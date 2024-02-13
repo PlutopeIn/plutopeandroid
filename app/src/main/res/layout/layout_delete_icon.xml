@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/textViewDeleteIcon"
+    android:layout_width="@dimen/_100mdp"
+    android:layout_height="@dimen/_30mdp"
+    android:layout_gravity="center"
+    android:fontFamily="@font/quicksand_bold"
+    android:text="@string/delete"
+    android:textColor="@color/white"
+    android:textSize="@dimen/_16mdp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+

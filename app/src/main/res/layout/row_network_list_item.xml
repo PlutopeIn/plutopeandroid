@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.app.plutope.networkConfig.Chains" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20mdp"
+        android:layout_marginVertical="@dimen/_5mdp"
+        android:background="@drawable/bg_corner_radius_10"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_connection"
+            android:layout_width="@dimen/_40mdp"
+            android:layout_height="@dimen/_40mdp"
+            android:layout_marginStart="@dimen/_15mdp"
+            android:src="@drawable/img_logo_circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_connection_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_15mdp"
+            android:layout_marginTop="@dimen/_13mdp"
+            android:fontFamily="@font/quicksand_bold"
+            android:text="@{model.mainName}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14mdp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_connection"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="This is connection name" />
+
+        <TextView
+            android:id="@+id/txt_connection_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5mdp"
+            android:layout_marginBottom="@dimen/_13mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:text="@{model.walletAddress}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_10mdp"
+            app:layout_constrainedWidth="true"
+            android:ellipsize="middle"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/txt_connection_name"
+            app:layout_constraintStart_toStartOf="@id/txt_connection_name"
+            app:layout_constraintTop_toBottomOf="@id/txt_connection_name"
+            tools:text="This is url" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

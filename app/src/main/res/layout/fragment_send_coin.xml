@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="sendCoinViewModel"
+            type="com.app.plutope.ui.fragment.transactions.send.send_coin.SendCoinViewModel" />
+
+        <variable
+            name="model"
+            type="com.app.plutope.model.Tokens" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/const_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".ui.fragment.transactions.send.send_coin.SendCoin">
+
+        <TextView
+            android:id="@+id/txt_address_or_naming_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16mdp"
+            android:layout_marginTop="@dimen/_50mdp"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="@string/address_or_naming_service"
+            android:textColor="@color/purple_7576D"
+            android:textSize="@dimen/_10msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edt_contract_address"
+            style="@style/edittext_fill_bg_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:layout_marginEnd="@dimen/_16mdp"
+            android:minHeight="@dimen/_45mdp"
+            android:paddingVertical="@dimen/_5mdp"
+            android:paddingStart="@dimen/_10mdp"
+            android:inputType="textNoSuggestions"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/_12msp"
+            android:maxLines="1"
+            android:paddingEnd="@dimen/_130mdp"
+            tools:text="12345678912345678912345678945654644564"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/txt_address_or_naming_service"
+            app:layout_constraintTop_toBottomOf="@id/txt_address_or_naming_service"
+
+            />
+
+        <ImageView
+            android:id="@+id/img_scanner"
+            android:layout_width="@dimen/_17mdp"
+            android:layout_height="@dimen/_17mdp"
+            android:layout_marginEnd="@dimen/_16mdp"
+            android:src="@drawable/img_scanner"
+            app:layout_constraintBottom_toBottomOf="@id/edt_contract_address"
+            app:layout_constraintEnd_toStartOf="@id/img_contact"
+            app:layout_constraintTop_toTopOf="@id/edt_contract_address" />
+
+
+        <ImageView
+            android:id="@+id/img_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_17mdp"
+            android:layout_marginEnd="@dimen/_16mdp"
+            android:src="@drawable/ic_user"
+            app:layout_constraintBottom_toBottomOf="@id/edt_contract_address"
+            app:layout_constraintEnd_toStartOf="@id/txt_paste"
+            app:layout_constraintTop_toTopOf="@id/edt_contract_address" />
+
+
+        <TextView
+            android:id="@+id/txt_paste"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_12mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:text="@string/paste"
+            android:textColor="@color/blue_00C6FB"
+            android:textSize="@dimen/_13msp"
+            app:layout_constraintBottom_toBottomOf="@id/edt_contract_address"
+            app:layout_constraintEnd_toEndOf="@id/edt_contract_address"
+            app:layout_constraintTop_toTopOf="@id/edt_contract_address" />
+
+
+        <TextView
+            android:id="@+id/amount_btc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16mdp"
+            android:layout_marginTop="@dimen/_25mdp"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="@{`Amount `+model.t_symbol}"
+            android:textColor="@color/purple_7576D"
+            android:textSize="@dimen/_10msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_contract_address" />
+
+
+        <EditText
+            android:id="@+id/edt_amount"
+            style="@style/edittext_fill_bg_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:layout_marginEnd="@dimen/_16mdp"
+            android:inputType="numberDecimal"
+            android:digits="0123456789."
+            android:minHeight="@dimen/_45mdp"
+            android:paddingEnd="@dimen/_100mdp"
+            android:paddingVertical="@dimen/_5mdp"
+            android:paddingStart="@dimen/_10mdp"
+            android:singleLine="true"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/_12msp"
+            tools:text="12345678912345678912345678945654644564"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/txt_address_or_naming_service"
+            app:layout_constraintTop_toBottomOf="@id/amount_btc"
+
+            />
+
+        <TextView
+            android:id="@+id/txt_coin_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_12mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:text="@{model.t_symbol}"
+            android:textColor="@color/blue_00C6FB"
+            android:textSize="@dimen/_13msp"
+            app:layout_constraintBottom_toBottomOf="@id/edt_amount"
+            app:layout_constraintEnd_toEndOf="@id/edt_amount"
+            app:layout_constraintTop_toTopOf="@id/edt_amount"
+            tools:text="BTC" />
+
+        <TextView
+            android:id="@+id/txt_max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_12mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:text="@string/max"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13msp"
+            app:layout_constraintBottom_toBottomOf="@id/edt_amount"
+            app:layout_constraintEnd_toStartOf="@id/txt_coin_type"
+            app:layout_constraintTop_toTopOf="@id/edt_amount" />
+
+
+        <TextView
+            android:id="@+id/txt_convert_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16mdp"
+            android:layout_marginTop="@dimen/_25mdp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/purple_7576D"
+            android:textSize="@dimen/_12msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_amount"
+            tools:text="~123" />
+
+        <TextView
+            android:id="@+id/txt_add_address_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_12mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:text="@string/add_this_address_to_your_address_book"
+            android:textColor="@color/blue_00C6FB"
+            android:textSize="@dimen/_15msp"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/_15mdp"
+            android:gravity="center_horizontal"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="@id/txt_convert_balance"
+            app:layout_constraintEnd_toEndOf="@id/edt_contract_address"
+            app:layout_constraintTop_toBottomOf="@id/txt_convert_balance" />
+
+
+        <Button
+            android:id="@+id/btn_continue"
+            style="@style/wallet_button_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50mdp"
+            android:layout_marginHorizontal="@dimen/_30mdp"
+            android:layout_marginTop="@dimen/_50mdp"
+            android:layout_marginBottom="@dimen/_30mdp"
+            android:text="@string/next"
+            android:textAllCaps="false"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_convert_balance"
+            app:layout_constraintVertical_bias="1"
+
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

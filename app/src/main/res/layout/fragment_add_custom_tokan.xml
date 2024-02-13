@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="addCustomTokenViewModel"
+            type="com.app.plutope.ui.fragment.add_custom_token.AddCustomTokenViewModel" />
+    </data>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/const_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            tools:context=".ui.fragment.add_custom_token.AddCustomToken">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_network"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_50mdp"
+                android:background="@drawable/bg_corner_radius_10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/txt_network"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/_21mdp"
+                    android:layout_marginStart="@dimen/_14mdp"
+                    android:fontFamily="@font/quicksand_semibold"
+                    android:text="@string/network"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/txt_network_name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/txt_network_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_17mdp"
+                    android:drawablePadding="@dimen/_24mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:gravity="end"
+                    android:text="Ethereum"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14msp"
+                    app:drawableEndCompat="@drawable/ic_forword_new"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/txt_network"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/txt_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_29mdp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="@string/add"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12msp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="@id/layout_network"
+                app:layout_constraintTop_toBottomOf="@id/layout_network" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_contract_add"
+                style="@style/edittext_fill_bg_style_r_10"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="@id/layout_network"
+                app:layout_constraintStart_toStartOf="@id/layout_network"
+                app:layout_constraintTop_toBottomOf="@id/txt_add">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_contract_address"
+                    style="@style/edittext_fill_bg_style_r_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50mdp"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:hint="@string/contract_address"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_10mdp"
+                    android:paddingEnd="@dimen/_10mdp"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@null"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toStartOf="@id/txt_paste"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="bsbhbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+
+                    />
+
+                <ImageView
+                    android:id="@+id/img_scanner"
+                    android:layout_width="@dimen/_17mdp"
+                    android:layout_height="@dimen/_17mdp"
+                    android:layout_marginEnd="@dimen/_17mdp"
+                    android:src="@drawable/img_scanner"
+                    app:layout_constraintBottom_toBottomOf="@id/edt_contract_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/edt_contract_address" />
+
+                <TextView
+                    android:id="@+id/txt_paste"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_12mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:text="@string/paste"
+                    android:textColor="@color/blue_00C6FB"
+                    android:textSize="@dimen/_13msp"
+                    app:layout_constraintBottom_toBottomOf="@id/edt_contract_address"
+                    app:layout_constraintEnd_toStartOf="@id/img_scanner"
+                    app:layout_constraintTop_toTopOf="@id/edt_contract_address" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <EditText
+                android:id="@+id/edt_name"
+                style="@style/edittext_fill_bg_style_r_10"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginTop="@dimen/_5mdp"
+                android:hint="@string/name"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/_10mdp"
+                android:textCursorDrawable="@null"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="@id/layout_network"
+                app:layout_constraintStart_toStartOf="@id/layout_network"
+                app:layout_constraintTop_toBottomOf="@id/constraint_contract_add"
+
+                />
+
+            <EditText
+                android:id="@+id/edt_symbol"
+                style="@style/edittext_fill_bg_style_r_10"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginTop="@dimen/_5mdp"
+                android:hint="@string/symbol"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/_10mdp"
+                android:textCursorDrawable="@null"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="@id/layout_network"
+                app:layout_constraintStart_toStartOf="@id/layout_network"
+                app:layout_constraintTop_toBottomOf="@id/edt_name"
+
+                />
+
+            <EditText
+                android:id="@+id/edt_decimal"
+                style="@style/edittext_fill_bg_style_r_10"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginTop="@dimen/_5mdp"
+                android:ellipsize="end"
+                android:hint="@string/decimals"
+                android:inputType="number"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/_10mdp"
+                android:textCursorDrawable="@null"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="@id/layout_network"
+                app:layout_constraintStart_toStartOf="@id/layout_network"
+                app:layout_constraintTop_toBottomOf="@id/edt_symbol"
+
+                />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_34mdp"
+                android:background="@drawable/background_warning"
+                app:layout_constraintTop_toBottomOf="@id/edt_decimal">
+
+
+                <ImageView
+                    android:id="@+id/img_warning"
+                    android:layout_width="@dimen/_20mdp"
+                    android:layout_height="@dimen/_20mdp"
+                    android:layout_marginStart="@dimen/_14mdp"
+                    android:layout_marginTop="@dimen/_1mdp"
+                    android:src="@drawable/ic_warning_triangle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_warning" />
+
+                <TextView
+                    android:id="@+id/txt_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_9mdp"
+                    android:layout_marginTop="@dimen/_17mdp"
+                    android:layout_marginEnd="@dimen/_41mdp"
+                    android:layout_marginBottom="@dimen/_17mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:text="@string/anyone_can_create_a_token_including_fake_versions_of_existing_tokens_learn_about_scams_and_security_risks"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/img_warning"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
+
+                <ImageView
+                    android:id="@+id/img_info"
+                    android:layout_width="@dimen/_23mdp"
+                    android:layout_height="@dimen/_23mdp"
+                    android:layout_marginStart="@dimen/_15mdp"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:src="@drawable/ic_close_circle"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <Button
+                android:id="@+id/btn_cancel"
+                style="@style/button_border_blue"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_30mdp"
+                android:layout_marginTop="@dimen/_50mdp"
+                android:layout_marginEnd="@dimen/_8mdp"
+                android:layout_marginBottom="@dimen/_36mdp"
+                android:text="@string/cancel"
+                android:textAllCaps="false"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toTopOf="@id/txt_token_instruction"
+                app:layout_constraintEnd_toStartOf="@+id/btn_save"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_warning"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintVertical_chainStyle="packed"
+
+                />
+
+
+            <Button
+                android:id="@+id/btn_save"
+                style="@style/wallet_button_gradient"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:layout_marginEnd="@dimen/_30mdp"
+                android:text="@string/save"
+                android:textAllCaps="false"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btn_cancel"
+                app:layout_constraintTop_toTopOf="@id/btn_cancel" />
+
+
+            <TextView
+                android:id="@+id/txt_token_instruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:fontFamily="@font/quicksand_medium"
+                android:gravity="center_horizontal"
+                android:text="@string/what_is_custom_token"
+                android:textAllCaps="false"
+                android:textColor="@color/blue_00C6FB"
+                android:textSize="@dimen/_15msp"
+                app:layout_constraintBottom_toBottomOf="@id/guid"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_bias="1" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.95" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

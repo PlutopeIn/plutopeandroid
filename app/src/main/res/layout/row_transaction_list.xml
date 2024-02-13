@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="transactionModel"
+            type="com.app.plutope.model.TransactionLists" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5mdp"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:background="@drawable/bg_corner_radius_20">
+
+        <ImageView
+            android:id="@+id/img_bag"
+            android:layout_width="@dimen/_36mdp"
+            android:layout_height="@dimen/_36mdp"
+            android:layout_marginStart="@dimen/_12mdp"
+            android:background="@drawable/ic_bag_circle"
+            android:padding="@dimen/_10mdp"
+            android:src="@drawable/ic_back_arrow_right_up"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_transaction_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_14mdp"
+            android:layout_marginTop="@dimen/_18mdp"
+            android:fontFamily="@font/quicksand_semibold"
+            tools:text="Transfer"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13msp"
+            app:layout_constraintStart_toEndOf="@id/img_bag"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <TextView
+            android:id="@+id/txt_transaction_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4mdp"
+            android:layout_marginBottom="@dimen/_18mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:text="@{transactionModel.addressShow}"
+            android:textColor="@color/purple_7576D"
+            android:textSize="@dimen/_10msp"
+            android:ellipsize="middle"
+            android:maxWidth="@dimen/_160mdp"
+            android:maxLines="1"
+            tools:text="higeruhtguierhhgrtguighfguirhguigferuguirghuigfireubguigbuirgufhguireghuigrbirghiughuireghruiehgheruigheruihguirehguire"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/txt_transaction_name"
+            app:layout_constraintTop_toBottomOf="@id/txt_transaction_name"
+
+            />
+
+
+        <TextView
+            android:id="@+id/txt_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_14mdp"
+            android:layout_marginEnd="@dimen/_19mdp"
+            android:fontFamily="@font/quicksand_semibold"
+            android:text=''
+            tools:text="327658754"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14msp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toEndOf="@id/txt_transaction_name"
+            app:layout_constraintTop_toTopOf="@id/txt_transaction_name"
+
+            />
+
+        <TextView
+            android:id="@+id/txt_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_3mdp"
+            android:layout_marginStart="@dimen/_14mdp"
+            android:layout_marginEnd="@dimen/_19mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:text="@{transactionModel.transactionTime}"
+            android:textColor="@color/purple_7576D"
+            android:textSize="@dimen/_10msp"
+            app:layout_constraintTop_toBottomOf="@id/txt_price"
+            android:layout_marginBottom="@dimen/_8mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintStart_toEndOf="@id/txt_transaction_name"
+            tools:text="fhjkdshgfdk"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

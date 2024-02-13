@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.app.plutope.ui.fragment.card.payment.PaymentTransactionModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_20mdp">
+
+        <TextView
+            android:id="@+id/txt_title_coin_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_23mdp"
+            android:fontFamily="@font/quicksand_medium"
+            android:text="@{model.coinName}"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/_13msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="BTC Rate"
+
+            />
+
+        <TextView
+            android:id="@+id/txt_currency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_regular"
+            android:text="@{model.coinName+` = `+model.coinConvertedValue}"
+            android:textColor="@color/purple_7576D"
+            android:textColorHint="@color/purple_7576D"
+            android:textSize="@dimen/_11msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/txt_title_coin_rate"
+            app:layout_constraintTop_toBottomOf="@id/txt_title_coin_rate"
+            tools:text="1 BTC = 28.60.2 USD" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="walletConnectViewModel"
+            type="com.app.plutope.ui.fragment.wallet_connection.walletConnectionList.WalletConnectViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".ui.fragment.wallet_connection.walletConnectionList.WalletConnect">
+
+        <!--  <androidx.constraintlayout.widget.ConstraintLayout
+              android:id="@+id/const_root_compose"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:visibility="gone"
+              android:layout_marginHorizontal="@dimen/_5mdp"
+              android:layout_marginVertical="@dimen/_50mdp"
+              >
+
+
+
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+  -->
+        <!--
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/compose_layout"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    tools:composableName="session_proposal">
+
+                </androidx.compose.ui.platform.ComposeView>
+        -->
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_connection_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_5mdp"
+            android:layout_marginBottom="@dimen/_20mdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_connection"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/row_wallet_connection_list_item"
+
+            />
+
+
+        <Button
+            android:layout_marginBottom="@dimen/_40mdp"
+            android:id="@+id/btn_add_connection"
+            style="@style/button_border_blue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_30mdp"
+            android:layout_marginTop="@dimen/_66mdp"
+            android:visibility="visible"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:text="@string/add_new_connection"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

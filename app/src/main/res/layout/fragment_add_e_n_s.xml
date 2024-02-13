@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="addENSViewModel"
+            type="com.app.plutope.ui.fragment.ens.AddENSViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".ui.fragment.ens.AddENS">
+
+        <EditText
+            android:id="@+id/edt_search"
+            style="@style/edittext_fill_bg_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16mdp"
+            android:layout_marginTop="@dimen/_22mdp"
+            android:autofillHints=""
+            android:digits="@string/_1234567890abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+            android:ellipsize="end"
+            android:fontFamily="@font/montserrat_light"
+            android:hint="@string/search"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="@dimen/_20mdp"
+            android:paddingEnd="@dimen/_90mdp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/purple_7576D"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/_10mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/btn_search"
+            style="@style/wallet_button_gradient"
+            android:layout_width="@dimen/_80mdp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/_2mdp"
+            android:focusable="true"
+            android:fontFamily="@font/quicksand_semibold"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="@string/search_"
+            android:textAllCaps="false"
+            android:textSize="@dimen/_12msp"
+            app:layout_constrainedHeight="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/edt_search"
+            app:layout_constraintEnd_toEndOf="@id/edt_search"
+            app:layout_constraintTop_toTopOf="@id/edt_search" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_ens_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_20mdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_search"
+            tools:listitem="@layout/row_ens_list_item"
+
+            />
+
+        <TextView
+            android:id="@+id/txt_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_30mdp"
+            android:layout_marginBottom="@dimen/_30mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:gravity="center"
+            android:text="@string/please_search_domain_name_from_searchbar"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_search" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="yourRecoveryPhraseViewModel"
+            type="com.app.plutope.ui.fragment.phrase.recovery_phrase.YourRecoveryPhraseViewModel" />
+
+    </data>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            tools:context=".ui.fragment.phrase.recovery_phrase.YourRecoveryPhrase">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/background_warning">
+
+
+                <ImageView
+                    android:id="@+id/img_warning"
+                    android:layout_width="@dimen/_25mdp"
+                    android:layout_height="@dimen/_25mdp"
+                    android:layout_marginStart="@dimen/_15mdp"
+                    android:src="@drawable/ic_warning_full"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_warning"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_warning" />
+
+                <TextView
+                    android:id="@+id/txt_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_14mdp"
+                    android:layout_marginTop="@dimen/_15mdp"
+                    android:layout_marginEnd="@dimen/_87mdp"
+                    android:layout_marginBottom="@dimen/_13mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:text="@string/never_share_your_secret_phrase_with_anyone"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/img_warning"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_info"
+                    android:layout_width="@dimen/_23mdp"
+                    android:layout_height="@dimen/_23mdp"
+                    android:layout_marginStart="@dimen/_15mdp"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:src="@drawable/ic_info"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_20mdp"
+                android:layout_marginTop="@dimen/_30mdp"
+                android:background="@drawable/bg_gradient_phrases_list"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_warning">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_phrase_generated_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:minHeight="@dimen/_280mdp"
+                    android:orientation="horizontal"
+                    app:spanCount="6"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:listitem="@layout/row_secret_phrase" />
+
+
+                <!--
+                                <eightbitlab.com.blurview.BlurView
+                                    android:id="@+id/blurView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    app:layout_constrainedWidth="true"
+                                    app:layout_constrainedHeight="true"
+                                    android:elevation="@dimen/_5mdp"
+                                    app:layout_constraintTop_toTopOf="@id/rv_phrase_generated_list"
+                                    app:layout_constraintStart_toStartOf="@id/rv_phrase_generated_list"
+                                    app:layout_constraintBottom_toBottomOf="@id/rv_phrase_generated_list"
+                                    app:layout_constraintEnd_toEndOf="@id/rv_phrase_generated_list"
+                                    app:blurOverlayColor="#78ffffff"
+                                    />
+                -->
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_blur"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_gradient_phrases_list"
+                app:cardBackgroundColor="@color/transparent"
+                app:cardCornerRadius="@dimen/_17mdp"
+                app:layout_constrainedHeight="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/card_view"
+                app:layout_constraintEnd_toEndOf="@id/card_view"
+                app:layout_constraintStart_toStartOf="@id/card_view"
+                app:layout_constraintTop_toTopOf="@id/card_view">
+
+                <eightbitlab.com.blurview.BlurView
+                    android:id="@+id/blur_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="@dimen/_5mdp"
+                    app:blurOverlayColor="#78ffffff"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="@id/rv_phrase_generated_list"
+                    app:layout_constraintEnd_toEndOf="@id/rv_phrase_generated_list"
+                    app:layout_constraintStart_toStartOf="@id/rv_phrase_generated_list"
+                    app:layout_constraintTop_toTopOf="@id/rv_phrase_generated_list" />
+
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/txt_tap_to_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/_20mdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/tap_to_hold_view_phrases"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18mdp"
+                app:layout_constraintBottom_toBottomOf="@id/card_view_blur"
+                app:layout_constraintEnd_toEndOf="@id/card_view_blur"
+                app:layout_constraintStart_toStartOf="@id/card_view_blur"
+                app:layout_constraintTop_toTopOf="@id/card_view_blur" />
+
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/txt_hide_show_phrase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5mdp"
+                android:drawablePadding="@dimen/_11mdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:paddingVertical="@dimen/_15mdp"
+                android:text="@string/show_recovery_phrase"
+                android:textColor="@color/blue_00C6FB"
+                android:textSize="@dimen/_14msp"
+                app:layout_constraintEnd_toEndOf="@id/card_view"
+                app:layout_constraintTop_toBottomOf="@id/card_view"
+
+                />
+
+
+            <TextView
+                android:id="@+id/txt_warning_security_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginBottom="@dimen/_28mdp"
+                android:layout_marginTop="@dimen/_50mdp"
+                android:fontFamily="@font/quicksand_regular"
+                android:gravity="top|center_horizontal"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="@dimen/_5msp"
+                android:text="@string/never_share_your_secret_key_with_anyone_for_any_reason_treat_it_as_you_would_treat_your_most_valuable_possession_remember_plutope_will_never_ask_you_for_your_secret_key"
+                android:textColor="@color/yellow_FFD23D"
+                android:textSize="@dimen/_12msp"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_view"
+                app:layout_constraintVertical_chainStyle="packed"
+
+                />
+
+
+            <Button
+                android:id="@+id/btn_continue"
+                style="@style/wallet_button_gradient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginBottom="@dimen/_26mdp"
+                android:text="@string/_continue"
+                android:textAllCaps="false"
+                android:layout_marginTop="@dimen/_28mdp"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintBottom_toTopOf="@id/txt_copy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_warning_security_text"
+
+                />
+            <Button
+                android:id="@+id/btn_delete"
+                style="@style/button_border_red"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginBottom="@dimen/_20mdp"
+                android:text="@string/delete_backup"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/_10mdp"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintBottom_toTopOf="@id/txt_copy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_warning_security_text"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_11mdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/copy"
+                android:textColor="@color/blue_00C6FB"
+                android:textSize="@dimen/_15msp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/guid"
+                app:layout_constraintTop_toBottomOf="@id/btn_delete"
+                app:drawableStartCompat="@drawable/ic_copy_outline"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent=".95" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

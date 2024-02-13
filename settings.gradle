@@ -1,0 +1,31 @@
+pluginManagement {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url 'https://jitpack.io' }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven { url 'https://jitpack.io' }
+       /* maven {
+            url = uri("https://maven.pkg.github.com/trustwallet/wallet-core")
+            credentials {
+                username = "KomalVH"//properties.getProperty("gpr.user") as String?: System.getenv("GITHUB_USER")
+                password = "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"//properties.getProperty("gpr.key") as String?: System.getenv("GITHUB_TOKEN")
+            }
+        }*/
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        flatDir {
+            dirs 'app/libs'
+        }
+    }
+}
+rootProject.name = "PlutoPe"
+include ':app'

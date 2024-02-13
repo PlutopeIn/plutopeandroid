@@ -1,0 +1,369 @@
+<resources>
+
+    <string-array name="select_language">
+        <item>English</item>
+        <item>Thai</item>
+    </string-array>
+
+
+    <string name="app_name" translatable="false">PlutoPe</string>
+    <string name="title_activity_base" translatable="false">BaseActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label" translatable="false">First Fragment</string>
+    <string name="second_fragment_label" translatable="false">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <!-- client id-->
+    <string name="clientid" translatable="false">992295208788-pvkm9hotbtcgheod11380ms1nipo199k.apps.googleusercontent.com</string>
+
+    <string name="lorem_ipsum" translatable="false">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
+        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
+        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
+        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
+        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
+        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
+        bibendum, vel congue leo egestas.\n\n
+        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
+        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
+        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
+        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
+        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
+        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
+        est.\n\n
+        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
+        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
+        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
+        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
+        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
+        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
+        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
+        convallis.\n\n
+        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
+        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
+        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
+        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
+        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+    </string>
+
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="todo" translatable="false">TODO</string>
+    <string name="wallet_setup">Wallet Setup</string>
+    <string name="import_an_existing_wallet_or_create_a_new_one">Import an existing wallet or\ncreate a new one</string>
+    <string name="create_a_new_wallet">Create a new Wallet</string>
+    <string name="import_using_secret_recovery_phrase">Import using Secret Recovery Phrase</string>
+    <string name="lorem_ipsum_dolor_sit_amet_consetetur_adipscing_elitr_sed_diam_nonumy_eirmod_tempor_invidunt_ut_labore_et_dolore_magna">Lorem ipsum dolor sit amet, consetetur adipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms Of Service</string>
+    <string name="_continue">Continue</string>
+    <string name="lorem_ipsum_dolor_sit_amet_consetetur_adipscing_elitr_sed_diam_nonumy_eirmod_tempor">Lorem ipsum dolor sit amet, consetetur adipscing elitr, sed diam nonumy eirmod tempor</string>
+    <string name="create_passcode">Create Passcode</string>
+    <string name="confirm_passcode">Confirm Passcode</string>
+    <string name="secret_phrase_backup">Secret Phrase Backup</string>
+    <string name="back_up_manually">Back Up Manually</string>
+    <string name="back_up_to_icloud">Back Up to Google Drive</string>
+    <string name="back_up_your_wallet_now">Back up your wallet now!</string>
+    <string name="in_the_next_step_you_will_see_secret_phrase_12_words_that_allows_you_to_recover_a_wallet">In the next step you will see Secret Phrase (12 words) that allows you to recover a wallet.</string>
+    <string name="if_lose_my_secret_phrase_my_funds_will_be_lost_forever">If lose my secret phrase, my funds will be lost forever.</string>
+    <string name="if_expose_or_share_my_secret_phrase_to_anybody_my_funds_can_get_stolen">If expose or share my secret phrase to anybody, my funds can get stolen.</string>
+    <string name="trust_wallet_support_will_never_reach_out_to_ask_for_it">PlutoPe support will NEVER reach out to ask for it</string>
+    <string name="name_your_backup">Name your backup</string>
+    <string name="backup_name">Backup Name</string>
+    <string name="include_at_least_1_character">include at least 1 character</string>
+    <string name="do_not_delete_this_backup_file_on_google_drive_or_you_risk_losing_all_your_crypto">Do not delete this backup file on Google drive, or you risk losing all your crypto!</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="_9">9</string>
+    <string name="cancel">Cancel</string>
+    <string name="_0">0</string>
+    <string name="description">description</string>
+    <string name="set_encryption_password">Set encryption password</string>
+    <string name="password">Password</string>
+    <string name="at_least_8_characters_including_one_upper_case_letter_one_lower_case_letter_one_number_and_one_symbol">At least 8 characters, including one upper-case letter, one lower-case letter, one number, and one symbol.</string>
+    <string name="do_not_lose_this_password_as_trust_wallet_cannot_reset_it_for_you">Do not lose this password, as PlutoPe cannot reset it for you!</string>
+    <string name="enter_the_financial_freedom">Enter the Financial Freedom</string>
+    <string name="never_share_your_secret_phrase_with_anyone">Never share your secret phrase with anyone</string>
+    <string name="your_12_word_secret_phrase_is_only_way_to_recover_your_wallet_please_store_it_securely">Your 12-word secret phrase is only way to recover your wallet. Please store it securely!</string>
+    <string name="confirm_encryption_password">Confirm encryption password</string>
+    <string name="confirm">Confirm</string>
+    <string name="confirm_password_did_not_match_with_password">Confirm password did not match with password!</string>
+    <string name="copy">Copy</string>
+    <string name="never_share_your_secret_phrase_with_anyone_store_it_securely">Never share your secret phrase with anyone, store it securely!</string>
+    <string name="verify_secret_phrase">Verify Secret Phrase</string>
+    <string name="tap_the_words_to_put_them_next_to_each_other_in_the_correct_order">Tap the words to put them next to each other in the correct order.</string>
+    <string name="done">Done</string>
+    <string name="invalid_order_contain">Invalid order.Try again!</string>
+    <string name="spend_your_crypto_anywhere_in_the_world_with_plutope_debit_card" translatable="false">Spend your crypto anywhere in the world with Plutope debit card.</string>
+    <string name="multi_chain_amp_lightning_fast" translatable="false"><![CDATA[Multi-Chain & Lightning fast]]></string>
+    <string name="one_wallet_amp_unlimited_possibilities"><![CDATA[One Wallet & Unlimited Possibilities]]></string>
+    <string name="wallet">Wallet</string>
+    <string name="current_balance">Current Balance</string>
+    <string name="nfts">NFTs</string>
+    <string name="assets">Assets</string>
+    <string name="search">Search...</string>
+    <string name="search_">Search</string>
+    <string name="send">Send</string>
+    <string name="your_coins">Your Coins</string>
+    <string name="all_coins">All Coins</string>
+    <string name="receive">Receive</string>
+    <string name="swap">Swap</string>
+    <string name="initiated">Initiated</string>
+    <string name="swapping">Swapping</string>
+    <string name="success">Success</string>
+    <string name="you_pay">You Pay</string>
+    <string name="balance">Balance</string>
+    <string name="ethereum">Ethereum</string>
+    <string name="wallets">Wallets</string>
+    <string name="security">Security</string>
+    <string name="push_notifications">Push Notifications</string>
+    <string name="help_center">Help Centre</string>
+    <string name="about_plutope">About PlutoPe</string>
+    <string name="card">Card</string>
+    <string name="expire">Expire</string>
+    <string name="transactions">Transactions</string>
+    <string name="notifications">Notifications</string>
+    <string name="_new">New</string>
+    <string name="earlier">Earlier</string>
+    <string name="buy_bitcoin">Buy Bitcoin</string>
+    <string name="third_party_provider">Third Party Provider</string>
+    <string name="mercuryo">Mercuryo</string>
+    <string name="providers">Providers</string>
+    <string name="currency">Currency</string>
+    <string name="receive_bitcoin">Receive Bitcoin</string>
+    <string name="no_nfts_yet">No NFTs yet</string>
+    <string name="add_more">Add more</string>
+    <string name="enable">Enable</string>
+    <string name="bitcoin">Bitcoin</string>
+    <string name="about_bitcoin">About Bitcoin</string>
+    <string name="market_cap">Market Cap</string>
+    <string name="volume_24h">Volume (24h)</string>
+    <string name="circulating_supply">Circulating Supply</string>
+    <string name="total_supply">Total Supply</string>
+
+
+    <string name="well_done">Well done!</string>
+    <string name="add_custom_token">Add Custom Token</string>
+    <string name="network">Network</string>
+    <string name="add">Add</string>
+    <string name="contract_address">Contract Address</string>
+    <string name="name">Name</string>
+    <string name="symbol">Symbol</string>
+    <string name="decimals">Decimals</string>
+    <string name="what_is_custom_token">What is Custom Token?</string>
+    <string name="paste">Paste</string>
+    <string name="multi_coin_wallets">Multi-Coin Wallets</string>
+    <string name="transfer">Transfer</string>
+    <string name="date">Date</string>
+    <string name="status">Status</string>
+    <string name="recipient">Recipient</string>
+    <string name="network_fee">Network Fee</string>
+    <string name="nonce" translatable="false">Nonce</string>
+    <string name="more_details">More Details</string>
+    <string name="import_multi_coin_wallet">Import Multi-Coin Wallet</string>
+    <string name="phrase">Phrase</string>
+    <string name="typically_12_sometimes_18_24_words_seprated_by_single_spaces">Typically 12 (Sometimes 18,24) words separated by single spaces</string>
+    <string name="what_is_secret_phrase">What is Secret Phrase?</string>
+    <string name="import_">Import</string>
+    <string name="plutope_locked" translatable="false">PlutoPe Locked</string>
+    <string name="multi_coin_wallet" translatable="false">Multi-Coin Wallet</string>
+    <string name="restore_your_wallet">Restore Your Wallet</string>
+    <string name="restore_your_wallet_with_the_12_word_secret_phrase_or_with_icloud" translatable="false">Restore your wallet with the 12-word secret phrase or with Google drive.</string>
+    <string name="restore_your_wallet_with_the_12_word_secret_phrase">Restore your wallet with the 12-word secret phrase.</string>
+    <string name="restore_with_google_drive">Restore with Google Drive</string>
+    <string name="restore_with_secret_phrase">Restore with secret phrase</string>
+    <string name="app_lock">App Lock</string>
+    <string name="auto_lock">Auto-Lock</string>
+    <string name="lock_method">Lock Method</string>
+    <string name="transaction_signing">Transaction Signing</string>
+    <string name="security_scanner">Security Scanner</string>
+    <string name="choose_the_backup_for_the_wallet_you_want_to_restore">Choose the backup for the wallet you want to restore</string>
+    <string name="if_you_don_t_see_your_backup_try_to_sync_your_google_drive">If you don\'t see your backup, try to sync your Google drive.</string>
+    <string name="select_wallet_backup" translatable="false">Select Wallet Backup</string>
+    <string name="address_or_naming_service">Address Or Naming Service</string>
+    <string name="amount_btc" translatable="false">Amount BTC</string>
+    <string name="max" translatable="false">MAX</string>
+    <string name="you_get">You Get</string>
+    <string name="no_transactions">No Transactions yet</string>
+    <string name="buy">Buy</string>
+    <string name="enter_encryption_password" translatable="false">Enter encryption password</string>
+    <string name="please_review_the_plutope_terms_of_services_and_privacy_policy">Please review the PlutoPe Terms of Services and Privacy Policy.</string>
+    <string name="i_ve_read_and_accept_the_terms_of_services_and_privacy_policy" translatable="false">I\'ve read and accept the Terms of Services and Privacy Policy.</string>
+    <string name="receive_nft">Receive NFT</string>
+    <string name="best_price">Best Price</string>
+    <string name="your_secret_phrase_is_the_master_key_to_your_wallet_and_anyone_that_has_it_can_access_your_crypto_never_share_it">Your secret phrase is the master key to your wallet and anyone that has it can access your crypto, Never share it!</string>
+    <string name="hide_recovery_phrase" translatable="false">Hide Recovery Phrase</string>
+    <string name="show_recovery_phrase">Show Recovery Phrase</string>
+    <string name="never_share_your_secret_key_with_anyone_for_any_reason_treat_it_as_you_would_treat_your_most_valuable_possession_remember_plutope_will_never_ask_you_for_your_secret_key">Never share your Secret Key with anyone, for any reason. Treat it as you would treat your most valuable possession. Remember, PlutoPe will never ask you for your Secret Key.</string>
+    <string name="just_top_up_your_crypto_in_your_card_and_you_are_good_to_go_your_plutope_card_works_at_all_merchants_that_take_mastercard">Just top up your crypto in your card and you are good to go. Your PlutoPe card works at all merchants that take Mastercard.</string>
+    <string name="just_top_up_your_card_with_crypto_and_you_are_good_to_go_your_plutope_card_works_at_all_merchants_that_take_mastercard">Just top up your card with crypto and you are good to go. Your PlutoPe card works at all merchants that take Mastercard.</string>
+    <string name="one_wallet_for_all_your_needs" translatable="false">One Wallet for all your needs</string>
+    <string name="transact_stake_withdraw_buy_and_sell_your_cryptocurrencies_with_ease" translatable="false">Transact, stake, withdraw, buy and sell your cryptocurrencies with ease.</string>
+    <string name="anyone_can_create_a_token_including_fake_versions_of_existing_tokens_learn_about_scams_and_security_risks">Anyone can create a token, including fake versions of existing tokens. Learn about scams and security risks.</string>
+    <string name="enter_passcode">Enter Passcode</string>
+    <string name="lock_methods">Lock Methods</string>
+    <string name="exceeds_balance">Exceeds balance</string>
+    <string name="you_need_to_withdraw_0_01_or_more">You need to withdraw 0.01 or more</string>
+    <string name="adds_an_extra_layer_of_security_when_using_the_app">Adds an extra layer of security when using the app</string>
+    <string name="delete">Delete</string>
+    <string name="contacts">Contacts</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="add_this_address_to_your_address_book">Add this address to your address book</string>
+    <string name="add_to_address_book">Add to address book</string>
+    <string name="enter_an_alias">Enter an alias</string>
+    <string name="save">Save</string>
+    <string name="public_address_0x">Public address (0x)</string>
+    <string name="backup_options">Backup Options</string>
+    <string name="drive_backup" translatable="false">Drive Backup</string>
+    <string name="manual_backup">Manual Backup</string>
+    <string name="main_wallet">Main Wallet</string>
+    <string name="learn_more">Learn More</string>
+    <string name="delete_backup">Delete Backup</string>
+    <string name="get_card">Get Card</string>
+    <string name="sign_up_login">Sign Up/Login</string>
+    <string name="email">Email</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="payment">Payment</string>
+    <string name="personal_details" translatable="false">Personal\nDetails</string>
+    <string name="membership">Membership</string>
+    <string name="country_of_residence">Country of residence *</string>
+    <string name="address_1">Address 1 *</string>
+    <string name="address_2">Address 2 *</string>
+    <string name="city">City *</string>
+    <string name="postcode">Postcode *</string>
+    <string name="add_address">Add Address</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="delete_wallet">Delete Wallet</string>
+    <string name="are_you_sure_you_would_like_to_delete_this_wallet">Are you sure you would like to delete this wallet?</string>
+    <string name="make_sure_you_have_backup_of_your_wallet">Make sure you have backup of your wallet.</string>
+
+    <string name="are_you_sure_you_want_to_delete_cloud_backup">Are you sure you want to delete drive backup?</string>
+    <string name="manual_backup_required">Manual backup required</string>
+    <string name="before_deleting_your_icloud_backup_ensure_a_manual_backup_is_in_place_for_your_data_s_security">Before deleting your Drive backup, ensure a manual backup is in place for your data\'s security.</string>
+    <string name="first_name_legal">First Name(Legal) *</string>
+    <string name="last_name_legal">Last Name(Legal) *</string>
+    <string name="date_of_birth">Date of birth *</string>
+    <string name="email_address">Email address *</string>
+    <string name="mobile_phone">Mobile Phone *</string>
+    <string name="password_">Password *</string>
+    <string name="confirm_password_">Confirm password *</string>
+    <string name="preferred_language">Preferred Language</string>
+    <string name="i_have_read_and_agree_to_the_membership_agreement" translatable="false">I have read and agree to the membership agreement</string>
+    <string name="tap_to_hold_view_phrases">Tap and hold to view phrases</string>
+    <string name="no_contacts_yet">No contacts yet</string>
+    <string name="card_design">Card Design</string>
+    <string name="if_you_loos_access_to_this_device_your_fund_will_be_lost_unless_you_back_up">If you loos access to this device, your fund will be lost, unless you back up!</string>
+    <string name="enter_the_encryption_password_you_created_for_your_google_drive_secret_phrase_backup">Enter the encryption password you created for your Google Drive secret phrase backup.</string>
+    <string name="this_password_is_used_to_protect_your_wallet_and_provide_access_to_the_browser_extension_it_cannot_be_reset_and_is_separate_from_your_mobile_wallet">This password is used to protect your wallet and provide access to the browser extension. It cannot be reset and is separate from your mobile wallet.</string>
+    <string name="basic">Basic</string>
+    <string name="professional">Professional</string>
+    <string name="business">Business</string>
+    <string name="platinum_elite">Platinum Elite</string>
+    <string name="plastic_global_payment_card">Plastic Global Payment Card</string>
+    <string name="daily_card_top_up">Daily Card Top Up</string>
+    <string name="atm_withdrawals">ATM Withdrawals</string>
+    <string name="crypto_liquidation">Crypto Liquidation</string>
+    <string name="global_support">Global Support</string>
+    <string name="_24_7_via_online_chat">24/7 via online chat</string>
+    <string name="get_basic_card">Get Basic Card</string>
+    <string name="get_professional_card">Get Professional Card</string>
+    <string name="card_currency">Card Currency</string>
+    <string name="shipping">Shipping*</string>
+    <string name="pay_today">Pay Today</string>
+    <string name="crypto" translatable="false">Crypto</string>
+    <string name="shippings">Shippings</string>
+    <string name="your_card_will_be_shipped_to_the_address_provided">Your card will be shipped to the address provided.</string>
+    <string name="apply_discount_code">Apply Discount Code</string>
+    <string name="discount_code">Discount Code</string>
+    <string name="apply">Apply</string>
+    <string name="select_payment_method">Select Payment Method</string>
+    <string name="details">Details</string>
+    <string name="get_a_physical_or_virtual_card_in_minutes_that_is_accepted_at_more_than_42_million_merchants_worldwide" translatable="false">Get a physical or virtual card in minutes that is accepted at more than 42 million merchants worldwide.</string>
+    <string name="the_plutope_wallet_operates_across_multiple_chains_delivering_lightning_fast_transactions_no_more_manual_network_selection" translatable="false">The Plutope wallet operates across multiple chains, delivering lightning fast transactions. No more manual network selection.</string>
+    <string name="forgot_password_">Forgot Password</string>
+    <string name="restore_wallet">Restore Wallet</string>
+
+    <string name="from">From</string>
+    <string name="confirm_swap">Confirm Swap</string>
+    <string name="provider_fee">Provider Fee</string>
+    <string name="preview_swap">Preview Swap</string>
+    <string name="ok">OK</string>
+    <string name="your_tokens">Your Tokens</string>
+    <string name="okt_chain" translatable="false">OKT Chain</string>
+    <string name="invalid_address">Invalid Address</string>
+
+    <string name="buy_btc" translatable="false">Buy BTC</string>
+    <string name="max_slipage">Max Slipage</string>
+    <string name="_0_01" translatable="false">0.1%</string>
+    <string name="graph_details_not_available">Graph details not available</string>
+
+    <string name="to">To</string>
+    <string name="max_total">Max Total</string>
+    <string name="asset">Asset</string>
+    <string name="more">More</string>
+    <string name="advanced">Advanced</string>
+    <string name="gas_price_gwei">Gas Price(Gwei)</string>
+    <string name="gas_limit">Gas Limit</string>
+
+    <string name="transaction_data_optional" translatable="false">Transaction Data (Optional)</string>
+    <string name="max_fee_gwei">Max Fee (Gwei)</string>
+    <string name="miner_tip_gwei">Miner Tip (Gwei)</string>
+    <string name="using_the_best_quote">Using the best quote</string>
+    <string name="best_quote">Best Quote</string>
+    <string name="overall_value" translatable="false">Overall \nValue</string>
+    <string name="gas_price">Gas Price</string>
+
+    <string name="language">Language</string>
+    <string name="your_recovery_phrase">Your Recovery Phrase</string>
+    <string name="active">Active</string>
+    <string name="not_active">Not Active</string>
+    <string name="settings" translatable="false">Settings</string>
+    <string name="english" translatable="false">English</string>
+    <string name="thai" translatable="false">Thai</string>
+    <string name="hindi" translatable="false">Hindi</string>
+    <string name="advanced_options">Advanced options</string>
+    <string name="leverage_gas_fee">Leverage gas fee</string>
+    <string name="send_bitcoin">Send bitcoin</string>
+    <string name="type_t_symbol" translatable="false">%1$s %2$s</string>
+    <string name="coin_margin" translatable="false">" %1$s"</string>
+    <string name="margins" translatable="false">~%1$s%2$s</string>
+
+    <string name="arabic" translatable="false">Arabic</string>
+    <string name="wallet_connect">Wallet Connect</string>
+    <string name="add_new_connection">Add new connection</string>
+    <string name="price" translatable="false">Price : $%1$s</string>
+    <string name="ens" translatable="false">ENS</string>
+    <string name="forword_arrow_for_show_forword_redirection" translatable="false">forword arrow for show forword redirection</string>
+    <string name="_1234567890abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" translatable="false">1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.</string>
+    <string name="please_search_domain_name_from_searchbar" translatable="false">Please search domain name from searchbar</string>
+    <string name="approve">Approve</string>
+    <string name="remove_connection">Remove Connection</string>
+    <string name="connection_detail">Connection Detail</string>
+    <string name="connection_dapp">Connection DApp</string>
+    <string name="connect">Connect</string>
+    <string name="dapp">DApp</string>
+    <string name="website_flagged">Website flagged</string>
+    <string name="wants_to_connect_to_your_wallet">%1$s wants to connect to your wallet</string>
+    <string name="search_or_type_web_address">Search or type web address</string>
+    <string name="request_for_payment">Request for payment</string>
+    <string name="sign">Sign</string>
+    <string name="signature_request">Signature Request</string>
+    <string name="now_you_are_online">Now you are online.</string>
+    <string name="no_internet_connection">No Internet connection.</string>
+    <string name="instruction_text">%1$s  %2$s ≈ %3$s%4$s</string>
+
+
+</resources>

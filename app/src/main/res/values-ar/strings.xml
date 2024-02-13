@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wallet_setup">إعداد المحفظة</string>
+    <string name="import_an_existing_wallet_or_create_a_new_one">استيراد محفظة موجودة أو\nإنشاء واحدة جديدة</string>
+    <string name="create_a_new_wallet">إنشاء محفظة جديدة</string>
+    <string name="import_using_secret_recovery_phrase">استيراد باستخدام عبارة الاسترداد السرية</string>
+    <string name="lorem_ipsum_dolor_sit_amet_consetetur_adipscing_elitr_sed_diam_nonumy_eirmod_tempor_invidunt_ut_labore_et_dolore_magna">لوريم إيبسوم دولور سيت أميت، كونستيتيتور أديبسسينج إليتر، سيد ديام نونومي أيرمود تيمبور إنفيدونت أت لابوري آت دولوري ماجنا.</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="terms_of_service">شروط الخدمة</string>
+    <string name="_continue">متابعة</string>
+    <string name="lorem_ipsum_dolor_sit_amet_consetetur_adipscing_elitr_sed_diam_nonumy_eirmod_tempor">لوريم إيبسوم دولور سيت أميت، كونستيتيتور أديبسسينج إليتر، سيد ديام نونومي أيرمود تيمبور</string>
+    <string name="create_passcode">إنشاء رمز الوصول</string>
+    <string name="confirm_passcode">تأكيد رمز الوصول</string>
+    <string name="secret_phrase_backup">نسخة احتياطية للعبارة السرية</string>
+    <string name="back_up_manually">النسخ الاحتياطي يدويًا</string>
+    <string name="back_up_to_icloud">النسخ الاحتياطي إلى Google Drive</string>
+    <string name="back_up_your_wallet_now">قم بنسخ احتياطي لمحفظتك الآن!</string>
+    <string name="in_the_next_step_you_will_see_secret_phrase_12_words_that_allows_you_to_recover_a_wallet">في الخطوة التالية، سترى العبارة السرية (12 كلمة) التي تسمح لك باسترداد المحفظة.</string>
+    <string name="if_lose_my_secret_phrase_my_funds_will_be_lost_forever">إذا فقدت عبارتي السرية، ستفقد أموالي إلى الأبد.</string>
+    <string name="if_expose_or_share_my_secret_phrase_to_anybody_my_funds_can_get_stolen">إذا كشفت أو شاركت عبارتي السرية مع أي شخص، يمكن أن تسرق أموالي.</string>
+    <string name="trust_wallet_support_will_never_reach_out_to_ask_for_it">دعم PlutoPe لن يتصل أبدًا لطلب ذلك</string>
+    <string name="name_your_backup">قم بتسمية النسخة الاحتياطية</string>
+    <string name="backup_name">اسم النسخة الاحتياطية</string>
+    <string name="include_at_least_1_character">تضمين حرف واحد على الأقل</string>
+    <string name="do_not_delete_this_backup_file_on_google_drive_or_you_risk_losing_all_your_crypto">لا تقم بحذف ملف النسخ الاحتياطي هذا على Google Drive، أو تخاطر بفقدان جميع عملاتك الرقمية!</string>
+
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="_9">9</string>
+    <string name="cancel">إلغاء</string>
+    <string name="_0">0</string>
+    <string name="description">الوصف</string>
+    <string name="set_encryption_password">تعيين كلمة مرور التشفير</string>
+    <string name="password">كلمة المرور</string>
+    <string name="at_least_8_characters_including_one_upper_case_letter_one_lower_case_letter_one_number_and_one_symbol">على الأقل 8 أحرف، بما في ذلك حرف كبير وحرف صغير ورقم ورمز.</string>
+    <string name="do_not_lose_this_password_as_trust_wallet_cannot_reset_it_for_you">لا تفقد هذه الكلمة السرية، حيث لا يمكن لـ PlutoPe إعادة تعيينها لك!</string>
+    <string name="enter_the_financial_freedom">ادخل حرية التمويل</string>
+    <string name="never_share_your_secret_phrase_with_anyone">لا تشارك عبارتك السرية مع أي شخص</string>
+    <string name="your_12_word_secret_phrase_is_only_way_to_recover_your_wallet_please_store_it_securely">عبارتك السرية المكونة من 12 كلمة هي الطريقة الوحيدة لاستعادة محفظتك. يرجى تخزينها بشكل آمن!</string>
+    <string name="confirm_encryption_password">تأكيد كلمة مرور التشفير</string>
+    <string name="confirm">تأكيد</string>
+    <string name="confirm_password_did_not_match_with_password">لم يتطابق تأكيد كلمة المرور مع كلمة المرور!</string>
+    <string name="copy">نسخ</string>
+    <string name="never_share_your_secret_phrase_with_anyone_store_it_securely">لا تشارك عبارتك السرية مع أي شخص، قم بتخزينها بشكل آمن!</string>
+    <string name="verify_secret_phrase">تحقق من العبارة السرية</string>
+    <string name="tap_the_words_to_put_them_next_to_each_other_in_the_correct_order">اضغط على الكلمات لوضعها بجوار بعضها البعض بالترتيب الصحيح.</string>
+    <string name="done">تم</string>
+    <string name="invalid_order_contain">ترتيب غير صالح. حاول مرة أخرى!</string>
+    <string name="spend_your_crypto_anywhere_in_the_world_with_plutope_debit_card" translatable="false">انفق عملاتك الرقمية في أي مكان في العالم باستخدام بطاقة Plutope الائتمانية.</string>
+    <string name="multi_chain_amp_lightning_fast" translatable="false"><![CDATA[متعدد السلاسل وسريع بالبرق]]></string>
+    <string name="one_wallet_amp_unlimited_possibilities"><![CDATA[محفظة واحدة وإمكانيات غير محدودة]]></string>
+    <string name="wallet">المحفظة</string>
+    <string name="current_balance">الرصيد الحالي</string>
+    <string name="nfts">NFTs</string>
+    <string name="assets">الأصول</string>
+    <string name="search">البحث...</string>
+    <string name="search_">البحث</string>
+    <string name="send">إرسال</string>
+    <string name="your_coins">عملاتك</string>
+    <string name="all_coins">كل العملات</string>
+    <string name="receive">استلام</string>
+    <string name="swap">تبديل</string>
+    <string name="initiated">تم البدء</string>
+    <string name="swapping">قيد التبديل</string>
+    <string name="success">نجاح</string>
+    <string name="you_pay">أنت تدفع</string>
+    <string name="balance">الرصيد</string>
+    <string name="ethereum">إيثيريوم</string>
+    <string name="wallets">المحافظ</string>
+    <string name="security">الأمان</string>
+    <string name="push_notifications">إشعارات الدفع</string>
+    <string name="help_center">مركز المساعدة</string>
+    <string name="about_plutope">حول PlutoPe</string>
+    <string name="card">بطاقة</string>
+    <string name="expire">تنتهي</string>
+    <string name="transactions">المعاملات</string>
+    <string name="notifications">الإشعارات</string>
+    <string name="_new">جديد</string>
+    <string name="earlier">سابقًا</string>
+    <string name="buy_bitcoin">شراء بيتكوين</string>
+    <string name="third_party_provider">مزود خدمة من طرف ثالث</string>
+    <string name="mercuryo">Mercuryo</string>
+    <string name="providers">مزودو الخدمة</string>
+    <string name="currency">العملة</string>
+    <string name="receive_bitcoin">استلام بيتكوين</string>
+    <string name="no_nfts_yet">لا توجد NFT حتى الآن</string>
+    <string name="add_more">إضافة المزيد</string>
+    <string name="enable">تمكين</string>
+    <string name="bitcoin">بيتكوين</string>
+    <string name="about_bitcoin">حول بيتكوين</string>
+    <string name="market_cap">رأس المال السوقي</string>
+    <string name="volume_24h">الحجم (24 ساعة)</string>
+    <string name="circulating_supply">الإمداد الحالي</string>
+    <string name="total_supply">الإمداد الكلي</string>
+
+
+    <string name="well_done">عمل رائع!</string>
+    <string name="add_custom_token">إضافة رمز مخصص</string>
+    <string name="network">الشبكة</string>
+    <string name="add">إضافة</string>
+    <string name="contract_address">عنوان العقد</string>
+    <string name="name">الاسم</string>
+    <string name="symbol">الرمز</string>
+    <string name="decimals">الأرقام العشرية</string>
+    <string name="what_is_custom_token">ما هو الرمز المخصص؟</string>
+    <string name="paste">لصق</string>
+    <string name="multi_coin_wallets">محافظ متعددة للعملات</string>
+    <string name="transfer">نقل</string>
+    <string name="date">التاريخ</string>
+    <string name="status">الحالة</string>
+    <string name="recipient">المستلم</string>
+    <string name="network_fee">رسوم الشبكة</string>
+    <string name="nonce" translatable="false">Nonce</string>
+    <string name="more_details">مزيد من التفاصيل</string>
+    <string name="import_multi_coin_wallet">استيراد محفظة متعددة العملات</string>
+    <string name="phrase">عبارة</string>
+    <string name="typically_12_sometimes_18_24_words_seprated_by_single_spaces">عادةً 12 (أحيانًا 18، 24) كلمة مفصولة بمسافات فارغة واحدة</string>
+    <string name="what_is_secret_phrase">ما هي العبارة السرية؟</string>
+    <string name="import_">استيراد</string>
+    <string name="plutope_locked" translatable="false">مقفلة بواسطة PlutoPe</string>
+    <string name="multi_coin_wallet" translatable="false">محفظة متعددة العملات</string>
+    <string name="restore_your_wallet">استعادة محفظتك</string>
+    <string name="restore_your_wallet_with_the_12_word_secret_phrase_or_with_icloud" translatable="false">استعادة محفظتك بواسطة العبارة السرية المكونة من 12 كلمة أو من خلال Google Drive.</string>
+    <string name="restore_your_wallet_with_the_12_word_secret_phrase">استعادة محفظتك بواسطة العبارة السرية المكونة من 12 كلمة.</string>
+    <string name="restore_with_google_drive">استعادة بواسطة Google Drive</string>
+    <string name="restore_with_secret_phrase">استعادة بواسطة العبارة السرية</string>
+    <string name="app_lock">قفل التطبيق</string>
+    <string name="auto_lock">القفل التلقائي</string>
+    <string name="lock_method">طريقة القفل</string>
+    <string name="transaction_signing">توقيع العملية</string>
+    <string name="security_scanner">ماسح الأمان</string>
+    <string name="choose_the_backup_for_the_wallet_you_want_to_restore">اختر النسخة الاحتياطية للمحفظة التي تريد استعادتها</string>
+    <string name="if_you_don_t_see_your_backup_try_to_sync_your_google_drive">إذا لم تر النسخة الاحتياطية الخاصة بك، حاول مزامنة Google Drive الخاص بك.</string>
+    <string name="select_wallet_backup" translatable="false">اختر نسخة احتياطية للمحفظة</string>
+    <string name="address_or_naming_service">العنوان أو خدمة التسمية</string>
+    <string name="amount_btc" translatable="false">المبلغ BTC</string>
+    <string name="max" translatable="false">الحد الأقصى</string>
+    <string name="you_get">ستحصل عليه</string>
+    <string name="no_transactions">لا توجد عمليات حتى الآن</string>
+    <string name="buy">شراء</string>
+    <string name="enter_encryption_password" translatable="false">أدخل كلمة مرور التشفير</string>
+    <string name="please_review_the_plutope_terms_of_services_and_privacy_policy">الرجاء مراجعة شروط خدمة PlutoPe وسياسة الخصوصية.</string>
+    <string name="i_ve_read_and_accept_the_terms_of_services_and_privacy_policy" translatable="false">لقد قرأت ووافقت على شروط الخدمة وسياسة الخصوصية.</string>
+    <string name="receive_nft">استلام NFT</string>
+    <string name="best_price">أفضل سعر</string>
+    <string name="your_secret_phrase_is_the_master_key_to_your_wallet_and_anyone_that_has_it_can_access_your_crypto_never_share_it">عبارتك السرية هي المفتاح الرئيسي لمحفظتك، وأي شخص يمتلكها يمكنه الوصول إلى عملتك الرقمية، لا تشاركها أبدًا!</string>
+    <string name="hide_recovery_phrase" translatable="false">إخفاء عبارة الاستعادة</string>
+    <string name="show_recovery_phrase">عرض عبارة الاستعادة</string>
+    <string name="never_share_your_secret_key_with_anyone_for_any_reason_treat_it_as_you_would_treat_your_most_valuable_possession_remember_plutope_will_never_ask_you_for_your_secret_key">لا تشارك أبدًا مفتاحك السري مع أي شخص، لأي سبب كان. عامله كما تعامل أغلى ممتلكاتك. تذكر، لن يطلب منك PlutoPe مفتاحك السري أبدًا.</string>
+    <string name="just_top_up_your_crypto_in_your_card_and_you_are_good_to_go_your_plutope_card_works_at_all_merchants_that_take_mastercard">قم بتعبئة رصيد عملتك الرقمية في بطاقتك وستكون جاهزًا. تعمل بطاقة PlutoPe في جميع التجار الذين يقبلون بطاقات Mastercard.</string>
+    <string name="just_top_up_your_card_with_crypto_and_you_are_good_to_go_your_plutope_card_works_at_all_merchants_that_take_mastercard">قم بتعبئة بطاقتك بالعملة الرقمية وستكون جاهزًا. تعمل بطاقة PlutoPe في جميع التجار الذين يقبلون بطاقات Mastercard.</string>
+    <string name="one_wallet_for_all_your_needs" translatable="false">محفظة واحدة لكل احتياجاتك</string>
+    <string name="transact_stake_withdraw_buy_and_sell_your_cryptocurrencies_with_ease" translatable="false">قم بإجراء معاملاتك، وقم بالرهان، وقم بالسحب، وقم بالشراء والبيع لعملاتك الرقمية بسهولة.</string>
+    <string name="anyone_can_create_a_token_including_fake_versions_of_existing_tokens_learn_about_scams_and_security_risks">يمكن لأي شخص إنشاء رمز، بما في ذلك النسخ المزيفة للرموز الحالية. تعرف على الاحتيالات ومخاطر الأمان.</string>
+    <string name="enter_passcode">أدخل رمز المرور</string>
+    <string name="lock_methods">طرق القفل</string>
+    <string name="exceeds_balance">تجاوز الرصيد</string>
+    <string name="you_need_to_withdraw_0_01_or_more">يجب أن تقوم بالسحب بقيمة 0.01 أو أكثر</string>
+    <string name="adds_an_extra_layer_of_security_when_using_the_app">يضيف طبقة إضافية من الأمان عند استخدام التطبيق</string>
+    <string name="delete">حذف</string>
+    <string name="contacts">جهات الاتصال</string>
+    <string name="add_contact">إضافة جهة اتصال</string>
+    <string name="add_this_address_to_your_address_book">أضف هذا العنوان إلى دفتر العناوين الخاص بك</string>
+    <string name="add_to_address_book">إضافة إلى دفتر العناوين</string>
+    <string name="enter_an_alias">أدخل الاسم المستعار</string>
+    <string name="save">حفظ</string>
+    <string name="public_address_0x">العنوان العام (0x)</string>
+    <string name="backup_options">خيارات النسخ الاحتياطي</string>
+    <string name="drive_backup" translatable="false">نسخ احتياطي إلى Drive</string>
+    <string name="manual_backup">نسخ احتياطي يدوي</string>
+    <string name="main_wallet">المحفظة الرئيسية</string>
+    <string name="learn_more">تعلم المزيد</string>
+    <string name="delete_backup">حذف النسخ الاحتياطي</string>
+    <string name="get_card">احصل على بطاقة</string>
+    <string name="sign_up_login">التسجيل/تسجيل الدخول</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="forgot_password">هل نسيت كلمة المرور؟</string>
+    <string name="payment">الدفع</string>
+    <string name="personal_details" translatable="false">تفاصيل\nشخصية</string>
+    <string name="membership">العضوية</string>
+    <string name="country_of_residence">بلد الإقامة *</string>
+    <string name="address_1">العنوان 1 *</string>
+    <string name="address_2">العنوان 2 *</string>
+    <string name="city">المدينة *</string>
+    <string name="postcode">الرمز البريدي *</string>
+    <string name="add_address">إضافة عنوان</string>
+    <string name="personal_information">المعلومات الشخصية</string>
+    <string name="delete_wallet">حذف المحفظة</string>
+    <string name="are_you_sure_you_would_like_to_delete_this_wallet">هل أنت متأكد أنك ترغب في حذف هذه المحفظة؟</string>
+    <string name="make_sure_you_have_backup_of_your_wallet">تأكد من أن لديك نسخة احتياطية من محفظتك.</string>
+
+    <string name="are_you_sure_you_want_to_delete_cloud_backup">هل أنت متأكد أنك تريد حذف نسخة الاحتياطي على Drive؟</string>
+    <string name="manual_backup_required">النسخ الاحتياطي اليدوي مطلوب</string>
+    <string name="before_deleting_your_icloud_backup_ensure_a_manual_backup_is_in_place_for_your_data_s_security">قبل حذف نسخة الاحتياطي على Drive، تأكد من وجود نسخة احتياطية يدوية لأمان بياناتك.</string>
+    <string name="first_name_legal">الاسم الأول (القانوني) *</string>
+    <string name="last_name_legal">اسم العائلة (القانوني) *</string>
+    <string name="date_of_birth">تاريخ الميلاد *</string>
+    <string name="email_address">عنوان البريد الإلكتروني *</string>
+    <string name="mobile_phone">الهاتف المحمول *</string>
+    <string name="password_">كلمة المرور *</string>
+    <string name="confirm_password_">تأكيد كلمة المرور *</string>
+    <string name="preferred_language">اللغة المفضلة</string>
+    <string name="i_have_read_and_agree_to_the_membership_agreement" translatable="false">لقد قرأت ووافقت على اتفاقية العضوية</string>
+    <string name="tap_to_hold_view_phrases">اضغط واستمر لعرض العبارات</string>
+    <string name="no_contacts_yet">لا يوجد لديك أي جهات اتصال حتى الآن</string>
+    <string name="card_design">تصميم البطاقة</string>
+    <string name="if_you_loos_access_to_this_device_your_fund_will_be_lost_unless_you_back_up">إذا فقدت الوصول إلى هذا الجهاز، سيتم فقدان الأموال ما لم تقم بالنسخ الاحتياطي!</string>
+    <string name="enter_the_encryption_password_you_created_for_your_google_drive_secret_phrase_backup">أدخل كلمة المرور للتشفير التي أنشأتها لنسخة الاحتياطي بواسطة Google Drive لعبارة السرية.</string>
+    <string name="this_password_is_used_to_protect_your_wallet_and_provide_access_to_the_browser_extension_it_cannot_be_reset_and_is_separate_from_your_mobile_wallet">تُستخدم هذه كلمة المرور لحماية محفظتك وتوفير الوصول إلى ملحق المتصفح. لا يمكن إعادة تعيينها وهي منفصلة عن محفظتك على الجوال.</string>
+    <string name="basic">أساسي</string>
+    <string name="professional">احترافي</string>
+    <string name="business">تجاري</string>
+    <string name="platinum_elite">بلاتينيوم إليت</string>
+    <string name="plastic_global_payment_card">بطاقة الدفع العالمية البلاستيكية</string>
+    <string name="daily_card_top_up">تعبئة البطاقة اليومية</string>
+    <string name="atm_withdrawals">سحب نقدي من الصراف الآلي</string>
+    <string name="crypto_liquidation">تحويل العملات الرقمية إلى نقود</string>
+    <string name="global_support">الدعم العالمي</string>
+    <string name="_24_7_via_online_chat">24/7 عبر الدردشة عبر الإنترنت</string>
+    <string name="get_basic_card">احصل على البطاقة الأساسية</string>
+    <string name="get_professional_card">احصل على البطاقة الاحترافية</string>
+    <string name="card_currency">عملة البطاقة</string>
+    <string name="shipping">الشحن*</string>
+    <string name="pay_today">ادفع اليوم</string>
+    <string name="crypto" translatable="false">العملات الرقمية</string>
+    <string name="shippings">الشحن</string>
+    <string name="your_card_will_be_shipped_to_the_address_provided">سيتم شحن بطاقتك إلى العنوان المقدم.</string>
+    <string name="apply_discount_code">تطبيق كود الخصم</string>
+    <string name="discount_code">كود الخصم</string>
+    <string name="apply">تطبيق</string>
+    <string name="select_payment_method">اختيار وسيلة الدفع</string>
+    <string name="details">تفاصيل</string>
+    <string name="get_a_physical_or_virtual_card_in_minutes_that_is_accepted_at_more_than_42_million_merchants_worldwide" translatable="false">احصل على بطاقة فيزا في دقائق يتم قبولها في أكثر من 42 مليون تاجر في جميع أنحاء العالم.</string>
+    <string name="the_plutope_wallet_operates_across_multiple_chains_delivering_lightning_fast_transactions_no_more_manual_network_selection" translatable="false">تعمل محفظة Plutope عبر عدة سلاسل، مما يوفر معاملات سريعة. لا داعي لاختيار الشبكة يدويًا.</string>
+    <string name="forgot_password_">نسيت كلمة المرور</string>
+    <string name="restore_wallet">استعادة المحفظة</string>
+
+    <string name="from">من</string>
+    <string name="confirm_swap">تأكيد التبديل</string>
+    <string name="provider_fee">رسوم الخدمة</string>
+    <string name="preview_swap">معاينة التبديل</string>
+    <string name="ok">موافق</string>
+    <string name="your_tokens">رموزك</string>
+    <string name="okt_chain" translatable="false">سلسلة OKT</string>
+    <string name="invalid_address">عنوان غير صالح</string>
+
+    <string name="buy_btc" translatable="false">شراء بيتكوين</string>
+    <string name="max_slipage">أقصى انزلاق</string>
+    <string name="_0_01" translatable="false">0.1%</string>
+    <string name="graph_details_not_available">تفاصيل الرسم البياني غير متاحة</string>
+
+    <string name="to">إلى</string>
+    <string name="max_total">الحد الأقصى الإجمالي</string>
+    <string name="asset">الأصول</string>
+    <string name="more">المزيد</string>
+    <string name="advanced">متقدم</string>
+    <string name="gas_price_gwei">سعر الغاز (جيوي)</string>
+    <string name="gas_limit">حد الغاز</string>
+
+    <string name="transaction_data_optional" translatable="false">بيانات المعاملة (اختياري)</string>
+    <string name="max_fee_gwei">أقصى رسوم (جيوي)</string>
+    <string name="miner_tip_gwei">تلميح العامل (جيوي)</string>
+    <string name="using_the_best_quote">استخدام أفضل عرض</string>
+    <string name="best_quote">أفضل عرض</string>
+    <string name="overall_value" translatable="false">القيمة الإجمالية</string>
+    <string name="gas_price">سعر الغاز</string>
+
+    <string name="language">اللغة</string>
+    <string name="your_recovery_phrase">عبارة الاسترداد الخاصة بك</string>
+    <string name="active">نشط</string>
+    <string name="not_active">غير نشط</string>
+    <string name="settings" translatable="false">الإعدادات</string>
+    <string name="english" translatable="false">الإنجليزية</string>
+    <string name="thai" translatable="false">التايلاندية</string>
+    <string name="hindi" translatable="false">الهندية</string>
+    <string name="advanced_options">خيارات متقدمة</string>
+    <string name="leverage_gas_fee">رفع رسوم الغاز</string>
+    <string name="send_bitcoin">إرسال البيتكوين</string>
+    <string name="type_t_symbol" translatable="false">%1$s %2$s</string>
+    <string name="coin_margin" translatable="false">" %1$s"</string>
+    <string name="margins" translatable="false">~%1$s%2$s</string>
+    <string name="wallet_connect">Wallet Connect</string>
+    <string name="add_new_connection">Add new connection</string>
+    <string name="approve">Approve</string>
+    <string name="remove_connection">Remove Connection</string>
+    <string name="connection_detail">Connection Detail</string>
+    <string name="connection_dapp">Connection DApp</string>
+    <string name="connect">Connect</string>
+    <string name="dapp">DApp</string>
+    <string name="website_flagged">Website flagged</string>
+    <string name="search_or_type_web_address">Search or type web address</string>
+    <string name="request_for_payment">Request for payment</string>
+    <string name="sign">Sign</string>
+    <string name="signature_request">Signature Request</string>
+    <string name="now_you_are_online">Now you are online.</string>
+    <string name="no_internet_connection">No Internet connection.</string>
+</resources>

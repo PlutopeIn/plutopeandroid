@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="eNSListModel"
+            type="com.app.plutope.ui.fragment.ens.ENSListModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20mdp"
+        android:layout_marginVertical="@dimen/_4mdp"
+        android:background="@drawable/bg_corner_radius_10_border"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_domain_image"
+            android:layout_width="@dimen/_40mdp"
+            android:layout_height="@dimen/_40mdp"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:src="@drawable/img_ens"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <TextView
+            android:id="@+id/txt_domain_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20mdp"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:fontFamily="@font/quicksand_semibold"
+            android:text="@{eNSListModel.data.name}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16mdp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@id/btn_buy"
+            app:layout_constraintStart_toEndOf="@id/img_domain_image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Domain name" />
+
+        <TextView
+            android:id="@+id/txt_domain_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4mdp"
+            android:layout_marginBottom="@dimen/_10mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:text="@{eNSListModel.data.availability.status}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="@id/txt_domain_name"
+            app:layout_constraintStart_toStartOf="@id/txt_domain_name"
+            app:layout_constraintTop_toBottomOf="@id/txt_domain_name"
+            tools:text="Domain status" />
+
+        <TextView
+            android:id="@+id/txt_domain_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4mdp"
+            android:layout_marginBottom="@dimen/_10mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:textColor="@color/gray_767691"
+            android:textSize="@dimen/_12msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/txt_domain_status"
+            app:layout_constraintStart_toStartOf="@id/txt_domain_status"
+            app:layout_constraintTop_toBottomOf="@id/txt_domain_status"
+            tools:text="Domain status" />
+
+
+        <TextView
+            android:id="@+id/btn_buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10mdp"
+            android:background="@drawable/button_gradient_26"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_25mdp"
+            android:paddingVertical="@dimen/_6mdp"
+            android:text="@string/buy"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_10msp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

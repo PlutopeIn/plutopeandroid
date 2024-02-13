@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_8mdp"
+            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardCornerRadius="@dimen/_17mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_inner_dialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constrainedHeight="true">
+                <ImageView
+                    android:id="@+id/img_warning"
+                    android:layout_width="@dimen/_82mdp"
+                    android:layout_height="@dimen/_82mdp"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/_25mdp"
+                    android:src="@drawable/ic_warning_full"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="@dimen/_20mdp"
+                    android:layout_marginTop="@dimen/_31mdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:gravity="center"
+                    tools:text="Are you sure you would like to delete this wallet?"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_20msp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/img_warning"/>
+
+
+                <TextView
+                    android:id="@+id/txt_sub_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:layout_marginHorizontal="@dimen/_10mdp"
+                    tools:text="Make sure you have backup of your wallet."
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_13msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title" />
+
+
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_cancel"
+                    style="@style/wallet_button_gradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50mdp"
+                    android:gravity="center"
+                    android:layout_marginEnd="@dimen/_30mdp"
+                    android:text="@string/cancel"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="@id/btn_delete"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_delete"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="@id/txt_title"
+                    app:layout_constraintTop_toTopOf="@id/btn_delete" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_delete"
+                    style="@style/button_border_red"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50mdp"
+                    android:layout_marginTop="@dimen/_30mdp"
+                    android:layout_marginBottom="@dimen/_46mdp"
+                    android:gravity="center"
+                    android:text="@string/delete"
+                    android:textAllCaps="false"
+                    android:textColor="@color/red"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/txt_title"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/btn_cancel"
+                    app:layout_constraintTop_toBottomOf="@id/txt_sub_title" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

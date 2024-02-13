@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="buyBTCViewModel"
+            type="com.app.plutope.ui.fragment.transactions.buy.buy_btc.BuyBTCViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            tools:context=".ui.fragment.transactions.buy.buy_btc.BuyBTC">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="@dimen/_30mdp"
+                    android:layout_height="@dimen/_30mdp"
+                    android:layout_marginStart="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:padding="@dimen/_8mdp"
+                    android:src="@drawable/ic_back_arrow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_toolbar_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_80mdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:gravity="center_horizontal"
+                    android:maxLines="1"
+                    android:text="@string/buy_btc"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18mdp"
+                    app:layout_constraintBottom_toBottomOf="@id/img_back"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/img_back" />
+
+                <TextView
+                    android:id="@+id/txt_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_15mdp"
+                    android:background="@drawable/bg_corner_radius_10"
+                    android:drawablePadding="@dimen/_8mdp"
+                    android:fontFamily="@font/quicksand_light"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/_12mdp"
+                    android:paddingStart="@dimen/_10mdp"
+                    android:paddingEnd="@dimen/_9mdp"
+                    android:text="USD"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13msp"
+                    app:drawableEndCompat="@drawable/ic_forword_new"
+                    app:layout_constraintBottom_toBottomOf="@id/img_back"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/img_back" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:minWidth="@dimen/_210mdp"
+                android:minHeight="@dimen/_210mdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_toolbar">
+
+
+                <ImageView
+                    android:layout_width="@dimen/_210mdp"
+                    android:layout_height="@dimen/_210mdp"
+                    android:background="@drawable/img_buy_btc_circle"
+                    android:minWidth="@dimen/_210mdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_currency_symbole"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10mdp"
+                    android:background="@null"
+                    android:focusable="false"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:maxLength="1"
+                    android:textColor="@color/white"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_40msp"
+                    app:layout_constraintBottom_toBottomOf="@id/edt_price"
+                    app:layout_constraintEnd_toStartOf="@id/edt_price"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/edt_price"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="$" />
+
+
+                <EditText
+                    android:id="@+id/edt_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:background="@null"
+                    android:focusable="false"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:inputType="numberDecimal"
+                    android:maxLength="11"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_40msp"
+                    android:ellipsize="end"
+                    app:layout_constraintBottom_toTopOf="@id/txt_coin_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/txt_currency_symbole"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="222222222222" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_coin_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10mdp"
+                    android:layout_marginTop="@dimen/_7mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_16msp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/edt_price"
+                    app:layout_constraintStart_toStartOf="@id/txt_currency_symbole"
+                    app:layout_constraintTop_toBottomOf="@id/edt_price"
+                    tools:text="~0.001234BTC" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2mdp"
+                    android:layout_marginTop="@dimen/_2mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:text="Not available!"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/_16msp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/edt_price"
+                    app:layout_constraintStart_toStartOf="@id/txt_currency_symbole"
+                    app:layout_constraintTop_toBottomOf="@id/txt_coin_margin"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <ProgressBar
+                    android:id="@+id/progress_amount"
+                    android:layout_width="@dimen/_20mdp"
+                    android:layout_height="@dimen/_20mdp"
+                    android:indeterminateTint="@color/blue_00C6FB"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/edt_price"
+                    app:layout_constraintStart_toStartOf="@id/txt_currency_symbole"
+                    app:layout_constraintTop_toBottomOf="@id/txt_coin_margin" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_provider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:background="@drawable/bg_corner_radius_10"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_price">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_provider_view"
+                    android:layout_width="@dimen/_42mdp"
+                    android:layout_height="@dimen/_42mdp"
+                    android:layout_marginStart="@dimen/_12mdp"
+                    android:src="@drawable/img_provider_hand"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="@dimen/_1mdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_provider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_9mdp"
+                    android:layout_marginTop="@dimen/_14mdp"
+                    android:layout_marginEnd="@dimen/_5mdp"
+                    android:fontFamily="@font/quicksand_semibold"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toStartOf="@id/txt_best_price"
+                    app:layout_constraintStart_toEndOf="@id/img_provider_view"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_best_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_5mdp"
+                    android:layout_marginTop="@dimen/_14mdp"
+                    android:layout_marginEnd="@dimen/_12mdp"
+                    android:fontFamily="@font/quicksand_semibold"
+                    android:gravity="end"
+                    android:text="@string/best_price"
+                    android:textColor="@color/blue_00C6FB"
+                    android:textSize="@dimen/_13msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/txt_provider"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_provider_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4mdp"
+                    android:layout_marginBottom="@dimen/_14mdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="@string/third_party_provider"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_12msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/txt_provider"
+                    app:layout_constraintStart_toStartOf="@id/txt_provider"
+                    app:layout_constraintTop_toBottomOf="@id/txt_provider"
+
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.app.plutope.custom_views.CustomKeyboardView
+                android:id="@+id/keyboardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toTopOf="@id/btn_next"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_provider"
+                app:layout_constraintVertical_bias="1"
+
+                />
+
+            <Button
+                android:id="@+id/btn_next"
+                style="@style/wallet_button_gradient"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginTop="@dimen/_26mdp"
+                android:layout_marginBottom="@dimen/_30mdp"
+                android:text="@string/next"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/keyboardView"
+                app:layout_constraintVertical_bias="1"
+
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</layout>

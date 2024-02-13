@@ -1,0 +1,147 @@
+package com.app.plutope.utils.walletConnection.compose_ui
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+@Composable
+fun Buttons(
+    allowButtonColor: Color,
+    modifier: Modifier = Modifier,
+    onDecline: () -> Unit = {},
+    onAllow: () -> Unit = {}
+) {
+    Row(modifier = modifier) {
+        Spacer(modifier = Modifier.width(18.dp))
+        CancelButton(
+            modifier = Modifier
+                .weight(1f)
+                .height(46.dp)
+                .clickable { onDecline() }
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        ConfirmButton(
+            allowButtonColor,
+            modifier = Modifier
+                .weight(1f)
+                .height(46.dp)
+                .clickable { onAllow() }
+        )
+        Spacer(modifier = Modifier.width(20.dp))
+    }
+}
+
+
+@Composable
+fun CancelButton(modifier: Modifier = Modifier, backgroundColor: Color = Color(0xFFD6D6D6)) {
+    CancelButtonTopLevel(modifier = modifier, backgroundColor = backgroundColor) {
+        Cancel()
+    }
+}
+
+@Composable
+fun Cancel(modifier: Modifier = Modifier) {
+    Text(
+        text = "Cancel",
+        style = TextStyle(
+            fontSize = 20.0.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color(0xFF000000),
+        ),
+        modifier = modifier.wrapContentHeight(align = Alignment.CenterVertically)
+    )
+}
+
+@Composable
+fun CancelButtonTopLevel(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color,
+    content: @Composable () -> Unit,
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .padding(
+                PaddingValues(
+                    start = 8.0.dp,
+                    top = 0.0.dp,
+                    end = 8.0.dp,
+                    bottom = 1.0.dp
+                )
+            )
+            .clip(RoundedCornerShape(20.dp))
+            .background(backgroundColor)
+
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun ConfirmButton(allowButtonColor: Color, modifier: Modifier = Modifier) {
+    ConfirmButtonTopLevel(allowButtonColor, modifier = modifier) {
+        Confirm()
+    }
+}
+
+@Composable
+fun Confirm(modifier: Modifier = Modifier) {
+    Text(
+        text = "Confirm",
+        style = TextStyle(
+            fontSize = 20.0.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color(
+                alpha = 255,
+                red = 255,
+                green = 255,
+                blue = 255
+            ),
+        ),
+        modifier = modifier.wrapContentHeight(align = Alignment.CenterVertically)
+    )
+}
+
+@Composable
+fun ConfirmButtonTopLevel(
+    allowButtonColor: Color,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .padding(
+                start = 8.0.dp,
+                top = 0.0.dp,
+                end = 8.0.dp,
+                bottom = 1.0.dp
+            )
+            .clip(RoundedCornerShape(20.dp))
+            .background(allowButtonColor)
+            .fillMaxWidth(1.0f)
+            .fillMaxHeight(1.0f)
+    ) {
+        content()
+    }
+}

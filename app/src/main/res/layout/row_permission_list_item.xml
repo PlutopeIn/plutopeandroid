@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.app.plutope.ui.fragment.wallet_connection.walletConnectionList.Permission" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_3mdp">
+
+        <ImageView
+            android:id="@+id/img_permission_icon"
+            android:layout_width="@dimen/_18mdp"
+            android:layout_height="@dimen/_18mdp"
+            android:layout_marginEnd="@dimen/_5mdp"
+            android:src="@drawable/ic_check_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_permission_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14msp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_permission_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="this is permission" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

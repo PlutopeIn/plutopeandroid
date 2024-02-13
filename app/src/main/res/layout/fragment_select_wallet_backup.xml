@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="selectWalletBackupViewModel"
+            type="com.app.plutope.ui.fragment.wallet.select_wallet_backup.SelectWalletBackupViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/const_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            tools:context=".ui.fragment.wallet.select_wallet_backup.SelectWalletBackup">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_23mdp"
+                android:background="@drawable/background_warning"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <TextView
+                    android:id="@+id/txt_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_21mdp"
+                    android:layout_marginVertical="@dimen/_19mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:text="@string/choose_the_backup_for_the_wallet_you_want_to_restore"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_wallet_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_15mdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_warning"
+                tools:listitem="@layout/row_wallet_back_up_list_item"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_instruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_15mdp"
+                android:fontFamily="@font/quicksand_regular"
+                android:lineSpacingExtra="@dimen/_6mdp"
+                android:text="@string/if_you_don_t_see_your_backup_try_to_sync_your_google_drive"
+                android:textColor="@color/purple_7576D"
+                android:textSize="@dimen/_10msp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="@id/rv_wallet_list"
+                app:layout_constraintStart_toStartOf="@id/rv_wallet_list"
+                app:layout_constraintTop_toBottomOf="@id/rv_wallet_list" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

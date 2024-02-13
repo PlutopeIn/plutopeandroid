@@ -1,0 +1,1595 @@
+package com.app.plutope.ui.fragment.transactions.swap
+
+import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
+import androidx.core.os.postDelayed
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.app.plutope.BR
+import com.app.plutope.R
+import com.app.plutope.databinding.FragmentSwapBinding
+import com.app.plutope.dialogs.CoinSearchBottomSheetDialog
+import com.app.plutope.dialogs.SwapProgressDialog
+import com.app.plutope.model.AvailablePairsResponseModel
+import com.app.plutope.model.CoinCode
+import com.app.plutope.model.Data1
+import com.app.plutope.model.ExchangeRequestModel
+import com.app.plutope.model.PreviewSwapDetail
+import com.app.plutope.model.SwapExchangeStatus
+import com.app.plutope.model.Tokens
+import com.app.plutope.model.Wallet
+import com.app.plutope.ui.base.BaseActivity
+import com.app.plutope.ui.base.BaseFragment
+import com.app.plutope.ui.fragment.providers.ProviderModel
+import com.app.plutope.ui.fragment.token.TokenViewModel
+import com.app.plutope.ui.fragment.transactions.buy.graph.GraphDetailViewModel
+import com.app.plutope.ui.fragment.transactions.swap.previewSwap.PreviewSwapFragment.Companion.KEY_BUNDLE_PREVIEWSWAP
+import com.app.plutope.utils.coinTypeEnum.CoinType
+import com.app.plutope.utils.constant.COIN_GEKO_MARKET_API
+import com.app.plutope.utils.constant.DEFAULT_CHAIN_ADDRESS
+import com.app.plutope.utils.constant.EXCHANGE_API
+import com.app.plutope.utils.constant.EXCHANGE_STATUS_API
+import com.app.plutope.utils.constant.KIP_20
+import com.app.plutope.utils.convertScientificToBigDecimal
+import com.app.plutope.utils.convertWeiToEther
+import com.app.plutope.utils.customSnackbar.CustomSnackbar
+import com.app.plutope.utils.extras.PreferenceHelper
+import com.app.plutope.utils.getActualDigits
+import com.app.plutope.utils.getNetworkForRangoExchange
+import com.app.plutope.utils.getNetworkString
+import com.app.plutope.utils.hideLoader
+import com.app.plutope.utils.loge
+import com.app.plutope.utils.network.NetworkState
+import com.app.plutope.utils.roundTo
+import com.app.plutope.utils.safeNavigate
+import com.app.plutope.utils.setBalanceText
+import com.app.plutope.utils.setProgress
+import com.app.plutope.utils.showLoader
+import com.app.plutope.utils.showLoaderAnyHow
+import com.app.plutope.utils.showSnackBar
+import com.app.plutope.utils.showToast
+import com.app.plutope.utils.weiToEther
+import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.web3j.utils.Convert
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.math.RoundingMode
+
+@AndroidEntryPoint
+class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
+    private var storedDecimalInRango: Int? = 18
+    private var routerListData: Data1? = null
+    private var dexCotractAddress: String? = ""
+    private lateinit var tokenListDialog: CoinSearchBottomSheetDialog
+    private val swapViewModel: SwapViewModel by viewModels()
+    private lateinit var tokenModel: Tokens
+    private val args: SwapArgs by navArgs()
+    private var fromNetwork: String? = ""
+    private var toNetwork: String? = ""
+    private var isFromGet: Boolean = false
+    private var youPayObj = Tokens()
+    private var youGetObj = Tokens()
+    private var transactionID: String? = ""
+    private lateinit var URL_BY_ID: String
+    private val tokenViewModel: TokenViewModel by viewModels()
+    private var filterList: MutableList<Tokens> = mutableListOf()
+    private var indexPairApi: Int = 0
+    private var originalWidth: Int? = 0
+    private var originalHeight: Int? = 0
+    private var apiSuccessCount = 0
+    private val graphDetailViewModel: GraphDetailViewModel by viewModels()
+    private var isApiCalled = false
+    private var isProgrammaticChange = false
+
+    private var providerList: ArrayList<ProviderModel> = arrayListOf()
+
+    var selectedProvider = ProviderModel(coinCode = CoinCode.CHANGENOW)
+
+    private val handler = Handler(Looper.getMainLooper())
+    private var runnable: Runnable? = null
+    override fun getViewModel(): SwapViewModel {
+        return swapViewModel
+    }
+
+    override fun getBindingVariable(): Int {
+        return BR.swapViewModel
+    }
+
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_swap
+    }
+
+    override fun setupToolbarText(): String {
+        return getString(R.string.swap)
+    }
+
+    override fun setupUI() {
+
+
+        setFragmentResultListeners()
+        setProgress(viewDataBinding!!.root, 1, (requireActivity() as BaseActivity))
+        tokenModel = args.tokenModel
+        fromNetwork = getNetworkString(youPayObj.chain)
+        toNetwork = getNetworkString(youGetObj.chain)
+
+        originalWidth = viewDataBinding?.imgSwapChange?.width!!
+        originalHeight = viewDataBinding?.imgSwapChange?.height!!
+
+
+        setData()
+        addProviders(youPayObj)
+
+        setOnClickListner()
+
+        viewDataBinding!!.txtMax.setOnClickListener {
+            //viewDataBinding!!.edtYouPay.setText(String.format("%.6f", youPayObj.t_balance.toDouble()))
+            viewDataBinding!!.edtYouPay.setText(youPayObj.t_balance)
+        }
+
+        viewDataBinding!!.cardBestProvider.setOnClickListener {
+
+            DialogSwapProviderList.getInstance().show(
+                requireContext(),
+                providerList.filter { it.bestPrice.toDouble() > 0.0 } as MutableList<ProviderModel>,
+                youPayObj,
+                youGetObj,
+                object : DialogSwapProviderList.DialogOnClickBtnListner {
+                    @SuppressLint("SetTextI18n")
+                    override fun onSubmitClicked(model: ProviderModel) {
+                        selectedProvider = model
+                        requireActivity().runOnUiThread {
+
+                            /* viewDataBinding!!.progressAmount.visibility = GONE
+                             viewDataBinding!!.edtYouGet.visibility = VISIBLE*/
+
+                            viewDataBinding?.edtYouGet?.setText(
+                                String.format(
+                                    "%.7f",
+                                    selectedProvider.bestPrice.toDouble()
+                                ) + " ${youGetObj.t_symbol}"
+                            )
+
+
+                            val price = selectedProvider.bestPrice.toDouble()
+                                .toBigDecimal() * youGetObj.t_price!!.toBigDecimal()
+                            val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
+
+                            viewDataBinding!!.txtConvertedYouGet.text =
+                                if (selectedProvider.bestPrice.toDouble() > 0.0) "${
+                                    PreferenceHelper.getInstance().getSelectedCurrency()?.symbol
+                                }$formattedPrice" else {
+                                    ""
+                                }
+
+
+                        }
+
+
+                    }
+                })
+        }
+
+        tokenListDialog = CoinSearchBottomSheetDialog(
+            isFromGet,
+            true,
+            youPayObj.chain?.symbol?.lowercase(),
+            youPayObj.t_symbol.toString(),
+            youGetObj.chain?.symbol?.lowercase() ?: "bsc", payObj = youPayObj, getObj = youGetObj,
+            dialogDismissListner = { token, dismissed ->
+                lifecycleScope.launch(Dispatchers.Main) {
+                    requireContext().showLoaderAnyHow()
+                    token.callFunction.getBalance {
+
+                        token.t_balance = it.toString()
+
+                        requireActivity().runOnUiThread {
+                            viewDataBinding?.apply {
+                                edtYouPay.setText("")
+                                edtYouGet.setText("")
+                                viewDataBinding!!.txtConvertedYouPay.text = ""
+                                viewDataBinding!!.txtConvertedYouGet.text = ""
+
+                            }
+                            if (dismissed) {
+                                youGetObj = token
+
+                            } else {
+                                youPayObj = token
+                                addProviders(youPayObj)
+
+                            }
+                            hideLoader()
+                            setDetail()
+                        }
+
+                    }
+                }
+            })
+
+
+        if (youPayObj.t_type?.lowercase() != KIP_20.lowercase()) {
+            if (!isApiCalled) {
+                requireContext().showLoader()
+                exchangePair(indexPairApi)
+            }
+        } else {
+            lifecycleScope.launch(Dispatchers.IO) {
+
+                val tokenList = tokenViewModel.getAllTokensList() as MutableList<Tokens>
+                try {
+                    requireActivity().runOnUiThread {
+                        val newTokenList =
+                            tokenList.filter { it.t_type?.lowercase() == KIP_20.lowercase() && it.tokenId?.lowercase() != youPayObj.tokenId?.lowercase() }
+
+                        if (newTokenList.isNotEmpty()) {
+                            youGetObj = newTokenList[0]
+                            setDetail()
+                            filterList.clear()
+                            filterList.addAll(newTokenList)
+                            filterList.distinct()
+                            tokenListDialog.setSwapPairTokenList(filterList)
+                        }
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+
+    }
+
+    private fun addProviders(token: Tokens) {
+        providerList.clear()
+        if (token.chain?.coinType == CoinType.BITCOIN) {
+            providerList.add(ProviderModel("CHANGENOW", CoinCode.CHANGENOW))
+        } else {
+            providerList.add(ProviderModel("OKX", CoinCode.OKX))
+            providerList.add(ProviderModel("CHANGENOW", CoinCode.CHANGENOW))
+            providerList.add(ProviderModel("RANGO", CoinCode.RANGO))
+        }
+
+    }
+
+    private fun setFragmentResultListeners() {
+        setFragmentResultListener(KEY_BUNDLE_PREVIEWSWAP) { _, _ ->
+            isProgrammaticChange = false
+            tokenListDialog.setSwapPairTokenList(filterList)
+        }
+    }
+
+    private fun exchangePair(index: Int) {
+        val arrayChains = arrayOf("eth", "bsc", "matic", "btc")
+
+        swapViewModel.executeSwapPairResponse(
+            youPayObj.t_symbol.toString().lowercase(),
+            getNetworkString(youPayObj.chain),
+            arrayChains[index]
+        )
+    }
+
+    private fun setOnClickListner() {
+        viewDataBinding?.btnSwap?.setOnClickListener {
+            if (viewDataBinding?.edtYouPay?.text.toString()
+                    .isNotEmpty() && (viewDataBinding?.edtYouPay?.text.toString().toDouble() > 0.0)
+            ) {
+
+                /* findNavController().safeNavigate(
+                     SwapDirections.actionSwapToPreviewSwapFragment(
+                         PreviewSwapDetail(
+                             youPayObj,
+                             youGetObj,
+                             routerListData,
+                             viewDataBinding?.edtYouPay?.text.toString(),
+                             viewDataBinding?.edtYouGet?.text.toString(),
+                             viewDataBinding?.txtFirstPrice?.text.toString()
+                         ), selectedProvider
+                     )
+                 )*/
+
+
+
+                if ((viewDataBinding?.edtYouPay?.text.toString()
+                        .toDouble() > youPayObj.t_balance.toDouble())
+                ) {
+                    viewDataBinding?.root?.showSnackBar("You don't have enough ${youPayObj.t_symbol} in your account.")
+                } else {
+
+                    if (providerList.none { it.bestPrice.toDouble() > 0.0 }) {
+                        requireContext().showToast("Provider not found!")
+                    } else {
+
+
+                        when (selectedProvider.coinCode.name) {
+
+                            CoinCode.RANGO.name -> {
+                                if (selectedProvider.swapperFees.toBigDecimal() >= youPayObj.t_balance.toBigDecimal()) {
+                                    requireContext().showToast("You don't have enough ${youPayObj.t_symbol} in your account. make sure you have to (${selectedProvider.swapperFees} + ${selectedProvider.bestPrice}) = ${selectedProvider.swapperFees.toBigDecimal() + selectedProvider.bestPrice.toBigDecimal()} ${youPayObj.t_symbol} in your account")
+                                } else {
+                                    findNavController().safeNavigate(
+                                        SwapDirections.actionSwapToPreviewSwapFragment(
+                                            PreviewSwapDetail(
+                                                youPayObj,
+                                                youGetObj,
+                                                routerListData,
+                                                viewDataBinding?.edtYouPay?.text.toString(),
+                                                viewDataBinding?.edtYouGet?.text.toString(),
+                                                viewDataBinding?.txtFirstPrice?.text.toString()
+                                            ), selectedProvider
+                                        )
+                                    )
+
+                                }
+
+                            }
+
+                            else -> {
+                                findNavController().safeNavigate(
+                                    SwapDirections.actionSwapToPreviewSwapFragment(
+                                        PreviewSwapDetail(
+                                            youPayObj,
+                                            youGetObj,
+                                            routerListData,
+                                            viewDataBinding?.edtYouPay?.text.toString(),
+                                            viewDataBinding?.edtYouGet?.text.toString(),
+                                            viewDataBinding?.txtFirstPrice?.text.toString()
+                                        ), selectedProvider
+                                    )
+                                )
+
+                            }
+
+                        }
+
+
+                        /*
+                                                findNavController().safeNavigate(
+                                                    SwapDirections.actionSwapToPreviewSwapFragment(
+                                                        PreviewSwapDetail(
+                                                            youPayObj,
+                                                            youGetObj,
+                                                            routerListData,
+                                                            viewDataBinding?.edtYouPay?.text.toString(),
+                                                            viewDataBinding?.edtYouGet?.text.toString(),
+                                                            viewDataBinding?.txtFirstPrice?.text.toString()
+                                                        ), selectedProvider
+                                                    )
+                                                )
+                        */
+
+
+                    }
+
+                }
+
+
+            } else {
+                requireContext().showToast("Paying amount can't be empty or 0")
+            }
+        }
+
+        viewDataBinding?.imgSwapChange?.setOnClickListener {
+            swapChangeBlankObject()
+        }
+
+        viewDataBinding?.cardInnerCoin?.setOnClickListener {
+            isFromGet = false
+            tokenListDialog.isFromGet = false
+            tokenListDialog.fromNetWork = youPayObj.chain?.symbol!!.lowercase()
+            tokenListDialog.fromCurrency = youPayObj.t_symbol.toString()
+            tokenListDialog.show(childFragmentManager, "")
+        }
+
+        viewDataBinding?.cardInnerCoinSwapped?.setOnClickListener {
+            isFromGet = true
+            tokenListDialog.isFromGet = true
+            tokenListDialog.fromNetWork = youPayObj.chain?.symbol!!.lowercase()
+            tokenListDialog.fromCurrency = youPayObj.t_symbol.toString()
+            tokenListDialog.show(childFragmentManager, "")
+        }
+
+        viewDataBinding?.edtYouPay?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                /*if (viewDataBinding != null && viewDataBinding?.edtYouPay != null) {
+                handler.removeCallbacks(runnable!!)
+                runnable = Runnable {
+*/
+
+                if (!isProgrammaticChange) {
+                    if (s.toString().isNotEmpty()) {
+                        val inputValue = s.toString()
+                        try {
+                            // Check if the input starts with a dot
+                            val numericValue = if (inputValue.startsWith(".")) {
+                                "0$inputValue"
+                            } else {
+                                inputValue
+                            }.toDouble()
+
+                            if (numericValue > 0.0) {
+                                requireActivity().runOnUiThread {
+                                    Handler(Looper.getMainLooper()).postDelayed(2000) {
+
+                                        // convertAmountToCurrency(numericValue.toString())
+
+
+                                        val price =
+                                            numericValue.toBigDecimal() * youPayObj.t_price!!.toBigDecimal()
+                                        val formattedPrice =
+                                            price.setScale(2, RoundingMode.DOWN).toString()
+                                        viewDataBinding!!.txtConvertedYouPay.text =
+                                            if (price.toDouble() > 0.0) "${
+                                                PreferenceHelper.getInstance()
+                                                    .getSelectedCurrency()?.symbol
+                                            }$formattedPrice" else {
+                                                ""
+                                            }
+
+                                        apiCallForAllProviderBestPrice(numericValue.toString())
+                                    }
+                                }
+
+                            } else {
+                                try {
+                                    requireActivity().runOnUiThread {
+                                        Handler(Looper.getMainLooper()).postDelayed(1000) {
+                                            viewDataBinding?.edtYouGet?.setText("0")
+                                            viewDataBinding!!.txtConvertedYouPay.text = ""
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        } catch (e: NumberFormatException) {
+                            e.printStackTrace()
+                        }
+
+                    } else {
+                        try {
+                            requireActivity().runOnUiThread {
+                                viewDataBinding?.edtYouGet?.setText("0")
+                                viewDataBinding!!.txtConvertedYouPay.text = ""
+                                viewDataBinding!!.txtConvertedYouGet.text = ""
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+
+                    }
+
+                } else {
+                    try {
+                        requireActivity().runOnUiThread {
+                            Handler(Looper.getMainLooper()).postDelayed(1000) {
+                                viewDataBinding?.edtYouGet?.setText("0")
+                                viewDataBinding!!.txtConvertedYouPay.text = ""
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+
+
+            }
+            /*   handler.postDelayed(runnable!!, 1000)
+           }*/
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString().isNotEmpty()) {
+                    val inputValue = s.toString()
+
+                }
+
+            }
+
+        })
+
+    }
+
+    private fun clearValues() {
+
+        requireActivity().runOnUiThread {
+
+            Handler(Looper.getMainLooper()).postDelayed(1000) {
+                try {
+                    viewDataBinding?.edtYouGet?.setText("")
+                    viewDataBinding?.edtYouPay?.setText("")
+                    viewDataBinding?.txtConvertedYouPay?.text = ""
+                    viewDataBinding?.txtConvertedYouGet?.text = ""
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun swapChangeBlankObject() {
+        val temp: Tokens = youPayObj
+        youPayObj = youGetObj
+        youGetObj = temp
+
+        viewDataBinding!!.edtYouPay.setText("")
+        viewDataBinding!!.edtYouGet.setText("")
+        viewDataBinding!!.txtConvertedYouPay.text = ""
+        viewDataBinding!!.txtConvertedYouGet.text = ""
+
+        setDetail()
+    }
+
+    private fun setData() {
+        youPayObj = tokenModel
+        setDetail()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setDetail() {
+
+        // viewDataBinding?.txtFromBalanceValue?.text =  String.format("%.6f", youPayObj.t_balance.toDouble())
+        viewDataBinding?.txtFromBalanceValue?.text = setBalanceText(
+            youPayObj.t_balance.toBigDecimal() ?: 0.toBigDecimal(),
+            "",
+            6
+        )
+
+
+        viewDataBinding?.txtCoinName?.text = youPayObj.t_symbol
+        viewDataBinding?.txtNetworkNameTop?.text = youPayObj.t_type
+
+
+        // viewDataBinding?.txtYouGetBalanceValue?.text = String.format("%.6f", youGetObj.t_balance.toDouble())
+        viewDataBinding?.txtYouGetBalanceValue?.text = setBalanceText(
+            youGetObj.t_balance.toBigDecimal() ?: 0.toBigDecimal(),
+            "",
+            6
+        )
+
+
+        viewDataBinding?.txtCoinNameSwapped?.text = youGetObj.t_symbol
+        viewDataBinding?.txtNetworkNameBottom?.text = youGetObj.t_type
+
+        Glide.with(requireContext()).load(youPayObj.t_logouri).into(viewDataBinding?.imgCoin!!)
+        Glide.with(requireContext()).load(youGetObj.t_logouri)
+            .into(viewDataBinding?.imgCoinSwapped!!)
+
+
+        if (/*!isApiCalled && */indexPairApi == 3)
+            graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=${youGetObj.tokenId},${youPayObj.tokenId}")
+
+        /* if (youPayObj.t_type?.lowercase() == youGetObj.t_type?.lowercase()) {
+             viewDataBinding?.btnSwap?.text = "Preview Swap"
+         } else {
+             viewDataBinding?.btnSwap?.text = "Confirm Swap"
+         }*/
+
+        viewDataBinding?.btnSwap?.text = getString(R.string.preview_swap)
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun setupObserver() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                swapViewModel.executeExchangeResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            val response = it.data
+
+                            viewDataBinding?.edtYouGet?.setText(
+                                String.format(
+                                    "%.7f",
+                                    response?.toAmount
+                                ) + " ${youGetObj.t_symbol}"
+                            )
+                            val payingAddress = response?.payinAddress
+                            transactionID = response?.id
+
+
+                            val tokenList = tokenViewModel.getAllTokensList()
+                            youPayObj.callFunction.sendTokenOrCoin(
+                                payingAddress,
+                                viewDataBinding?.edtYouPay?.text.toString().toDouble(),
+                                tokenList
+                            ) { success, errorMessage, _ ->
+
+                                if (success) {
+                                    URL_BY_ID = "$EXCHANGE_STATUS_API?id=$transactionID"
+                                    requireActivity().runOnUiThread {
+                                        Handler(Looper.getMainLooper()).postDelayed(5000) {
+                                            hideLoader()
+                                            viewDataBinding?.apply {
+                                                edtYouPay.setText("0.0")
+                                                edtYouGet.setText("0.0")
+
+                                            }
+                                            openSwapProgressDialog(
+                                                "Processing....",
+                                                "It might take a few minutes."
+                                            )
+                                        }
+                                    }
+                                    // swapViewModel.executeExchangeStatus(URL_BY_ID)
+                                } else {
+                                    requireActivity().runOnUiThread {
+                                        hideLoader()
+                                        requireContext().showToast(errorMessage.toString())
+                                    }
+                                }
+
+                            }
+                        }
+
+                        is NetworkState.Loading -> {
+                            requireContext().showLoader()
+                        }
+
+                        is NetworkState.Error -> {
+                            requireContext().showToast(it.message.toString())
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            )
+                                .show()
+                        }
+
+                        else -> {
+                           // hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                swapViewModel.executeExchangeStatusResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+
+                            when {
+                                it.data?.status?.lowercase() == SwapExchangeStatus.finished.name.lowercase() -> {
+                                    requireActivity().runOnUiThread {
+                                        hideLoader()
+                                        setProgress(
+                                            viewDataBinding!!.root,
+                                            3,
+                                            (requireActivity() as BaseActivity)
+                                        )
+                                        findNavController().safeNavigate(SwapDirections.actionSwapToDashboard())
+
+                                    }
+                                }
+
+                                it.data?.status?.lowercase() == SwapExchangeStatus.failed.name -> {
+                                    requireContext().showToast("Failed Transaction")
+                                    hideLoader()
+                                    return@collect
+                                }
+
+                                else -> {
+                                    if (it.data?.status?.lowercase() == SwapExchangeStatus.confirming.name || it.data?.status?.lowercase() == SwapExchangeStatus.exchanging.name) {
+                                        setProgress(
+                                            viewDataBinding!!.root,
+                                            2,
+                                            (requireActivity() as BaseActivity)
+                                        )
+                                    } else if (it.data?.status?.lowercase() == SwapExchangeStatus.waiting.name) {
+                                        setProgress(
+                                            viewDataBinding!!.root,
+                                            1,
+                                            (requireActivity() as BaseActivity)
+                                        )
+                                    }
+                                    swapViewModel.executeExchangeStatus(URL_BY_ID)
+                                }
+                            }
+                        }
+
+                        is NetworkState.Loading -> {
+                            requireContext().showLoader()
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            )
+                                .show()
+                        }
+
+                        else -> {
+                          //  hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            swapViewModel.executeSwapUsingOkxResponse.collect {
+                when (it) {
+                    is NetworkState.Success -> {
+                        if (it.data?.data1?.isNotEmpty() == true) {
+                            val response = it.data.data1[0].tx
+
+                            val amountSend: BigInteger =
+                                Convert.toWei(
+                                    viewDataBinding?.edtYouPay?.text.toString(),
+                                    Convert.Unit.ETHER
+                                ).toBigInteger()
+
+                            viewDataBinding?.edtYouGet?.setText(
+                                String.format(
+                                    "%.7f",
+                                    weiToEther(it.data.data1[0].tx.minReceiveAmount.toBigInteger())
+                                ) + " ${youGetObj.t_symbol}"
+                            )
+
+
+
+                            youPayObj.callFunction.swapTokenOrCoinOkx(
+                                response.to,
+                                response.data,
+                                response.gasPrice,
+                                response.gas,
+                                amountSend,
+                                dexCotractAddress, { success, errorMessage, _ ->
+
+                                    if (success) {
+                                        requireActivity().runOnUiThread {
+                                            hideLoader()
+                                            setProgress(
+                                                viewDataBinding!!.root,
+                                                3,
+                                                (requireActivity() as BaseActivity)
+                                            )
+                                            Handler(Looper.getMainLooper()).postDelayed(5000) {
+                                                findNavController().safeNavigate(SwapDirections.actionSwapToDashboard())
+                                            }
+
+
+                                        }
+
+                                    } else {
+                                        requireActivity().runOnUiThread {
+                                            hideLoader()
+                                            requireContext().showToast(errorMessage.toString())
+                                        }
+                                    }
+
+                                }, { success, _, _ ->
+                                    if (success) {
+                                        requireActivity().runOnUiThread {
+                                            setProgress(
+                                                viewDataBinding!!.root,
+                                                2,
+                                                (requireActivity() as BaseActivity)
+                                            )
+                                        }
+                                    } else {
+                                        requireActivity().runOnUiThread {
+                                            hideLoader()
+                                        }
+                                    }
+                                })
+
+                        }
+
+                    }
+
+                    is NetworkState.Loading -> {
+                        requireContext().showLoader()
+                    }
+
+                    is NetworkState.Error -> {
+                        hideLoader()
+                        requireContext().showToast(it.message.toString())
+                    }
+
+                    is NetworkState.SessionOut -> {
+                        hideLoader()
+                        CustomSnackbar.make(
+                            requireActivity().window.decorView.rootView as ViewGroup,
+                            it.message.toString()
+                        )
+                            .show()
+                    }
+
+                    else -> {
+                        //hideLoader()
+                    }
+                }
+            }
+        }
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                swapViewModel.executeSwapUsingSwapPairResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            val response = it.data as MutableList<AvailablePairsResponseModel>
+                            val filterResult = swapViewModel.filterTokensFromPair(
+                                response,
+                                tokenViewModel.getAllTokensList() as MutableList<Tokens>
+                            )
+                            filterList.addAll(filterResult)
+                            if (indexPairApi == 0) {
+                                val randomObject =
+                                    filterList.first { token -> token.t_type?.lowercase() == "ERC20".lowercase() || token.t_type?.lowercase() == "btc" }
+                                youGetObj = randomObject
+                                // setData()
+                            }
+
+
+                            if (indexPairApi < 3) {
+                                indexPairApi += 1
+                                exchangePair(indexPairApi)
+                            } else {
+                                filterList.distinct()
+                                setDetail()
+                                //hideLoader()
+                                viewDataBinding?.progressToken?.visibility = GONE
+                                tokenListDialog.setSwapPairTokenList(filterList)
+                            }
+                        }
+
+                        is NetworkState.Loading -> {
+                            if(indexPairApi==0) {
+                                requireContext().showLoader()
+                            }
+                               // viewDataBinding?.progressToken?.visibility=VISIBLE
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                            try {
+                                requireActivity().runOnUiThread {
+                                    lifecycleScope.launch(Dispatchers.IO) {
+                                        val tokenList =
+                                            tokenViewModel.getAllTokensList() as MutableList<Tokens>
+                                        try {
+                                            requireActivity().runOnUiThread {
+                                                val newTokenList =
+                                                    tokenList.filter { token -> token.t_type?.lowercase() == youPayObj.t_type?.lowercase() && token.tokenId?.lowercase() != youPayObj.tokenId?.lowercase() }
+
+                                                if (newTokenList.isNotEmpty()) {
+                                                    filterList.clear()
+                                                    filterList.addAll(newTokenList)
+                                                    youGetObj = newTokenList[0]
+                                                    setDetail()
+                                                    tokenListDialog.setSwapPairTokenList(filterList)
+                                                }
+                                            }
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        }
+                                    }
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            ).show()
+                        }
+
+                        else -> {
+                           // hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                graphDetailViewModel.getGetMarketResponse.collect { networkState ->
+                    when (networkState) {
+                        is NetworkState.Success -> {
+
+                            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                                val cryptoList = networkState.data
+                                if (cryptoList?.isNotEmpty() == true) {
+                                    cryptoList.forEach { coinMarket ->
+                                        if (coinMarket.id == youGetObj.tokenId) {
+                                            youGetObj.t_price = coinMarket.current_price
+                                            youGetObj.t_last_price_change_impact =
+                                                coinMarket.price_change_percentage_24h
+                                            youGetObj.t_logouri = coinMarket.image
+                                        } else {
+                                            youPayObj.t_price = coinMarket.current_price
+                                            youPayObj.t_last_price_change_impact =
+                                                coinMarket.price_change_percentage_24h
+                                            youPayObj.t_logouri = coinMarket.image
+                                        }
+
+                                    }
+
+                                    viewDataBinding!!.edtYouPay.setText("")
+                                    estimatePrice(youGetObj, youPayObj)
+
+                                    hideLoader()
+                                }
+                            }
+                        }
+
+                        is NetworkState.Loading -> {
+                            requireContext().showLoaderAnyHow()
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                networkState.message.toString()
+                            )
+                                .show()
+                        }
+
+                        else -> {
+                           // hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                swapViewModel.executeApproveUsingOkxResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            hideLoader()
+
+                            if (it.data?.data1?.isNotEmpty() == true) {
+
+                                dexCotractAddress = it.data.data1[0].dexContractAddress
+
+                                var decimal: Int?
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    youPayObj.callFunction.getDecimal { dec ->
+                                        decimal = dec
+
+                                        swapViewModel.executeSwapOkx(
+                                            viewDataBinding?.edtYouPay?.text.toString(),
+                                            youPayObj.chain?.chainIdHex.toString(),
+                                            youGetObj.t_address.toString()
+                                                .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+                                            youPayObj.t_address.toString()
+                                                .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+                                            Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)
+                                                .toString(),
+                                            decimal = decimal
+                                        )
+
+
+                                    }
+                                }
+
+
+                            }
+
+
+                        }
+
+                        is NetworkState.Loading -> {
+                            requireContext().showLoader()
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                            requireContext().showToast(it.message.toString())
+
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            )
+                                .show()
+                        }
+
+                        else -> {
+                           // hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                swapViewModel.executeSwapUsingOkxEstimatResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+
+                            if (it.data?.data1?.isNotEmpty() == true) {
+                                routerListData = it.data.data1[0]
+
+                                //here
+                                var decimal: Int
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    youGetObj.callFunction.getDecimal { dec ->
+                                        decimal = dec!!
+                                        val amt = convertWeiToEther(
+                                            it.data.data1[0].routerResult.toTokenAmount,
+                                            if (decimal == 0) 8 else decimal
+                                        )
+
+                                        // Convert.Unit.WEI.weiFactor=de
+
+                                        /*   val amountSend: BigInteger = convertToWei(
+                                               it.data.data1[0].routerResult.toTokenAmount.toDouble(),
+                                               decimal
+                                           )
+                                           val wai: BigInteger = convertToWei(amt.toDouble(), decimal)*/
+
+                                        loge("OKX_response", amt)
+
+                                        providerList.filter { provider -> provider.coinCode == CoinCode.OKX }
+                                            .forEach { provideModel ->
+
+                                                val price = setBalanceText(
+                                                    amt.toBigDecimal(),
+                                                    "",
+                                                    6
+                                                )
+                                                provideModel.bestPrice = price
+                                            }
+
+                                        checkAllAPIsCompleted()
+                                    }
+                                }
+
+                            } else {
+                                providerList.filter { provider -> provider.coinCode == CoinCode.OKX }
+                                    .forEach { innerProvider ->
+                                        innerProvider.bestPrice = "0.0"
+                                    }
+
+                                checkAllAPIsCompleted()
+                            }
+
+
+                        }
+
+                        is NetworkState.Loading -> {
+
+                        }
+
+                        is NetworkState.Error -> {
+
+                            providerList.filter { provider -> provider.coinCode == CoinCode.OKX }
+                                .forEach { provider ->
+                                    provider.bestPrice = "0.0"
+                                }
+
+                            checkAllAPIsCompleted()
+                            // requireContext().showToast(it.message.toString())
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            )
+                                .show()
+                        }
+
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                swapViewModel.executeEstimateExchangeResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            //hideLoader()
+                            val response = it.data
+
+                            providerList.filter { provider -> provider.coinCode == CoinCode.CHANGENOW }
+                                .forEach { provider ->
+
+                                    val price = setBalanceText(
+                                        response?.toAmount?.toBigDecimal() ?: 0.toBigDecimal(),
+                                        "",
+                                        6
+                                    )
+
+                                    provider.bestPrice = price
+                                    // provider.bestPrice = String.format("%.6f", response?.toAmount)
+                                }
+
+
+                            /*  viewDataBinding?.edtYouGet?.setText(
+                                  String.format(
+                                      "%.7f",
+                                      response?.toAmount
+                                  ) + " ${youGetObj.t_symbol}"
+                              )
+  */
+
+                            val payingAddress = response?.payinAddress
+                            transactionID = response?.id
+
+                            checkAllAPIsCompleted()
+
+                        }
+
+                        is NetworkState.Loading -> {
+                            //  requireContext().showLoader()
+                        }
+
+                        is NetworkState.Error -> {
+                            //   hideLoader()
+
+                            providerList.filter { provider -> provider.coinCode == CoinCode.CHANGENOW }
+                                .forEach { provider ->
+                                    provider.bestPrice = "0.0"
+                                }
+
+                            checkAllAPIsCompleted()
+
+                            // requireContext().showToast(it.message.toString())
+
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            )
+                                .show()
+                        }
+
+                        else -> {
+                            //   hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                swapViewModel.responseRengoExcQuoteResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            //hideLoader()
+                            val response = it.data
+
+                            if (response?.route != null) {
+
+                                val amount = response.route!!.outputAmount
+
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    youGetObj.callFunction.getDecimal { dec ->
+                                        val decimal = dec!!
+                                        val amt = convertWeiToEther(
+                                            amount!!, decimal
+                                            /*if (decimal == 0) 8 else decimal*/
+                                        )
+
+
+                                        var feesAmount: BigDecimal = 0.toBigDecimal()
+                                        it.data.route?.fee?.forEach {
+                                            feesAmount += it?.amount!!.toBigDecimal()
+                                        }
+
+                                        val fees = convertWeiToEther(
+                                            feesAmount.toString(),
+                                            it.data.route?.fee?.get(0)?.token?.decimals!!
+                                            /* if (decimal == 0) 8 else decimal*/
+                                        )
+
+                                        loge(
+                                            "Decimal",
+                                            "Rango: $decimal  :: amount =>${getActualDigits(amt)}   feesAmount : $feesAmount : actualfee : ${
+                                                convertScientificToBigDecimal(
+                                                    "$feesAmount"
+                                                )
+                                            } :: $fees"
+                                        )
+
+
+                                        val amount =
+                                            if (youGetObj.chain?.coinType == CoinType.BITCOIN) {
+                                                /* String.format(
+                                                     "%.18f",
+                                                     getActualDigits(amt).toDouble()
+                                                 )*/
+
+                                                setBalanceText(
+                                                    getActualDigits(amt).toBigDecimal(),
+                                                    "",
+                                                    18
+                                                )
+                                            } else {
+
+                                                setBalanceText(
+                                                    getActualDigits(amt).toBigDecimal(),
+                                                    "",
+                                                    decimal
+                                                )
+
+                                                /* String.format(
+                                                     "%.6f",
+                                                     getActualDigits(amt).toDouble()
+                                                 )*/
+                                            }
+
+                                        providerList.filter { it.coinCode == CoinCode.RANGO }
+                                            .forEach {
+                                                it.bestPrice = amount
+                                                it.swapperFees = setBalanceText(
+                                                    fees.toBigDecimal(),
+                                                    "",
+                                                    6
+                                                )
+                                                // String.format("%.6f", fees.toDouble())
+                                            }
+
+
+                                        checkAllAPIsCompleted()
+                                    }
+                                }
+
+                            } else {
+
+                                providerList.filter { provider -> provider.coinCode == CoinCode.RANGO }
+                                    .forEach { provider ->
+                                        provider.bestPrice = "0.0"
+                                        provider.swapperFees = "0.0"
+                                    }
+
+                                checkAllAPIsCompleted()
+                            }
+
+
+                        }
+
+                        is NetworkState.Loading -> {
+                            //  requireContext().showLoader()
+                        }
+
+                        is NetworkState.Error -> {
+                            //   hideLoader()
+
+                            providerList.filter { provider -> provider.coinCode == CoinCode.RANGO }
+                                .forEach { provider ->
+                                    provider.bestPrice = "0.0"
+                                    provider.swapperFees = "0.0"
+
+                                }
+
+                            checkAllAPIsCompleted()
+
+                            // requireContext().showToast(it.message.toString())
+
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            )
+                                .show()
+                        }
+
+                        else -> {
+                            //   hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    private fun executeExchangeCall() {
+        fromNetwork = getNetworkString(youPayObj.chain)
+        toNetwork = getNetworkString(youGetObj.chain)
+        swapViewModel.executeExchange(
+            EXCHANGE_API, ExchangeRequestModel(
+                youPayObj.t_symbol.toString().lowercase(),
+                youGetObj.t_symbol.toString().lowercase(),
+                fromNetwork.toString(),
+                toNetwork.toString(),
+                viewDataBinding?.edtYouPay?.text.toString().ifEmpty { "0.0" },
+                Wallet.getPublicWalletAddress(tokenModel.chain?.coinType ?: CoinType.ETHEREUM)
+                    .toString()
+            )
+        )
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun estimatePrice(getCoinDetail: Tokens?, payCoinDetail: Tokens?) {
+        val getPrice = getCoinDetail?.t_price?.toDoubleOrNull() ?: 0.0
+        val payPrice = payCoinDetail?.t_price?.toDoubleOrNull() ?: 0.0
+        var estPrice = payPrice / getPrice
+        estPrice = estPrice.roundTo(6)
+        viewDataBinding?.txtFirstPrice?.text =
+            "1 ${payCoinDetail?.t_symbol ?: ""} ≈ $estPrice ${getCoinDetail?.t_symbol ?: ""}"
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isApiCalled = true
+        isProgrammaticChange = true
+    }
+
+    private fun openSwapProgressDialog(title: String, subtitle: String) {
+        SwapProgressDialog.getInstance().show(
+            requireContext(),
+            title,
+            subtitle,
+            listener = object : SwapProgressDialog.DialogOnClickBtnListner {
+                override fun onOkClick() {
+                    findNavController().safeNavigate(SwapDirections.actionSwapToDashboard())
+                }
+            })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isProgrammaticChange)
+            isProgrammaticChange = false
+    }
+
+
+    private fun apiCallForAllProviderBestPrice(numericValue: String) {
+
+        viewDataBinding!!.progressAmount.visibility = VISIBLE
+        viewDataBinding!!.edtYouGet.visibility = GONE
+        viewDataBinding!!.edtYouGet.setText("0")
+        viewDataBinding!!.txtConvertedYouGet.text = ""
+
+        providerList.forEach {
+
+            when (it.coinCode.name) {
+
+                CoinCode.CHANGENOW.name -> {
+                    fromNetwork = getNetworkString(youPayObj.chain)
+                    toNetwork = getNetworkString(youGetObj.chain)
+
+                    swapViewModel.executeEstimateExchange(
+                        EXCHANGE_API, ExchangeRequestModel(
+                            youPayObj.t_symbol.toString().lowercase(),
+                            youGetObj.t_symbol.toString().lowercase(),
+                            fromNetwork.toString(),
+                            toNetwork.toString(),
+                            numericValue.toString(),
+                            Wallet.getPublicWalletAddress(
+                                youGetObj.chain?.coinType ?: CoinType.ETHEREUM
+                            ).toString()
+                        )
+                    )
+
+
+                }
+
+
+                CoinCode.OKX.name -> {
+
+
+                    if (youGetObj.t_type == youPayObj.t_type && youGetObj.t_address != "" && youPayObj.t_address != "") {
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            youPayObj.callFunction.getDecimal {
+
+                                swapViewModel.executeSwapOkxEstimat(
+                                    numericValue.toString(),
+                                    youPayObj.chain?.chainIdHex.toString(),
+                                    youGetObj.t_address.toString()
+                                        .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+                                    youPayObj.t_address.toString()
+                                        .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+                                    Wallet.getPublicWalletAddress(youPayObj.chain?.coinType!!)
+                                        .toString(),
+                                    it
+                                )
+                            }
+                        }
+                    } else {
+                        checkAllAPIsCompleted()
+                    }
+                }
+
+                CoinCode.RANGO.name -> {
+
+
+                    fromNetwork = getNetworkForRangoExchange(youPayObj.chain)
+                    toNetwork = getNetworkForRangoExchange(youGetObj.chain)
+
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        youPayObj.callFunction.getDecimal { decimal ->
+                            storedDecimalInRango = decimal
+
+                            loge("storedDecimalInRango", "$storedDecimalInRango")
+
+                            swapViewModel.executeRangoExchangeQuote(
+                                fromBlockchain = fromNetwork!!,
+                                fromTokenSymbol = youPayObj.t_symbol.toString(),
+                                fromTokenAddress = youPayObj.t_address.toString()
+                                    .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+                                toBlockchain = toNetwork!!,
+                                toTokenSymbol = youGetObj.t_symbol.toString().lowercase(),
+                                toTokenAddress = youGetObj.t_address.toString()
+                                    .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+                                walletAddress = Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)
+                                    .toString(),
+                                numericValue,
+                                decimal = storedDecimalInRango,
+                                fromWalletAddress = Wallet.getPublicWalletAddress(youPayObj.chain?.coinType!!)!!,
+                                toWalletAddress = Wallet.getPublicWalletAddress(youGetObj.chain?.coinType!!)!!
+
+                            )
+
+
+                        }
+
+
+
+
+                    }
+
+
+                }
+
+
+            }
+
+        }
+
+    }
+
+    private fun checkAllAPIsCompleted() {
+        apiSuccessCount += 1
+        loge("TAG", "checkAllAPIsCompleted: apicount $apiSuccessCount")
+        if (apiSuccessCount == providerList.size) {
+            getBestPriceFromAllBestPrices()
+        }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getBestPriceFromAllBestPrices() {
+        loge("Provider", "getBestPriceFromAllBestPrices: $providerList")
+
+        requireActivity().runOnUiThread {
+            viewDataBinding!!.progressAmount.visibility = GONE
+            viewDataBinding!!.edtYouGet.visibility = VISIBLE
+        }
+
+        if (viewDataBinding?.edtYouPay?.text.toString() != "") {
+
+            val maxBestPriceModel = providerList.maxBy {
+                it.bestPrice.toDouble()
+            }
+
+            selectedProvider = maxBestPriceModel
+            apiSuccessCount = 0
+
+
+            val price = maxBestPriceModel.bestPrice.toDouble()
+                .toBigDecimal() * youGetObj.t_price!!.toBigDecimal()
+            val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
+
+            requireActivity().runOnUiThread {
+
+                /* viewDataBinding!!.progressAmount.visibility = GONE
+                 viewDataBinding!!.edtYouGet.visibility = VISIBLE*/
+
+                if (maxBestPriceModel.bestPrice.toDouble() > 0.0) {
+
+                    val amount = if (youGetObj.chain?.coinType == CoinType.BITCOIN) {
+                        // String.format("%.15f", maxBestPriceModel.bestPrice.toDouble())
+
+                        setBalanceText(
+                            maxBestPriceModel.bestPrice.toBigDecimal(),
+                            "",
+                            18
+                        )
+                    } else {
+
+                        setBalanceText(
+                            maxBestPriceModel.bestPrice.toBigDecimal(),
+                            "",
+                            6
+                        )
+
+                        //  String.format("%.6f", maxBestPriceModel.bestPrice.toDouble())
+
+                    }
+
+                    viewDataBinding?.edtYouGet?.setText(amount + " ${youGetObj.t_symbol}")
+
+
+                } else {
+                    viewDataBinding?.edtYouGet?.setText("0")
+                }
+
+                viewDataBinding!!.txtConvertedYouGet.text =
+                    if (maxBestPriceModel.bestPrice.toDouble() > 0.0) "${
+                        PreferenceHelper.getInstance().getSelectedCurrency()?.symbol
+                    }$formattedPrice" else {
+                        ""
+                    }
+            }
+
+            loge("Swap", "getBestPriceFromAllBestPrices: MaxBestPrice $maxBestPriceModel")
+        } else {
+
+            selectedProvider = ProviderModel(coinCode = CoinCode.CHANGENOW)
+
+            requireActivity().runOnUiThread {
+                /* viewDataBinding!!.progressAmount.visibility = GONE
+                 viewDataBinding!!.edtYouGet.visibility = VISIBLE*/
+
+                viewDataBinding?.edtYouGet?.setText("0" + " ${youGetObj.t_symbol}")
+                viewDataBinding!!.txtConvertedYouGet.text = ""
+                apiSuccessCount = 0
+            }
+
+        }
+    }
+
+}

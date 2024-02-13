@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_8mdp"
+            app:cardBackgroundColor="#C9000000"
+            app:cardCornerRadius="@dimen/_17mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_inner_dialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constrainedHeight="true">
+
+                <ImageView
+                    android:id="@+id/img_close"
+                    android:layout_width="@dimen/_27mdp"
+                    android:layout_height="@dimen/_27mdp"
+                    android:layout_marginTop="@dimen/_10mdp"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:src="@drawable/ic_close_circle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_phrase_secret_dialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/_350mdp"
+                    android:maxHeight="@dimen/_350mdp"
+                    android:layout_margin="@dimen/_20mdp"
+                    android:layout_marginTop="@dimen/_15mdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title" />
+
+                <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="@dimen/_20mdp"
+                    android:layout_marginTop="@dimen/_31mdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_20msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="$2000 REWARDS" />
+
+
+                <TextView
+                    android:id="@+id/txt_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_29mdp"
+                    android:layout_marginTop="@dimen/_15mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:gravity="center_horizontal"
+                    android:lineSpacingExtra="@dimen/_10mdp"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13msp"
+                    app:layout_constrainedWidth="true"
+                    android:layout_marginBottom="@dimen/_20mdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/img_phrase_secret_dialog" />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

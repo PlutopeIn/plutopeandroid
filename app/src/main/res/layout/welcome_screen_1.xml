@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_300mdp"
+        android:layout_marginHorizontal="@dimen/_42mdp"
+        android:layout_marginTop="@dimen/_68mdp"
+        android:src="@drawable/welcome_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_300mdp"
+            android:layout_marginTop="@dimen/_100mdp"
+            android:padding="@dimen/_40mdp"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/spend_crypto"
+            app:lottie_speed="2" />
+    -->
+
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_33mdp"
+        android:layout_marginTop="@dimen/_60mdp"
+        android:fontFamily="@font/quicksand_bold"
+        android:gravity="center_horizontal"
+        android:text="@string/spend_your_crypto_anywhere_in_the_world_with_plutope_debit_card"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_25msp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_view"
+
+        />
+
+        <!--android:text="@string/just_top_up_your_crypto_in_your_card_and_you_are_good_to_go_your_plutope_card_works_at_all_merchants_that_take_mastercard"-->
+    <TextView
+        android:id="@+id/txt_instruction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_38mdp"
+        android:layout_marginTop="@dimen/_19mdp"
+        android:fontFamily="@font/quicksand_regular"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14msp"
+        android:text="@string/get_a_physical_or_virtual_card_in_minutes_that_is_accepted_at_more_than_42_million_merchants_worldwide"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_title"
+
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

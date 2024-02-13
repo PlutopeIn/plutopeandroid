@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="-50dp"
+            android:layout_marginTop="-200dp"
+            android:layout_marginEnd="-50dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_circle_bg"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@id/guid2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guid1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".29" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guid2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".45" />
+
+
+        <TextView
+            android:id="@+id/txt_create_passcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_100mdp"
+            android:fontFamily="@font/quicksand_bold"
+            android:gravity="center"
+            android:text="@string/enter_passcode"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_27msp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
+
+
+        <com.app.plutope.passcode.pass2.PassCodeView
+            android:id="@+id/password_view"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_10mdp"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:padding="@dimen/_10mdp"
+            app:digit_size="@dimen/_14mdp"
+            app:digit_spacing="@dimen/_18mdp"
+            app:digits="6"
+            app:empty_drawable="@drawable/ic_asterisk_unselected"
+            app:filled_drawable="@drawable/ic_asterisk_selected"
+            app:key_text_size="@dimen/_14mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guid1" />
+
+
+        <!--
+                <com.app.plutope.passcode.PasswordView
+                    android:id="@+id/password_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5mdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/guid1"
+                    app:password_between_margin="@dimen/_18mdp"
+                    app:password_correct_color="#00A54E"
+                    app:password_count="6"
+                    app:password_radius="@dimen/_6mdp"
+                    app:password_incorrect_color="#D51731"
+                    app:password_not_input_color="@color/purple_7576D"
+                    app:password_outline_color="@color/purple_7576D"
+
+                    />
+        -->
+
+        <com.app.plutope.custom_views.CustomKeyboardView
+            android:id="@+id/keyboard_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/password_view"
+            app:layout_constraintVertical_bias=".7"
+
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

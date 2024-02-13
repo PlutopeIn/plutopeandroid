@@ -1,0 +1,406 @@
+package com.app.plutope.ui.fragment.transactions.buy.graph
+
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.text.Html
+import android.text.method.LinkMovementMethod
+import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.app.plutope.BR
+import com.app.plutope.R
+import com.app.plutope.databinding.FragmentGraphDetailBinding
+import com.app.plutope.model.CoinGeckoMarketsResponse
+import com.app.plutope.model.CustomMarkerView
+import com.app.plutope.model.TimeSelection
+import com.app.plutope.ui.adapter.GraphPriceTimeAdapter
+import com.app.plutope.ui.base.BaseFragment
+import com.app.plutope.utils.constant.COIN_GEKO_COIN_DETAIL
+import com.app.plutope.utils.constant.COIN_GEKO_MARKETPRICE
+import com.app.plutope.utils.constant.COIN_GEKO_MARKET_API
+import com.app.plutope.utils.customSnackbar.CustomSnackbar
+import com.app.plutope.utils.hideLoader
+import com.app.plutope.utils.network.NetworkState
+import com.app.plutope.utils.safeNavigate
+import com.app.plutope.utils.showLoader
+import com.app.plutope.utils.showSnackBar
+import com.bumptech.glide.Glide
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.github.mikephil.charting.utils.ViewPortHandler
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
+
+@AndroidEntryPoint
+class GraphDetail : BaseFragment<FragmentGraphDetailBinding, GraphDetailViewModel>() {
+
+    private var graphObj: CoinGeckoMarketsResponse? = null
+    private val graphDetailViewModel: GraphDetailViewModel by viewModels()
+    val args: GraphDetailArgs by navArgs()
+    private var customMarker: CustomMarkerView? = null
+    override fun getViewModel(): GraphDetailViewModel {
+        return graphDetailViewModel
+    }
+
+    override fun getBindingVariable(): Int {
+        return BR.graphDetailViewModel
+    }
+
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_graph_detail
+    }
+
+    override fun setupToolbarText(): String {
+        return ""
+    }
+
+    override fun setupUI() {
+
+        viewDataBinding!!.model = args.tokenModel
+
+        setDetail()
+
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        viewDataBinding!!.imgNotification.setOnClickListener {
+            findNavController().safeNavigate(GraphDetailDirections.actionGraphDetailToNotification())
+        }
+
+        setTimeSelectionData()
+        if(!args.tokenModel.isCustomTokens!!) {
+            graphDetailViewModel.executeGetGraphMarketResponse("${COIN_GEKO_MARKETPRICE}${args.tokenModel.tokenId?.lowercase()}/market_chart?id=${args.tokenModel.tokenId}&&vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&days=1&interval=")
+            graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&ids=${args.tokenModel.tokenId}")
+        }else{
+            viewDataBinding?.constRoot?.showSnackBar(getString(R.string.graph_details_not_available))
+        }
+    }
+
+    private fun setDetail() {
+        viewDataBinding?.txtCoinName?.text = args.tokenModel.t_name
+        viewDataBinding?.txtNetworkName?.text = args.tokenModel.t_type
+
+
+        Glide.with(requireContext()).load(args.tokenModel.t_logouri)
+            .into(viewDataBinding?.imgCoin!!)
+        graphDetailViewModel.executeGetCoinDetailResponse(COIN_GEKO_COIN_DETAIL + args.tokenModel.tokenId)
+
+        val priceDouble = args.tokenModel.t_price?.toDoubleOrNull() ?: 0.0
+        val priceText = String.format("%.4f", priceDouble)
+        val percentChange = args.tokenModel.t_last_price_change_impact?.toDoubleOrNull() ?: 0.0
+        val color = if (percentChange < 0.0) context?.resources!!.getColor(
+            R.color.red,
+            null
+        ) else context?.resources!!.getColor(R.color.green_099817, null)
+
+        val pricePercent = if (percentChange < 0.0) String.format(
+            "%.2f",
+            percentChange
+        ) else "+" + String.format("%.2f", percentChange)
+        viewDataBinding?.txtCoinPrice?.text = preferenceHelper.getSelectedCurrency()?.symbol + "" + priceText
+        viewDataBinding?.txtCoinMargin?.text = "$pricePercent%"
+        viewDataBinding?.txtCoinMargin?.setTextColor(color)
+
+        viewDataBinding?.txtCoinBalance?.text = preferenceHelper.getSelectedCurrency()?.symbol + "" + priceText
+
+    }
+
+    private fun setTimeSelectionData() {
+        val adapter = GraphPriceTimeAdapter {
+
+            graphDetailViewModel.executeGetGraphMarketResponse("${COIN_GEKO_MARKETPRICE}${args.tokenModel.tokenId?.lowercase()}/market_chart?id=${args.tokenModel.tokenId?.lowercase()}&&vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&days=${it.interval}&interval=")
+
+        }
+        val list = mutableListOf<TimeSelection>()
+        list.add(TimeSelection("1H", true, "1hour"))
+        list.add(TimeSelection("1D", false, "1"))
+        list.add(TimeSelection("1W", false, "7"))
+        list.add(TimeSelection("1M", false, "30"))
+        list.add(TimeSelection("1Y", false, "365"))
+        list.add(TimeSelection("All", false, "max"))
+        adapter.submitList(list)
+        viewDataBinding?.recyclerTimeSelect?.adapter = adapter
+    }
+
+
+    override fun setupObserver() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                graphDetailViewModel.getGetGraphMarketResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+
+                            val result = it.data?.prices
+
+                            val hrSelected =
+                                (viewDataBinding?.recyclerTimeSelect?.adapter as GraphPriceTimeAdapter).currentList.filter { it.isSelected && it.interval == "1hour" }
+                            val dataList = if (hrSelected.isNotEmpty()) {
+                                if (result?.size!! >= 12) {
+                                    result.subList(result.size - 12, result.size)
+                                } else {
+                                    result
+                                }
+                            } else {
+                                result
+                            }
+
+                            viewDataBinding?.chartView?.apply {
+                                data = null
+                                marker = null
+                                clear()
+                                setOnChartValueSelectedListener(null)
+                                notifyDataSetChanged()
+                            }
+
+
+                            setChartDetailGraph(dataList)
+
+
+                        }
+
+                        is NetworkState.Loading -> {
+
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(requireActivity().window.decorView.rootView as ViewGroup, it.message.toString())
+                                .show()
+                        }
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                graphDetailViewModel.getGetMarketResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            hideLoader()
+                            val result = it.data
+                            graphObj =
+                                result?.single { it.symbol.lowercase() == args.tokenModel.t_symbol?.lowercase() }
+                            setMarketCapDetail(graphObj)
+
+                            // graphDetailViewModel.executeGetGraphMarketResponse("${COIN_GEKO_MARKETPRICE}${graphObj?.id?.lowercase()}/market_chart?id=${graphObj?.id}&&vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&days=1")
+
+                        }
+
+                        is NetworkState.Loading -> {
+                            requireContext().showLoader()
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(requireActivity().window.decorView.rootView as ViewGroup, it.message.toString())
+                                .show()
+                        }
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                graphDetailViewModel.getGetCoinDetailResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            hideLoader()
+                            val result = it.data
+                            if (result != null) {
+                                viewDataBinding?.txtCoinAbout?.apply {
+                                    text = Html.fromHtml(result.description.en,
+                                            Html.FROM_HTML_MODE_LEGACY)
+
+                                    movementMethod = LinkMovementMethod.getInstance();
+                                }
+
+                            }
+                        }
+
+                        is NetworkState.Loading -> {
+                            requireContext().showLoader()
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {
+                            hideLoader()
+                            CustomSnackbar.make(requireActivity().window.decorView.rootView as ViewGroup, it.message.toString())
+                                .show()
+                        }
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setMarketCapDetail(graphObj: CoinGeckoMarketsResponse?) {
+        viewDataBinding?.txtMarketCapValue?.text =
+            preferenceHelper.getSelectedCurrency()?.symbol + graphObj?.market_cap.toString()
+        viewDataBinding?.txtVolumeValue?.text =
+            preferenceHelper.getSelectedCurrency()?.symbol + graphObj?.total_volume.toString()
+        viewDataBinding?.txtCirculatingSupplyValue?.text = graphObj?.circulating_supply.toString() +" "+ args.tokenModel.t_symbol
+        viewDataBinding?.txtTotalSupplyValue?.text = graphObj?.total_supply.toString() +" "+ args.tokenModel.t_symbol
+    }
+
+    private fun setChartDetailGraph(result: List<List<Double>>?) {
+        viewDataBinding?.chartView?.refreshDrawableState()
+
+        val prices: MutableList<Pair<Long, Float>> = mutableListOf()
+        result?.forEach {
+            prices.add(Pair(it[0].toLong(), it[1].toFloat()))
+        }
+
+        val entryArrayList = ArrayList<Entry>().apply {
+            result?.forEachIndexed { index, entryData ->
+                val x = index.toFloat()
+                val y = entryData[1]
+                add(Entry(x, y.toFloat()))
+            }
+        }
+        val minPrice: Pair<Long, Float> = Pair(
+            prices.minByOrNull { it.second }?.first ?: 0L,
+            prices.minByOrNull { it.second }?.second ?: 0f
+        )
+        val maxPrice = Pair(
+            prices.maxByOrNull { it.second }?.first ?: 0L,
+            prices.maxByOrNull { it.second }?.second ?: 0f
+        )
+        val valueFormatter1 = object : ValueFormatter() {
+            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                axis!!.mEntries[0] = minPrice.second
+                axis.mEntries[1] = maxPrice.second
+                return getFormattedValue(value)
+            }
+
+            override fun getFormattedValue(value: Float): String {
+                if (value == minPrice.second || value == maxPrice.second) {
+
+                    return "${preferenceHelper.getSelectedCurrency()?.symbol}${String.format("%.2f", value)}"
+                }
+                return ""
+            }
+
+            override fun getFormattedValue(
+                value: Float,
+                entry: Entry?,
+                dataSetIndex: Int,
+                viewPortHandler: ViewPortHandler?
+            ): String {
+                if (value == minPrice.second || value == maxPrice.second) {
+                    return "${preferenceHelper.getSelectedCurrency()?.symbol}${String.format("%.2f", value)}"
+                }
+                return ""
+            }
+
+
+        }
+
+        customMarker = CustomMarkerView(requireContext(), R.layout.layout_textview_label)
+        var dataset: LineDataSet? = null
+        dataset=LineDataSet(entryArrayList, null).apply {
+            setDrawCircles(false)
+            lineWidth = 1f
+            color = Color.WHITE
+            fillColor = resources.getColor(R.color.light_green_22d1ee, null)
+            setCircleColor(Color.YELLOW)
+            circleRadius = 1f
+            mode = LineDataSet.Mode.LINEAR
+            setDrawFilled(true)
+            // Set text size directly on the LineDataSet
+            valueTextSize = 8f // Set your desired text size here
+            valueFormatter = valueFormatter1
+
+            setDrawValues(true)
+        }
+
+
+        val lineData = LineData(dataset).apply {
+            setValueTextSize(10f)
+            setValueTextColor(Color.WHITE)
+
+        }
+
+        viewDataBinding?.chartView?.apply {
+            marker = customMarker
+            axisLeft.setDrawLabels(false)
+            axisRight.setDrawLabels(false)
+            xAxis.setDrawLabels(false)
+            setScaleEnabled(false)
+            xAxis?.setDrawGridLines(false)
+            axisLeft.setDrawGridLines(false)
+            axisRight.setDrawGridLines(false)
+            axisLeft.valueFormatter = valueFormatter1
+            axisRight.valueFormatter = valueFormatter1
+
+        }
+
+        viewDataBinding?.chartView?.setOnChartValueSelectedListener(object :
+            OnChartValueSelectedListener {
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+                e?.let {
+                    val price = "${preferenceHelper.getSelectedCurrency()?.symbol}${String.format("%.2f", e.y)}"
+
+                    viewDataBinding?.chartView?.marker = customMarker
+                    viewDataBinding?.chartView?.refreshDrawableState()
+
+                    // You can also update the marker's content based on the selected value
+                    customMarker?.refreshContent(e, h)
+                    viewDataBinding?.txtCoinBalance?.text = price
+
+                }
+            }
+
+            override fun onNothingSelected() {
+                // Remove the default label when nothing is selected
+                viewDataBinding?.chartView?.highlightValue(null)
+                valueFormatter1.getFormattedValue(minPrice.second)
+            }
+        })
+
+
+        viewDataBinding?.chartView?.data = lineData
+        viewDataBinding?.chartView?.axisLeft?.spaceBottom = 20f
+        viewDataBinding?.chartView?.setExtraOffsets(10f, 10f, 10f, 10f)
+        viewDataBinding?.chartView?.invalidate()
+    }
+
+
+
+}

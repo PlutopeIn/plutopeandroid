@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="updateViewModel"
+            type="com.app.plutope.ui.fragment.phrase.verify_phrase.VerifySecretPhraseViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guid2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".80" />
+
+
+        <TextView
+            android:id="@+id/txt_app_update_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_100mdp"
+            android:fontFamily="@font/quicksand_bold"
+            android:gravity="center"
+            android:text="Plutope update"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_27msp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
+
+        <TextView
+            android:id="@+id/txt_update_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_25mdp"
+            android:layout_marginTop="@dimen/_100mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:gravity="center"
+            android:text="We've just released an update for PlutoPe to enhance your experience and improve security. This update includes bug fixes and performance improvements."
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16msp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_app_update_title"
+            app:layout_constraintVertical_bias="0" />
+
+
+        <Button
+            android:id="@+id/btn_update"
+            style="@style/wallet_button_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50mdp"
+            android:layout_marginHorizontal="@dimen/_59mdp"
+            android:layout_marginTop="@dimen/_16mdp"
+            android:layout_marginBottom="@dimen/_46mdp"
+            android:gravity="center"
+            android:text="Update"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guid2" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

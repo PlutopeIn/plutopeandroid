@@ -1,0 +1,1338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splash">
+
+
+    <fragment
+        android:id="@+id/splash"
+        android:name="com.app.plutope.ui.fragment.splash.Splash"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splash_to_walletSetup"
+            app:destination="@id/walletSetup"
+            app:popUpTo="@id/splash"
+            app:popUpToInclusive="true"
+
+            />
+
+        <action
+            android:id="@+id/action_splash_to_update_anything"
+            app:destination="@id/updateAnything"
+            app:popUpTo="@id/splash"
+            app:popUpToInclusive="true"
+
+            />
+
+
+        <action
+            android:id="@+id/action_splash_to_dashboard"
+            app:destination="@id/dashboard"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splash_to_welcome"
+            app:destination="@id/welcomeScreen"
+            app:popUpTo="@id/splash"
+            app:popUpToInclusive="true"
+
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/walletSetup"
+        android:name="com.app.plutope.ui.fragment.wallet.walletSetup.WalletSetup">
+        <action
+            android:id="@+id/action_walletSetup_to_legal"
+            app:destination="@id/legal"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+
+        <action
+            android:id="@+id/action_walletSetup_to_importMultiWallet2"
+            app:destination="@id/importMultiWallet"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_walletSetup_to_restoreWallet"
+            app:destination="@id/restoreWallet"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+        <action
+            android:id="@+id/action_walletSetup_to_phraseBackupFragment"
+            app:destination="@id/phraseBackupFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+        <action
+            android:id="@+id/action_walletSetup_to_create_password"
+            app:destination="@id/passcode"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/legal"
+        android:name="com.app.plutope.ui.fragment.wallet.legal.Legal">
+        <action
+            android:id="@+id/action_legal_to_phraseBackupFragment"
+            app:destination="@id/phraseBackupFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+        <action
+            android:id="@+id/action_legal_to_passcode"
+            app:destination="@id/passcode"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+        <action
+            android:id="@+id/action_legal_to_webViewToolbar"
+            app:destination="@id/webViewToolbar"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/passcode"
+        android:name="com.app.plutope.ui.fragment.passcode_screen.Passcode"
+        android:label="Passcode">
+        <argument
+            android:name="isFromSecurity"
+            app:argType="boolean" />
+
+        <action
+            android:id="@+id/action_passcode_to_confirmPasscode"
+            app:destination="@id/confirmPasscode"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/confirmPasscode"
+        android:name="com.app.plutope.ui.fragment.passcode_screen.ConfirmPasscode"
+        android:label="ConfirmPasscode">
+
+        <argument
+            android:name="passcode"
+            app:argType="string" />
+
+        <argument
+            android:name="isFromSecurity"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_confirmPasscode_to_phraseBackupFragment"
+            app:destination="@id/phraseBackupFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+        <action
+            android:id="@+id/action_confirmPasscode_to_restore_wallet"
+            app:destination="@id/restoreWallet"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/phraseBackupFragment"
+        android:name="com.app.plutope.ui.fragment.wallet.backup.PhraseBackupFragment"
+        android:label="">
+
+        <action
+            android:id="@+id/action_phraseBackupFragment_to_backUpWalletCheck"
+            app:destination="@id/backUpWalletCheck"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_phraseBackupFragment_to_nameYourBackup"
+            app:destination="@id/nameYourBackup"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/backUpWalletCheck"
+        android:name="com.app.plutope.ui.fragment.wallet.back_up_wallet.BackUpWalletCheck"
+        android:label="">
+        <argument
+            android:name="walletModel"
+            app:argType="com.app.plutope.model.Wallets" />
+        <action
+            android:id="@+id/action_backUpWalletCheck_to_yourRecoveryPhrase"
+            app:destination="@id/yourRecoveryPhrase"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/yourRecoveryPhrase"
+        android:name="com.app.plutope.ui.fragment.phrase.recovery_phrase.YourRecoveryPhrase"
+        android:label="YourRecoveryPhrase">
+
+        <argument
+            android:name="wordsString"
+            app:argType="string" />
+        <argument
+            android:name="wordArrayList"
+            app:argType="string[]" />
+
+        <argument
+            android:name="walletModel"
+            app:argType="com.app.plutope.model.Wallets" />
+
+        <argument
+            android:name="isFromDriveBackup"
+            app:argType="boolean" />
+
+        <action
+            android:id="@+id/action_yourRecoveryPhrase_to_verifySecretPhrase"
+            app:destination="@id/verifySecretPhrase"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_yourRecoveryPhrase_to_recoveryWalletFragment"
+            app:destination="@id/recoveryWalletFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/recoveryWalletFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+    </fragment>
+    <fragment
+        android:id="@+id/nameYourBackup"
+        android:name="com.app.plutope.ui.fragment.wallet.name_your_backup.NameYourBackup">
+        <argument
+            android:name="walletModel"
+            app:argType="com.app.plutope.model.Wallets" />
+        <action
+            android:id="@+id/action_nameYourBackup_to_setEncryptionPassword"
+            app:destination="@id/setEncryptionPassword"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/setEncryptionPassword"
+        android:name="com.app.plutope.ui.fragment.password.set_encryption_password.SetEncryptionPassword"
+        android:label="">
+        <argument
+            android:name="backup_wallet_name"
+            app:argType="string" />
+
+        <argument
+            android:name="backup_drive_content"
+            app:argType="string" />
+
+        <argument
+            android:name="walletModel"
+            app:argType="com.app.plutope.model.Wallets" />
+
+        <action
+            android:id="@+id/action_setEncryptionPassword_to_confirmEncryptionPassword"
+            app:destination="@id/confirmEncryptionPassword"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_setEncryptionPassword_to_welcomeScreen"
+            app:destination="@id/welcomeScreen"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_setEncryptionPassword_to_dashboard"
+            app:destination="@id/dashboard"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/confirmEncryptionPassword"
+        android:name="com.app.plutope.ui.fragment.password.confirm_encryption_password.ConfirmEncryptionPassword">
+
+        <argument
+            android:name="password"
+            app:argType="string" />
+
+        <argument
+            android:name="wallet_backup_name"
+            app:argType="string" />
+        <argument
+            android:name="walletModel"
+            app:argType="com.app.plutope.model.Wallets" />
+        <action
+            android:id="@+id/action_confirmEncryptionPassword_to_dashboard"
+            app:destination="@id/dashboard"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+        <action
+            android:id="@+id/action_confirmEncryptionPassword_to_recoveryWalletFragment"
+            app:destination="@id/recoveryWalletFragment"
+            app:popUpTo="@id/recoveryWalletFragment"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/verifySecretPhrase"
+        android:name="com.app.plutope.ui.fragment.phrase.verify_phrase.VerifySecretPhrase">
+
+        <argument
+            android:name="wordsString"
+            app:argType="string" />
+        <argument
+            android:name="wordArrayList"
+            app:argType="string[]" />
+        <argument
+            android:name="walletModel"
+            app:argType="com.app.plutope.model.Wallets" />
+
+        <action
+            android:id="@+id/action_verifySecretPhrase_to_welcomeScreen"
+            app:destination="@id/welcomeScreen"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_verifySecretPhrase_to_recoveryWalletFragment"
+            app:destination="@id/recoveryWalletFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/recoveryWalletFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_verifySecretPhrase_to_dashboard"
+            app:destination="@id/dashboard"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/welcomeScreen"
+        android:name="com.app.plutope.ui.fragment.welcome_screen.WelcomeScreen">
+        <action
+            android:id="@+id/action_welcomeScreen_to_dashboard"
+            app:destination="@id/dashboard"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_to_dashboard"
+        app:destination="@id/dashboard"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"
+        />
+
+    <fragment
+        android:id="@+id/dashboard"
+        android:name="com.app.plutope.ui.fragment.dashboard.Dashboard">
+
+        <!--
+                <deepLink
+                    app:action="android.intent.action.VIEW"
+                    app:uri="plutope.page.link/u9DC" />
+        -->
+
+        <action
+            android:id="@+id/action_dashboard_to_coinSearchBottomSheetDialog"
+            app:destination="@id/coinSearchBottomSheetDialog"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+        <action
+            android:id="@+id/action_dashboard_to_notification"
+            app:destination="@id/notification"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_dashboard_to_addCustomToken"
+            app:destination="@id/addCustomToken"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_dashboard_to_buyDetails"
+            app:destination="@id/buyDetails"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_dashboard_to_receive"
+            app:destination="@id/receive" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_to_send"
+        app:destination="@id/send" />
+
+    <fragment
+        android:id="@+id/send"
+        android:name="com.app.plutope.ui.fragment.transactions.send.Send">
+        <argument
+            android:name="tokenModel"
+            app:argType="com.app.plutope.model.Tokens"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_send_to_sendCoin"
+            app:destination="@id/sendCoin"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_to_buy"
+        app:destination="@id/buy"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+    <fragment
+        android:id="@+id/buy"
+        android:name="com.app.plutope.ui.fragment.transactions.buy.Buy">
+
+        <argument
+            android:name="page_type"
+            android:defaultValue="Buy"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_buy_to_buyDetails"
+            app:destination="@id/buyDetails"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+        <action
+            android:id="@+id/action_buy_to_swap"
+            app:destination="@id/swap"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+
+
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_to_receive"
+        app:destination="@id/receive"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+    <fragment
+        android:id="@+id/receive"
+        android:name="com.app.plutope.ui.fragment.transactions.receive.Receive">
+
+        <argument
+            android:name="page_type"
+            android:defaultValue="0"
+            app:argType="string"
+            />
+
+        <action
+            android:id="@+id/action_receive_to_receiveCoin"
+            app:destination="@id/receiveCoin"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_to_swap"
+        app:destination="@id/swap"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+    <fragment
+        android:id="@+id/swap"
+        android:name="com.app.plutope.ui.fragment.transactions.swap.Swap">
+        <argument
+            android:name="tokenModel"
+            app:argType="com.app.plutope.model.Tokens" />
+        <action
+            android:id="@+id/action_swap_to_dashboard"
+            app:destination="@id/dashboard" />
+        <action
+            android:id="@+id/action_swap_to_previewSwapFragment"
+            app:destination="@id/previewSwapFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/setting"
+        android:name="com.app.plutope.ui.fragment.setting.Setting">
+        <action
+            android:id="@+id/action_setting_to_wallets"
+            app:destination="@id/wallets"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+        <action
+            android:id="@+id/action_setting_to_security"
+            app:destination="@id/security"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_setting_to_currency"
+            app:destination="@id/currency"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+        <action
+            android:id="@+id/action_setting_to_webView"
+            app:destination="@id/webView"
+
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+        <action
+            android:id="@+id/action_setting_to_webViewToolbar"
+            app:destination="@id/webViewToolbar"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+        <action
+            android:id="@+id/action_setting_to_contactListFragment"
+            app:destination="@id/contactListFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+
+        <action
+            android:id="@+id/action_setting_to_walletConnect"
+            app:destination="@id/walletConnect"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+
+        <action
+            android:id="@+id/action_setting_to_addENS"
+            app:destination="@id/addENS"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/assets"
+        android:name="com.app.plutope.ui.fragment.dashboard.assets.Assets">
+        <action
+            android:id="@+id/action_assets_to_coinSearchBottomSheetDialog"
+            app:destination="@id/coinSearchBottomSheetDialog"
+            />
+        <action
+            android:id="@+id/action_assets_to_buyDetails"
+            app:destination="@id/buyDetails"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+
+    </fragment>
+
+
+    <dialog
+        android:id="@+id/coinSearchBottomSheetDialog"
+        android:name="com.app.plutope.dialogs.CoinSearchBottomSheetDialog">
+        <!-- <argument
+             android:name="list"
+             app:argType="string" />-->
+        <argument
+            android:name="isFromget"
+            app:argType="boolean" />
+        <argument
+            android:name="isFromSwap"
+            app:argType="boolean" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/card"
+        android:name="com.app.plutope.ui.fragment.card.card_list.Card">
+        <action
+            android:id="@+id/action_card_to_notification"
+            app:destination="@id/notification"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+        <action
+            android:id="@+id/action_card_to_sign_up_login"
+            app:destination="@id/signUp"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/notification"
+        android:name="com.app.plutope.ui.fragment.notification.Notification"
+        tools:layout="@layout/fragment_notification" />
+
+    <fragment
+        android:id="@+id/buyDetails"
+        android:name="com.app.plutope.ui.fragment.transactions.buy.buy_detail.BuyDetails">
+        <argument
+            android:name="tokenModel"
+            app:argType="com.app.plutope.model.Tokens" />
+
+        <action
+            android:id="@+id/action_buyDetails_to_buyBTC"
+            app:destination="@id/buyBTC"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_buyDetails_to_graphDetail"
+            app:destination="@id/graphDetail"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+        <action
+            android:id="@+id/action_buyDetails_to_transfer"
+            app:destination="@id/transfer"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_buyDetails_to_swap"
+            app:destination="@id/swap"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_buyDetails_to_receiveCoin"
+            app:destination="@id/receiveCoin"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+        <action
+            android:id="@+id/action_buyDetails_to_sendCoin"
+            app:destination="@id/sendCoin"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+        <action
+            android:id="@+id/action_buyDetails_to_sellFragment"
+            app:destination="@id/sellFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+        <action
+            android:id="@+id/action_buyDetails_to_browser"
+            app:destination="@id/browser"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/buyBTC"
+        android:name="com.app.plutope.ui.fragment.transactions.buy.buy_btc.BuyBTC">
+
+        <argument
+            android:name="tokenModel"
+            app:argType="com.app.plutope.model.Tokens" />
+
+        <argument
+            android:name="page_type"
+            android:defaultValue="Buy"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_buyBTC_to_providers"
+            app:destination="@id/providers"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+        <action
+            android:id="@+id/action_buyBTC_to_currency"
+            app:destination="@id/currency"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+        <action
+            android:id="@+id/action_buyBTC_to_webView"
+            app:destination="@id/webView"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+        <action
+            android:id="@+id/action_buyBTC_to_browser"
+            app:destination="@id/browser"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/currency"
+        android:name="com.app.plutope.ui.fragment.currency.Currency" >
+        <argument
+            android:name="isFromSetting"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_currency_to_dashboard"
+            app:destination="@id/dashboard" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/providers"
+        android:name="com.app.plutope.ui.fragment.providers.Providers">
+
+        <argument
+            android:name="providers"
+            app:argType="string" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/receiveCoin"
+        android:name="com.app.plutope.ui.fragment.transactions.receive.receive_coin_detail.ReceiveCoin"
+        android:label="ReceiveCoin" >
+        <argument
+            android:name="tokenModel"
+            app:argType="com.app.plutope.model.Tokens" />
+    </fragment>
+    <fragment
+        android:id="@+id/graphDetail"
+        android:name="com.app.plutope.ui.fragment.transactions.buy.graph.GraphDetail"
+        android:label="GraphDetail">
+
+        <argument
+            android:name="tokenModel"
+            app:argType="com.app.plutope.model.Tokens" />
+        <action
+            android:id="@+id/action_graphDetail_to_buyBTC"
+            app:destination="@id/buyBTC"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_graphDetail_to_notification"
+            app:destination="@id/notification"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+    </fragment>
+    <fragment
+        android:id="@+id/addCustomToken"
+        android:name="com.app.plutope.ui.fragment.add_custom_token.AddCustomToken" >
+        <action
+            android:id="@+id/action_addCustomToken_to_receive"
+            app:destination="@id/receive" />
+        <action
+            android:id="@+id/action_addCustomToken_to_dashboard"
+            app:destination="@id/dashboard" />
+        <action
+            android:id="@+id/action_addCustomToken_to_buyDetails"
+            app:destination="@id/buyDetails"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/addCustomToken"
+            />
+        <action
+            android:id="@+id/action_addCustomToken_to_webViewToolbar"
+            app:destination="@id/webViewToolbar" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/wallets"
+        android:name="com.app.plutope.ui.fragment.wallet.wallets.WalletsList">
+        <action
+            android:id="@+id/action_wallets_to_importMultiWallet"
+            app:destination="@id/importMultiWallet"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_wallets_to_walletSetup"
+            app:destination="@id/walletSetup"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_wallets_to_recoveryWalletFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:destination="@id/recoveryWalletFragment" />
+        <action
+            android:id="@+id/action_wallets_to_dashboard"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:destination="@id/dashboard" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/transfer"
+        android:name="com.app.plutope.ui.fragment.transfer.Transfer" >
+        <argument
+            android:name="tokenModel"
+            app:argType="com.app.plutope.model.Tokens" />
+        <argument
+            android:name="transaction"
+            app:argType="com.app.plutope.model.TransactionLists" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/importMultiWallet"
+        android:name="com.app.plutope.ui.fragment.wallet.import_multi_wallet.ImportMultiWallet">
+        <action
+            android:id="@+id/action_importMultiWallet_to_dashboard"
+            app:destination="@id/dashboard"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left" />
+
+        <action
+            android:id="@+id/action_importMultiWallet_to_welcome"
+            app:destination="@id/welcomeScreen"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_importMultiWallet_self"
+            app:destination="@id/importMultiWallet" />
+        <action
+            android:id="@+id/action_importMultiWallet_to_webViewToolbar"
+            app:destination="@id/webViewToolbar" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/restoreWallet"
+        android:name="com.app.plutope.ui.fragment.wallet.restore_wallet.RestoreWallet">
+
+        <action
+            android:id="@+id/action_restoreWallet_to_importMultiWallet"
+            app:destination="@id/importMultiWallet"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_restoreWallet_to_selectWalletBackup"
+            app:destination="@id/selectWalletBackup"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_restoreWallet_to_setEncryptionPassword"
+            app:destination="@id/setEncryptionPassword"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/security"
+        android:name="com.app.plutope.ui.fragment.security.Security" >
+        <action
+            android:id="@+id/action_security_to_passcode"
+            app:destination="@id/passcode"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectWalletBackup"
+        android:name="com.app.plutope.ui.fragment.wallet.select_wallet_backup.SelectWalletBackup" />
+
+    <fragment
+        android:id="@+id/webView"
+        android:name="com.app.plutope.ui.fragment.webviews.WebView">
+
+        <argument
+            android:name="url"
+            app:argType="string" />
+
+        <argument
+            android:name="title"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="provider"
+            app:argType="string" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/sendCoin"
+        android:name="com.app.plutope.ui.fragment.transactions.send.send_coin.SendCoin">
+
+        <argument
+            android:name="tokenModel"
+            app:argType="com.app.plutope.model.Tokens" />
+
+        <action
+            android:id="@+id/action_sendCoin_to_dashboard"
+            app:destination="@id/dashboard"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+        <action
+            android:id="@+id/action_sendCoin_to_contactListFragment"
+            app:destination="@id/contactListFragment" />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/webViewToolbar"
+        android:name="com.app.plutope.ui.fragment.webviews.WebViewToolbar"
+        android:label="WebViewToolbar">
+
+        <argument
+            android:name="url"
+            app:argType="string" />
+
+        <argument
+            android:name="title"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="provider"
+            app:argType="string"
+            android:defaultValue=""/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/sellFragment"
+        android:name="com.app.plutope.ui.fragment.transactions.sell.SellFragment"
+        android:label="SellFragment" >
+        <argument
+            android:name="tokenModel"
+            app:argType="com.app.plutope.model.Tokens" />
+        <action
+            android:id="@+id/action_sellFragment_to_providers"
+            app:destination="@id/providers"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+        <action
+            android:id="@+id/action_sellFragment_to_webView"
+            app:destination="@id/webView"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+        <action
+            android:id="@+id/action_sellFragment_to_currency"
+            app:destination="@id/currency" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/contactListFragment"
+        android:name="com.app.plutope.ui.fragment.contact.ContactListFragment"
+        android:label="ContactListFragment" >
+        <argument
+            android:name="isForSelection"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_contactListFragment_to_addContactFragment"
+            app:destination="@id/addContactFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addContactFragment"
+        android:name="com.app.plutope.ui.fragment.contact.AddContactFragment"
+        android:label="AddContactFragment" />
+    <fragment
+        android:id="@+id/recoveryWalletFragment"
+        android:name="com.app.plutope.ui.fragment.recovery_wallet.RecoveryWalletFragment"
+        android:label="RecoveryWalletFragment" >
+        <argument
+            android:name="walletModel"
+            app:argType="com.app.plutope.model.Wallets"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_recoveryWalletFragment_to_nameYourBackup"
+            app:destination="@id/nameYourBackup"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_recoveryWalletFragment_to_backUpWalletCheck"
+            app:destination="@id/backUpWalletCheck"
+            />
+        <action
+            android:id="@+id/action_recoveryWalletFragment_to_yourRecoveryPhrase"
+            app:destination="@id/yourRecoveryPhrase" />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/signUp"
+        android:name="com.app.plutope.ui.fragment.card.sign_up_login.SignUp"
+        android:label="SignUp">
+        <action
+            android:id="@+id/action_signUp_to_personalDetail"
+            app:destination="@id/personalDetail"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+        <action
+            android:id="@+id/action_signUp_to_forgotPassword"
+            app:destination="@id/forgotPassword"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/personalDetail"
+        android:name="com.app.plutope.ui.fragment.card.personal_details.personal_info.PersonalDetail"
+        android:label="PersonalDetail">
+        <action
+            android:id="@+id/action_personalDetail_to_addAddressFragment"
+            app:destination="@id/addAddressFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/addAddressFragment"
+        android:name="com.app.plutope.ui.fragment.card.personal_details.add_address.AddAddressFragment"
+        android:label="fragment_add_address"
+        tools:layout="@layout/fragment_add_address">
+
+        <action
+            android:id="@+id/action_addAddressFragment_to_moreDetails"
+            app:destination="@id/moreDetails"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/moreDetails"
+        android:name="com.app.plutope.ui.fragment.card.personal_details.more_details.MoreDetails"
+        android:label="MoreDetails">
+        <action
+            android:id="@+id/action_moreDetails_to_basic"
+            app:destination="@id/basic"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/basic"
+        android:name="com.app.plutope.ui.fragment.card.membership.basic.Basic"
+        android:label="Basic">
+        <action
+            android:id="@+id/action_basic_to_memberShip2Fragment"
+            app:destination="@id/memberShip2Fragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/memberShip2Fragment"
+        android:name="com.app.plutope.ui.fragment.card.membership_2.MemberShip2Fragment"
+        android:label="MemberShip2Fragment">
+        <action
+            android:id="@+id/action_memberShip2Fragment_to_cardDesign"
+            app:destination="@id/cardDesign"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/cardDesign"
+        android:name="com.app.plutope.ui.fragment.card.card_wallets.CardDesign"
+        android:label="CardDesign">
+        <action
+            android:id="@+id/action_cardDesign_to_payment"
+            app:destination="@id/payment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/payment"
+        android:name="com.app.plutope.ui.fragment.card.payment.Payment"
+        android:label="Payment" />
+
+    <fragment
+        android:id="@+id/forgotPassword"
+        android:name="com.app.plutope.ui.fragment.card.sign_up_login.forgot_password.ForgotPassword"
+        android:label="ForgotPassword" />
+    <fragment
+        android:id="@+id/previewSwapFragment"
+        android:name="com.app.plutope.ui.fragment.transactions.swap.previewSwap.PreviewSwapFragment"
+        android:label="PreviewSwapFragment">
+        <argument
+            android:name="previewSwapDetail"
+            app:argType="com.app.plutope.model.PreviewSwapDetail" />
+
+        <argument
+            android:name="providerModel"
+            app:argType="com.app.plutope.ui.fragment.providers.ProviderModel" />
+
+
+        <action
+            android:id="@+id/action_previewSwapFragment_to_dashboard"
+            app:destination="@id/dashboard" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateAnything"
+        android:name="com.app.plutope.ui.fragment.UpdateAnything"
+        android:label="UpdateAnything">
+
+        <action
+            android:id="@+id/action_update_anything_to_dashboard"
+            app:destination="@id/dashboard"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addENS"
+        android:name="com.app.plutope.ui.fragment.ens.AddENS"
+        android:label="AddENS">
+
+        <action
+            android:id="@+id/action_addENS_to_dashboard"
+            app:destination="@id/dashboard"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/walletConnect"
+        android:name="com.app.plutope.ui.fragment.wallet_connection.walletConnectionList.WalletConnect"
+        android:label="WalletConnect">
+
+        <!--<deepLink
+            app:action="android.intent.action.VIEW"
+            app:uri="wc:/{topic}@2" />
+
+        <deepLink
+            app:action="android.intent.action.VIEW"
+            app:uri="kotlin-web3wallet:/request" />-->
+
+        <action
+            android:id="@+id/action_walletConnection_to_walletConnectionDetail"
+            app:destination="@id/walletConnectionDetail"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popEnterAnim="@anim/nav_slide_in_left"
+            app:popExitAnim="@anim/nav_slide_out_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/walletConnectionDetail"
+        android:name="com.app.plutope.ui.fragment.wallet_connection.walletConnectionDetail.WalletConnectionDetail"
+        android:label="WalletConnectionDetail">
+
+        <argument
+            android:name="connection_id"
+            android:defaultValue="0"
+            app:argType="string" />
+
+    </fragment>
+
+
+    <!-- <composable
+         android:id="@+id/composeDestination"
+         android:name="com.app.plutope.utils.walletConnection.compose_ui.session_proposal"
+         android:label="Compose Destination">
+         &lt;!&ndash; Compose destination configurations &ndash;&gt;
+     </composable>-->
+
+    <fragment
+        android:id="@+id/auth_request"
+        android:name="com.app.plutope.ui.fragment.AuthRequestFragment"
+        android:label="Authentication Request">
+        <deepLink app:uri="android-app://androidx.navigation/auth_request" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/browser"
+        android:name="com.app.plutope.browser.Browser"
+        android:label="Browser">
+
+        <argument
+            android:name="url"
+            android:defaultValue="0"
+            app:argType="string" />
+
+    </fragment>
+
+
+</navigation>

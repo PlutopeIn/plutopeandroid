@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="receiveViewModel"
+            type="com.app.plutope.ui.fragment.token.TokenViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".ui.fragment.transactions.receive.Receive">
+
+
+        <EditText
+            android:id="@+id/edt_search"
+            style="@style/edittext_fill_bg_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16mdp"
+            android:layout_marginTop="@dimen/_22mdp"
+            android:autofillHints=""
+            android:fontFamily="@font/montserrat_light"
+            android:hint="@string/search"
+            android:paddingStart="@dimen/_43mdp"
+            android:paddingEnd="@dimen/_20mdp"
+            android:textColor="@color/white"
+            android:ellipsize="end"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColorHint="@color/purple_7576D"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/_10mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_search"
+            android:layout_width="@dimen/_16mdp"
+            android:layout_height="@dimen/_16mdp"
+            android:layout_marginStart="@dimen/_17mdp"
+            android:src="@drawable/ic_search"
+            app:layout_constraintBottom_toBottomOf="@id/edt_search"
+            app:layout_constraintStart_toStartOf="@id/edt_search"
+            app:layout_constraintTop_toTopOf="@id/edt_search"
+            tools:ignore="ContentDescription" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_receive_coin_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_20mdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constrainedHeight="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/edt_search"
+            app:layout_constraintStart_toStartOf="@id/edt_search"
+            app:layout_constraintTop_toBottomOf="@id/edt_search"
+            tools:listitem="@layout/row_assets_list" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

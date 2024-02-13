@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.app.plutope.model.Tokens" />
+
+        <import type="com.app.plutope.utils.UtilsKt" />
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5mdp"
+        app:cardBackgroundColor="@color/purple_25264D"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardCornerRadius="@dimen/_10mdp"
+        app:cardElevation="@dimen/_6mdp"
+        app:cardUseCompatPadding="false">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical">
+
+
+            <ImageView
+                android:id="@+id/img_crypto_coin"
+                android:layout_width="@dimen/_35mdp"
+                android:layout_height="@dimen/_40mdp"
+                android:layout_marginStart="@dimen/_14mdp"
+                android:src="@drawable/img_pluto_pe_logo_with_bg"
+                app:layout_constraintBottom_toBottomOf="@id/txt_crypto_type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_crypto_name"
+                app:layout_goneMarginBottom="@dimen/_20mdp"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_crypto_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_7mdp"
+                android:layout_marginTop="@dimen/_15mdp"
+                android:fontFamily="@font/quicksand_semibold"
+                android:text="@{model.t_symbol}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13msp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_crypto_name"
+                app:layout_constraintStart_toEndOf="@id/img_crypto_coin"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_goneMarginBottom="@dimen/_20mdp"
+                tools:text="Bitcoin" />
+
+
+            <TextView
+                android:id="@+id/txt_crypto_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_regular"
+                android:text="@{model.t_type}"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:background="@drawable/bg_corner_radius_2"
+                android:paddingHorizontal="@dimen/_5mdp"
+                android:paddingVertical="@dimen/_2mdp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10msp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@id/txt_crypto_symbol"
+                app:layout_constraintStart_toEndOf="@id/txt_crypto_symbol"
+                app:layout_constraintTop_toTopOf="@id/txt_crypto_symbol"
+
+                tools:text="Network name"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_crypto_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5mdp"
+                android:layout_marginBottom="@dimen/_19mdp"
+                android:fontFamily="@font/quicksand_regular"
+                android:text="@{model.t_name}"
+                android:textColor="@color/purple_7576D"
+                android:textSize="@dimen/_10msp"
+                android:visibility="visible"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/txt_crypto_symbol"
+                app:layout_constraintStart_toStartOf="@id/txt_crypto_symbol"
+                app:layout_constraintTop_toBottomOf="@+id/txt_crypto_symbol"
+                app:layout_constraintVertical_bias="0.5"
+                tools:text="Bitcoin"
+
+                />
+
+
+            <!-- <TextView
+                 android:id="@+id/txt_crypto_type"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:fontFamily="@font/quicksand_regular"
+                 android:text="@{model.t_type}"
+                 android:textColor="@color/purple_7576D"
+                 android:textSize="@dimen/_10msp"
+                 android:visibility="visible"
+                 app:layout_constrainedHeight="true"
+                 app:layout_constraintBottom_toTopOf="@+id/txt_crypto_price"
+                 app:layout_constraintStart_toStartOf="@id/txt_crypto_name"
+                 app:layout_constraintTop_toBottomOf="@+id/txt_crypto_name"
+                 app:layout_constraintVertical_bias="0.5"
+                 tools:text="BTC"
+                 android:layout_marginBottom="@dimen/_15mdp"
+                 app:layout_constraintBottom_toBottomOf="parent"-->
+
+                />
+
+            <TextView
+                android:id="@+id/txt_crypto_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_7mdp"
+                android:layout_marginBottom="@dimen/_11mdp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12msp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/txt_crypto_name"
+                app:layout_constraintTop_toBottomOf="@+id/txt_crypto_type"
+                app:layout_constraintVertical_bias="0.5"
+                tools:text="$19.564" />
+
+            <TextView
+                android:id="@+id/txt_crypto_diffrence_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text=""
+                android:textColor="@color/green_099817"
+                android:textSize="@dimen/_12msp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/txt_crypto_price"
+                app:layout_constraintStart_toEndOf="@id/txt_crypto_price"
+                app:layout_constraintTop_toTopOf="@id/txt_crypto_price"
+                tools:text="$3.16"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_your_token"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:layout_marginEnd="@dimen/_12mdp"
+                android:fontFamily="@font/quicksand_regular"
+                android:text=""
+                android:textColor="@color/purple_7576D"
+                android:textSize="@dimen/_10msp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/txt_btc_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Your Tokens"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_btc_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_1mdp"
+                android:layout_marginEnd="@dimen/_12mdp"
+                android:fontFamily="@font/quicksand_semibold"
+                android:text="@{UtilsKt.setBalanceText(Double.valueOf(model.t_balance),``,Integer.valueOf(6)) }"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13msp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/txt_usd_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_your_token"
+                app:layout_goneMarginBottom="@dimen/_20mdp"
+                app:layout_goneMarginTop="@dimen/_20mdp"
+                tools:text="4,468 BTC"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_usd_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12mdp"
+                android:layout_marginBottom="@dimen/_11mdp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12msp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_btc_price"
+                tools:text="$3.465887 USD"
+
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

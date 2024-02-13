@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Plutope" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:includeFontPadding">false</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="bottomSheetDialogTheme">
+            @style/Theme.QuinableFacilityApp.BottomSheet.Dialog.Navigation
+        </item><!--
+                <item name="android:windowLightStatusBar">true</item>
+        -->
+    </style>
+    <!-- Base application theme. -->
+    <!--<style name="Base.Theme.Plutope" parent="Theme.Material3.DayNight.NoActionBar">
+
+      </style>-->
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="wallet_button_gradient">
+        <item name="android:background">@drawable/button_gradient_26</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/_15msp</item>
+        <item name="fontFamily">@font/quicksand_bold</item>
+    </style>
+
+    <style name="button_border_blue">
+        <item name="android:background">@drawable/button_bg_border_blue</item>
+        <item name="android:textColor">@color/blue_00C6FB</item>
+        <item name="android:textSize">@dimen/_15msp</item>
+        <item name="fontFamily">@font/quicksand_bold</item>
+    </style>
+
+    <style name="button_border_red">
+        <item name="android:background">@drawable/button_bg_border_red</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">@dimen/_15msp</item>
+        <item name="fontFamily">@font/quicksand_bold</item>
+    </style>
+
+    <style name="button_disable">
+        <item name="android:background">@drawable/button_disable</item>
+        <item name="android:textColor">@color/green_02303B</item>
+        <item name="android:textSize">@dimen/_15msp</item>
+        <item name="fontFamily">@font/quicksand_bold</item>
+        <item name="android:enabled">false</item>
+    </style>
+
+    <style name="edittext_fill_bg_style">
+        <item name="android:background">@drawable/bg_edittext_filled</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/_15msp</item>
+        <item name="android:minHeight">@dimen/_45mdp</item>
+        <item name="fontFamily">@font/montserrat_medium</item>
+
+    </style>
+
+    <style name="edittext_fill_bg_style_r_10">
+        <item name="android:background">@drawable/bg_corner_radius_10</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/_12msp</item>
+        <item name="android:minHeight">@dimen/_50mdp</item>
+        <item name="android:textColorHint">@color/purple_7576D</item>
+        <item name="fontFamily">@font/quicksand_regular</item>
+
+    </style>
+
+
+    <style name="edittext_fill_bg_style_small">
+        <item name="android:background">@drawable/bg_corner_radius_10</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/_12msp</item>
+        <item name="android:minHeight">@dimen/_45mdp</item>
+        <item name="android:textColorHint">@color/purple_7576D</item>
+        <item name="fontFamily">@font/quicksand_regular</item>
+
+    </style>
+
+    <style name="App_tab">
+        <item name="android:textColor">@color/gray_767691</item>
+        <item name="fontFamily">@font/quicksand_medium</item>
+        <item name="android:fontFamily">@font/quicksand_medium</item>
+        <item name="android:textSize">@dimen/_16msp</item>
+        <item name="font">@font/quicksand_medium</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+    <style name="MyAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/NegativeButtonStyle</item>
+
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+
+    <style name="Theme.PlutoPeApp.ErrorDialog" parent="android:Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up_dialog</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_down</item>
+    </style>
+
+    <style name="full_screen" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    </style>
+
+    <style name="Theme.ADrive.DatePickerDialog" parent="ThemeOverlay.AppCompat.Dialog">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+    </style>
+
+    <style name="Theme.Plutope.HeaderText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/purple_7576D</item>
+
+    </style>
+
+  <!--  <style name="Theme.QuinableFacilityApp.BottomSheet.Dialog.Navigation" parent="ThemeOverlay.Material3.DayNight.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:navigationBarColor">?android:colorBackground</item>
+        <item name="android:navigationBarDividerColor">?android:colorBackground</item>
+        <item name="backgroundColor">@android:color/transparent</item>
+        <item name="cornerSizeTopRight">@dimen/_30mdp</item>
+        <item name="cornerSizeTopLeft">@dimen/_30mdp</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>-->
+    <!--
+        <style name="BottomSheetTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+            <item name="android:windowIsFloating">false</item>
+            <item name="android:statusBarColor">@android:color/transparent</item>
+            <item name="android:navigationBarColor">?android:colorBackground</item>
+            <item name="android:navigationBarDividerColor">?android:colorBackground</item>
+            <item name="cornerSizeTopRight">@dimen/_1mdp</item>
+            <item name="cornerSizeTopLeft">@dimen/_1mdp</item>
+        </style>
+    -->
+
+    <style name="BottomSheetTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimAmount">0.0</item>
+    </style>
+
+
+    <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
+        <item name="sv_backgroundColor">#CC00C6FB</item>
+        <item name="sv_showcaseColor">#5E99A8</item>
+        <!-- <item name="sv_buttonText"></item>-->
+        <item name="sv_tintButtonColor">false</item>
+        <item name="sv_titleTextColor">@color/white</item>
+        <item name="sv_detailTextColor">@color/white</item>
+    </style>
+
+    <style name="CustomShowcaseTheme2" parent="ShowcaseView">
+        <item name="sv_backgroundColor">#e51249d9</item>
+        <item name="sv_showcaseColor">#25467A</item>
+        <item name="sv_buttonText">Close</item>
+
+    </style>
+
+    <style name="BottomSheetDialogThemeNoAnimation" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:windowAnimationStyle">@style/BottomSheetDialogNoAnimation</item>
+    </style>
+
+    <style name="BottomSheetDialogNoAnimation">
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+</resources>

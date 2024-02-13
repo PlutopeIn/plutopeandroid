@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="welcomeScreenViewModel"
+            type="com.app.plutope.ui.fragment.welcome_screen.WelcomeScreenViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".ui.fragment.welcome_screen.WelcomeScreen">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constrainedHeight="true"
+            android:layout_marginBottom="@dimen/_30mdp"
+            app:layout_constraintBottom_toTopOf="@id/tabIndicator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
+            android:id="@+id/tabIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_30mdp"
+            app:dotsColor="@color/blue_00C6FB"
+            app:dotsSize="@dimen/_7mdp"
+            app:dotsSpacing="@dimen/_5mdp"
+            app:dotsStrokeColor="#121C3D"
+            app:dotsStrokeWidth="@dimen/_1mdp"
+            app:layout_constraintTop_toBottomOf="@id/view_pager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/view_pager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:progressMode="true"
+            app:selectedDotColor="@color/blue_00C6FB" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/btn_next_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:layout_marginBottom="@dimen/_26mdp"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/tabIndicator"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tabIndicator"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/next"
+            app:lottie_speed="1" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

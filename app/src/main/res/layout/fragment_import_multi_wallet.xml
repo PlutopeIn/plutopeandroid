@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="importMultiWalletViewModel"
+            type="com.app.plutope.ui.fragment.wallet.import_multi_wallet.ImportMultiWalletViewModel" />
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            tools:context=".ui.fragment.wallet.import_multi_wallet.ImportMultiWallet">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="@dimen/_30mdp"
+                    android:layout_height="@dimen/_30mdp"
+                    android:layout_marginStart="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:padding="@dimen/_8mdp"
+                    android:src="@drawable/ic_back_arrow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="@string/import_multi_coin_wallet"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18msp"
+                    app:layout_constraintBottom_toBottomOf="@id/img_back"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/img_back" />
+
+
+                <ImageView
+                    android:id="@+id/img_add_wallet"
+                    android:layout_width="@dimen/_40mdp"
+                    android:layout_height="@dimen/_40mdp"
+                    android:layout_marginEnd="@dimen/_19mdp"
+                    android:background="@drawable/bg_corner_radius_10"
+                    android:padding="@dimen/_10mdp"
+                    android:src="@drawable/ic_copy_dash"
+                    app:layout_constraintBottom_toBottomOf="@id/img_back"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/img_back" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edt_wallet_name"
+                style="@style/edittext_fill_bg_style_small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_21mdp"
+                android:inputType="textPersonName"
+                android:fontFamily="@font/quicksand_semibold"
+                android:text="@string/main_wallet"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/_14mdp"
+                android:textCursorDrawable="@null"
+                android:textColor="@color/white"
+                android:layout_marginHorizontal="@dimen/_17mdp"
+                android:textSize="@dimen/_13msp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_toolbar" />
+
+
+            <EditText
+                android:id="@+id/edt_phrases"
+                style="@style/edittext_fill_bg_style_r_10"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:gravity="top|start"
+                android:hint="@string/phrase"
+                android:paddingStart="@dimen/_14mdp"
+                android:paddingTop="@dimen/_18mdp"
+                android:paddingEnd="@dimen/_14mdp"
+                android:paddingBottom="@dimen/_30mdp"
+                android:textCursorDrawable="@null"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="@id/edt_wallet_name"
+                app:layout_constraintStart_toStartOf="@id/edt_wallet_name"
+                app:layout_constraintTop_toBottomOf="@id/edt_wallet_name"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_paste"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12mdp"
+                android:layout_marginBottom="@dimen/_12mdp"
+                android:fontFamily="@font/quicksand_regular"
+                android:text="@string/paste"
+                android:visibility="gone"
+                android:textColor="@color/blue_00C6FB"
+                android:textSize="@dimen/_13msp"
+                app:layout_constraintBottom_toBottomOf="@id/edt_phrases"
+                app:layout_constraintEnd_toEndOf="@id/edt_phrases" />
+
+            <TextView
+                android:id="@+id/txt_instruction_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_17mdp"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:fontFamily="@font/quicksand_regular"
+                android:lineSpacingExtra="@dimen/_10msp"
+                android:text="@string/typically_12_sometimes_18_24_words_seprated_by_single_spaces"
+                android:textColor="@color/purple_7576D"
+                android:textSize="@dimen/_10msp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_phrases" />
+
+            <Button
+                android:id="@+id/btn_import"
+                style="@style/wallet_button_gradient"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginTop="@dimen/_70mdp"
+                android:layout_marginBottom="@dimen/_26mdp"
+                android:text="@string/import_"
+                android:textAllCaps="false"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toTopOf="@id/txt_secret_phrase_instruction"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_instruction_message"
+                app:layout_constraintVertical_bias="1" />
+
+
+            <TextView
+                android:id="@+id/txt_secret_phrase_instruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:fontFamily="@font/quicksand_medium"
+                android:gravity="center_horizontal"
+                android:text="@string/what_is_secret_phrase"
+                android:textAllCaps="false"
+                android:textColor="@color/blue_00C6FB"
+                android:textSize="@dimen/_15msp"
+                app:layout_constraintBottom_toBottomOf="@id/guid"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_bias="1" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.95" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

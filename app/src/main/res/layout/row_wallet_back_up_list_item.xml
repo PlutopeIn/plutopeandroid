@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.app.plutope.model.GoogleDriveBackupModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5mdp"
+        android:background="@drawable/bg_corner_radius_10">
+
+
+        <TextView
+            android:id="@+id/txt_wallet_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_26mdp"
+            android:layout_marginStart="@dimen/_14mdp"
+            android:fontFamily="@font/quicksand_semibold"
+            android:text="@{model.fileName}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13msp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Main Wallet 1"
+
+            />
+
+        <TextView
+            android:id="@+id/txt_transaction_date_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_18mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:gravity="end"
+            android:lineSpacingExtra="@dimen/_6mdp"
+            android:text="26 May 2023 \n2:12 PM"
+            android:textColor="@color/purple_7576D"
+            android:textSize="@dimen/_10msp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

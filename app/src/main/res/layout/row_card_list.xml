@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.app.plutope.ui.fragment.card.card_list.CardListModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_35mdp"
+            android:layout_marginVertical="@dimen/_20mdp"
+            android:background="@drawable/img_card_inner_gradient_bg"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/img_card_logo"
+                android:layout_width="@dimen/_128mdp"
+                android:layout_height="@dimen/_45mdp"
+                android:layout_marginStart="@dimen/_18mdp"
+                android:layout_marginTop="@dimen/_18mdp"
+                android:src="@drawable/img_logo_splash"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_card_info"
+                android:layout_width="@dimen/_29mdp"
+                android:layout_height="@dimen/_29mdp"
+                android:layout_marginTop="@dimen/_18mdp"
+                android:layout_marginEnd="@dimen/_18mdp"
+                android:src="@drawable/ic_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/txt_card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:fontFamily="@font/quicksand_medium"
+                android:gravity="center_horizontal"
+                android:text="1234 4567 7899 0123"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_21msp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/img_card_logo" />
+
+            <TextView
+                android:id="@+id/txt_balance_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_18mdp"
+                android:layout_marginTop="@dimen/_26mdp"
+                android:fontFamily="@font/quicksand_regular"
+                android:text="@string/balance"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12msp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_card_number"
+
+                />
+
+
+            <TextView
+                android:id="@+id/txt_balance_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_1mdp"
+                android:layout_marginEnd="@dimen/_10mdp"
+                android:layout_marginBottom="@dimen/_20mdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="$29,100.90"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_22msp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guid_card"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/txt_balance_title"
+                app:layout_constraintTop_toBottomOf="@id/txt_balance_title"
+                app:layout_constraintVertical_bias="0"
+
+                />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guid_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".5" />
+
+
+            <TextView
+                android:id="@+id/txt_expire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_26mdp"
+                android:fontFamily="@font/quicksand_regular"
+                android:text="@string/expire"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12msp"
+                app:layout_constraintStart_toStartOf="@id/guid_card"
+                app:layout_constraintTop_toBottomOf="@id/txt_card_number"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_expire_card_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6mdp"
+                android:fontFamily="@font/quicksand_semibold"
+                android:text="05/25"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14msp"
+                app:layout_constraintStart_toStartOf="@id/guid_card"
+                app:layout_constraintTop_toBottomOf="@id/txt_expire"
+
+                />
+
+            <ImageView
+                android:id="@+id/img_master_card_logo"
+                android:layout_width="@dimen/_45mdp"
+                android:layout_height="@dimen/_29mdp"
+                android:layout_marginEnd="@dimen/_18mdp"
+                android:src="@drawable/ic_master_card_logo"
+                app:layout_constraintBottom_toBottomOf="@id/txt_expire_card_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_expire" />
+
+
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="img_card_logo,img_card_info,txt_card_number,txt_balance_title,txt_balance_value,txt_expire,txt_expire_card_date"
+
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btn_get_card"
+            style="@style/wallet_button_gradient"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_38mdp"
+            android:fontFamily="@font/quicksand_bold"
+            android:includeFontPadding="false"
+            android:maxHeight="@dimen/_38mdp"
+            android:paddingHorizontal="@dimen/_38mdp"
+            android:paddingVertical="@dimen/_11mdp"
+            android:text="@string/get_card"
+            android:textAllCaps="false"
+            android:textSize="@dimen/_12mdp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

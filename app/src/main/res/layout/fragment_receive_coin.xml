@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="receiveCoinViewModel"
+            type="com.app.plutope.ui.fragment.transactions.receive.receive_coin_detail.ReceiveCoinViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            tools:context=".ui.fragment.dashboard.Dashboard">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_upper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <ImageView
+                    android:id="@+id/img_semi_circle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="-50dp"
+                    android:layout_marginTop="-250dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_circle_bg"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintBottom_toTopOf="@id/guid2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guid1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent=".22" />
+
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guid2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent=".4" />
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="@dimen/_30mdp"
+                    android:layout_height="@dimen/_30mdp"
+                    android:layout_marginStart="@dimen/_17mdp"
+                    android:padding="@dimen/_8mdp"
+                    android:src="@drawable/ic_back_arrow"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_toolbar_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_toolbar_title"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="@string/receive_bitcoin"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18msp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/img_card_logo"
+                    android:layout_width="@dimen/_140mdp"
+                    android:layout_height="@dimen/_51mdp"
+                    android:src="@drawable/img_logo_splash"
+                    app:layout_constraintBottom_toTopOf="@id/guid1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_card"
+                    android:layout_width="@dimen/_220mdp"
+                    android:layout_height="@dimen/_220mdp"
+                    android:layout_marginTop="@dimen/_14mdp"
+                    android:background="@drawable/bg_qr_code_border_white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/guid1">
+
+                    <ImageView
+                        android:id="@+id/img_qr_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_22mdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <TextView
+                    android:id="@+id/txt_wallet_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_75mdp"
+                    android:layout_marginTop="@dimen/_22mdp"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    tools:text="Lorem ipsum dolor sit amet, consetetur adipscing elitr, sed diam nonumy eirmod"
+                    android:textSize="@dimen/_12msp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_card" />
+
+
+                <TextView
+                    android:id="@+id/txt_instruction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20mdp"
+                    android:layout_marginTop="@dimen/_26mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15mdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_wallet_key" />
+
+
+                <ImageView
+                    android:id="@+id/img_copy"
+                    android:layout_width="@dimen/_50mdp"
+                    android:layout_height="@dimen/_50mdp"
+                    android:layout_marginTop="@dimen/_14mdp"
+                    android:src="@drawable/ic_copy_with_bg"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/img_doller"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_instruction"
+                    app:layout_constraintVertical_bias="0.4" />
+
+
+                <ImageView
+                    android:id="@+id/img_doller"
+                    android:layout_width="@dimen/_50mdp"
+                    android:layout_height="@dimen/_50mdp"
+                    android:layout_marginHorizontal="@dimen/_30mdp"
+                    android:src="@drawable/ic_doller_with_bg_2"
+                    app:layout_constraintEnd_toStartOf="@+id/img_share"
+                    app:layout_constraintStart_toEndOf="@+id/img_copy"
+                    app:layout_constraintTop_toTopOf="@id/img_copy" />
+
+                <ImageView
+                    android:id="@+id/img_share"
+                    android:layout_width="@dimen/_50mdp"
+                    android:layout_height="@dimen/_50mdp"
+                    android:src="@drawable/ic_share_with_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toEndOf="@+id/img_doller"
+                    app:layout_constraintTop_toTopOf="@id/img_doller"
+
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+</layout>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/progress_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@id/progress_2"
+        app:layout_constraintStart_toStartOf="parent"
+
+        >
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_circle_1"
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:layout_gravity="center"
+            android:background="@drawable/background_circle_non_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2mdp"
+            android:background="@color/purple_25264D"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/img_circle_1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_circle_1"
+            app:layout_constraintTop_toTopOf="@id/img_circle_1" />
+
+        <TextView
+            android:id="@+id/txt_personal_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:fontFamily="@font/quicksand_medium"
+            android:gravity="center_horizontal"
+            android:text="@string/personal_details"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_circle_1" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/progress_2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="@id/progress_1"
+        app:layout_constraintEnd_toStartOf="@id/progress_3"
+        app:layout_constraintStart_toEndOf="@id/progress_1"
+        app:layout_constraintTop_toTopOf="@id/progress_1"
+
+        >
+
+
+        <View
+            android:id="@+id/view_2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2mdp"
+            android:background="@color/purple_25264D"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/img_circle_2"
+            app:layout_constraintEnd_toStartOf="@id/img_circle_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/img_circle_2" />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_circle_2"
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:layout_gravity="center"
+            android:background="@drawable/background_circle_non_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_4"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2mdp"
+            android:background="@color/purple_25264D"
+            android:visibility="visible"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/img_circle_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_circle_2"
+            app:layout_constraintTop_toTopOf="@id/img_circle_2" />
+
+
+        <TextView
+            android:id="@+id/txt_membership"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:fontFamily="@font/quicksand_medium"
+            android:gravity="center_horizontal"
+            android:text="@string/membership"
+            android:textColor="@color/purple_7576D"
+            android:textSize="@dimen/_12msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_circle_2"
+
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/progress_3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="@id/progress_1"
+        app:layout_constraintEnd_toStartOf="@id/progress_4"
+        app:layout_constraintStart_toEndOf="@id/progress_2"
+        app:layout_constraintTop_toTopOf="@id/progress_1">
+
+        <View
+            android:id="@+id/view_3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2mdp"
+            android:background="@color/purple_25264D"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/img_circle_3"
+            app:layout_constraintEnd_toStartOf="@id/img_circle_3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/img_circle_3" />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_circle_3"
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:layout_gravity="center"
+            android:background="@drawable/background_circle_non_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_6"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2mdp"
+            android:background="@color/purple_25264D"
+            android:visibility="visible"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/img_circle_3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_circle_3"
+            app:layout_constraintTop_toTopOf="@id/img_circle_3" />
+
+
+        <TextView
+            android:id="@+id/txt_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:fontFamily="@font/quicksand_medium"
+            android:gravity="center_horizontal"
+            android:text="@string/card"
+            android:textColor="@color/purple_7576D"
+            android:textSize="@dimen/_12msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_circle_3"
+
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/progress_4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="@id/progress_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/progress_3"
+        app:layout_constraintTop_toTopOf="@id/progress_1">
+
+        <View
+            android:id="@+id/view_7"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2mdp"
+            android:background="@color/purple_25264D"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/img_circle_4"
+            app:layout_constraintEnd_toStartOf="@id/img_circle_4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/img_circle_4" />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_circle_4"
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:layout_gravity="center"
+            android:background="@drawable/background_circle_non_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:fontFamily="@font/quicksand_medium"
+            android:gravity="center_horizontal"
+            android:text="@string/payment"
+            android:textColor="@color/purple_7576D"
+            android:textSize="@dimen/_12msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_circle_4"
+
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#0C0D2D</color>
+    <color name="colorSplash">#EEEBED</color>
+    <color name="colorPrimaryDark">#050626</color>
+    <color name="colorAccent">#20173D</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="gray_767691">#767691</color>
+
+    <color name="blue_00C6FB">#00C6FB</color>
+    <color name="blue_121C3D">#121C3D</color>
+    <color name="blue_627EEA">#627EEA</color>
+
+
+    <color name="green_02303B">#02303B</color>
+
+    <color name="purple_25264D">#25264D</color>
+    <color name="purple_7576D">#75769D</color>
+    <color name="purple_202148">#202148</color>
+
+
+    <color name="yellow_FFD23D">#FFD23D</color>
+    <color name="yellow_46443C">#46443C</color>
+    <color name="yellow_F7931A">#F7931A</color>
+    <color name="yellow_FADF68">#FADF68</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="red">#D50000</color>
+
+    <color name="green_099817">#099817</color>
+    <color name="green_4DCC59">#4DCC59</color>
+
+    <color name="blue_22d1ee">#22d1ee</color>
+    <color name="light_green_22d1ee">#a7ff83</color>
+
+
+    <!-- dots inactive colors -->
+    <color name="dot_dark_screen1">#FFFFF0</color>
+    <color name="dot_dark_screen2">#FFFFF0</color>
+    <color name="dot_dark_screen3">#FFFFF0</color>
+    <color name="dot_dark_screen4">#FFFFF0</color>
+
+    <!-- dots active colors -->
+    <color name="dot_light_screen1">#4FCEC9</color>
+    <color name="dot_light_screen2">#4FCEC9</color>
+    <color name="dot_light_screen3">#4FCEC9</color>
+    <color name="dot_light_screen4">#4FCEC9</color>
+
+
+    <array name="array_dot_active">
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen2</item>
+        <item>@color/dot_light_screen3</item>
+        <item>@color/dot_light_screen4</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen2</item>
+        <item>@color/dot_dark_screen3</item>
+        <item>@color/dot_dark_screen4</item>
+    </array>
+
+    <color name="light_blue">#44456E</color>
+    <color name="yellow_color">#F0B90B</color>
+
+</resources>

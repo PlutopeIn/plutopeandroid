@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/const_root"
+        android:background="@color/colorPrimary">
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/_30mdp"
+            android:layout_height="@dimen/_30mdp"
+            android:layout_marginStart="@dimen/_17mdp"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:padding="@dimen/_8mdp"
+            android:src="@drawable/ic_back_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/txt_advanced"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:fontFamily="@font/quicksand_bold"
+            android:gravity="center"
+            android:text="@string/advanced"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_20msp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
+
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_80mdp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@id/btn_save"
+            app:layout_constraintTop_toBottomOf="@id/txt_advanced">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/txt_title_gas_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/gas_price_gwei"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/edt_gas_price"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_title_gas_price"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title_gas_price" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/txt_max_gas_fee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/max_fee_gwei"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_gas_price" />
+
+                <EditText
+                    android:visibility="gone"
+                    android:id="@+id/edt_max_gas_fee"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_max_gas_fee"
+                    app:layout_constraintTop_toBottomOf="@id/txt_max_gas_fee" />
+
+
+                <TextView
+                    android:id="@+id/txt_title_gas_limit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/gas_limit"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_max_gas_fee" />
+
+                <EditText
+                    android:id="@+id/edt_gas_limit"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_title_gas_limit"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title_gas_limit" />
+
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/txt_transaction_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/transaction_data_optional"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_gas_limit" />
+
+                <EditText
+                    android:visibility="gone"
+                    android:id="@+id/edt_transaction_data"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_transaction_data"
+                    app:layout_constraintTop_toBottomOf="@id/txt_transaction_data" />
+
+
+                <TextView
+                    android:id="@+id/txt_nonce"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/nonce"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_transaction_data" />
+
+                <EditText
+                    android:id="@+id/edt_nonce"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:layout_marginBottom="@dimen/_20mdp"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_nonce"
+                    app:layout_constraintTop_toBottomOf="@id/txt_nonce" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            style="@style/wallet_button_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_30mdp"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:layout_marginBottom="@dimen/_50mdp"
+            android:fitsSystemWindows="false"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scroll_view"
+            app:layout_constraintVertical_bias="1" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="nFTsViewModel"
+            type="com.app.plutope.ui.fragment.dashboard.nfts.NFTsViewModel" />
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.fragment.dashboard.nfts.NFTs">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_nfts_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                app:spanCount="2"
+                tools:itemCount="10"
+                tools:listitem="@layout/row_nft_list_item" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_no_found"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.35">
+
+                <ImageView
+                    android:id="@+id/img_robot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_user_robot"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_no_nfts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_12mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:text="@string/no_nfts_yet"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16msp"
+                    app:layout_constraintEnd_toEndOf="@id/img_robot"
+                    app:layout_constraintStart_toStartOf="@id/img_robot"
+                    app:layout_constraintTop_toBottomOf="@id/img_robot" />
+
+                <TextView
+                    android:id="@+id/txt_add_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_7mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:text="@string/learn_more"
+                    android:textColor="@color/blue_00C6FB"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintEnd_toEndOf="@id/img_robot"
+                    app:layout_constraintStart_toStartOf="@id/img_robot"
+                    app:layout_constraintTop_toBottomOf="@id/txt_no_nfts" />
+
+                <Button
+                    android:id="@+id/btn_receive"
+                    style="@style/wallet_button_gradient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_38mdp"
+                    android:layout_marginTop="@dimen/_18mdp"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_40mdp"
+                    android:text="@string/receive"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_add_more" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <Button
+                android:id="@+id/btn_receive_bottom"
+                style="@style/wallet_button_gradient"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_38mdp"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/_40mdp"
+                android:layout_marginBottom="@dimen/_100mdp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="@string/receive_nft"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_nfts_list" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

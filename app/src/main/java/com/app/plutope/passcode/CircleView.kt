@@ -1,0 +1,196 @@
+
+package com.app.plutope.passcode
+
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Paint.ANTI_ALIAS_FLAG
+import android.util.AttributeSet
+import android.view.View
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator
+
+internal class CircleView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
+
+    private val outLinePaint = Paint(ANTI_ALIAS_FLAG).apply {
+        color = Color.GRAY
+        strokeWidth = 2f
+        style = Paint.Style.STROKE
+    }
+
+    private val fillCirclePaint = Paint(ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        style = Paint.Style.FILL
+    }
+
+    private val fillAndStrokeCirclePaint = Paint(ANTI_ALIAS_FLAG).apply {
+        color = Color.BLACK
+        style = Paint.Style.FILL_AND_STROKE
+    }
+
+    private var radius = 10f
+
+    private var animator: ValueAnimator? = null
+
+    private var inputAndRemoveAnimationDuration = 200L
+
+    private var progress = 0.0f
+        set(value) {
+            field = value
+            postInvalidateOnAnimation()
+        }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val width = ((radius * 2) + (outLinePaint.strokeWidth)).toInt()
+        val height = ((radius * 2) + (outLinePaint.strokeWidth)).toInt()
+        setMeasuredDimension(width, height)
+    }
+
+    @SuppressLint("DrawAllocation")
+    override fun onDraw(canvas: Canvas) {
+
+        val halfOutLineStrokeWidth = outLinePaint.strokeWidth / 2
+
+        // fill circle
+        canvas.drawCircle(
+            radius + halfOutLineStrokeWidth,
+            radius + halfOutLineStrokeWidth,
+            lerp(radius - halfOutLineStrokeWidth, 0f, progress),
+            fillCirclePaint
+        )
+
+        // outline circle
+        canvas.drawCircle(
+            radius + halfOutLineStrokeWidth,
+            radius + halfOutLineStrokeWidth,
+            lerp(radius, 0f, progress),
+            outLinePaint
+        )
+
+        // fill and stroke circle
+        canvas.drawCircle(
+            radius + halfOutLineStrokeWidth,
+            radius + halfOutLineStrokeWidth,
+            lerp(0f, radius + halfOutLineStrokeWidth, progress),
+            fillAndStrokeCirclePaint
+        )
+    }
+
+    /*
+        override fun onDraw(canvas: Canvas) {
+            val halfOutLineStrokeWidth = outLinePaint.strokeWidth / 2
+            val centerX = radius + halfOutLineStrokeWidth
+            val centerY = radius + halfOutLineStrokeWidth
+            val asteriskSize = lerp(radius, 5f, progress)
+
+            // Draw the upper diagonal line of the asterisk
+            canvas.drawLine(
+                centerX - asteriskSize,
+                centerY - asteriskSize,
+                centerX + asteriskSize,
+                centerY + asteriskSize,
+                fillAndStrokeCirclePaint
+            )
+
+            // Draw the lower diagonal line of the asterisk
+            canvas.drawLine(
+                centerX - asteriskSize,
+                centerY + asteriskSize,
+                centerX + asteriskSize,
+                centerY - asteriskSize,
+                fillAndStrokeCirclePaint
+            )
+
+            // Draw the horizontal line of the asterisk
+            canvas.drawLine(
+                centerX - asteriskSize,
+                centerY,
+                centerX + asteriskSize,
+                centerY,
+                fillAndStrokeCirclePaint
+            )
+
+            // Draw the vertical line of the asterisk
+            canvas.drawLine(
+                centerX,
+                centerY - asteriskSize,
+                centerX,
+                centerY + asteriskSize,
+                fillAndStrokeCirclePaint
+            )
+        }
+    */
+
+    fun animateAndInvoke(onEnd: (() -> Unit)? = null) {
+        if (animator != null) {
+            return
+        }
+
+        val newProgress = if (progress == 0f) 1f else 0f
+        animator = ValueAnimator.ofFloat(progress, newProgress).apply {
+            duration = inputAndRemoveAnimationDuration
+            addUpdateListener {
+                progress = it.animatedValue as Float
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    animator = null
+                    onEnd?.invoke()
+                }
+            })
+            interpolator = FastOutLinearInInterpolator()
+        }
+        animator?.start()
+    }
+
+    fun setRadius(radius: Float) {
+        this.radius = radius
+        invalidate()
+    }
+
+    fun setFillCircleColor(color: Int) {
+        fillCirclePaint.color = color
+        postInvalidateOnAnimation()
+    }
+
+    fun setOutLineColor(color: Int) {
+        outLinePaint.color = color
+        postInvalidateOnAnimation()
+    }
+
+    fun setFillAndStrokeCircleColor(color: Int) {
+        fillAndStrokeCirclePaint.color = color
+        postInvalidateOnAnimation()
+    }
+
+    fun setOutlineStrokeWidth(strokeWidth: Float) {
+        outLinePaint.strokeWidth = strokeWidth
+    }
+
+    fun isAnimating(): Boolean = animator != null
+
+    fun getFillAndStrokeCircleColor(): Int = fillAndStrokeCirclePaint.color
+
+    fun getFillCircleColor(): Int = fillCirclePaint.color
+
+    fun getOutLineColor(): Int = outLinePaint.color
+
+    fun setInputAndRemoveAnimationDuration(duration: Long) {
+        inputAndRemoveAnimationDuration = duration
+    }
+
+    /*
+     * Linearly interpolate between two values.
+     */
+    private fun lerp(a: Float, b: Float, t: Float): Float {
+        return a + (b - a) * t
+    }
+}

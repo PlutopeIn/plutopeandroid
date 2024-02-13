@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="model"
+            type="com.app.plutope.model.CurrencyModel" />
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5mdp"
+        android:background="@drawable/bg_corner_radius_10">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/_20mdp"
+            android:layout_height="@dimen/_20mdp"
+            android:layout_marginEnd="@dimen/_17mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{model.isSelected ? View.VISIBLE : View.GONE}"
+            app:srcCompat="@drawable/ic_tick" />
+
+
+        <TextView
+            android:id="@+id/txt_phrases"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12mdp"
+            android:layout_marginVertical="@dimen/_17mdp"
+            android:fontFamily="@font/quicksand_semibold"
+            android:gravity="center_vertical"
+            android:text="@{model.code + ` - `+model.name}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="All - Albanian Lek" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

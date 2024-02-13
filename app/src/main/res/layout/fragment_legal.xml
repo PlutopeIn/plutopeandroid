@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="legalViewModel"
+            type="com.app.plutope.ui.fragment.wallet.legal.LegalViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".ui.fragment.wallet.legal.Legal">
+
+        <TextView
+            android:id="@+id/txt_legal_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_17mdp"
+            android:layout_marginTop="@dimen/_30mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:gravity="start"
+            android:lineSpacingExtra="@dimen/_15mdp"
+            android:paddingEnd="@dimen/_15mdp"
+            android:text="@string/please_review_the_plutope_terms_of_services_and_privacy_policy"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13msp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_privacy_policy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_45mdp"
+            app:layout_constrainedWidth="true"
+            android:paddingVertical="@dimen/_15mdp"
+            app:layout_constraintEnd_toEndOf="@id/txt_legal_info"
+            app:layout_constraintStart_toStartOf="@id/txt_legal_info"
+            app:layout_constraintTop_toBottomOf="@id/txt_legal_info">
+
+            <TextView
+                android:id="@+id/txt_privacy_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/privacy_policy"
+                android:textColor="@color/blue_00C6FB"
+                android:textSize="@dimen/_15msp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <ImageView
+                android:layout_width="@dimen/_25mdp"
+                android:layout_height="@dimen/_25mdp"
+                android:src="@drawable/img_right_arrow"
+                app:layout_constraintBottom_toBottomOf="@id/txt_privacy_policy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_privacy_policy"
+
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_terms_of_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_15mdp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="@id/txt_legal_info"
+            app:layout_constraintStart_toStartOf="@id/txt_legal_info"
+            app:layout_constraintTop_toBottomOf="@id/layout_privacy_policy">
+
+            <TextView
+                android:id="@+id/txt_terms_of_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/terms_of_service"
+                android:textColor="@color/blue_00C6FB"
+                android:textSize="@dimen/_15msp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <ImageView
+                android:layout_width="@dimen/_25mdp"
+                android:layout_height="@dimen/_25mdp"
+                android:src="@drawable/img_right_arrow"
+                app:layout_constraintBottom_toBottomOf="@id/txt_terms_of_service"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_terms_of_service"
+
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/ic_checkbox_selecter"
+            app:layout_constraintStart_toStartOf="@id/layout_terms_of_service"
+            app:layout_constraintTop_toTopOf="@id/txt_check_box_info" />
+
+
+        <TextView
+            android:id="@+id/txt_check_box_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_17mdp"
+            android:layout_marginTop="@dimen/_30mdp"
+            android:fontFamily="@font/quicksand_regular"
+            android:gravity="start"
+            android:lineSpacingExtra="@dimen/_15mdp"
+            android:text="@string/i_ve_read_and_accept_the_terms_of_services_and_privacy_policy"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/btn_continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checkbox"
+            app:layout_constraintTop_toBottomOf="@id/layout_terms_of_service"
+            app:layout_constraintVertical_bias=".8" />
+
+
+        <Button
+            android:id="@+id/btn_continue"
+            style="@style/button_disable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_30mdp"
+            android:layout_marginBottom="@dimen/_80mdp"
+            android:text="@string/_continue"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

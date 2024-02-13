@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_8mdp"
+            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardCornerRadius="@dimen/_17mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_inner_dialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constrainedHeight="true">
+
+
+                <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="@dimen/_20mdp"
+                    android:layout_marginTop="@dimen/_31mdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:gravity="center"
+                    android:text="@string/add_to_address_book"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_20msp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/txt_address_or_naming_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_16mdp"
+                    android:layout_marginTop="@dimen/_40mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="@string/enter_an_alias"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title" />
+
+
+                <EditText
+                    android:id="@+id/edt_alias_name"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:hint="e.g. Abc"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:minHeight="@dimen/_45mdp"
+                    android:paddingVertical="@dimen/_5mdp"
+                    android:paddingStart="@dimen/_10mdp"
+                    android:paddingEnd="@dimen/_130mdp"
+                    android:textColorHint="@color/gray_767691"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_12msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_address_or_naming_service"
+                    app:layout_constraintTop_toBottomOf="@id/txt_address_or_naming_service"
+
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_cancel"
+                    style="@style/button_border_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50mdp"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="@dimen/_30mdp"
+                    android:text="@string/cancel"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="@id/btn_save"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_save"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="@id/edt_alias_name"
+                    app:layout_constraintTop_toTopOf="@id/btn_save" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_save"
+                    style="@style/wallet_button_gradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:layout_marginBottom="@dimen/_46mdp"
+                    android:layout_marginEnd="@dimen/_30mdp"
+                    android:gravity="center"
+                    android:text="@string/save"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/edt_alias_name"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/btn_cancel"
+                    app:layout_constraintTop_toBottomOf="@id/edt_alias_name" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

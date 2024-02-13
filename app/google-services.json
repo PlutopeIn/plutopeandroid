@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "605735237130",
+    "project_id": "plutopeapp",
+    "storage_bucket": "plutopeapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605735237130:android:56c7dfee5cb7b7f81791f3",
+        "android_client_info": {
+          "package_name": "com.app.plutope"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605735237130-6i22aimhs6rq70tb6vsdskl3qintmjd5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy3a_puuNco7d4grdShzsMaEQcPN9IUK4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605735237130-6i22aimhs6rq70tb6vsdskl3qintmjd5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

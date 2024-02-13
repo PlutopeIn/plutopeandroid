@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="recoverModel"
+            type="com.app.plutope.ui.fragment.recovery_wallet.RecoveryWalletViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            tools:context=".ui.fragment.recovery_wallet.RecoveryWalletFragment">
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_40mdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="@string/name"
+                android:textColor="@color/purple_7576D"
+                android:textSize="@dimen/_10msp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edt_wallet_name"
+                style="@style/edittext_fill_bg_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_8mdp"
+                android:hint="@string/main_wallet"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:minHeight="@dimen/_45mdp"
+                android:paddingVertical="@dimen/_5mdp"
+                android:paddingStart="@dimen/_20mdp"
+                android:paddingEnd="@dimen/_20mdp"
+                android:textColorHint="@color/gray_767691"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/_12msp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_name"
+
+                />
+
+            <ImageView
+                android:id="@+id/img_cancel"
+                android:layout_width="@dimen/_20mdp"
+                android:layout_height="@dimen/_20mdp"
+                android:layout_marginEnd="@dimen/_15mdp"
+                android:src="@drawable/ic_circle_cancel"
+                app:layout_constraintBottom_toBottomOf="@id/edt_wallet_name"
+                app:layout_constraintEnd_toEndOf="@id/edt_wallet_name"
+                app:layout_constraintTop_toTopOf="@id/edt_wallet_name"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_backup_option"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_40mdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="@string/backup_options"
+                android:textColor="@color/purple_7576D"
+                android:textSize="@dimen/_10msp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_wallet_name" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_drive_backup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/purple_25264D"
+                app:cardCornerRadius="@dimen/_10mdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_backup_option">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/img_drive"
+                        android:layout_width="@dimen/_20mdp"
+                        android:layout_height="@dimen/_20mdp"
+                        android:layout_marginStart="@dimen/_15mdp"
+                        android:src="@drawable/ic_google_drive"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_drive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_19mdp"
+                        android:layout_marginStart="@dimen/_7mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:text="@string/drive_backup"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_13msp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/img_drive"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/txt_drive_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_10mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:textColor="@color/gray_767691"
+                        android:textSize="@dimen/_13msp"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_drive"
+                        app:layout_constraintEnd_toStartOf="@id/img_drive_backup_arrow"
+                        app:layout_constraintTop_toTopOf="@id/txt_drive"
+                        tools:text="Not Active" />
+
+                    <ImageView
+                        android:id="@+id/img_drive_backup_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_17mdp"
+                        android:src="@drawable/ic_forword_new"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_manual_backup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                app:cardBackgroundColor="@color/purple_25264D"
+                app:cardCornerRadius="@dimen/_10mdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_drive_backup">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/img_manual"
+                        android:layout_width="@dimen/_20mdp"
+                        android:layout_height="@dimen/_20mdp"
+                        android:layout_marginStart="@dimen/_15mdp"
+                        android:background="@drawable/ic_user_guide"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_manual"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_19mdp"
+                        android:layout_marginStart="@dimen/_7mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:text="@string/manual_backup"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_13msp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/img_manual"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/txt_manual_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_10mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:textColor="@color/gray_767691"
+                        android:textSize="@dimen/_13msp"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_manual"
+                        app:layout_constraintEnd_toStartOf="@id/img_manual_arrow"
+                        app:layout_constraintTop_toTopOf="@id/txt_manual"
+                        tools:text="Not Active" />
+
+                    <ImageView
+                        android:id="@+id/img_manual_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_17mdp"
+                        android:src="@drawable/ic_forword_new"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/txt_backup_des"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_19mdp"
+                android:fontFamily="@font/quicksand_regular"
+                android:gravity="start"
+                android:maxLines="2"
+                android:text="@string/if_you_loos_access_to_this_device_your_fund_will_be_lost_unless_you_back_up"
+                android:textColor="@color/purple_7576D"
+                android:textSize="@dimen/_10msp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="@id/card_drive_backup"
+                app:layout_constraintStart_toStartOf="@id/card_drive_backup"
+                app:layout_constraintTop_toBottomOf="@id/card_manual_backup" />
+
+            <Button
+                android:id="@+id/btn_save"
+                style="@style/wallet_button_gradient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginBottom="@dimen/_26mdp"
+                android:text="@string/save"
+                android:textAllCaps="false"
+                android:layout_marginTop="@dimen/_100mdp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/btn_delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_backup_des"
+                app:layout_constraintVertical_bias="1"
+
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <Button
+                android:id="@+id/btn_delete"
+                style="@style/button_border_red"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:layout_marginBottom="@dimen/_20mdp"
+                android:text="@string/delete_wallet"
+                android:textAllCaps="false"
+                android:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@id/btn_save"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_goneMarginTop="@dimen/_100mdp"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintVertical_chainStyle="packed"
+
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

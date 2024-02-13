@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="moreDetailsViewModel"
+            type="com.app.plutope.ui.fragment.card.personal_details.more_details.MoreDetailsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".ui.fragment.card.personal_details.more_details.MoreDetails">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/_30mdp"
+            android:layout_height="@dimen/_30mdp"
+            android:layout_marginStart="@dimen/_17mdp"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:padding="@dimen/_8mdp"
+            android:src="@drawable/ic_back_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <include
+            android:id="@+id/linear_progress"
+            layout="@layout/progress_card_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_back" />
+
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:fillViewport="true"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linear_progress"
+            app:layout_constraintVertical_bias="0.0">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linear_progress">
+
+                <TextView
+                    android:id="@+id/txt_more_details_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_14mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:text="@string/more_details"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_17msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_title_email_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/email_address"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_more_details_title" />
+
+                <EditText
+                    android:id="@+id/edt_email_address"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_title_email_address"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title_email_address" />
+
+
+                <TextView
+                    android:id="@+id/txt_title_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/mobile_phone"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@id/edt_email_address"
+                    app:layout_constraintStart_toStartOf="@id/edt_email_address"
+                    app:layout_constraintTop_toBottomOf="@id/edt_email_address" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_mobile_number"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16mdp"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title_mobile_number">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_country_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/img_country_flag"
+                            android:layout_width="@dimen/_22mdp"
+                            android:layout_height="@dimen/_22mdp"
+                            android:layout_marginStart="@dimen/_12mdp"
+                            android:src="@drawable/img_logo_with_circle_bg"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <View
+                            android:id="@+id/view"
+                            android:layout_width="@dimen/_1mdp"
+                            android:layout_height="@dimen/_22mdp"
+                            android:layout_marginStart="@dimen/_6mdp"
+                            android:background="@color/purple_7576D"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_country_flag"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/txt_country_code"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_6mdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:lineSpacingExtra="@dimen/_10msp"
+                            android:text="+91"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_10msp"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/view"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <EditText
+                        android:id="@+id/edt_mobile_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_10mdp"
+                        android:autofillHints=""
+                        android:background="@null"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center_vertical"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:paddingStart="@dimen/_12mdp"
+                        android:paddingEnd="@dimen/_20mdp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/purple_7576D"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/_10msp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/layout_country_code"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="India" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <TextView
+                    android:id="@+id/txt_title_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/password_"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_mobile_number" />
+
+                <EditText
+                    android:id="@+id/edt_password"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:inputType="textPassword"
+                    android:letterSpacing="0.5"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_title_password"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title_password" />
+
+                <ImageView
+                    android:id="@+id/img_hide_show"
+                    android:layout_width="@dimen/_16mdp"
+                    android:layout_height="@dimen/_16mdp"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:src="@drawable/ic_eye_hide"
+                    app:layout_constraintBottom_toBottomOf="@id/edt_password"
+                    app:layout_constraintEnd_toEndOf="@id/edt_password"
+                    app:layout_constraintTop_toTopOf="@id/edt_password" />
+
+
+                <TextView
+                    android:id="@+id/txt_title_confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/confirm_password_"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_password" />
+
+                <EditText
+                    android:id="@+id/edt_confirm_password"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:inputType="textPassword"
+                    android:letterSpacing="0.5"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_title_confirm_password"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title_confirm_password" />
+
+                <ImageView
+                    android:id="@+id/img_confirm_password_hide_show"
+                    android:layout_width="@dimen/_16mdp"
+                    android:layout_height="@dimen/_16mdp"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:src="@drawable/ic_eye_hide"
+                    app:layout_constraintBottom_toBottomOf="@id/edt_confirm_password"
+                    app:layout_constraintEnd_toEndOf="@id/edt_confirm_password"
+                    app:layout_constraintTop_toTopOf="@id/edt_confirm_password" />
+
+
+                <TextView
+                    android:id="@+id/txt_title_preferred_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_19mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/preferred_language"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_confirm_password" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_preferred_language"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16mdp"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_title_preferred_language">
+
+
+                    <TextView
+                        android:id="@+id/edt_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_10mdp"
+                        android:autofillHints=""
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/_20mdp"
+                        android:paddingEnd="@dimen/_20mdp"
+                        android:text="English"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/purple_7576D"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/_10msp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/img_down_arrow"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="English" />
+
+                    <ImageView
+                        android:id="@+id/img_down_arrow"
+                        android:layout_width="@dimen/_9mdp"
+                        android:layout_height="@dimen/_9mdp"
+                        android:layout_marginStart="@dimen/_12mdp"
+                        android:layout_marginEnd="@dimen/_19mdp"
+                        android:src="@drawable/ic_down_arrow"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/ic_checkbox_selecter"
+                    app:layout_constraintStart_toStartOf="@id/layout_preferred_language"
+                    app:layout_constraintTop_toTopOf="@id/txt_check_box_info" />
+
+
+                <TextView
+                    android:id="@+id/txt_check_box_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_42mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/_15mdp"
+                    android:text="@string/i_have_read_and_agree_to_the_membership_agreement"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/checkbox"
+                    app:layout_constraintTop_toBottomOf="@id/layout_preferred_language" />
+
+
+                <Button
+                    android:id="@+id/btn_continue"
+                    style="@style/wallet_button_gradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/_30mdp"
+                    android:layout_marginTop="@dimen/_53mdp"
+                    android:layout_marginBottom="@dimen/_41mdp"
+                    android:text="@string/next"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_check_box_info"
+
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/gridlayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:columnCount="3"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/password_view"
+    app:layout_constraintVertical_bias=".7">
+
+    <TextView
+        android:id="@+id/text_1"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_1"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_27msp"
+
+        app:layout_constraintEnd_toStartOf="@id/text_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        />
+
+    <TextView
+        android:id="@+id/text_2"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_2"
+        android:textColor="@color/white"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintBottom_toBottomOf="@id/text_1"
+        app:layout_constraintEnd_toStartOf="@id/text_3"
+        app:layout_constraintStart_toEndOf="@id/text_1"
+        app:layout_constraintTop_toTopOf="@id/text_1" />
+
+    <TextView
+        android:id="@+id/text_3"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_3"
+        android:textColor="@color/white"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintBottom_toBottomOf="@id/text_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/text_2"
+        app:layout_constraintTop_toTopOf="@id/text_2" />
+
+    <TextView
+        android:id="@+id/text_4"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_4"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/_10mdp"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintEnd_toEndOf="@id/text_1"
+        app:layout_constraintStart_toStartOf="@id/text_1"
+        app:layout_constraintTop_toBottomOf="@id/text_1" />
+
+    <TextView
+        android:id="@+id/text_5"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_5"
+        android:textColor="@color/white"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintBottom_toBottomOf="@id/text_4"
+        app:layout_constraintEnd_toEndOf="@id/text_2"
+        app:layout_constraintStart_toStartOf="@id/text_2"
+        app:layout_constraintTop_toTopOf="@id/text_4"
+
+        />
+
+    <TextView
+        android:id="@+id/text_6"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_6"
+        android:textColor="@color/white"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintBottom_toBottomOf="@id/text_5"
+        app:layout_constraintEnd_toEndOf="@id/text_3"
+        app:layout_constraintStart_toStartOf="@id/text_3"
+        app:layout_constraintTop_toTopOf="@id/text_5" />
+
+    <TextView
+        android:id="@+id/text_7"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_7"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/_10mdp"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintEnd_toEndOf="@id/text_4"
+        app:layout_constraintStart_toStartOf="@id/text_4"
+        app:layout_constraintTop_toBottomOf="@id/text_4"
+
+        />
+
+    <TextView
+        android:id="@+id/text_8"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_8"
+        android:textColor="@color/white"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintBottom_toBottomOf="@id/text_7"
+        app:layout_constraintEnd_toEndOf="@id/text_2"
+        app:layout_constraintStart_toStartOf="@id/text_2"
+        app:layout_constraintTop_toTopOf="@id/text_7"
+
+        />
+
+    <TextView
+        android:id="@+id/text_9"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_9"
+        android:textColor="@color/white"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintBottom_toBottomOf="@id/text_8"
+        app:layout_constraintEnd_toEndOf="@id/text_3"
+        app:layout_constraintStart_toStartOf="@id/text_3"
+        app:layout_constraintTop_toTopOf="@id/text_8" />
+
+    <TextView
+        android:id="@+id/text_cencel"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:layout_column="0"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/_10mdp"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_15msp"
+        app:layout_constraintEnd_toEndOf="@id/text_7"
+        app:layout_constraintStart_toStartOf="@id/text_7"
+        app:layout_constraintTop_toBottomOf="@id/text_7" />
+
+
+    <TextView
+        android:id="@+id/text_0"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:layout_column="1"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:text="@string/_0"
+        android:textColor="@color/white"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintBottom_toBottomOf="@id/text_cencel"
+        app:layout_constraintEnd_toEndOf="@id/text_2"
+        app:layout_constraintStart_toStartOf="@id/text_2"
+        app:layout_constraintTop_toTopOf="@id/text_cencel" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/text_d"
+        android:layout_width="@dimen/input_button_width"
+        android:layout_height="@dimen/input_button_height"
+        android:layout_column="2"
+        android:fontFamily="@font/quicksand_medium"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/ripple_key_board"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:textSize="@dimen/_27msp"
+        app:layout_constraintBottom_toBottomOf="@id/text_0"
+        app:layout_constraintEnd_toEndOf="@id/text_3"
+        app:layout_constraintStart_toStartOf="@id/text_3"
+        app:layout_constraintTop_toTopOf="@id/text_0">
+
+        <ImageView
+            android:layout_width="@dimen/_50mdp"
+            android:layout_height="@dimen/_50mdp"
+            android:background="@drawable/background_close_keyboard"
+            android:padding="@dimen/_15mdp"
+            android:contentDescription="@string/description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/ic_back_arrow_keyboard"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="browserViewModel"
+            type="com.app.plutope.browser.BrowserViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".browser.Browser">
+
+        <include
+            android:id="@+id/layout_toolbar"
+            layout="@layout/layout_url_bar_compact"
+            android:visibility="gone" />
+
+        <com.app.plutope.browser.custom.AddressBar
+            android:id="@+id/address_bar_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/address_bar_widget" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_3mdp"
+            android:indeterminate="false"
+            app:layout_constraintTop_toBottomOf="@id/separator" />
+
+        <View
+            android:id="@+id/anchor"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1mdp"
+            app:layout_constraintTop_toBottomOf="@id/progressBar" />
+
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/anchor"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <!--
+                        <com.app.plutope.browser.custom.DAppBrowserSwipeLayout
+                            android:id="@+id/swipe_refresh"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.app.plutope.browser.custom.Web3View
+                                android:id="@+id/web3view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                        </com.app.plutope.browser.custom.DAppBrowserSwipeLayout>
+            -->
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swap_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <com.app.plutope.browser.custom.Web3View
+                    android:id="@+id/web3view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </FrameLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

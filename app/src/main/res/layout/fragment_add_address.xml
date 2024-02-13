@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="addAddressViewModel"
+            type="com.app.plutope.ui.fragment.card.personal_details.add_address.AddAddressViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/_30mdp"
+            android:layout_height="@dimen/_30mdp"
+            android:layout_marginStart="@dimen/_17mdp"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:padding="@dimen/_8mdp"
+            android:src="@drawable/ic_back_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <include
+            android:id="@+id/linear_progress"
+            layout="@layout/progress_card_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_back" />
+
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:fillViewport="true"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linear_progress">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linear_progress">
+
+
+                <TextView
+                    android:id="@+id/txt_add_address_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_14mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:text="@string/add_address"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_17msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_address_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_17mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/address_1"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_add_address_title" />
+
+                <EditText
+                    android:id="@+id/edt_address_1"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_address_1"
+                    app:layout_constraintTop_toBottomOf="@id/txt_address_1" />
+
+                <TextView
+                    android:id="@+id/txt_address_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/address_2"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@id/edt_address_1"
+                    app:layout_constraintStart_toStartOf="@id/edt_address_1"
+                    app:layout_constraintTop_toBottomOf="@id/edt_address_1" />
+
+                <EditText
+                    android:id="@+id/edt_address_2"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@id/txt_address_2"
+                    app:layout_constraintStart_toStartOf="@id/txt_address_2"
+                    app:layout_constraintTop_toBottomOf="@id/txt_address_2" />
+
+                <TextView
+                    android:id="@+id/txt_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/city"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@id/edt_address_2"
+                    app:layout_constraintStart_toStartOf="@id/edt_address_2"
+                    app:layout_constraintTop_toBottomOf="@id/edt_address_2" />
+
+                <EditText
+                    android:id="@+id/edt_city"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@id/txt_city"
+                    app:layout_constraintStart_toStartOf="@id/txt_city"
+                    app:layout_constraintTop_toBottomOf="@id/txt_city" />
+
+                <TextView
+                    android:id="@+id/txt_postcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="@dimen/_10msp"
+                    android:text="@string/postcode"
+                    android:textColor="@color/purple_7576D"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@id/edt_city"
+                    app:layout_constraintStart_toStartOf="@id/edt_city"
+                    app:layout_constraintTop_toBottomOf="@id/edt_city" />
+
+                <EditText
+                    android:id="@+id/edt_postcode"
+                    style="@style/edittext_fill_bg_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_11mdp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_20mdp"
+                    android:paddingEnd="@dimen/_35mdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@id/txt_postcode"
+                    app:layout_constraintStart_toStartOf="@id/txt_postcode"
+                    app:layout_constraintTop_toBottomOf="@id/txt_postcode" />
+
+                <Button
+                    android:id="@+id/btn_next"
+                    style="@style/wallet_button_gradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/_30mdp"
+                    android:layout_marginTop="@dimen/_71mdp"
+                    android:layout_marginBottom="@dimen/_80mdp"
+                    android:text="@string/next"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_postcode"
+                    app:layout_constraintVertical_bias="0"
+                    app:layout_constraintVertical_chainStyle="packed"
+
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

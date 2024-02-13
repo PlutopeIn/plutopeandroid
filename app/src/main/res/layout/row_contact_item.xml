@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="contactModel"
+            type="com.app.plutope.model.ContactModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/txt_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_7mdp"
+            android:layout_marginTop="@dimen/_15mdp"
+            android:layout_marginEnd="@dimen/_10mdp"
+            android:fontFamily="@font/quicksand_semibold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15msp"
+            android:visibility="gone"
+            android:text="@{contactModel.name}"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="guierwgi"
+
+            />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:layout_marginBottom="@dimen/_5mdp"
+            app:cardBackgroundColor="@color/purple_25264D"
+            app:cardCornerRadius="@dimen/_10mdp"
+            app:layout_constraintTop_toBottomOf="@id/txt_header">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageView
+                    android:id="@+id/img_bag"
+                    android:layout_width="@dimen/_40mdp"
+                    android:layout_height="@dimen/_40mdp"
+                    android:layout_marginStart="@dimen/_14mdp"
+                    android:src="@drawable/img_pluto_pe_logo_with_bg"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_transaction_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7mdp"
+                    android:layout_marginTop="@dimen/_19mdp"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:fontFamily="@font/quicksand_semibold"
+                    android:text="@{contactModel.name}"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toEndOf="@id/img_bag"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="guierwgi"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_transaction_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4mdp"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:layout_marginBottom="@dimen/_19mdp"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:text="@{contactModel.address}"
+                    android:textColor="@color/purple_7576D"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:textSize="@dimen/_10msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/txt_transaction_name"
+                    app:layout_constraintTop_toBottomOf="@id/txt_transaction_name"
+                    tools:text="fiwegfhi fewbfuiewgrbfuiturh3ui" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>
