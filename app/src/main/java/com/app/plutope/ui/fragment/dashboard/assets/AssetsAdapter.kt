@@ -45,14 +45,22 @@ class AssetsAdapter(var list: MutableList<Tokens>, var listener: (Tokens) -> Uni
 
 
             val price = model.t_balance.toBigDecimal() * model.t_price!!.toBigDecimal()
-
             val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
-
             binding.txtUsdPrice.text = if (price.toDouble() > 0.0) "${
                 PreferenceHelper.getInstance().getSelectedCurrency()?.symbol
-            }$formattedPrice" else{
+            }$formattedPrice" else {
                 ""
             }
+
+
+            /*
+                        CoroutineScope(Dispatchers.Main).launch{
+                            model.callFunction.getBalance {
+                                    binding.model?.t_balance = it.toString()
+                            }
+                        }
+            */
+
 
             binding.executePendingBindings()
         }
@@ -125,7 +133,7 @@ class AssetsAdapter(var list: MutableList<Tokens>, var listener: (Tokens) -> Uni
     }
 
     fun sortListByPrice() {
-        filteredList = list.sortedWith(compareByDescending { item ->
+        filteredList = list.distinct().sortedWith(compareByDescending { item ->
             val balance = item.t_balance.toBigDecimalOrNull() ?: BigDecimal.ZERO
             val price = item.t_price?.toBigDecimalOrNull() ?: BigDecimal.ZERO
             val result = balance * price

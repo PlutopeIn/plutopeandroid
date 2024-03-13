@@ -2,6 +2,7 @@ package com.app.plutope.ui.fragment.dashboard.assets
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,19 +19,21 @@ import com.app.plutope.model.Wallet
 import com.app.plutope.networkConfig.Chains
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.dashboard.DashboardDirections
+import com.app.plutope.ui.fragment.dashboard.DashboardViewModel
+import com.app.plutope.ui.fragment.dashboard.UpdateBalanceListener
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.transactions.buy.graph.GraphDetailViewModel
 import com.app.plutope.utils.coinTypeEnum.CoinType
-import com.app.plutope.utils.constant.COIN_GEKO_MARKET_API
+import com.app.plutope.utils.constant.COIN_GEKO_PLUTO_PE_SERVER_URL_NEW
 import com.app.plutope.utils.constant.isFromReceived
 import com.app.plutope.utils.customSnackbar.CustomSnackbar
 import com.app.plutope.utils.extras.SwipeToDeleteCallback
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.safeNavigate
-import com.app.plutope.utils.showLoader
-import com.app.plutope.utils.showLoaderAnyHow
+import com.app.plutope.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,9 +46,7 @@ import java.math.BigDecimal
 import java.util.Locale
 
 @AndroidEntryPoint
-class Assets(val callback: (data: String) -> Unit) :
-    BaseFragment<FragmentAssetsBinding, AssetsViewModel>() {
-
+class Assets : BaseFragment<FragmentAssetsBinding, AssetsViewModel>() {
     private val assetsViewModel: AssetsViewModel by viewModels()
     private var adapter: AssetsAdapter? = null
     private val tokenViewModel: TokenViewModel by viewModels()
@@ -53,8 +54,23 @@ class Assets(val callback: (data: String) -> Unit) :
     private var dataList: MutableList<Tokens> = mutableListOf()
     private var isFirstTimeCall: Boolean = false
     private var isFromTokenImageUpdate: Boolean = false
+    private val dashboardViewModel: DashboardViewModel by activityViewModels()
 
     private var btcBalance = "0"
+
+    private var callback: ((data: String) -> Unit)? = null
+
+    private var listenerUpdateBalance: UpdateBalanceListener? = null
+
+    companion object {
+        fun newInstance(callback: (data: String) -> Unit): Assets {
+            val fragment = Assets()
+            fragment.callback = callback
+            return fragment
+        }
+    }
+
+
     override fun getViewModel(): AssetsViewModel {
         return assetsViewModel
     }
@@ -77,6 +93,7 @@ class Assets(val callback: (data: String) -> Unit) :
     }
 
     override fun setupUI() {
+        startShimmerEffect()
         isFromReceived = false
         adapter = AssetsAdapter(dataList, listener = { model ->
             if (isAdded) {
@@ -95,26 +112,46 @@ class Assets(val callback: (data: String) -> Unit) :
 
         tokenViewModel.getWalletTokenOfSpecificWalletId(Wallet.walletObject.w_id)
         viewDataBinding?.swipeRefreshLayout?.setOnRefreshListener {
-            tokenViewModel.executeUpdateTokens(Wallet.getPublicWalletAddress(CoinType.BITCOIN)!!)
-            tokenViewModel.getWalletTokenOfSpecificWalletId(Wallet.walletObject.w_id)
+            startShimmerEffect()
+            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                exploreNewToken()
+            }
+            /* tokenViewModel.executeUpdateTokens(Wallet.getPublicWalletAddress(CoinType.BITCOIN)!!)
+             tokenViewModel.getWalletTokenOfSpecificWalletId(Wallet.walletObject.w_id)*/
         }
 
         viewDataBinding!!.edtSearch.setOnClickListener {
             CoinSearchBottomSheetDialog(
                 isFromGet = false,
                 isFromSwap = false, dialogDismissListner = { _, _ ->
+                    startShimmerEffect()
                     tokenViewModel.getWalletTokenOfSpecificWalletId(Wallet.walletObject.w_id)
                 }).show(childFragmentManager, "")
 
         }
 
+        viewDataBinding!!.btnExploreToken.buttonClickedWithEffect {
+            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                exploreNewToken()
+            }
+
+        }
+
 
         if (!preferenceHelper.isTokenImageUpdateCalled) {
-            requireContext().showLoaderAnyHow()
+           // requireContext().showLoaderAnyHow()
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val tokenlist = tokenViewModel.getAllTokensList()
                     val tokenImageList = tokenViewModel.getAllTokensImageList()
+
+                    loge(
+                        "TokenList",
+                        "size : ${tokenlist.map { it.t_symbol }.size} :: ${
+                            tokenlist.distinctBy { it.t_symbol }.map { it.t_symbol }.size
+                        }"
+                    )
+
                     val filteredList = tokenlist.filter { item1 ->
                         tokenImageList.any { item2Update ->
                             item1.tokenId == item2Update.coin_id &&
@@ -140,11 +177,26 @@ class Assets(val callback: (data: String) -> Unit) :
 
     }
 
+
+    private fun startShimmerEffect() {
+        viewDataBinding!!.shimmerLayout.startShimmer()
+        viewDataBinding!!.shimmerLayout.visibility = View.VISIBLE
+        viewDataBinding!!.rvAssetsList.visibility = View.GONE
+
+    }
+
+    private fun stopShimmerEffect() {
+        viewDataBinding!!.shimmerLayout.stopShimmer()
+        viewDataBinding?.shimmerLayout?.visibility = View.INVISIBLE
+        viewDataBinding!!.rvAssetsList.visibility = View.VISIBLE
+    }
+
+
     private fun enableSwipeToDeleteAndUndo() {
         val swipeToDeleteCallback: SwipeToDeleteCallback =
             object : SwipeToDeleteCallback(requireContext(), adapter!!.filteredList) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
-
+                    startShimmerEffect()
                     val position = viewHolder.adapterPosition
                     val item = adapter!!.filteredList[position]
                     item.isEnable = false
@@ -155,7 +207,6 @@ class Assets(val callback: (data: String) -> Unit) :
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(viewDataBinding!!.rvAssetsList)
         adapter?.notifyDataSetChanged()
-
     }
 
 
@@ -201,21 +252,27 @@ class Assets(val callback: (data: String) -> Unit) :
                             viewDataBinding?.swipeRefreshLayout?.isRefreshing = false
                             if (it.data?.isNotEmpty() == true) {
                                 dataList.clear()
-
                                 dataList.addAll(it.data as MutableList<Tokens>)
+
+                                loge("DataList", "datalist : ${dataList.size}")
+
+                                loge("Takans", "${dataList.filter { it.isEnable == true }.size}")
+
 
                                 val assetFilter =
                                     dataList.map { it.tokenId }.toList().joinToString(",")
 
                                 //dashboardViewModel.executeGetAssets(cryptoCurrencyUrl + "quotes/latest?" + "symbol=" + assetFilter + "&convert=${preferenceHelper.getSelectedCurrency()?.code}")
 
-                                graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=${assetFilter},bitcoin")
+                                //  graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=${assetFilter},bitcoin")
+                                // graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_PLUTO_PE_SERVER_URL${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=${assetFilter},bitcoin")
+                                graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_PLUTO_PE_SERVER_URL_NEW${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=${assetFilter},bitcoin")
 
                             }
                         }
 
                         is NetworkState.Loading -> {
-                            requireContext().showLoader()
+                            // requireContext().showLoader()
                         }
 
                         is NetworkState.Error -> {
@@ -270,65 +327,60 @@ class Assets(val callback: (data: String) -> Unit) :
                                     chain.t_logouri = coinMarket.image
                                 }
 
-                                /* if (chain.chain?.coinType == CoinType.BITCOIN) {
-                                     countBalance++
-                                     chain.t_balance = btcBalance
-                                     tokenViewModel.executeUpdateTokens(dataList)
-                                     checkBalanceFinish(countBalance)
-
-                                     //  tokenViewModel.executeUpdateTokens("bc1q4ce2w4z6q8m6v7fehau640dpp0fpqqzjqzpgsk")
-
-
-                                 } else {
-
-                                     lifecycleScope.launch(Dispatchers.IO) {
-                                         chain.callFunction.getBalance { // Assuming getBalance is a suspend function
-                                             countBalance++
-                                             chain.t_balance =
-                                                 if (chain.chain?.coinType != CoinType.BITCOIN) btcBalance else it.toString()
-                                             tokenViewModel.executeUpdateTokens(dataList)
-                                             checkBalanceFinish(countBalance)
-                                         }
-                                     }
-                                 }*/
 
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     chain.callFunction.getBalance { // Assuming getBalance is a suspend function
                                         countBalance++
                                         chain.t_balance =
                                             if (chain.chain?.coinType == CoinType.BITCOIN) btcBalance else it.toString()
+                                        loge("Getbalance:", "${chain.t_symbol}=>${it.toString()}")
                                         tokenViewModel.executeUpdateTokens(dataList)
                                         checkBalanceFinish(countBalance)
                                     }
                                 }
 
-
-                                chain // Return the updated Chain object
+                                chain
                             }
                         }
 
-                        val updatedDataList = deferredList.awaitAll()
+                        val updatedDataList = deferredList.awaitAll().toMutableList()
 
+
+                        adapter?.list = updatedDataList
+                        adapter?.notifyDataSetChanged()
+                        enableSwipeToDeleteAndUndo()
+                        delay(5000)
                         requireActivity().runOnUiThread {
+                            /* adapter?.list = updatedDataList
+                             adapter?.notifyDataSetChanged()
+                             enableSwipeToDeleteAndUndo()*/
 
-                            adapter?.list = updatedDataList as MutableList<Tokens>
-                            adapter?.notifyDataSetChanged()
-                            enableSwipeToDeleteAndUndo()
+
+                            /* viewDataBinding?.rvAssetsList?.visibility = View.VISIBLE
+                             viewDataBinding?.groupSearchToken?.visibility = View.VISIBLE
+                             stopShimmerEffect()*/
+
+                            loge("SIZE:", "${adapter?.list?.size}")
+
+
+
 
                             viewDataBinding?.rvAssetsList?.visibility = View.VISIBLE
                             viewDataBinding?.groupSearchToken?.visibility = View.VISIBLE
-                        }
+                            hideLoader()
+                            stopShimmerEffect()
 
-                        delay(1000)
-                        hideLoader()
+
+                        }
 
                     }
 
                     is NetworkState.Loading -> {
-                        requireContext().showLoader()
+                        // requireContext().showLoader()
                     }
 
                     is NetworkState.Error -> {
+                        requireContext().showToast("Please check after sometimes.")
                         hideLoader()
 
                     }
@@ -347,7 +399,7 @@ class Assets(val callback: (data: String) -> Unit) :
         }
 
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 tokenViewModel.updateWalletTokenResp.collect {
                     when (it) {
@@ -359,7 +411,7 @@ class Assets(val callback: (data: String) -> Unit) :
                         }
 
                         is NetworkState.Loading -> {
-                            requireContext().showLoader()
+                            // requireContext().showLoader()
                         }
 
                         is NetworkState.Error -> {
@@ -380,7 +432,7 @@ class Assets(val callback: (data: String) -> Unit) :
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 tokenViewModel.getBitcoinBalance.collect {
                     when (it) {
@@ -396,6 +448,7 @@ class Assets(val callback: (data: String) -> Unit) :
                                             // countBalance++
                                             chain.t_balance =
                                                 if (chain.chain?.coinType == CoinType.BITCOIN) btcBalance else it.toString()
+
                                             /* tokenViewModel.executeUpdateTokens(dataList)
                                         checkBalanceFinish(countBalance)*/
                                         }
@@ -405,7 +458,7 @@ class Assets(val callback: (data: String) -> Unit) :
                         }
 
                         is NetworkState.Loading -> {
-                            requireContext().showLoader()
+                            // requireContext().showLoader()
                         }
 
                         is NetworkState.Error -> {
@@ -417,9 +470,87 @@ class Assets(val callback: (data: String) -> Unit) :
                             CustomSnackbar.make(
                                 requireActivity().window.decorView.rootView as ViewGroup,
                                 it.message.toString()
-                            )
-                                .show()
+                            ).show()
                         }
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                tokenViewModel.getAllActiveTokenListResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data!!.isNotEmpty()) {
+                                val tempList = mutableListOf<Tokens>()
+                                tokenViewModel.getAllDisableTokens().forEach { allToken ->
+                                    it.data.forEach {
+                                        if (allToken.t_symbol?.lowercase() == it.symbol?.lowercase() && it.tokenAddress?.lowercase() == allToken.t_address?.lowercase()) {
+                                            if (it.tokenAddress != "0x0000000000000000000000000000000000001010") {
+                                                tempList.add(allToken)
+                                            }
+                                        }
+                                    }
+                                }
+
+                                tokenViewModel.getAllTokenList(
+                                    tokenViewModel,
+                                    tempList.distinct().toMutableList(), true
+                                )
+
+                            } else {
+                                tokenViewModel.getAllTokenList(tokenViewModel)
+                            }
+
+                        }
+
+                        is NetworkState.Loading -> {
+                            startShimmerEffect()
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                tokenViewModel.insertWalletTokenResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                                hideLoader()
+                                adapter?.list?.clear()
+                                adapter?.notifyDataSetChanged()
+                                setupUI()
+                            }
+
+                        }
+
+                        is NetworkState.Loading -> {
+
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {}
 
                         else -> {
                             hideLoader()
@@ -433,7 +564,7 @@ class Assets(val callback: (data: String) -> Unit) :
     }
 
     private fun checkBalanceFinish(countBalance: Int) {
-
+        loge("countBalance", "${adapter?.list?.size} == $countBalance")
         if(countBalance==adapter?.list?.size){
             val list = adapter?.list
 
@@ -446,27 +577,45 @@ class Assets(val callback: (data: String) -> Unit) :
             requireActivity().runOnUiThread {
                 adapter?.sortListByPrice()
                 enableSwipeToDeleteAndUndo()
+
+                /*  loge("checkBalanceFinish","Now it's time to load list")
+                  viewDataBinding?.rvAssetsList?.visibility = View.VISIBLE
+                  viewDataBinding?.groupSearchToken?.visibility = View.VISIBLE
+                  stopShimmerEffect()*/
             }
 
         }
     }
 
+
     private fun getTotalBalance() {
         val list = adapter?.list
         var totalBalance: BigDecimal = BigDecimal.ZERO
-        list?.onEach {
-            if (it.t_price?.isNotEmpty() == true) {
-                val rupees: BigDecimal =
-                    (it.t_balance.toBigDecimal()
-                        .times(it.t_price?.toBigDecimal() ?: 0.0.toBigDecimal()))
 
-                totalBalance += rupees
+        list?.let {
+            if (it.isNotEmpty()) {
+                it.forEach {
+                    if (it.t_price?.isNotEmpty() == true) {
+                        val rupees: BigDecimal =
+                            (it.t_balance.toBigDecimal()
+                                .times(it.t_price?.toBigDecimal() ?: BigDecimal.ZERO))
+                        totalBalance += rupees
+                    }
+                }
+
+                adapter?.notifyDataSetChanged()
+                dashboardViewModel.getBalance.value = totalBalance.toString()
+                callback?.invoke(totalBalance.toString())
+            } else {
+                // Handle the case where the list is empty
+                // You may want to notify the user or take appropriate action
+                callback?.invoke("0.0")
             }
-        }?.last()
+        }
+    }
 
-        adapter?.notifyDataSetChanged()
-        // enableSwipeToDeleteAndUndo()
-        callback.invoke(totalBalance.toString())
+    private fun exploreNewToken() {
+        tokenViewModel.getAllActiveTokenList(Wallet.getPublicWalletAddress(CoinType.ETHEREUM)!!)
     }
 
 

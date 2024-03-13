@@ -75,14 +75,15 @@ class ReceiveCoin : BaseFragment<FragmentReceiveCoinBinding, ReceiveCoinViewMode
     }
 
     override fun setupToolbarText(): String {
-        return "Receive ${args.tokenModel.t_symbol}"
+        return getString(R.string.receiving_coin, args.tokenModel.t_symbol)
     }
 
 
     override fun setupUI() {
         hideLoader()
         isFromReceived = true
-        viewDataBinding?.txtToolbarTitle?.text = "Receive ${args.tokenModel.t_symbol}"
+        viewDataBinding?.txtToolbarTitle?.text =
+            getString(R.string.receive_coin, args.tokenModel.t_symbol)
 
 
         addressWallet =

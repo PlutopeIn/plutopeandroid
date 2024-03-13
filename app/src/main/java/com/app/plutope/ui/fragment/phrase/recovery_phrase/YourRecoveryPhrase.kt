@@ -27,7 +27,7 @@ import com.app.plutope.ui.fragment.wallet.backup.PhraseBackupFragment
 import com.app.plutope.utils.GoogleSignInListner
 import com.app.plutope.utils.copyToClipboard
 import com.app.plutope.utils.extras.DriveServiceHelper
-import com.app.plutope.utils.extras.setSafeOnClickListener
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.requestGoogleSignIn
@@ -241,7 +241,7 @@ class YourRecoveryPhrase :
     }
 
     private fun setListener() {
-        viewDataBinding?.btnContinue?.setOnClickListener {
+        viewDataBinding?.btnContinue?.buttonClickedWithEffect {
             findNavController().safeNavigate(
                 YourRecoveryPhraseDirections.actionYourRecoveryPhraseToVerifySecretPhrase(
                     words.toString(),
@@ -256,12 +256,18 @@ class YourRecoveryPhrase :
             requireContext().showToast("Copied $words")
         }
 
-        viewDataBinding?.btnDelete?.setSafeOnClickListener {
+        viewDataBinding?.btnDelete?.buttonClickedWithEffect {
             if (!args.walletModel.w_is_manual_backup) {
-                openConfirmationDialog(getString(R.string.manual_backup_required),getString(R.string.before_deleting_your_icloud_backup_ensure_a_manual_backup_is_in_place_for_your_data_s_security),true)
+                openConfirmationDialog(
+                    getString(R.string.manual_backup_required),
+                    getString(R.string.before_deleting_your_icloud_backup_ensure_a_manual_backup_is_in_place_for_your_data_s_security),
+                    true
+                )
             } else {
-                openConfirmationDialog(getString(R.string.delete_backup),
-                    getString(R.string.are_you_sure_you_want_to_delete_cloud_backup),false)
+                openConfirmationDialog(
+                    getString(R.string.delete_backup),
+                    getString(R.string.are_you_sure_you_want_to_delete_cloud_backup), false
+                )
             }
         }
     }

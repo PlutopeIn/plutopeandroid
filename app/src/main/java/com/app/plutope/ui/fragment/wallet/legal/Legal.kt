@@ -8,6 +8,7 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentLegalBinding
 import com.app.plutope.ui.base.BaseFragment
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -80,7 +81,7 @@ class Legal : BaseFragment<FragmentLegalBinding, LegalViewModel>() {
             viewDataBinding!!.checkbox.performClick()
         }
 
-        viewDataBinding?.btnContinue?.setOnClickListener {
+        viewDataBinding?.btnContinue?.buttonClickedWithEffect {
             if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
 
                 if (preferenceHelper.menomonicWallet != "") {

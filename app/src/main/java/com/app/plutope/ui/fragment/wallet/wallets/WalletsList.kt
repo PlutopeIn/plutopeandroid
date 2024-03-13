@@ -14,11 +14,13 @@ import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.phrase.verify_phrase.VerifySecretPhraseViewModel
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.utils.Securities
+import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.safeNavigate
 import com.app.plutope.utils.showLoader
 import com.app.plutope.utils.showToast
+import com.app.plutope.utils.walletConnection.ACCOUNTS_1_EIP155_ADDRESS
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +74,6 @@ class WalletsList : BaseFragment<FragmentWalletsBinding, WalletsViewModel>() {
                     when (it) {
                         is NetworkState.Success -> {
                             hideLoader()
-
                             val list = it.data as MutableList<Wallets>
                             preferenceHelper.walletList = Gson().toJson(list)
                             if (list.isNotEmpty()) {
@@ -115,26 +116,16 @@ class WalletsList : BaseFragment<FragmentWalletsBinding, WalletsViewModel>() {
                                     tokenViewModel.executeUpdateAllTokenBalanceZero()
                                 }
                                 Wallet.refreshWallet()
+                                ACCOUNTS_1_EIP155_ADDRESS =
+                                    Wallet.getPublicWalletAddress(CoinType.ETHEREUM)
                                 findNavController().safeNavigate(WalletsListDirections.actionGlobalToDashboard())
                             }
-
                         }
 
-                        is NetworkState.Loading -> {
-
-                        }
-
-                        is NetworkState.Error -> {
-
-
-                        }
-
+                        is NetworkState.Loading -> {}
+                        is NetworkState.Error -> {}
                         is NetworkState.SessionOut -> {}
-
-                        else -> {
-
-
-                        }
+                        else -> {}
 
                     }
                 }

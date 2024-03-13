@@ -8,7 +8,6 @@ import android.view.animation.RotateAnimation
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -27,6 +26,7 @@ import com.app.plutope.ui.fragment.dashboard.assets.Assets
 import com.app.plutope.ui.fragment.dashboard.nfts.NFTs
 import com.app.plutope.utils.ConnectivityReceiver
 import com.app.plutope.utils.constant.isFromReceived
+import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.loadJSONFromRaw
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
@@ -41,9 +41,9 @@ import java.math.RoundingMode
 
 @AndroidEntryPoint
 class Dashboard : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(),
-    ConnectivityReceiver.ConnectivityReceiverListener {
+    ConnectivityReceiver.ConnectivityReceiverListener, UpdateBalanceListener {
 
-    private val dashboardViewModel: DashboardViewModel by viewModels()
+    private val dashboardViewModel: DashboardViewModel by activityViewModels()
     private val currencyViewModel: CurrencyViewModel by activityViewModels()
 
 
@@ -65,8 +65,9 @@ class Dashboard : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        hideLoader()
         (activity as BaseActivity).askNotificationPermission()
+
 
         animateImageProgress()
         loadTabData()
@@ -76,6 +77,17 @@ class Dashboard : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(),
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
+        /*
+                viewLifecycleOwner.lifecycleScope.launch {
+                    dashboardViewModel.getBalance.observe(viewLifecycleOwner){
+                        loge("Dashboard", "updateBalance1 : $it")
+                    }
+
+                }
+        */
+
+        // loge("PrivateKey","PK : ${Wallet.getPrivateKeyData(CoinType.ETHEREUM)}")
 
     }
 
@@ -114,9 +126,10 @@ class Dashboard : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(),
 
         })
         val titleTab = arrayListOf(getString(R.string.assets),getString(R.string.nfts))
+/*
         val asset = Assets(callback = { str ->
             val balance =
-                "${preferenceHelper.getSelectedCurrency()?.symbol.toString()}" + "" + (str.toBigDecimal()).setScale(
+                preferenceHelper.getSelectedCurrency()?.symbol.toString() + "" + (str.toBigDecimal()).setScale(
                     2,
                     RoundingMode.DOWN
                 ).toString()
@@ -125,6 +138,15 @@ class Dashboard : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(),
 
 
         })
+*/
+
+        val asset = Assets.newInstance { str ->
+            val balance = preferenceHelper.getSelectedCurrency()?.symbol.toString() +
+                    "" + (str.toBigDecimal()).setScale(2, RoundingMode.DOWN).toString()
+            Wallet.walletObject.w_wallet_last_balance = balance
+            viewDataBinding?.txtCurrentBalanceValue?.text = balance
+        }
+
 
         viewDataBinding?.txtCurrentBalanceValue?.text =
             Wallet.walletObject.w_wallet_last_balance
@@ -148,8 +170,7 @@ class Dashboard : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(),
 
     override fun setupUI() {
         setUpListener()
-        viewDataBinding?.txtCurrentBalanceTitle?.text =
-            Wallet.walletObject.w_wallet_name
+        viewDataBinding?.txtCurrentBalanceTitle?.text = Wallet.walletObject.w_wallet_name
     }
 
     private fun setUpListener() {
@@ -214,9 +235,37 @@ class Dashboard : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(),
 
     override fun onResume() {
         super.onResume()
+        loge("onResume", "in resume")
         if (isFromReceived) {
             loadTabData()
         }
+
+        Assets.newInstance { str ->
+            val balance = preferenceHelper.getSelectedCurrency()?.symbol.toString() +
+                    "" + (str.toBigDecimal()).setScale(2, RoundingMode.DOWN).toString()
+            Wallet.walletObject.w_wallet_last_balance = balance
+            viewDataBinding?.txtCurrentBalanceValue?.text = balance
+        }
+
+
+        // loadTabData()
+
+        dashboardViewModel.getBalance.observe(this) { str ->
+            loge("Dashboard", "updateBalance : $str")
+            requireActivity().runOnUiThread {
+                val balance = preferenceHelper.getSelectedCurrency()?.symbol.toString() +
+                        "" + (str.toBigDecimal()).setScale(2, RoundingMode.DOWN).toString()
+                Wallet.walletObject.w_wallet_last_balance = balance
+                viewDataBinding?.txtCurrentBalanceValue?.text = balance
+            }
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        loge("onStart", "in onStart")
+
     }
 
     private fun loadJsonCurrency(filename: Int): List<CurrencyModel> {
@@ -231,6 +280,10 @@ class Dashboard : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(),
             loadTabData()
         }
 
+    }
+
+    override fun updateBalance(balance: String) {
+        // loge("Dashboard", "updateBalance : $balance")
     }
 
 

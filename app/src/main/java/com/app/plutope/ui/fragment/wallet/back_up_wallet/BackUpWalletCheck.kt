@@ -11,6 +11,7 @@ import com.app.plutope.databinding.FragmentBackUpWalletCheckBinding
 import com.app.plutope.model.Wallets
 import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.getMnemonics
 import com.app.plutope.utils.getWordListFromWordCharArray
 import com.app.plutope.utils.safeNavigate
@@ -45,7 +46,7 @@ class BackUpWalletCheck :
 
         val words = wordList.joinToString(separator = " ")
 
-        viewDataBinding!!.btnContinue.setOnClickListener {
+        viewDataBinding!!.btnContinue.buttonClickedWithEffect {
 
             (activity as BaseActivity).askNotificationPermission()
 

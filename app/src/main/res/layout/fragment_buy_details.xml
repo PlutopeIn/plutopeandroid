@@ -10,15 +10,17 @@
             type="com.app.plutope.ui.fragment.transactions.buy.buy_detail.BuyDetailsViewModel" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
+   <!-- <androidx.core.widget.NestedScrollView
         android:id="@+id/nsScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:fillViewport="true">-->
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/colorPrimary"
             tools:context=".ui.fragment.transactions.buy.buy_detail.BuyDetails">
 
@@ -75,367 +77,467 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/img_coin"
-                android:layout_width="@dimen/_120mdp"
-                android:layout_height="@dimen/_120mdp"
-                android:layout_marginTop="@dimen/_30mdp"
-                android:background="@drawable/img_circle_shadow"
-                android:padding="@dimen/_25mdp"
-                android:src="@drawable/img_pluto_pe_logo_with_bg"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_toolbar"
-
-                />
-
-            <TextView
-                android:id="@+id/txt_balance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10mdp"
-                android:fontFamily="@font/quicksand_semibold"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="@color/white"
-                android:textSize="@dimen/_20msp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/img_coin"
-
-                />
-
-            <TextView
-                android:id="@+id/txt_network_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_6mdp"
-                android:background="@drawable/bg_corner_radius_2"
-                android:fontFamily="@font/quicksand_regular"
-                android:paddingHorizontal="@dimen/_4mdp"
-                android:paddingVertical="@dimen/_1mdp"
-                android:text="@string/you_pay"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_10msp"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@id/txt_balance"
-                app:layout_constraintStart_toEndOf="@id/txt_balance"
-                app:layout_constraintTop_toTopOf="@id/txt_balance"
-
-                />
-
-
-            <TextView
-                android:id="@+id/txt_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8mdp"
-                android:layout_marginEnd="@dimen/_3mdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:gravity="end"
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_14msp"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintEnd_toStartOf="@id/txt_crypto_diffrence_percentage"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_balance"
-                tools:text="$19.564" />
-
-            <TextView
-                android:id="@+id/txt_crypto_diffrence_percentage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_3mdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:gravity="start"
-                android:textColor="@color/green_099817"
-                android:textSize="@dimen/_14msp"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toEndOf="@id/txt_price"
-                app:layout_constraintTop_toTopOf="@id/txt_price"
-                tools:text="3.19%"
-
-                />
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/group_show_send_receive_icon"
+            <ScrollView
+                android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                app:constraint_referenced_ids="img_add,img_swap,txt_price,txt_crypto_diffrence_percentage"/>
-
-            <ImageView
-                android:id="@+id/img_send"
-                android:layout_width="@dimen/_50mdp"
-                android:layout_height="@dimen/_50mdp"
-                android:layout_marginTop="@dimen/_35mdp"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:src="@drawable/ic_send_bg_ract"
-                app:layout_constraintEnd_toStartOf="@+id/img_receive"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_price" />
-
-            <TextView
-                android:id="@+id/txt_send"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3mdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:gravity="center"
-                android:text="@string/send"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14msp"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintEnd_toEndOf="@id/img_send"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="@id/img_send"
-                app:layout_constraintTop_toBottomOf="@id/img_send" />
-
-
-            <ImageView
-                android:id="@+id/img_receive"
-                android:layout_width="@dimen/_50mdp"
-                android:layout_height="@dimen/_50mdp"
-                android:src="@drawable/ic_receive"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:layout_constraintEnd_toStartOf="@+id/img_add"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/img_send"
-                app:layout_constraintTop_toTopOf="@id/img_send" />
-
-
-            <TextView
-                android:id="@+id/txt_receive"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3mdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:gravity="center"
-                android:text="@string/receive"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14msp"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintEnd_toEndOf="@id/img_receive"
-                app:layout_constraintStart_toStartOf="@id/img_receive"
-                app:layout_constraintTop_toBottomOf="@id/img_receive" />
-
-
-            <ImageView
-                android:id="@+id/img_add"
-                android:layout_width="@dimen/_50mdp"
-                android:layout_height="@dimen/_50mdp"
-                android:src="@drawable/ic_add_bg_ract"
-                app:layout_constraintEnd_toStartOf="@+id/img_swap"
-                app:layout_constraintHorizontal_bias="0.5"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:layout_constraintStart_toEndOf="@+id/img_receive"
-                app:layout_constraintTop_toTopOf="@id/img_receive" />
-
-            <TextView
-                android:id="@+id/txt_buy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3mdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:gravity="center"
-                android:text="@string/buy"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14msp"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintEnd_toEndOf="@id/img_add"
-                app:layout_constraintStart_toStartOf="@id/img_add"
-                app:layout_constraintTop_toBottomOf="@id/img_add" />
-
-
-            <ImageView
-                android:id="@+id/img_swap"
-                android:layout_width="@dimen/_50mdp"
-                android:layout_height="@dimen/_50mdp"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:background="@drawable/bg_corner_radius_15"
-                android:padding="@dimen/_15mdp"
-                android:src="@drawable/ic_menu_dots_vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toEndOf="@+id/img_add"
-                app:layout_constraintTop_toTopOf="@id/img_add"
-
-                app:tint="@color/white" />
-
-            <TextView
-                android:id="@+id/txt_more"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3mdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:gravity="center"
-                android:text="@string/more"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14msp"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintEnd_toEndOf="@id/img_swap"
-                app:layout_constraintStart_toStartOf="@id/img_swap"
-                app:layout_constraintTop_toBottomOf="@id/img_swap" />
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:visibility="gone"
-                android:id="@+id/layout_warning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16mdp"
-                android:layout_marginTop="@dimen/_23mdp"
-                android:background="@drawable/background_warning"
-                app:layout_constraintTop_toBottomOf="@id/img_send">
-
-
-                <ImageView
-                    android:id="@+id/img_warning"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_20mdp"
-                    android:layout_marginStart="@dimen/_14mdp"
-                    android:layout_marginTop="@dimen/_1mdp"
-                    android:src="@drawable/ic_warning_triangle"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/txt_warning" />
-
-                <TextView
-                    android:id="@+id/txt_warning"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_9mdp"
-                    android:layout_marginTop="@dimen/_15mdp"
-                    android:layout_marginEnd="@dimen/_41mdp"
-                    android:layout_marginBottom="@dimen/_13mdp"
-                    android:fontFamily="@font/quicksand_regular"
-                    android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut."
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_12msp"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_warning"
-                    app:layout_constraintTop_toTopOf="parent"
-
-                    />
-
-                <ImageView
-                    android:id="@+id/img_info"
-                    android:layout_width="@dimen/_23mdp"
-                    android:layout_height="@dimen/_23mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:layout_marginTop="@dimen/_11mdp"
-                    android:layout_marginEnd="@dimen/_10mdp"
-                    android:src="@drawable/ic_close_circle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <TextView
-                android:id="@+id/txt_transactions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16mdp"
-                android:layout_marginTop="@dimen/_20mdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:text="@string/transactions"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_18msp"
-                app:layout_goneMarginTop="@dimen/_30mdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_warning" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_transaction_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16mdp"
-                android:layout_marginTop="@dimen/_10mdp"
-                android:layout_marginBottom="@dimen/_36mdp"
-                android:nestedScrollingEnabled="true"
-                android:overScrollMode="never"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/btn_buy"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_transactions"
-                tools:itemCount="15"
-                tools:listitem="@layout/row_transaction_list" />
-
-            <ProgressBar
-                android:id="@+id/progress_page"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_transaction_list" />
-
-
-            <Button
-                android:id="@+id/btn_buy"
-                style="@style/wallet_button_gradient"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_50mdp"
-                android:layout_marginHorizontal="@dimen/_30mdp"
-                android:layout_marginBottom="@dimen/_40mdp"
-                android:text="@string/buy_bitcoin"
-                android:visibility="gone"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/_5mdp"
+                android:nestedScrollingEnabled="false"
+                android:fillViewport="true"
+                app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/layout_toolbar">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_no_found"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/_50mdp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@id/btn_buy"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_transactions"
-                app:layout_constraintVertical_bias="0.5">
-
-                <ImageView
-                    android:id="@+id/img_robot"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_user_robot"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/txt_no_transaction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12mdp"
-                    android:fontFamily="@font/quicksand_regular"
-                    android:text="@string/no_transactions"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_16msp"
-                    app:layout_constraintEnd_toEndOf="@id/img_robot"
-                    app:layout_constraintStart_toStartOf="@id/img_robot"
-                    app:layout_constraintTop_toBottomOf="@id/img_robot" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_coin"
+                        android:layout_width="@dimen/_80mdp"
+                        android:layout_height="@dimen/_80mdp"
+                        android:layout_marginTop="@dimen/_10mdp"
+                        android:background="@drawable/img_circle_shadow"
+                        android:padding="@dimen/_15mdp"
+                        android:src="@drawable/img_pluto_pe_logo_with_bg"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10mdp"
+                        android:fontFamily="@font/quicksand_semibold"
+                        android:gravity="center_horizontal"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_20msp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/img_coin"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txt_network_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_6mdp"
+                        android:background="@drawable/bg_corner_radius_2"
+                        android:fontFamily="@font/quicksand_regular"
+                        android:paddingHorizontal="@dimen/_4mdp"
+                        android:paddingVertical="@dimen/_1mdp"
+                        android:text="@string/you_pay"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_10msp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_balance"
+                        app:layout_constraintStart_toEndOf="@id/txt_balance"
+                        app:layout_constraintTop_toTopOf="@id/txt_balance"
+
+                        />
+
+
+                    <TextView
+                        android:id="@+id/txt_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8mdp"
+                        android:layout_marginEnd="@dimen/_3mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:gravity="end"
+                        android:textColor="@color/purple_7576D"
+                        android:textSize="@dimen/_14msp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toStartOf="@id/txt_crypto_diffrence_percentage"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txt_balance"
+                        tools:text="$19.564" />
+
+                    <TextView
+                        android:id="@+id/txt_crypto_diffrence_percentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_3mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:gravity="start"
+                        android:textColor="@color/green_099817"
+                        android:textSize="@dimen/_14msp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toEndOf="@id/txt_price"
+                        app:layout_constraintTop_toTopOf="@id/txt_price"
+                        tools:text="3.19%"
+
+                        />
+
+                    <androidx.constraintlayout.widget.Group
+                        android:id="@+id/group_show_send_receive_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        app:constraint_referenced_ids="img_add,img_swap,txt_price,txt_crypto_diffrence_percentage" />
+
+                    <ImageView
+                        android:id="@+id/img_send"
+                        android:layout_width="@dimen/_50mdp"
+                        android:layout_height="@dimen/_50mdp"
+                        android:layout_marginTop="@dimen/_25mdp"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:src="@drawable/ic_send_bg_ract"
+                        app:layout_constraintEnd_toStartOf="@+id/img_receive"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txt_price" />
+
+                    <TextView
+                        android:id="@+id/txt_send"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:gravity="center"
+                        android:text="@string/send"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14msp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="@id/img_send"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="@id/img_send"
+                        app:layout_constraintTop_toBottomOf="@id/img_send" />
+
+
+                    <ImageView
+                        android:id="@+id/img_receive"
+                        android:layout_width="@dimen/_50mdp"
+                        android:layout_height="@dimen/_50mdp"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:src="@drawable/ic_receive"
+                        app:layout_constraintEnd_toStartOf="@+id/img_add"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/img_send"
+                        app:layout_constraintTop_toTopOf="@id/img_send" />
+
+
+                    <TextView
+                        android:id="@+id/txt_receive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:gravity="center"
+                        android:text="@string/receive"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14msp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="@id/img_receive"
+                        app:layout_constraintStart_toStartOf="@id/img_receive"
+                        app:layout_constraintTop_toBottomOf="@id/img_receive" />
+
+
+                    <ImageView
+                        android:id="@+id/img_add"
+                        android:layout_width="@dimen/_50mdp"
+                        android:layout_height="@dimen/_50mdp"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:src="@drawable/ic_add_bg_ract"
+                        app:layout_constraintEnd_toStartOf="@+id/img_swap"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/img_receive"
+                        app:layout_constraintTop_toTopOf="@id/img_receive" />
+
+                    <TextView
+                        android:id="@+id/txt_buy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:gravity="center"
+                        android:text="@string/buy"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14msp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="@id/img_add"
+                        app:layout_constraintStart_toStartOf="@id/img_add"
+                        app:layout_constraintTop_toBottomOf="@id/img_add" />
+
+
+                    <ImageView
+                        android:id="@+id/img_swap"
+                        android:layout_width="@dimen/_50mdp"
+                        android:layout_height="@dimen/_50mdp"
+                        android:background="@drawable/bg_corner_radius_15"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="@dimen/_15mdp"
+                        android:src="@drawable/ic_menu_dots_vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toEndOf="@+id/img_add"
+                        app:layout_constraintTop_toTopOf="@id/img_add"
+
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/txt_more"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:gravity="center"
+                        android:text="@string/more"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14msp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="@id/img_swap"
+                        app:layout_constraintStart_toStartOf="@id/img_swap"
+                        app:layout_constraintTop_toBottomOf="@id/img_swap" />
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_warning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16mdp"
+                        android:layout_marginTop="@dimen/_23mdp"
+                        android:background="@drawable/background_warning"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@id/img_send">
+
+
+                        <ImageView
+                            android:id="@+id/img_warning"
+                            android:layout_width="@dimen/_20mdp"
+                            android:layout_height="@dimen/_20mdp"
+                            android:layout_marginStart="@dimen/_14mdp"
+                            android:layout_marginTop="@dimen/_1mdp"
+                            android:src="@drawable/ic_warning_triangle"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/txt_warning" />
+
+                        <TextView
+                            android:id="@+id/txt_warning"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_9mdp"
+                            android:layout_marginTop="@dimen/_15mdp"
+                            android:layout_marginEnd="@dimen/_41mdp"
+                            android:layout_marginBottom="@dimen/_13mdp"
+                            android:fontFamily="@font/quicksand_regular"
+                            android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut."
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12msp"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_warning"
+                            app:layout_constraintTop_toTopOf="parent"
+
+                            />
+
+                        <ImageView
+                            android:id="@+id/img_info"
+                            android:layout_width="@dimen/_23mdp"
+                            android:layout_height="@dimen/_23mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:layout_marginEnd="@dimen/_10mdp"
+                            android:src="@drawable/ic_close_circle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40mdp"
+                        android:layout_marginHorizontal="@dimen/_64mdp"
+                        android:layout_marginTop="@dimen/_40mdp"
+                        android:background="@drawable/bg_tab_border"
+                        android:contentDescription="tab"
+                        android:textSize="@dimen/_16mdp"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layout_warning"
+                        app:tabBackground="@drawable/selecter_tab_item"
+                        app:tabIndicator="@null"
+                        app:tabMode="fixed"
+                        app:tabSelectedTextColor="@color/white"
+                        app:tabTextAppearance="@style/App_tab"
+                        app:tabTextColor="@color/gray_767691">
+
+                    </com.google.android.material.tabs.TabLayout>
+
+
+                    <TextView
+                        android:id="@+id/txt_transactions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16mdp"
+                        android:layout_marginTop="@dimen/_20mdp"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:text="@string/transactions"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_18msp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+                        app:layout_goneMarginTop="@dimen/_30mdp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constrainedHeight="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txt_transactions" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        android:id="@+id/rv_transaction_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16mdp"
+                        android:layout_marginTop="@dimen/_10mdp"
+                        android:layout_marginBottom="@dimen/_36mdp"
+                        android:nestedScrollingEnabled="true"
+                        android:overScrollMode="never"
+                        android:visibility="visible"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constrainedHeight="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txt_transactions"
+                        app:layout_constraintVertical_bias="0"
+                        tools:itemCount="50"
+                        tools:listitem="@layout/row_transaction_list" />
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/shimmerLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="@dimen/_16mdp"
+                        android:layout_marginTop="@dimen/_10mdp"
+                        android:animateLayoutChanges="true"
+                        android:animationCache="true"
+                        android:visibility="visible"
+                        app:layout_constrainedHeight="true"
+                        app:layout_constraintBottom_toTopOf="@id/btn_buy"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txt_transactions"
+                        app:shimmer_repeat_delay="10"
+                        app:shimmer_repeat_mode="restart"
+                        app:shimmer_shape="linear"
+                        tools:listitem="@layout/row_simmer_transaction_list">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <include layout="@layout/row_simmer_transaction_list" />
+
+                            <include layout="@layout/row_simmer_transaction_list" />
+
+                            <include layout="@layout/row_simmer_transaction_list" />
+
+                            <include layout="@layout/row_simmer_transaction_list" />
+
+                            <include layout="@layout/row_simmer_transaction_list" />
+
+                            <include layout="@layout/row_simmer_transaction_list" />
+
+                            <include layout="@layout/row_simmer_transaction_list" />
+
+                        </LinearLayout>
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+                    <ProgressBar
+                        android:id="@+id/progress_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:progressTint="@color/white"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rv_transaction_list" />
+
+
+                    <Button
+                        android:id="@+id/btn_buy"
+                        style="@style/wallet_button_gradient"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_50mdp"
+                        android:layout_marginHorizontal="@dimen/_30mdp"
+                        android:layout_marginBottom="@dimen/_40mdp"
+                        android:text="@string/buy_bitcoin"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_no_found"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_50mdp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toTopOf="@id/btn_buy"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txt_transactions"
+                        app:layout_constraintVertical_bias="0.5">
+
+                        <ImageView
+                            android:id="@+id/img_robot"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_user_robot"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/txt_no_transaction"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12mdp"
+                            android:fontFamily="@font/quicksand_regular"
+                            android:text="@string/no_transactions"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_16msp"
+                            app:layout_constraintEnd_toEndOf="@id/img_robot"
+                            app:layout_constraintStart_toStartOf="@id/img_robot"
+                            app:layout_constraintTop_toBottomOf="@id/img_robot" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    <!-- </androidx.core.widget.NestedScrollView>-->
 </layout>

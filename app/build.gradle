@@ -10,8 +10,8 @@ plugins {
     id "com.google.firebase.crashlytics"
 }
 
-def appVersionCode = 16
-def appVersionName = "1.1.5"
+def appVersionCode = 30
+def appVersionName = "1.3.0"
 
 
 android {
@@ -95,7 +95,7 @@ android {
             def appType = "release"
 
             if (variant.name == "debug") {
-                appType = "release"
+                appType = "debug"
                 output.versionCodeOverride = appVersionCode
                 output.versionNameOverride = appVersionName + "." + new Date().format('MMddHHmm')
             }
@@ -107,6 +107,12 @@ android {
 
     configurations {
         all*.exclude module: 'bcprov-jdk15on'
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 
 
@@ -306,6 +312,8 @@ dependencies {
 
     implementation('com.github.komputing.kethereum:ens:0.86.0')
     implementation('com.github.komputing.kethereum:rpc:0.86.0')
+
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
 
 }

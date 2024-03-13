@@ -12,6 +12,7 @@ import com.app.plutope.utils.constant.responseServerError
 import com.app.plutope.utils.constant.serverErrorMessage
 import com.app.plutope.utils.date_formate.getReadableDate
 import com.app.plutope.utils.decryptTransferInput
+import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.weiToEther
 import java.math.BigInteger
@@ -94,8 +95,19 @@ class TransactionHistoryRepo @Inject constructor(private val apiHelper: ApiHelpe
                     transList.addAll(list[0].transactionLists)
                     transList.groupBy { it.txId }.forEach {
                         val transModel = it.value.filter {
-                            it.transactionSymbol.lowercase() == tokens.t_symbol?.lowercase()
+
+                            loge(
+                                " MatchSymbole",
+                                "${it.transactionSymbol.lowercase()} == ${tokens.t_symbol?.lowercase()}"
+                            )
+                            val formatedSymbole =
+                                if (it.transactionSymbol.lowercase() == "usdc.e") "usdc" else it.transactionSymbol.lowercase()
+
+                            //formatedSymbole == tokens.t_symbol?.lowercase()
+
+                            tokens.t_address == it.tokenContractAddress
                         }
+
 
                         if(transModel.isNotEmpty()) {
                             if (it.value.size > 1) {
@@ -106,6 +118,8 @@ class TransactionHistoryRepo @Inject constructor(private val apiHelper: ApiHelpe
                             }
                         }
                     }
+
+
 
                     transListFilter.forEach { transaction ->
                         val valueResponse = transaction.amount.toBigDecimal().setScale(
@@ -150,6 +164,7 @@ class TransactionHistoryRepo @Inject constructor(private val apiHelper: ApiHelpe
                     // transListFilter.contains(TransactionLists)
 
                     list[0].transactionLists = transListFilter.distinctBy { it.txId }
+                        .filter { it.amount != "0" || it.txFee != "" }
                     NetworkState.Success("", list[0])
                 } else {
                     NetworkState.Error(response.message())

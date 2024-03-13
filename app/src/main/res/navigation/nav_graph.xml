@@ -423,10 +423,7 @@
         <action
             android:id="@+id/action_dashboard_to_addCustomToken"
             app:destination="@id/addCustomToken"
-            app:enterAnim="@anim/nav_slide_in_right"
-            app:exitAnim="@anim/nav_slide_out_left"
-            app:popExitAnim="@anim/nav_slide_out_right"
-            app:popEnterAnim="@anim/nav_slide_in_left"/>
+           />
         <action
             android:id="@+id/action_dashboard_to_buyDetails"
             app:destination="@id/buyDetails"

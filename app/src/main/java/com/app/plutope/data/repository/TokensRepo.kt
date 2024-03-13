@@ -1,6 +1,7 @@
 package com.app.plutope.data.repository
 
 import com.app.plutope.data.database.TokensDao
+import com.app.plutope.model.ModelActiveWalletToken
 import com.app.plutope.model.TokenListImageModel
 import com.app.plutope.model.Tokens
 import com.app.plutope.model.Wallet
@@ -11,6 +12,7 @@ import com.app.plutope.utils.constant.NO_INTERNET_CONNECTION
 import com.app.plutope.utils.constant.responseServerError
 import com.app.plutope.utils.constant.serverErrorMessage
 import com.app.plutope.utils.extras.PreferenceHelper
+import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +30,7 @@ class TokensRepo @Inject constructor(
     private val apiHelper: ApiHelper
 ) {
 
+    val activeTokenList = mutableListOf<ModelActiveWalletToken>()
     suspend fun insertAllTokens(
         tokenList: MutableList<Tokens>
     ): NetworkState<Tokens?> {
@@ -199,6 +202,12 @@ class TokensRepo @Inject constructor(
             } else {
                 if (response.isSuccessful) {
 
+
+                    loge(
+                        "getTokenFromCoinGecko",
+                        "getTokenFromCoinGecko: ${activeTokenList.map { it.symbol }}"
+                    )
+
                     val tokens: MutableList<Tokens> = mutableListOf()
                     val jsonArray = JSONArray(result?.string())
                     val supportedChain = arrayListOf(
@@ -215,6 +224,11 @@ class TokensRepo @Inject constructor(
                         val name = jObj.getString("name")
                         val symbol = jObj.getString("symbol")
                         val id = jObj.getString("id")
+
+                        loge("jsonArraySymbol", symbol)
+
+
+                        //  loge("MatchSymbole","${activeTokenBySymbol.contains(symbol)}")
 
                         if (nativeCoins.contains(name)) {
                             val tokenModel = Tokens()
@@ -272,6 +286,8 @@ class TokensRepo @Inject constructor(
                             }
                         }
                     }
+
+                    // private val tokensDao: TokensDao
 
                     NetworkState.Success("", tokens)
                 } else {
@@ -365,7 +381,7 @@ class TokensRepo @Inject constructor(
                 NetworkState.Error(serverErrorMessage)
             } else {
                 if (response.isSuccessful) {
-                    val data = result?.string()?.let { JSONObject(it) }
+                  //  val data = result?.string()?.let { JSONObject(it) }
 
                     NetworkState.Success("", "")
                 } else {
@@ -383,16 +399,14 @@ class TokensRepo @Inject constructor(
 
     }
 
-    suspend fun setWalletActive(address: String): NetworkState<String?> {
+    suspend fun setWalletActive(address: String, receiverAddress: String): NetworkState<String?> {
         return try {
-            val response = apiHelper.setWalletActive(address)
-            val result = response.body()
+            val response = apiHelper.setWalletActive(address, receiverAddress)
+            // val result = response.body()
             if (response.code() == responseServerError) {
                 NetworkState.Error(serverErrorMessage)
             } else {
                 if (response.isSuccessful) {
-                    val data = JSONObject(result?.string())
-
                     PreferenceHelper.getInstance().isActiveWallet = true
                     NetworkState.Success("", "")
                 } else {
@@ -443,6 +457,71 @@ class TokensRepo @Inject constructor(
                 NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
             } else {
                 NetworkState.Error(serverErrorMessage)
+            }
+        }
+
+    }
+
+
+    suspend fun registerWalletMaster(
+        deviceId: String,
+        address: String,
+        referralCode: String
+    ): NetworkState<String?> {
+        return try {
+            val response = apiHelper.registerWalletMaster(
+                deviceId,
+                address,
+                referralCode
+            )
+            val result = response.body()
+            if (response.code() == responseServerError) {
+                NetworkState.Error(serverErrorMessage)
+            } else {
+                if (response.isSuccessful) {
+                    val data = result?.string()?.let { JSONObject(it) }
+
+                    NetworkState.Success("", "")
+                } else {
+                    NetworkState.Error("")
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException) {
+                NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
+            } else {
+                NetworkState.Error(serverErrorMessage)
+            }
+        }
+
+    }
+
+
+    suspend fun getAllActiveTokenList(
+        url: String
+    ): NetworkState<MutableList<ModelActiveWalletToken>?> {
+        return try {
+            val response = apiHelper.getAllActiveTokenList(url)
+            val result = response.body()
+            if (response.code() == responseServerError) {
+                NetworkState.Error(serverErrorMessage)
+            } else {
+                if (response.isSuccessful && result != null) {
+
+                    activeTokenList.addAll(result)
+
+                    NetworkState.Success("", result)
+                } else {
+                    NetworkState.Error(response.message().toString())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException) {
+                NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
+            } else {
+                NetworkState.Error(e.message.toString())
             }
         }
 

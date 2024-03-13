@@ -69,7 +69,7 @@ abstract class BaseBottomSheetDialog : BottomSheetDialogFragment() {
 //        bottomSheet.layoutParams.height = Resources.getSystem().displayMetrics.heightPixels - getStatusBarHeight(requireActivity().window!!)
         bottomSheet.layoutParams.width = (Resources.getSystem().displayMetrics.widthPixels)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        //  behavior.peekHeight = 3000
+        behavior.peekHeight = 4000
 
     }
 

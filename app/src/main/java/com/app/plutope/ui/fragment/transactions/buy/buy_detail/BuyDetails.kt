@@ -1,9 +1,11 @@
 package com.app.plutope.ui.fragment.transactions.buy.buy_detail
 
 import android.annotation.SuppressLint
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,22 +25,24 @@ import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.card.card_list.TransactionListAdapter
 import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.constant.OK_LINK_TRANSACTION_LIST
-import com.app.plutope.utils.constant.buttonRampable
-import com.app.plutope.utils.constant.buttonSell
-import com.app.plutope.utils.constant.buttonSwap
 import com.app.plutope.utils.customSnackbar.CustomSnackbar
+import com.app.plutope.utils.date_formate.toAny
+import com.app.plutope.utils.date_formate.ymdHMS
 import com.app.plutope.utils.extras.PreferenceHelper
 import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.safeNavigate
 import com.app.plutope.utils.setBalanceText
-import com.app.plutope.utils.showLoader
 import com.bumptech.glide.Glide
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.Calendar
+
 
 @AndroidEntryPoint
 class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>() {
@@ -50,6 +54,8 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
     var totalPages = 0
     var isLastPage = false
     var dataList: MutableList<TransactionLists> = mutableListOf()
+
+    var protocolType = ""
     override fun getViewModel(): BuyDetailsViewModel {
         return buyDetailsViewModel
     }
@@ -67,8 +73,13 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
     }
 
     override fun setupUI() {
-
+        currentPage = 1
         loge("Detail", "${args.tokenModel}")
+        if (args.tokenModel.t_address == "" && args.tokenModel.t_symbol?.lowercase() != "btc") {
+            viewDataBinding!!.tabLayout.visibility = VISIBLE
+        } else {
+            viewDataBinding!!.tabLayout.visibility = GONE
+        }
 
         setTokenDetails()
         setOnClickLisners()
@@ -82,7 +93,51 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
             )
         }
 
-        fetchTransactionListData(currentPage)
+        fetchTransactionListData(currentPage, protocolType)
+
+
+        viewDataBinding!!.tabLayout.addTab(
+            viewDataBinding!!.tabLayout.newTab().setText("Transaction")
+        )
+        viewDataBinding!!.tabLayout.addTab(viewDataBinding!!.tabLayout.newTab().setText("Internal"))
+
+        viewDataBinding!!.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val position = tab.position
+                if (position == 0) {
+                    protocolType = ""
+                    currentPage = 0
+                    totalPages = 0
+                    isLastPage = false
+                    dataList.clear()
+                    // transactionListAdapter?.submitList(arrayListOf())
+                    fetchTransactionListData(currentPage, protocolType)
+                    startShimmerEffect()
+                    //  requireContext().showToast("Tab_1")
+
+                } else if (position == 1) {
+                    protocolType = "internal"
+                    currentPage = 0
+                    totalPages = 0
+                    isLastPage = false
+                    dataList.clear()
+                    // transactionListAdapter?.submitList(arrayListOf())
+                    fetchTransactionListData(currentPage, protocolType)
+                    startShimmerEffect()
+                    // requireContext().showToast("Tab_2")
+
+                }
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+
+            }
+        })
 
     }
 
@@ -115,14 +170,15 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
              *
             list.add(ButtonModel(2, buttonSell, R.drawable.ic_bank))
              */
-            list.add(ButtonModel(1, buttonSwap, R.drawable.ic_swap_with_bg))
-            list.add(ButtonModel(2, buttonSell, R.drawable.ic_bank))
+            list.add(ButtonModel(1, getString(R.string.swap), R.drawable.ic_swap_with_bg))
+            list.add(ButtonModel(2, getString(R.string.sell), R.drawable.ic_bank))
             // list.add(ButtonModel(3, buttonRampable, R.drawable.img_logo_circle_black))
 
             DialogSelectButtonList.getInstance()?.show(requireContext(), list) {
 
-                when (it.buttonName) {
-                    buttonSwap -> {
+                when (it.id) {
+                    1 -> {
+                        loge("PairCall", "Start 0: ${Calendar.getInstance().toAny(ymdHMS)}")
                         findNavController().safeNavigate(
                             BuyDetailsDirections.actionBuyDetailsToSwap(
                                 args.tokenModel
@@ -131,7 +187,7 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
 
                     }
 
-                    buttonSell -> {
+                    2 -> {
                         /*findNavController().safeNavigate(
                             BuyDetailsDirections.actionBuyDetailsToSellFragment(args.tokenModel)
                         )*/
@@ -153,7 +209,7 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
 
                     }
 
-                    buttonRampable -> {
+                    3 -> {
                         val url =
                             "https://webview-dev.rampable.co/?clientSecret=wpyYO6EyVSwx3QGY50d0VHCICTjiBHTTRGo7zbL6G6bxBtCSaGBrEbRB70ZhzdvP&useWalletConnect=true"
 
@@ -187,28 +243,55 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
 
         val layoutManager = LinearLayoutManager(requireContext())
         viewDataBinding?.rvTransactionList?.layoutManager = layoutManager
-
+        var totalScrollDistance = 0
         viewDataBinding?.rvTransactionList?.addOnScrollListener(object :
             RecyclerView.OnScrollListener() {
-
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                 val totalItemCount = layoutManager.itemCount
-                if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE) {
-
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (!isLastPage && lastVisibleItemPosition == totalItemCount - 1 && currentPage < totalPages) {
                         currentPage += 1
-                        fetchTransactionListData(currentPage)
+                        fetchTransactionListData(currentPage, protocolType)
                     }
                 }
             }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                // loge("Scroll","$dx :: $dy")
+                viewDataBinding!!.scrollView.scrollBy(dx, dy)
+
+            }
+
         })
+
+
+        /*
+                viewDataBinding!!.scrollView.viewTreeObserver.addOnScrollChangedListener {
+                    if (isScrollAtBottom(viewDataBinding!!.scrollView)) {
+                        if (!isLastPage  && currentPage < totalPages) {
+                            currentPage += 1
+                            fetchTransactionListData(currentPage, protocolType)
+                        }
+
+                    }
+                }
+        */
 
 
     }
 
-    private fun fetchTransactionListData(currentPage: Int) {
+    private fun isScrollAtBottom(scrollView: ScrollView): Boolean {
+        val diff = scrollView.getChildAt(0).bottom - (scrollView.height + scrollView.scrollY)
+        return diff <= 0
+    }
+
+    private fun fetchTransactionListData(currentPage: Int, protocolType: String) {
+
+        loge("Page", "currentPage = > $currentPage")
+
         if (currentPage >= 2) {
             viewDataBinding?.progressPage?.visibility = VISIBLE
         }
@@ -218,35 +301,18 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
 
             buyDetailsViewModel.executeGetTransactionHistoryOkLink(
                 "${OK_LINK_TRANSACTION_LIST}chainShortName=${args.tokenModel.chain?.chainName?.lowercase()}" +
-                        "&address=${Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)}&page=$currentPage&limit=50&protocolType=token_20",
+                        "&address=${Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)}&page=$currentPage&limit=50&tokenContractAddress=${args.tokenModel.t_address}&protocolType=token_20",
                 args.tokenModel
             )
-
-/*
-            buyDetailsViewModel.executeGetTransactionHistoryOkLink(
-                "${OK_LINK_TRANSACTION_LIST}chainShortName=${args.tokenModel.chain?.chainName?.lowercase()}" +
-                        "&address=1N52wHoVR79PMDishab2XmRHsbekCdGquK&page=$currentPage&limit=50&protocolType=token_20",
-                args.tokenModel
-            )
-*/
 
         }else {
-                        buyDetailsViewModel.executeGetTransactionHistoryOkLink(
-                            "${OK_LINK_TRANSACTION_LIST}chainShortName=${args.tokenModel.chain?.chainName?.lowercase()}&address=${
-                                Wallet.getPublicWalletAddress(
-                                    args.tokenModel.chain?.coinType!!
-                                )
-                            }&page=$currentPage&limit=50&protocolType=", args.tokenModel
-                        )
 
-            /*
-                        buyDetailsViewModel.executeGetTransactionHistoryOkLink(
-                            "${OK_LINK_TRANSACTION_LIST}chainShortName=${args.tokenModel.chain?.chainName?.lowercase()}&address=1N52wHoVR79PMDishab2XmRHsbekCdGquK&page=$currentPage&limit=50&protocolType=",
-                            args.tokenModel
-                        )
-            */
+            buyDetailsViewModel.executeGetTransactionHistoryOkLink(
+                "${OK_LINK_TRANSACTION_LIST}chainShortName=${args.tokenModel.chain?.chainName?.lowercase()}&address=" +
+                        "${Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)}&page=$currentPage&limit=50&protocolType=$protocolType",
+                args.tokenModel
+            )
         }
-
     }
 
 
@@ -281,7 +347,6 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
         )
         viewDataBinding?.txtNetworkName?.text = tokenModel.t_type
 
-
         val priceDouble = tokenModel.t_price?.toDoubleOrNull() ?: 0.0
         val priceText = String.format("%.2f", priceDouble)
         val percentChange = tokenModel.t_last_price_change_impact?.toDoubleOrNull() ?: 0.0
@@ -309,6 +374,9 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
                     when (it) {
                         is NetworkState.Success -> {
                             hideLoader()
+                            totalPages =
+                                if (it.data?.totalPage != "") it.data?.totalPage!!.toInt() else currentPage
+                            loge("DataList", "==>${dataList.size}")
                             if (it.data?.transactionLists?.isNotEmpty() == true) {
                                 if (it.data.transactionLists.isNotEmpty()) {
 
@@ -316,24 +384,28 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
                                         buyDetailsViewModel.setWalletActiveCall(
                                             Wallet.getPublicWalletAddress(
                                                 CoinType.ETHEREUM
-                                            )!!
+                                            )!!, ""
                                         )
                                     }
                                     currentPage = it.data.page.toInt()
                                     totalPages = it.data.totalPage.toInt()
                                     if (currentPage == totalPages) {
                                         isLastPage = true
+                                        stopShimmerEffect()
                                     }
                                     viewDataBinding?.rvTransactionList?.visibility = VISIBLE
                                     viewDataBinding?.layoutNoFound?.visibility = GONE
                                     val respList = it.data.transactionLists
+
                                     dataList.addAll(respList)
                                     if (args.tokenModel.t_address != "") {
                                         dataList = dataList.filter {
-                                            it.methodId == "" && args.tokenModel.t_symbol == it.transactionSymbol
+                                            // val formatedSymbole = if (it.transactionSymbol.lowercase() == "usdc.e") "usdc" else it.transactionSymbol.lowercase()
+                                            it.methodId == "" && args.tokenModel.t_address == it.tokenContractAddress /*args.tokenModel.t_symbol?.lowercase() == formatedSymbole*/
                                         } as MutableList<TransactionLists>
                                     }
                                     if (dataList.isEmpty()) {
+                                        stopShimmerEffect()
                                         viewDataBinding?.rvTransactionList?.visibility = GONE
                                         viewDataBinding?.layoutNoFound?.visibility = VISIBLE
                                     }
@@ -342,34 +414,59 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
                                         .distinctBy { it.transactionTimeInMillis })
                                     if (transactionListAdapter?.currentList!!.size < 10) {
                                         currentPage += 1
-                                        fetchTransactionListData(currentPage)
+                                        fetchTransactionListData(currentPage, protocolType)
                                     }
 
                                     viewDataBinding!!.rvTransactionList.adapter =
                                         transactionListAdapter
+
                                 } else {
+                                    stopShimmerEffect()
                                     viewDataBinding?.rvTransactionList?.visibility = GONE
                                     viewDataBinding?.layoutNoFound?.visibility = VISIBLE
                                 }
-                            }
-                            viewDataBinding?.progressPage?.visibility = GONE
+                            } else {
 
-                            if(transactionListAdapter?.currentList?.size==0){
+                                if (currentPage == totalPages) {
+                                    isLastPage = true
+                                    stopShimmerEffect()
+                                }
+
+                                if (!isLastPage) {
+                                    currentPage += 1
+                                    fetchTransactionListData(currentPage, protocolType)
+                                }
+
+                            }
+
+
+                            viewDataBinding?.progressPage?.visibility = GONE
+                            if (transactionListAdapter?.currentList?.size == 0) {
                                 viewDataBinding?.rvTransactionList?.visibility = GONE
                                 viewDataBinding?.layoutNoFound?.visibility = VISIBLE
                             }
+
+                            stopShimmerEffect()
                         }
                         is NetworkState.Loading -> {
                             if (currentPage == 1)
-                                requireContext().showLoader()
+                                startShimmerEffect()
+                            // requireContext().showLoader()
+
+
                         }
                         is NetworkState.Error -> {
                             viewDataBinding?.progressPage?.visibility = GONE
-                            hideLoader()
+                            // hideLoader()
+                            stopShimmerEffect()
                         }
                         is NetworkState.SessionOut -> {
-                            hideLoader()
-                            CustomSnackbar.make(requireActivity().window.decorView.rootView as ViewGroup, it.message.toString())
+                            // hideLoader()
+                            stopShimmerEffect()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            )
                                 .show()
                         }
 
@@ -408,6 +505,21 @@ class BuyDetails : BaseFragment<FragmentBuyDetailsBinding, BuyDetailsViewModel>(
                 }
             }
         }
+
+
+    }
+
+    private fun startShimmerEffect() {
+        viewDataBinding?.shimmerLayout?.startShimmer()
+        viewDataBinding?.shimmerLayout?.visibility = VISIBLE
+        viewDataBinding?.rvTransactionList?.visibility = GONE
+
+    }
+
+    private fun stopShimmerEffect() {
+        viewDataBinding?.shimmerLayout?.stopShimmer()
+        viewDataBinding?.rvTransactionList?.visibility = VISIBLE
+        viewDataBinding?.shimmerLayout?.visibility = View.INVISIBLE
 
 
     }

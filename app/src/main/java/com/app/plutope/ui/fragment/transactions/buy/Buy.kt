@@ -9,6 +9,7 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentBuyBinding
 import com.app.plutope.model.Tokens
+import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.transactions.send.CoinListAdapter
@@ -42,19 +43,16 @@ class Buy : BaseFragment<FragmentBuyBinding, TokenViewModel>() {
     }
 
     override fun setupUI() {
-
+        (activity as BaseActivity).showToolbarTransparentBack()
         coinAdapter = CoinListAdapter(providerClick = { model ->
             if (args.pageType == pageTypeSwap) {
                 findNavController().safeNavigate(BuyDirections.actionBuyToSwap(model))
             } else {
                 findNavController().safeNavigate(BuyDirections.actionBuyToBuyDetails(model))
             }
-
-
         })
 
         getAllTokenList()
-
         viewDataBinding!!.edtSearch.doAfterTextChanged {
             filters(it.toString(), dataList)
         }

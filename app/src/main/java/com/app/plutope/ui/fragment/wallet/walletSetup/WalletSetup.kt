@@ -8,6 +8,7 @@ import com.app.plutope.R
 import com.app.plutope.databinding.FragmentWalletSetupBinding
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.utils.constant.isImportWallet
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,7 +36,7 @@ class WalletSetup : BaseFragment<FragmentWalletSetupBinding, WalletSetupViewMode
     }
 
     private fun setUpListener() {
-        viewDataBinding?.btnCreateWallet?.setOnClickListener {
+        viewDataBinding?.btnCreateWallet?.buttonClickedWithEffect {
 
             if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
                 isImportWallet = false
@@ -54,7 +55,7 @@ class WalletSetup : BaseFragment<FragmentWalletSetupBinding, WalletSetupViewMode
                 }
             }
         }
-        viewDataBinding?.btnReCreateRecovery?.setOnClickListener {
+        viewDataBinding?.btnReCreateRecovery?.buttonClickedWithEffect {
             if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
                 isImportWallet = true
                 if (preferenceHelper.menomonicWallet != "") {

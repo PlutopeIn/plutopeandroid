@@ -75,7 +75,8 @@ object Wallet{
     }
 
     fun getPublicWalletAddress(coinType: CoinType): String? {
-        return if (coinType == CoinType.BITCOIN) walletBTC?.address /*"mnfE6ySXEuaA3bJRTikUk9j454T3cmSKvz"*/ else wallet?.address
+        loge("CurrentWallet", "${wallet?.address}")
+        return if (coinType == CoinType.BITCOIN) walletBTC?.address /*"bc1qs8fwrd8arcu0yrme9xy9hvhz34ryuj3msnxw9s"*/ else wallet?.address
     }
 
 

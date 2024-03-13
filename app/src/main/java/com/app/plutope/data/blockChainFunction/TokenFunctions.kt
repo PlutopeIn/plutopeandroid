@@ -158,6 +158,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
         val myWalletAddress = Wallet.getPublicWalletAddress(
             tokenDetails.chain?.coinType ?: CoinType.ETHEREUM
         )
+
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 val credentials = Credentials.create(chain?.privateKey)
@@ -297,6 +298,10 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                                                         transactionHash
                                                                     )
                                                                 } else {
+                                                                    loge(
+                                                                        "failed transaction",
+                                                                        "$errorMessage"
+                                                                    )
                                                                     completion(
                                                                         false,
                                                                         "Send failed please check after sometime.",
@@ -308,8 +313,6 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                                             // Transaction successful
                                                         }
                                                     }
-
-
                                             }
                                     }
                                 } else {
@@ -435,7 +438,6 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                         try {
                             contract.decimals().sendAsync().get().apply {
                                 val decimals = this.toInt()
-
                                 contract.balanceOf(walletAddress).sendAsync().get().apply {
 
                                     val bal = this
@@ -452,7 +454,6 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                     completion(
                                         etherValue.setScale(decimals, RoundingMode.DOWN).toString()
                                     )
-
 
                                 }
                             }

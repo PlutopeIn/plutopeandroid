@@ -1,6 +1,7 @@
 package com.app.plutope.utils.walletConnection.compose_ui.session_proposal
 
 import com.app.plutope.ui.base.BaseViewModel
+import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.common.CommonNavigator
 import com.app.plutope.utils.date_formate.toAny
 import com.app.plutope.utils.date_formate.ymdHMS
@@ -22,19 +23,84 @@ import kotlin.coroutines.suspendCoroutine
 @HiltViewModel
 class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavigator>() {
     val sessionProposal: SessionProposalUI? = generateSessionProposalUI()
+
     suspend fun approve(proposalPublicKey: String, onRedirect: (String) -> Unit = {}) {
         return suspendCoroutine { continuation ->
+
             if (Web3Wallet.getSessionProposals().isNotEmpty()) {
                 val sessionProposal: Wallet.Model.SessionProposal = requireNotNull(
-                    Web3Wallet.getSessionProposals()
-                        .find { it.proposerPublicKey == proposalPublicKey })
+                    Web3Wallet.getSessionProposals().find {
+                        loge("ProposalKeys", "$proposalPublicKey == ${it.proposerPublicKey}")
+                        it.proposerPublicKey == proposalPublicKey
+                    })
 
-                loge("Propose_1", "sessionProposal => $sessionProposal")
-                loge("Propose_1", " namespaces => ${walletMetaData.namespaces}")
+
+                val tempMeta = WalletMetaData(
+                    peerUI = PeerUI(
+                        peerIcon = "https://plutope.app/api/images/applogo.png",
+                        peerName = "plutope",
+                        peerUri = "com.app",
+                        peerDescription = ""
+                    ),
+                    namespaces = mapOf(
+                        "eip155" to Wallet.Model.Namespace.Session(
+                            chains = listOf("eip155:1", "eip155:137", "eip155:56", "eip155:66"),
+                            methods = listOf(
+                                "eth_sendTransaction",
+                                "personal_sign",
+                                "eth_accounts",
+                                "eth_requestAccounts",
+                                "eth_call",
+                                "eth_getBalance",
+                                "eth_sendRawTransaction",
+                                "eth_sign",
+                                "eth_signTransaction",
+                                "eth_signTypedData",
+                                "eth_signTypedData_v3",
+                                "eth_signTypedData_v4",
+                                "stellar_signXDR",
+                                "stellar_signAndSubmitXDR",
+                                "solana_signTransaction",
+                                "solana_signMessage",
+                                "wallet_switchEthereumChain",
+                                "wallet_addEthereumChain",
+                                "eth_chainId"
+
+                            ),
+                            events = listOf("chainChanged", "accountsChanged"),
+                            accounts = listOf(
+                                "eip155:1:${
+                                    com.app.plutope.model.Wallet.getPublicWalletAddress(
+                                        CoinType.ETHEREUM
+                                    )
+                                }",
+                                "eip155:137:${
+                                    com.app.plutope.model.Wallet.getPublicWalletAddress(
+                                        CoinType.ETHEREUM
+                                    )
+                                }",
+                                "eip155:56:${
+                                    com.app.plutope.model.Wallet.getPublicWalletAddress(
+                                        CoinType.ETHEREUM
+                                    )
+                                }",
+                                "eip155:66:${
+                                    com.app.plutope.model.Wallet.getPublicWalletAddress(
+                                        CoinType.ETHEREUM
+                                    )
+                                }"
+                            )
+                        ),
+
+                        )
+                )
+
+
+                loge("Propose_1", " namespaces => ${tempMeta.namespaces}")
 
                 val sessionNamespaces = Web3Wallet.generateApprovedNamespaces(
                     sessionProposal = sessionProposal,
-                    supportedNamespaces = walletMetaData.namespaces
+                    supportedNamespaces = tempMeta.namespaces
                 )
 
                 loge("Propose_2", "$sessionNamespaces")
@@ -50,7 +116,6 @@ class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavig
                     approveProposal,
                     onError = { error ->
                         loge("Propose_1_error", "$error")
-
 
                         continuation.resumeWithException(error.throwable)
                         Firebase.crashlytics.recordException(error.throwable)

@@ -17,6 +17,7 @@ import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.wallet.select_wallet_backup.SelectWalletBackup
 import com.app.plutope.utils.extras.DriveServiceHelper
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.safeNavigate
 import com.app.plutope.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -94,12 +95,12 @@ class RestoreWallet : BaseFragment<FragmentRestoreWalletBinding, RestoreWalletVi
         }
 
 
-        viewDataBinding!!.btnRestoreWithSecretPhrase.setOnClickListener {
+        viewDataBinding!!.btnRestoreWithSecretPhrase.buttonClickedWithEffect {
             (activity as BaseActivity).askNotificationPermission()
             findNavController().safeNavigate(RestoreWalletDirections.actionRestoreWalletToImportMultiWallet())
         }
 
-        viewDataBinding!!.btnRestoreWithGoogleDrive.setOnClickListener {
+        viewDataBinding!!.btnRestoreWithGoogleDrive.buttonClickedWithEffect {
             // openFileManager()
             findNavController().safeNavigate(RestoreWalletDirections.actionRestoreWalletToSelectWalletBackup())
         }

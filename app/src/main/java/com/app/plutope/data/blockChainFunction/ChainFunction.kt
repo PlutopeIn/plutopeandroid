@@ -586,8 +586,7 @@ class ChainFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
 
                         val initialGasLimit =
                                 if (result.isNullOrBlank()) BigInteger.valueOf(21000) else BigInteger(
-                                    this.result.substring(2),
-                                    16
+                                    this.result.substring(2), 16
                                 )
 
                             val increasedGasLimit =

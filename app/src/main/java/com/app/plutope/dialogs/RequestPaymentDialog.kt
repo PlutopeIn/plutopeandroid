@@ -13,7 +13,6 @@ import com.app.plutope.model.CurrencyModel
 import com.app.plutope.model.Tokens
 import com.app.plutope.utils.convertAmountToCurrency
 import com.app.plutope.utils.extras.PreferenceHelper
-import com.app.plutope.utils.extras.setSafeOnClickListener
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -83,12 +82,13 @@ class RequestPaymentDialog private constructor() {
             dialogRequestPayment?.dismiss()
         }
 
-        binding.txtCoinType.setSafeOnClickListener {
+        binding.txtCoinType.setOnClickListener {
             isCurrencySelected = !isCurrencySelected
             binding.edtAmount.setText("")
             if (isCurrencySelected) {
                 binding.txtCoinType.text = selectedCurrency?.code
-                binding.amountBtc.text = "Amount " + selectedCurrency?.code
+                binding.amountBtc.text =
+                    context.getString(R.string.amount_label) + " " + selectedCurrency?.code
 
                 //binding.edtAmount.setText(convertPrice.toString())
 
@@ -96,7 +96,8 @@ class RequestPaymentDialog private constructor() {
             } else {
 
                 binding.txtCoinType.text = token.t_symbol
-                binding.amountBtc.text = "Amount " + token.t_symbol
+                binding.amountBtc.text =
+                    context.getString(R.string.amount_label) + " " + token.t_symbol
 
                 //  binding.edtAmount.setText(convertPrice.toString())
 

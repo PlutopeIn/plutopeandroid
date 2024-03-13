@@ -1,5 +1,6 @@
 package com.app.plutope.ui.fragment.dashboard.nfts
 
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
@@ -21,10 +22,8 @@ import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.constant.NFT_BASE_URL
 import com.app.plutope.utils.constant.nftPageType
 import com.app.plutope.utils.customSnackbar.CustomSnackbar
-import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.safeNavigate
-import com.app.plutope.utils.showLoader
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -33,6 +32,13 @@ class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
     private val nFTsViewModel: NFTsViewModel by viewModels()
     private var adapter: NftsListAdapter? = null
     var dataList: MutableList<NFTModel> = mutableListOf()
+    val arrayChain = arrayListOf(
+        Chain.Ethereum.chainName,
+        Chain.BinanceSmartChain.chainName,
+        Chain.Polygon.chainName
+    )
+
+    var apiCount = 0
     override fun getViewModel(): NFTsViewModel {
         return nFTsViewModel
     }
@@ -55,11 +61,6 @@ class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
         }
         viewDataBinding?.rvNftsList?.adapter = adapter
 
-        val arrayChain = arrayListOf(
-            Chain.Ethereum.chainName,
-            Chain.BinanceSmartChain.chainName,
-            Chain.Polygon.chainName
-        )
         arrayChain.forEach { it ->
             nFTsViewModel.executeGetNFTList(NFT_BASE_URL + "${Wallet.getPublicWalletAddress(CoinType.ETHEREUM)}/nft?chain=${it}")
         }
@@ -93,37 +94,52 @@ class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
                 nFTsViewModel.getNFTListResponse.collect {
                     when (it) {
                         is NetworkState.Success -> {
-                            hideLoader()
+                            apiCount += 1
+                            //hideLoader()
                             val list = it.data?.result
                             if (!list.isNullOrEmpty()) {
                                 dataList.clear()
                                 dataList.addAll(list)
                                 submitData(dataList)
                             }
-                            if (dataList.isEmpty()) {
-                                viewDataBinding?.rvNftsList?.visibility = GONE
-                                viewDataBinding?.btnReceiveBottom?.visibility = GONE
-                                viewDataBinding?.layoutNoFound?.visibility = VISIBLE
+
+                            if (apiCount >= arrayChain.size) {
+                                stopShimmerEffect()
+                                if (dataList.isEmpty()) {
+                                    viewDataBinding?.rvNftsList?.visibility = GONE
+                                    viewDataBinding?.btnReceiveBottom?.visibility = GONE
+                                    viewDataBinding?.layoutNoFound?.visibility = VISIBLE
+                                }
+
                             }
+
 
                         }
 
                         is NetworkState.Loading -> {
-                            requireContext().showLoader()
+                            // requireContext().showLoader()
+                            startShimmerEffect()
                         }
 
                         is NetworkState.Error -> {
-                            hideLoader()
+                            apiCount += 1
+                            // hideLoader()
+                            stopShimmerEffect()
                         }
 
                         is NetworkState.SessionOut -> {
-                            hideLoader()
-                            CustomSnackbar.make(requireActivity().window.decorView.rootView as ViewGroup, it.message.toString())
+                            // hideLoader()
+                            stopShimmerEffect()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            )
                                 .show()
                         }
 
                         else -> {
-                            hideLoader()
+                            // hideLoader()
+                            stopShimmerEffect()
                         }
                     }
                 }
@@ -146,5 +162,18 @@ class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
         }
     }
 
+
+    private fun startShimmerEffect() {
+        viewDataBinding!!.shimmerLayout.startShimmer()
+        viewDataBinding!!.shimmerLayout.visibility = View.VISIBLE
+        viewDataBinding!!.rvNftsList.visibility = View.GONE
+
+    }
+
+    private fun stopShimmerEffect() {
+        viewDataBinding!!.shimmerLayout.stopShimmer()
+        viewDataBinding?.shimmerLayout?.visibility = View.INVISIBLE
+        viewDataBinding!!.rvNftsList.visibility = View.VISIBLE
+    }
 
 }

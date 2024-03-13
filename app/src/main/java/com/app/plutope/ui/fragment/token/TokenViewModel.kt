@@ -2,12 +2,15 @@ package com.app.plutope.ui.fragment.token
 
 import androidx.lifecycle.viewModelScope
 import com.app.plutope.data.repository.TokensRepo
+import com.app.plutope.model.ModelActiveWalletToken
 import com.app.plutope.model.TokenListImageModel
 import com.app.plutope.model.Tokens
 import com.app.plutope.model.Wallet
 import com.app.plutope.model.WalletTokens
 import com.app.plutope.ui.base.BaseViewModel
 import com.app.plutope.utils.common.CommonNavigator
+import com.app.plutope.utils.constant.BASE_URL_PLUTO_PE
+import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,9 +39,9 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
     }
 
 
-    private fun getEnableTokens(isEnable: Int): List<Tokens> {
-        return tokenRepo.getAllIsEnableToken(isEnable)
-    }
+     fun getEnableTokens(isEnable: Int): List<Tokens> {
+         return tokenRepo.getAllIsEnableToken(isEnable)
+     }
 
     fun getAllTokensList(): List<Tokens> {
         return tokenRepo.getAllTokenList()
@@ -127,10 +130,14 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         }
     }
 
-    fun getAllTokenList(tokenViewModel:TokenViewModel) {
+    fun getAllTokenList(
+        tokenViewModel: TokenViewModel,
+        tokenList: MutableList<Tokens> = mutableListOf(),
+        isFromRefresh: Boolean = false
+    ) {
         val list = getAllTokensList()
         if (list.isNotEmpty()) {
-           insertInWalletTokens(tokenViewModel)
+            insertInWalletTokens(tokenViewModel, tokenList, isFromRefresh)
         } else {
             setChains(tokenViewModel)
         }
@@ -141,16 +148,35 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         if(Wallet.prefHelper.menomonicWallet?.isNotEmpty()==true){
             tokenViewModel.getCoinGeckoTokensList()
         }
-
     }
 
-    fun insertInWalletTokens(tokenViewModel: TokenViewModel){
-        val listWalletTokens= mutableListOf<WalletTokens>()
-        val defaultTokenslist = getEnableTokens(1)
+    fun insertInWalletTokens(
+        tokenViewModel: TokenViewModel,
+        tokenList: MutableList<Tokens> = mutableListOf(),
+        isFromRefresh: Boolean = false
+
+    ) {
+        val listWalletTokens = mutableListOf<WalletTokens>()
+        // val defaultTokenslist =getEnableTokens(1) + tokenList
+        loge(
+            "insertInWalletTokens",
+            "condition => ${isFromRefresh}   :: ${getEnableTokens(1).size} :: ${tokenList}"
+        )
+        val defaultTokenslist = if (isFromRefresh) tokenList else getEnableTokens(1) + tokenList
+
         defaultTokenslist.forEach {
-            listWalletTokens.add(WalletTokens(walletId = Wallet.walletObject.w_id ,it.t_pk,isEnable = true))
+            listWalletTokens.add(
+                WalletTokens(
+                    walletId = Wallet.walletObject.w_id,
+                    it.t_pk,
+                    isEnable = true
+                )
+            )
         }
-        tokenViewModel.executeInsertWalletTokens(listWalletTokens)
+
+        loge("executeInsertWalletTokens", "${defaultTokenslist}   ==>${listWalletTokens}")
+
+        tokenViewModel.executeInsertWalletTokens(listWalletTokens.distinct().toMutableList())
     }
 
 
@@ -254,6 +280,52 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         viewModelScope.launch {
             _tagRegisterWallet.emit(NetworkState.Loading())
             _tagRegisterWallet.collectStateFlow(tokenRepo.registerWallet(address, fcmToken))
+        }
+    }
+
+    /**
+     * Get register wallet with referralCode
+     * */
+
+    private val _tagRegisterWalletMaster =
+        MutableStateFlow<NetworkState<String?>>(NetworkState.Empty())
+
+    val getRegisterWalletMaster: StateFlow<NetworkState<String?>>
+        get() = _tagRegisterWalletMaster
+
+    fun registerWalletCallMaster(deviceId: String, address: String, referralCode: String) {
+        viewModelScope.launch {
+            _tagRegisterWalletMaster.emit(NetworkState.Loading())
+            _tagRegisterWalletMaster.collectStateFlow(
+                tokenRepo.registerWalletMaster(
+                    deviceId,
+                    address,
+                    referralCode
+                )
+            )
+        }
+    }
+
+
+    /**
+     *  Get all active token list api call
+     */
+
+
+    private val _getAllActiveTokenListResponse =
+        MutableStateFlow<NetworkState<MutableList<ModelActiveWalletToken>?>>(NetworkState.Empty())
+    val getAllActiveTokenListResponse: StateFlow<NetworkState<MutableList<ModelActiveWalletToken>?>>
+        get() = _getAllActiveTokenListResponse
+
+    fun getAllActiveTokenList(walletAddress: String) {
+        viewModelScope.launch {
+            _getAllActiveTokenListResponse.emit(NetworkState.Loading())
+            _getAllActiveTokenListResponse.collectStateFlow(
+                tokenRepo.getAllActiveTokenList(
+                    BASE_URL_PLUTO_PE + "get-wallet-tokens/" + walletAddress
+                )
+            )
+
         }
     }
 

@@ -48,7 +48,7 @@ class ContactListFragment : BaseFragment<FragmentContactListBinding, ContactList
     }
 
     override fun setupToolbarText(): String {
-        return "Contacts"
+        return getString(R.string.contacts)
     }
 
     override fun setupUI() {

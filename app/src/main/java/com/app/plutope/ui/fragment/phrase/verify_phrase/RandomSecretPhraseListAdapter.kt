@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.app.plutope.databinding.RowSecretPhrasePickedBinding
-import com.app.plutope.utils.extras.setSafeOnClickListener
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 
 
 class RandomSecretPhraseListAdapter(
@@ -18,19 +18,9 @@ class RandomSecretPhraseListAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(model: String) {
             binding.txtPhrases.text = model
-
-            /* if (layoutPosition % 2 == 0) {
-                 binding.txtCount.text = (layoutPosition).toString()
-                 binding.txtPhrases.text = model.pointText
-             } else {
-                 binding.txtCount.text = (layoutPosition).toString()
-                 binding.txtPhrases.text = model.pointText
-             }*/
-
-            // binding.model = model
             binding.executePendingBindings()
 
-            itemView.setSafeOnClickListener {
+            itemView.buttonClickedWithEffect {
                 providerClick.invoke(model, layoutPosition)
             }
         }

@@ -86,7 +86,6 @@
     <string name="buy_bitcoin">شراء بيتكوين</string>
     <string name="third_party_provider">مزود خدمة من طرف ثالث</string>
     <string name="mercuryo">Mercuryo</string>
-    <string name="providers">مزودو الخدمة</string>
     <string name="currency">العملة</string>
     <string name="receive_bitcoin">استلام بيتكوين</string>
     <string name="no_nfts_yet">لا توجد NFT حتى الآن</string>
@@ -99,7 +98,7 @@
     <string name="circulating_supply">الإمداد الحالي</string>
     <string name="total_supply">الإمداد الكلي</string>
 
-
+    <string name="nonce">رقم الترتيب</string>
     <string name="well_done">عمل رائع!</string>
     <string name="add_custom_token">إضافة رمز مخصص</string>
     <string name="network">الشبكة</string>
@@ -116,7 +115,6 @@
     <string name="status">الحالة</string>
     <string name="recipient">المستلم</string>
     <string name="network_fee">رسوم الشبكة</string>
-    <string name="nonce" translatable="false">Nonce</string>
     <string name="more_details">مزيد من التفاصيل</string>
     <string name="import_multi_coin_wallet">استيراد محفظة متعددة العملات</string>
     <string name="phrase">عبارة</string>
@@ -140,7 +138,6 @@
     <string name="select_wallet_backup" translatable="false">اختر نسخة احتياطية للمحفظة</string>
     <string name="address_or_naming_service">العنوان أو خدمة التسمية</string>
     <string name="amount_btc" translatable="false">المبلغ BTC</string>
-    <string name="max" translatable="false">الحد الأقصى</string>
     <string name="you_get">ستحصل عليه</string>
     <string name="no_transactions">لا توجد عمليات حتى الآن</string>
     <string name="buy">شراء</string>
@@ -268,7 +265,6 @@
     <string name="miner_tip_gwei">تلميح العامل (جيوي)</string>
     <string name="using_the_best_quote">استخدام أفضل عرض</string>
     <string name="best_quote">أفضل عرض</string>
-    <string name="overall_value" translatable="false">القيمة الإجمالية</string>
     <string name="gas_price">سعر الغاز</string>
 
     <string name="language">اللغة</string>
@@ -285,19 +281,39 @@
     <string name="type_t_symbol" translatable="false">%1$s %2$s</string>
     <string name="coin_margin" translatable="false">" %1$s"</string>
     <string name="margins" translatable="false">~%1$s%2$s</string>
-    <string name="wallet_connect">Wallet Connect</string>
-    <string name="add_new_connection">Add new connection</string>
-    <string name="approve">Approve</string>
-    <string name="remove_connection">Remove Connection</string>
-    <string name="connection_detail">Connection Detail</string>
-    <string name="connection_dapp">Connection DApp</string>
-    <string name="connect">Connect</string>
-    <string name="dapp">DApp</string>
-    <string name="website_flagged">Website flagged</string>
-    <string name="search_or_type_web_address">Search or type web address</string>
-    <string name="request_for_payment">Request for payment</string>
-    <string name="sign">Sign</string>
-    <string name="signature_request">Signature Request</string>
-    <string name="now_you_are_online">Now you are online.</string>
-    <string name="no_internet_connection">No Internet connection.</string>
+    <string name="wallet_connect">اتصال المحفظة</string>
+    <string name="add_new_connection">إضافة اتصال جديد</string>
+    <string name="approve">الموافقة</string>
+    <string name="remove_connection">إزالة الاتصال</string>
+    <string name="connection_detail">تفاصيل الاتصال</string>
+    <string name="connection_dapp">تطبيق متصل</string>
+    <string name="connect">اتصال</string>
+    <string name="dapp">تطبيق للتوسع</string>
+    <string name="website_flagged">تم وضع علامة على الموقع الإلكتروني</string>
+    <string name="search_or_type_web_address">البحث أو كتابة عنوان الويب</string>
+    <string name="request_for_payment">طلب للدفع</string>
+    <string name="sign">توقيع</string>
+    <string name="signature_request">طلب التوقيع</string>
+    <string name="now_you_are_online">أنت الآن متصل عبر الإنترنت.</string>
+    <string name="no_internet_connection">لا يوجد اتصال بالإنترنت.</string>
+    <string name="explore_new_token">استكشاف عملة رقمية جديدة</string>
+    <string name="swapper_fee">رسوم التبادل</string>
+    <string name="view_details"><![CDATA[عرض التفاصيل->]]></string>
+    <string name="overall_value">القيمة الإجمالية</string>
+    <string name="receiving">الاستلام</string>
+    <string name="quote">اقتباس</string>
+    <string name="receiving_coin">%1$s الاستلام</string>
+    <string name="amount_label">كمية</string>
+    <string name="max">الحد الأقصى</string>
+    <string name="sell">بيع</string>
+    <string name="receive_coin">استلام %1$s</string>
+    <string name="passcode">رمز المرور</string>
+    <string name="passcode_touch_id_face_id">رمز المرور/Touch ID/Face ID</string>
+
+    <string name="about_model_name">حول %1$s</string>
+    <string name="max_small">الحد الأقصى</string>
+    <string name="providers">مقدمو الخدمة</string>
+    <string name="smart_contract_call">استدعاء العقد الذكي</string>
+    <string name="self_transfer">Self transfer</string>
+
 </resources>

@@ -56,10 +56,15 @@ class SendCoinViewModel @Inject constructor(private val tokensRepo: TokensRepo) 
     val setWalletActive: StateFlow<NetworkState<String?>>
         get() = _tagSetWalletActive
 
-    fun setWalletActiveCall(address: String) {
+    fun setWalletActiveCall(address: String, receiverAddress: String) {
         viewModelScope.launch {
             _tagSetWalletActive.emit(NetworkState.Loading())
-            _tagSetWalletActive.collectStateFlow(tokensRepo.setWalletActive(address))
+            _tagSetWalletActive.collectStateFlow(
+                tokensRepo.setWalletActive(
+                    address,
+                    receiverAddress
+                )
+            )
         }
     }
 

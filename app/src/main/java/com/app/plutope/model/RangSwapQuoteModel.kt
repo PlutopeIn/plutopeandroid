@@ -9,6 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Keep
 @Parcelize
 data class RangSwapQuoteModel(
+    var enteredAmount: String? = "0",
     @SerializedName("error")
     var error: String?,
     @SerializedName("requestId")
@@ -21,8 +22,8 @@ data class RangSwapQuoteModel(
     @Keep
     @Parcelize
     data class Route(
-        @SerializedName("amountRestriction")
-        var amountRestriction: String?,
+        /* @SerializedName("amountRestriction")
+         var amountRestriction: String?,*/
         @SerializedName("estimatedTimeInSeconds")
         var estimatedTimeInSeconds: Int?,
         @SerializedName("fee")

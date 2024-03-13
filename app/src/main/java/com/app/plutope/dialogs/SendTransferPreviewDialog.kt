@@ -8,8 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.activityViewModels
 import com.app.plutope.R
 import com.app.plutope.databinding.DialogSendTransferPreviewBinding
 import com.app.plutope.model.Wallet
@@ -28,7 +27,10 @@ import com.app.plutope.utils.stringToBigDecimal
 import com.app.plutope.utils.stringToBigInteger
 import com.app.plutope.utils.underlineText
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.math.BigInteger
 import java.math.RoundingMode
 import javax.inject.Inject
@@ -36,7 +38,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SendTransferPreviewDialog(private val listner: DialogOnClickBtnListner) :
     BaseBottomSheetDialog() {
-    private lateinit var sendCoinViewModel: SendCoinViewModel
+    private val sendCoinViewModel: SendCoinViewModel by activityViewModels()
     private var binding: DialogSendTransferPreviewBinding? = null
 
     var transactionNetworkModel: TransferNetworkDetail? = null
@@ -49,10 +51,13 @@ class SendTransferPreviewDialog(private val listner: DialogOnClickBtnListner) :
 
     private lateinit var coinDetail: SendCoinDetail
     override fun setUpObservers() {
+
         sendCoinViewModel.getCoinDetail().observe(viewLifecycleOwner) {
             coinDetail = it
             setDetail()
         }
+
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -67,70 +72,66 @@ class SendTransferPreviewDialog(private val listner: DialogOnClickBtnListner) :
             txtPrice.text = coinDetail.convertedPrice.replace("~", "")
 
 
-            viewLifecycleOwner.lifecycleScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.IO) {
+                    coinDetail.tokenModel.callFunction.getTokenOrCoinNetworkDetailBeforeSend(
+                        coinDetail.address, coinDetail.amount.toDouble(), coinDetail.tokenList
+                    ) { success, model, code ->
 
-                coinDetail.tokenModel.callFunction.getTokenOrCoinNetworkDetailBeforeSend(
-                    coinDetail.address,
-                    coinDetail.amount.toDouble(),
-                    coinDetail.tokenList
-                ) { success, model, code ->
+                        if (!success) {
+                            return@getTokenOrCoinNetworkDetailBeforeSend
+                        } else {
 
-                    if (!success) {
-                        return@getTokenOrCoinNetworkDetailBeforeSend
-                    } else {
-
-                        val chainList =
-                            coinDetail.tokenList.filter { it.t_address == "" && it.t_type?.lowercase() == coinDetail.tokenModel.t_type?.lowercase() && it.t_symbol?.lowercase() == coinDetail.tokenModel.chain?.symbol?.lowercase() }
-                        var chainPrice = coinDetail.tokenModel.t_price?.toDoubleOrNull()
-                        if (chainList.isNotEmpty()) {
-                            chainPrice = chainList[0].t_price?.toDoubleOrNull()
-                        }
-
-                        val gasPrice =
-                            if (coinDetail.tokenModel.t_address != "") ((model?.gasAmount?.toDouble()
-                                ?: 0.0) * (chainPrice
-                                ?: 0.0)) / 1 else ((model?.gasAmount?.toDouble()
-                                ?: 0.0) * (coinDetail.tokenModel.t_price?.toDoubleOrNull()
-                                ?: 0.0)) / 1
-                        val networkFee =
-                            model?.gasAmount?.toBigDecimal()?.setScale(6, RoundingMode.DOWN)
-                                .toString()
-                        loge(
-                            "SendTrans::",
-                            "setDetail: ${coinDetail.tokenModel}  :: $success :: $model :: $code"
-                        )
-
-                        transactionNetworkModel = model
-
-                        if (isAdded) {
-                            requireActivity().runOnUiThread {
-                                val networkFee =
-                                    (networkFee + " " + coinDetail.tokenModel.chain?.symbol + "(${preferenceHelper.getSelectedCurrency()?.symbol}${
-                                        String.format(
-                                            "%.2f",
-                                            gasPrice
-                                        )
-                                    })")
-
-                                txtNetworkFeeValue.underlineText(networkFee)
-                                val maxTotal =
-                                    coinDetail.convertedPrice.replace(Regex("[^0-9.]"), "")
-                                        .toDouble() + gasPrice
-                                txtMaxTotalValue.text =
-                                    preferenceHelper.getSelectedCurrency()?.symbol + maxTotal.toBigDecimal()
-                                        .setScale(2, RoundingMode.DOWN).toString()
-
-                                // imgSetting.visibility = View.VISIBLE
-                                progressNetworkFee.visibility = View.GONE
-                                progressMaxTotal.visibility = View.GONE
-
-                                btnConfirm.isEnabled = success
+                            val chainList =
+                                coinDetail.tokenList.filter { it.t_address == "" && it.t_type?.lowercase() == coinDetail.tokenModel.t_type?.lowercase() && it.t_symbol?.lowercase() == coinDetail.tokenModel.chain?.symbol?.lowercase() }
+                            var chainPrice = coinDetail.tokenModel.t_price?.toDoubleOrNull()
+                            if (chainList.isNotEmpty()) {
+                                chainPrice = chainList[0].t_price?.toDoubleOrNull()
                             }
+
+                            val gasPrice =
+                                if (coinDetail.tokenModel.t_address != "") ((model?.gasAmount?.toDouble()
+                                    ?: 0.0) * (chainPrice
+                                    ?: 0.0)) / 1 else ((model?.gasAmount?.toDouble()
+                                    ?: 0.0) * (coinDetail.tokenModel.t_price?.toDoubleOrNull()
+                                    ?: 0.0)) / 1
+                            val networkFee =
+                                model?.gasAmount?.toBigDecimal()?.setScale(6, RoundingMode.DOWN)
+                                    .toString()
+                            loge(
+                                "SendTrans::",
+                                "setDetail: ${coinDetail.tokenModel}  :: $success :: $model :: $code"
+                            )
+
+                            transactionNetworkModel = model
+                            CoroutineScope(Dispatchers.Main).launch {
+                                if (isAdded) {
+                                    requireActivity().runOnUiThread {
+                                        val networkFee =
+                                            (networkFee + " " + coinDetail.tokenModel.chain?.symbol + "(${preferenceHelper.getSelectedCurrency()?.symbol}${
+                                                String.format(
+                                                    "%.2f", gasPrice
+                                                )
+                                            })")
+
+                                        txtNetworkFeeValue.underlineText(networkFee)
+                                        val maxTotal =
+                                            coinDetail.convertedPrice.replace(Regex("[^0-9.]"), "")
+                                                .toDouble() + gasPrice
+                                        txtMaxTotalValue.text =
+                                            preferenceHelper.getSelectedCurrency()?.symbol + maxTotal.toBigDecimal()
+                                                .setScale(2, RoundingMode.DOWN).toString()
+                                        progressNetworkFee.visibility = View.GONE
+                                        progressMaxTotal.visibility = View.GONE
+                                        btnConfirm.isEnabled = success
+
+                                    }
+                                }
                         }
                     }
 
+                    }
 
-                    // }
                 }
 
             }
@@ -352,7 +353,7 @@ class SendTransferPreviewDialog(private val listner: DialogOnClickBtnListner) :
             )
 
         // binding!!.root.setBackgroundColor(Color.TRANSPARENT)
-        sendCoinViewModel = ViewModelProvider(requireActivity())[SendCoinViewModel::class.java]
+        // sendCoinViewModel = ViewModelProvider(requireActivity())[SendCoinViewModel::class.java]
 
         return binding!!.root
     }

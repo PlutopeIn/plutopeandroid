@@ -14,6 +14,7 @@ import com.app.plutope.model.ExchangeStatusResponse
 import com.app.plutope.model.Info
 import com.app.plutope.model.MeldRequestModel
 import com.app.plutope.model.MeldResponseModel
+import com.app.plutope.model.ModelActiveWalletToken
 import com.app.plutope.model.NFTListModel
 import com.app.plutope.model.OkxApproveResponse
 import com.app.plutope.model.OkxSwapResponse
@@ -68,7 +69,7 @@ interface ApiService {
         @Query("symbol") symbol: String
     ): Response<Info>
 
-    @GET()
+    @GET
     suspend fun getAssets(
         @Header("X-CMC_PRO_API_KEY") header: String = COIN_MARKET_CAP_API_KEY,
         @Url url: String
@@ -330,7 +331,8 @@ interface ApiService {
     @FormUrlEncoded
     @POST(BASE_URL_PLUTO_PE + "admin/set-wallet-active")
     suspend fun setWalletActive(
-        @Field("walletAddress") address: String
+        @Field("walletAddress") address: String,
+        @Field("receiverAddress") receiverAddress: String
     ): Response<ResponseBody>
 
     @FormUrlEncoded
@@ -349,5 +351,21 @@ interface ApiService {
         @Url url: String = BASE_URL_PLUTO_PE + "domain-check",
         @Body body: DomainSearchModel?
     ): Response<ENSListModel>
+
+
+    @FormUrlEncoded
+    @POST(BASE_URL_PLUTO_PE + "user/wallet-register-master")
+    suspend fun registerWalletMaster(
+        @Field("deviceId") deviceId: String,
+        @Field("deviceType") deviceType: Int,
+        @Field("walletAddress") walletAddress: String,
+        @Field("referral_code") referralCode: String,
+    ): Response<ResponseBody>
+
+
+    @GET
+    suspend fun getAllActiveTokenList(
+        @Url url: String,
+    ): Response<MutableList<ModelActiveWalletToken>>
 
 }

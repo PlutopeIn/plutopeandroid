@@ -98,7 +98,6 @@ class DeviceLockFullScreenDialog private constructor() {
 
 
 
-
         if (!fullScreenSuccessDialog!!.isShowing) {
 
             try {

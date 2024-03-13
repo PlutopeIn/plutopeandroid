@@ -297,7 +297,7 @@
                 android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginTop="@dimen/_20mdp"
                 android:fontFamily="@font/quicksand_regular"
-                android:text="Quote"
+                android:text="@string/quote"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14msp"
                 android:layout_marginBottom="@dimen/_33mdp"
@@ -370,7 +370,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/layout_finance_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -393,9 +393,9 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14msp"
                 app:layout_constrainedWidth="true"
-                android:layout_marginBottom="@dimen/_30mdp"
-                app:layout_constraintEnd_toStartOf="@id/txt_network_fee_value"
+                android:layout_marginBottom="@dimen/_20mdp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/txt_swapper_fee_title"
                 app:layout_constraintTop_toBottomOf="@id/txt_provider_fee" />
 
             <TextView
@@ -407,12 +407,14 @@
                 android:fontFamily="@font/quicksand_regular"
                 android:textColor="@color/purple_7576D"
                 android:textSize="@dimen/_14msp"
-                android:maxLines="1"
+                android:maxLines="2"
+                android:gravity="end"
                 app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/txt_network_fee_title"
                 app:layout_constraintBottom_toBottomOf="@id/txt_network_fee_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/txt_network_fee_title"
-                tools:text="0.0001534 BNB($0.02)" />
+                tools:text="126.93854369785643fhdsjhjkfjdshfjkgdshjkfjdhfdsjkh" />
 
 
             <TextView
@@ -426,7 +428,6 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14msp"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintEnd_toStartOf="@id/txt_provider_value"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                  />
@@ -441,21 +442,23 @@
                 android:textColor="@color/purple_7576D"
                 android:textSize="@dimen/_14msp"
                 android:text="@string/_0_01"
+                android:gravity="end"
                 app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/txt_network_fee_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/txt_provider_fee"
-                tools:text="20" />
+                tools:text="126.93895074548908 :::  (₹126.94) fdhgfuyhg" />
 
 
             <TextView
+                android:text="@string/swapper_fee"
                 android:id="@+id/txt_swapper_fee_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
-                android:layout_marginTop="@dimen/_20mdp"
                 android:layout_marginBottom="@dimen/_30mdp"
                 android:fontFamily="@font/quicksand_regular"
-                android:text="Swapper fee"
+                android:visibility="visible"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14msp"
                 app:layout_constrainedWidth="true"
@@ -465,20 +468,23 @@
                 app:layout_constraintTop_toBottomOf="@id/txt_network_fee_title" />
 
             <TextView
+                android:gravity="end"
                 android:id="@+id/txt_swapper_fee_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginEnd="@dimen/_10mdp"
                 android:fontFamily="@font/quicksand_regular"
-                android:maxLines="1"
+                android:maxLines="2"
+                android:visibility="visible"
                 android:textColor="@color/purple_7576D"
                 android:textSize="@dimen/_14msp"
                 app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/txt_swapper_fee_title"
                 app:layout_constraintBottom_toBottomOf="@id/txt_swapper_fee_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/txt_swapper_fee_title"
-                tools:text="0.0001534 BNB($0.02)" />
+                tools:text="0.0001534 BNB($0.02)hfjkdshgjkfgiorejhgio" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -508,6 +514,8 @@
             android:layout_marginTop="@dimen/_67mdp"
             android:text="@string/confirm_swap"
             android:textAllCaps="false"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="@id/guid"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

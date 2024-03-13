@@ -141,7 +141,6 @@
     <string name="buy_bitcoin">Buy Bitcoin</string>
     <string name="third_party_provider">Third Party Provider</string>
     <string name="mercuryo">Mercuryo</string>
-    <string name="providers">Providers</string>
     <string name="currency">Currency</string>
     <string name="receive_bitcoin">Receive Bitcoin</string>
     <string name="no_nfts_yet">No NFTs yet</string>
@@ -171,7 +170,7 @@
     <string name="status">Status</string>
     <string name="recipient">Recipient</string>
     <string name="network_fee">Network Fee</string>
-    <string name="nonce" translatable="false">Nonce</string>
+    <string name="nonce">Nonce</string>
     <string name="more_details">More Details</string>
     <string name="import_multi_coin_wallet">Import Multi-Coin Wallet</string>
     <string name="phrase">Phrase</string>
@@ -323,7 +322,6 @@
     <string name="miner_tip_gwei">Miner Tip (Gwei)</string>
     <string name="using_the_best_quote">Using the best quote</string>
     <string name="best_quote">Best Quote</string>
-    <string name="overall_value" translatable="false">Overall \nValue</string>
     <string name="gas_price">Gas Price</string>
 
     <string name="language">Language</string>
@@ -364,6 +362,25 @@
     <string name="now_you_are_online">Now you are online.</string>
     <string name="no_internet_connection">No Internet connection.</string>
     <string name="instruction_text">%1$s  %2$s ≈ %3$s%4$s</string>
+    <string name="explore_new_token">Explore new token</string>
+    <string name="swapper_fee">Swapper fee</string>
+    <string name="view_details"><![CDATA[View details->]]></string>
+    <string name="overall_value">Overall Value</string>
+    <string name="receiving">Receiving</string>
+    <string name="networkfees">%1$s %2$s%3$s</string>
+    <string name="quote">Quote</string>
+    <string name="receiving_coin">%1$s Receiving</string>
+    <string name="amount_label">Amount</string>
+    <string name="sell">Sell</string>
+    <string name="receive_coin">Receive %1$s</string>
+    <string name="passcode">Passcode</string>
+    <string name="passcode_touch_id_face_id">Passcode/Touch ID/Face ID</string>
+
+    <string name="about_model_name">About %1$s</string>
+    <string name="max_small">Max</string>
+    <string name="providers">Providers</string>
+    <string name="smart_contract_call">Smart Contract Call</string>
+    <string name="self_transfer">Self transfer</string>
 
 
 </resources>

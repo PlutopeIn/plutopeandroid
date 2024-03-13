@@ -48,6 +48,56 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:listitem="@layout/row_assets_list" />
 
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_16mdp"
+                    android:layout_marginTop="@dimen/_10mdp"
+                    android:animateLayoutChanges="true"
+                    android:animationCache="true"
+                    android:visibility="visible"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shimmer_repeat_delay="10"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="linear"
+                    tools:listitem="@layout/row_assets_list">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                       <!-- <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />-->
+
+                    </LinearLayout>
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="rv_assets_list,shimmerLayout" />
 
                 <TextView
                     android:id="@+id/edt_search"
@@ -56,7 +106,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16mdp"
                     android:layout_marginTop="@dimen/_22mdp"
-                    android:layout_marginBottom="@dimen/_150mdp"
                     android:autofillHints=""
                     android:fontFamily="@font/montserrat_light"
                     android:gravity="center_vertical"
@@ -66,11 +115,33 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/purple_7576D"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_10mdp"
+                    android:textSize="@dimen/_14mdp"
+                    android:layout_marginBottom="@dimen/_130mdp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_assets_list" />
+                    app:layout_constraintTop_toBottomOf="@id/barrier" />
+
+                <Button
+                    android:id="@+id/btn_explore_token"
+                    style="@style/wallet_button_gradient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_38mdp"
+                    android:layout_marginTop="@dimen/_30mdp"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_30mdp"
+                    android:text="@string/explore_new_token"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:visibility="invisible"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_search" />
+
 
                 <ImageView
                     android:id="@+id/img_search"
@@ -87,7 +158,7 @@
                     android:id="@+id/group_search_token"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:constraint_referenced_ids="img_search,edt_search" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

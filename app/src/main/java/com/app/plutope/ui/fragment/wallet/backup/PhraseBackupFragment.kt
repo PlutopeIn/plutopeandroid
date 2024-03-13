@@ -8,6 +8,7 @@ import com.app.plutope.R
 import com.app.plutope.databinding.FragmentPhraseBackupBinding
 import com.app.plutope.model.Wallets
 import com.app.plutope.ui.base.BaseFragment
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +43,7 @@ class PhraseBackupFragment : BaseFragment<FragmentPhraseBackupBinding, PhraseBac
             findNavController().navigateUp()
         }
 
-        viewDataBinding!!.btnBackUpManually.setOnClickListener {
+        viewDataBinding!!.btnBackUpManually.buttonClickedWithEffect {
             if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
                 findNavController().safeNavigate(
                     PhraseBackupFragmentDirections.actionPhraseBackupFragmentToBackUpWalletCheck(
@@ -52,7 +53,7 @@ class PhraseBackupFragment : BaseFragment<FragmentPhraseBackupBinding, PhraseBac
             }
         }
 
-        viewDataBinding!!.btnBackUpToGoogleDrive.setOnClickListener {
+        viewDataBinding!!.btnBackUpToGoogleDrive.buttonClickedWithEffect {
             if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
 
                 findNavController().safeNavigate(

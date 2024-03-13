@@ -82,6 +82,7 @@ class GraphDetail : BaseFragment<FragmentGraphDetailBinding, GraphDetailViewMode
         if(!args.tokenModel.isCustomTokens!!) {
             graphDetailViewModel.executeGetGraphMarketResponse("${COIN_GEKO_MARKETPRICE}${args.tokenModel.tokenId?.lowercase()}/market_chart?id=${args.tokenModel.tokenId}&&vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&days=1&interval=")
             graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&ids=${args.tokenModel.tokenId}")
+          //  graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_PLUTO_PE_SERVER_URL${preferenceHelper.getSelectedCurrency()?.code}&ids=${args.tokenModel.tokenId}")
         }else{
             viewDataBinding?.constRoot?.showSnackBar(getString(R.string.graph_details_not_available))
         }
@@ -275,8 +276,10 @@ class GraphDetail : BaseFragment<FragmentGraphDetailBinding, GraphDetailViewMode
             preferenceHelper.getSelectedCurrency()?.symbol + graphObj?.market_cap.toString()
         viewDataBinding?.txtVolumeValue?.text =
             preferenceHelper.getSelectedCurrency()?.symbol + graphObj?.total_volume.toString()
-        viewDataBinding?.txtCirculatingSupplyValue?.text = graphObj?.circulating_supply.toString() +" "+ args.tokenModel.t_symbol
-        viewDataBinding?.txtTotalSupplyValue?.text = graphObj?.total_supply.toString() +" "+ args.tokenModel.t_symbol
+        viewDataBinding?.txtCirculatingSupplyValue?.text =
+            graphObj?.circulating_supply.toString() + " " + args.tokenModel.t_symbol
+        viewDataBinding?.txtTotalSupplyValue?.text =
+            if (graphObj?.total_supply.toString() != "null") graphObj?.total_supply.toString() else "0.0" + " " + args.tokenModel.t_symbol
     }
 
     private fun setChartDetailGraph(result: List<List<Double>>?) {

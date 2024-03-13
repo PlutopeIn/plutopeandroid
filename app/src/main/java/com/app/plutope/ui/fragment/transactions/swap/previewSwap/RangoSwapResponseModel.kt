@@ -16,7 +16,8 @@ data class RangoSwapResponseModel(
     @SerializedName("route")
     var route: Route?,
     @SerializedName("tx")
-    var tx: Tx?
+    var tx: Tx?,
+    var isFromButtonCliked: Boolean = false
 ) : Parcelable {
     @Parcelize
     data class Route(

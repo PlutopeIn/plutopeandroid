@@ -37,7 +37,7 @@
             android:maxLines="1"
             android:textColorHint="@color/purple_7576D"
             android:textCursorDrawable="@null"
-            android:textSize="@dimen/_10mdp"
+            android:textSize="@dimen/_14mdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

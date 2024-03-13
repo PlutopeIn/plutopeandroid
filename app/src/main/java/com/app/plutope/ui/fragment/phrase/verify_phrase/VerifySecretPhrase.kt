@@ -21,12 +21,14 @@ import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.utils.Securities
 import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.constant.appUpdateVersion
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.safeNavigate
 import com.app.plutope.utils.showLoader
 import com.app.plutope.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -73,7 +75,7 @@ class VerifySecretPhrase :
         setEmptyPhrasesList()
         pickedListPhrasesList(tagRandomWordList)
 
-        viewDataBinding?.btnDone?.setOnClickListener {
+        viewDataBinding?.btnDone?.buttonClickedWithEffect {
             createWalletAndInsertTable()
         }
 
@@ -246,6 +248,14 @@ class VerifySecretPhrase :
                                 walletAddress!!,
                                 preferenceHelper.firebaseToken!!
                             )
+
+                            tokenViewModel.registerWalletCallMaster(
+                                preferenceHelper.deviceId,
+                                walletAddress,
+                                preferenceHelper.referralCode
+                            )
+
+
                             preferenceHelper.appUpdatedFlag = appUpdateVersion
                             if (!preferenceHelper.isFirstTime)
                                 findNavController().safeNavigate(VerifySecretPhraseDirections.actionVerifySecretPhraseToWelcomeScreen())
@@ -356,6 +366,33 @@ class VerifySecretPhrase :
                 }
             }
         }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tokenViewModel.getRegisterWalletMaster.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.Loading -> {
+                            //requireContext().showLoader()
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {

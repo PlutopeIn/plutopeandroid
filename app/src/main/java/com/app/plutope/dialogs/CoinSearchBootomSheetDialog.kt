@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.app.plutope.R
 import com.app.plutope.databinding.DialogCoinSearchListBinding
 import com.app.plutope.model.Tokens
@@ -25,9 +26,11 @@ import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseBottomSheetDialog
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.transactions.buy.graph.GraphDetailViewModel
-import com.app.plutope.utils.constant.COIN_GEKO_MARKET_API
+import com.app.plutope.utils.constant.COIN_GEKO_PLUTO_PE_SERVER_URL
+import com.app.plutope.utils.constant.storedTokenList
 import com.app.plutope.utils.extras.PreferenceHelper
 import com.app.plutope.utils.hideLoader
+import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.showLoader
 import com.app.plutope.utils.showSnackBar
@@ -134,7 +137,7 @@ class CoinSearchBottomSheetDialog(
                         is NetworkState.Success -> {
                             val cryptoList = networkState.data
                             if (cryptoList?.isNotEmpty() == true) {
-
+                                currentPage += 1
                                 val commonIds = cryptoList.map { it.id }
                                 val commonData = commonIds.flatMap { id ->
                                     originalList.filter {
@@ -142,30 +145,36 @@ class CoinSearchBottomSheetDialog(
                                     }
                                 }
                                 if (!isFromGet) {
-
+                                    loge("Dashboard_Search", "size : ${cryptoList.size}")
+                                    storedTokenList = commonData
                                     trendingList.addAll(commonData)
                                     setDataListRecyclerView(commonData)
                                 }
                             } else {
                                 isLastPage = true
                             }
-                            binding?.progressToken?.visibility = GONE
+                            // binding?.progressToken?.visibility = GONE
+                            stopShimmerEffect()
                         }
 
                         is NetworkState.Loading -> {
                             if (currentPage == 1)
-                                binding?.progressToken?.visibility = VISIBLE
+                                startShimmerEffect()
+                            //binding?.progressToken?.visibility = VISIBLE
+
                         }
 
                         is NetworkState.Error -> {
                             binding?.root?.showSnackBar(networkState.message.toString())
-                            binding?.progressToken?.visibility = GONE
+                            //binding?.progressToken?.visibility = GONE
+                            stopShimmerEffect()
                         }
 
                         is NetworkState.SessionOut -> {}
 
                         else -> {
-                            binding?.progressToken?.visibility = GONE
+                            // binding?.progressToken?.visibility = GONE
+                            stopShimmerEffect()
                         }
                     }
                 }
@@ -174,7 +183,7 @@ class CoinSearchBottomSheetDialog(
     }
 
     override fun setUpUI() {
-
+        startShimmerEffect()
         adapter = SearchCoinListAdapter(isFromSwap = isFromSwap, providerClick = { model ->
             lifecycleScope.launch(Dispatchers.Main) {
                 selectedModel = model
@@ -190,13 +199,24 @@ class CoinSearchBottomSheetDialog(
                 }
             }
         })
+
         lifecycleScope.launch(Dispatchers.IO) {
             originalList = tokenViewModel.getAllDisableTokens()
             requireActivity().runOnUiThread {
                 if (isFromSwap) {
                     getAllTokenList()
                 } else {
-                    fetchTrendingTokens(currentPage)
+                    if (storedTokenList.isEmpty()) {
+                        fetchTrendingTokens(currentPage)
+                    } else {
+                        startShimmerEffect()
+
+                        loge("Enable", "Tokens=>${tokenViewModel.getEnableTokens(1)}")
+
+                        setDataListRecyclerView(storedTokenList)
+                    }
+
+
                 }
             }
 
@@ -207,6 +227,30 @@ class CoinSearchBottomSheetDialog(
 
         val layoutManager = LinearLayoutManager(requireContext())
         binding?.rvShiftTypeList?.layoutManager = layoutManager
+        binding?.rvShiftTypeList?.adapter = adapter
+
+        binding?.rvShiftTypeList?.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+
+                    /*
+                                        if (!isLastPage && lastVisibleItemPosition == totalItemCount - 1 && !isLastPage) {
+                                           // currentPage += 1
+                                            if (isFromSwap) {
+                                               // getAllTokenList()
+                                            } else {
+                                                fetchTrendingTokens(currentPage)
+                                            }
+                                        }
+                    */
+                }
+            }
+        })
 
     }
 
@@ -238,8 +282,13 @@ class CoinSearchBottomSheetDialog(
         }
         adapter?.submitList(sortList.distinct())
         if (sortedList.isNotEmpty()) {
-            binding?.rvShiftTypeList?.smoothScrollBy((adapter?.itemCount!! - 1), 0)
+            // binding?.rvShiftTypeList?.smoothScrollBy((adapter?.itemCount!! - 1), 0)
+            // binding?.rvShiftTypeList?.smoothScrollToPosition(0)
+            //  binding?.rvShiftTypeList?.scrollToPosition(0)
+
+            binding?.rvShiftTypeList?.layoutManager?.scrollToPosition(0)
             adapter?.notifyDataSetChanged()
+            //  binding?.rvShiftTypeList?.layoutManager?.scrollToPosition(0)
         }
     }
 
@@ -283,23 +332,17 @@ class CoinSearchBottomSheetDialog(
 
     private fun setDataListRecyclerView(list: List<Tokens>) {
         requireActivity().runOnUiThread {
-            dataList.clear()
             dataList.addAll(list)
             binding?.rvShiftTypeList?.visibility = VISIBLE
-
             var listSort = dataList.sortedByDescending { it.t_balance.toBigDecimalOrNull() }
                 .distinctBy { it.t_pk }
-
             if (isFromSwap && isFromGet) {
                 listSort = listSort.filter { it.t_pk != payObj.t_pk }
             }
-
-
             adapter?.submitList(listSort.distinct())
-            adapter?.submitList(listSort)
-
-            binding?.rvShiftTypeList?.adapter = adapter
             adapter?.notifyDataSetChanged()
+            stopShimmerEffect()
+
         }
     }
 
@@ -310,6 +353,20 @@ class CoinSearchBottomSheetDialog(
     }
 
     private fun fetchTrendingTokens(currentPage: Int) {
-        graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&page=$currentPage&per_page=250")
+        //graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&page=$currentPage&per_page=250")
+        graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_PLUTO_PE_SERVER_URL${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=&page=$currentPage&per_page=250")
+    }
+
+    private fun startShimmerEffect() {
+        binding?.shimmerLayout?.startShimmer()
+        binding?.shimmerLayout?.visibility = VISIBLE
+        binding?.rvShiftTypeList?.visibility = GONE
+
+    }
+
+    private fun stopShimmerEffect() {
+        binding?.shimmerLayout?.stopShimmer()
+        binding?.shimmerLayout?.visibility = View.INVISIBLE
+        binding?.rvShiftTypeList?.visibility = VISIBLE
     }
 }

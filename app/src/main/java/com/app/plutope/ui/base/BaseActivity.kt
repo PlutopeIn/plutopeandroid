@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.TransitionDrawable
 import android.net.ConnectivityManager
@@ -13,9 +14,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.LocaleList
 import android.os.Looper
 import android.os.PersistableBundle
-import android.provider.Settings
+import android.provider.Settings.ACTION_SECURITY_SETTINGS
+import android.provider.Settings.Secure
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
@@ -144,7 +147,7 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
                 if (preferenceHelper.isAppLock) {
                     if (/*navController?.currentDestination?.id != R.id.sendCoin &&*/ navController?.currentDestination?.id != R.id.addCustomToken && navController?.currentDestination?.id != R.id.addContactFragment && navController?.currentDestination?.id != R.id.confirmEncryptionPassword && navController?.currentDestination?.id != R.id.selectWalletBackup && navController?.currentDestination?.id != R.id.walletConnect && navController?.currentDestination?.id != R.id.browser) {
                         if (navController?.currentDestination?.id == R.id.splash) {
-                            Handler(Looper.getMainLooper()).postDelayed(5000) {
+                            Handler(Looper.getMainLooper()).postDelayed(1000) {
                                 hideLoader()
                                 if (!preferenceHelper.isLockModePassword) {
                                     setBioMetric(biometricListener)
@@ -179,13 +182,20 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
 
 
     }
+
     override fun onPause() {
         super.onPause()
         isPausedOnce = true
     }
+
     override fun onStop() {
         super.onStop()
     }
+
+    fun getAndroidId(): String {
+        return Secure.getString(this.contentResolver, Secure.ANDROID_ID)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val saveInstState = if (value != null) value else savedInstanceState
@@ -217,13 +227,15 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
          navGraph.setStartDestination(R.id.dashboard)
          navController!!.setGraph(navGraph.id)*/
 
-        changeLanguage(if (preferenceHelper.currentLanguage == "Thai") "th" else if (preferenceHelper.currentLanguage == "Hindi") "hi" else if (preferenceHelper.currentLanguage == "Arabic") "ar" else "en")
+        // JJ().selectedLanguage = preferenceHelper.currentLanguage!!
+        loge("SelectedLang", "::${preferenceHelper.currentLanguage}")
+
+        changeLanguage(preferenceHelper.currentLanguage)
 
         navController!!.addOnDestinationChangedListener { _, destination, _ ->
             binding.toolbar.title = ""
             when (destination.id) {
-                R.id.legal, R.id.yourRecoveryPhrase, R.id.verifySecretPhrase, R.id.send, R.id.buy, R.id.receive, R.id.swap, R.id.notification, R.id.providers, R.id.currency, R.id.addCustomToken, R.id.security, R.id.selectWalletBackup, R.id.sendCoin, R.id.webViewToolbar, R.id.contactListFragment, R.id.addContactFragment, R.id.recoveryWalletFragment, R.id.walletConnect, R.id.addENS, R.id.walletConnectionDetail -> {
-                    showToolbarTransparentBack()
+                R.id.legal, R.id.yourRecoveryPhrase, R.id.verifySecretPhrase, /*R.id.send, R.id.buy, R.id.receive, R.id.swap,*/ R.id.notification, R.id.providers, R.id.currency/*, R.id.addCustomToken*/, R.id.security, R.id.selectWalletBackup, R.id.sendCoin, R.id.webViewToolbar, R.id.contactListFragment, R.id.addContactFragment, R.id.recoveryWalletFragment, R.id.walletConnect, R.id.addENS, R.id.walletConnectionDetail -> {
                     showToolbarTransparentBack()
                     showBottomNavigation(false)
                 }
@@ -325,6 +337,10 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
             navController!!.safeNavigate(R.id.action_global_to_buy, result)
         }
 
+        loge("DeviceIDDDD ::", getAndroidId())
+
+        preferenceHelper.deviceId = getAndroidId()
+
         setupObserver()
         setWalletObject()
         setCurrency()
@@ -348,26 +364,24 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
     }
 
     fun changeLanguage(languageName: String, isRestart: Boolean = false) {
-        /* val appLocale: LocaleListCompat =
-             LocaleListCompat.forLanguageTags(languageName)
-         AppCompatDelegate.setApplicationLocales(appLocale)*/
+        loge("languageName", "::> $languageName  :: $isRestart")
         val locale = Locale(languageName)
         Locale.setDefault(locale)
-        val resources = resources
-        val configuration = resources.configuration
-        configuration.setLocale(locale)
-        configuration.setLayoutDirection(locale)
-        // configuration.setLayoutDirection(LayoutDirection.RTL)
-        //this.createConfigurationContext(configuration)
+
+        val resources = this.resources
+        val configuration = Configuration(this.applicationContext.resources.configuration)
+
+        val localeList = LocaleList(locale)
+        LocaleList.setDefault(localeList)
+        configuration.setLocales(localeList)
+
+
         resources.updateConfiguration(configuration, resources.displayMetrics)
+
         if (isRestart) {
             val id = navController?.currentDestination?.id
             navController?.popBackStack(id!!, true)
             navController?.navigate(id!!)
-            /* val intent = Intent(this, BaseActivity::class.java)
-             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-             startActivity(intent)
-             finish()*/
 
         }
     }
@@ -459,7 +473,7 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
         }
     }
 
-    private fun showToolbarTransparentBack(isHideBackButton: Boolean = false) { // binding.drawerLayout[0].findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
+    fun showToolbarTransparentBack(isHideBackButton: Boolean = false) { // binding.drawerLayout[0].findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
         binding.toolbar.visibility = View.VISIBLE
         binding.toolbar.background =
             ResourcesCompat.getDrawable(resources, R.drawable.background_toolbar_transparent, null)
@@ -519,6 +533,7 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
                 when (event) {
                     is SignEvent.SessionProposal -> {
                         CoroutineScope(Dispatchers.Main).launch {
+                            loge("Proposal", "here i am $event")
                             DialogWalletConnectionConfirmation.getInstance()
                                 ?.show(this@BaseActivity) { _, _ ->
                                     this@BaseActivity.intent.takeIf { intent -> intent?.action == Intent.ACTION_VIEW && !intent.dataString.isNullOrBlank() }
@@ -695,58 +710,6 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
                         }
 
 
-                        /*
-                                                if (transactionModelDAPP.transactionType == WalletConnectionUtils.WalletConnectionMethod.personalSignIn) {
-                                                    CoroutineScope(Dispatchers.Main).launch {
-                                                        try {
-                                                            SessionRequestViewModel().approve(
-                                                                transactionModelDAPP,
-                                                                transactionHash!!
-                                                            ) { uri ->
-                                                                sendResponseDeepLink(uri)
-                                                            }
-                                                            bottomSheetDialog.dismiss()
-                                                        } catch (e: Throwable) {
-                                                            e.printStackTrace()
-                                                            bottomSheetDialog.dismiss()
-                                                        }
-                                                    }
-
-                                                } else {
-                                                    CoroutineScope(Dispatchers.Main).launch {
-                                                        token.callFunction.getTransactionHash(
-                                                            isGettingTransactionHash = true,
-                                                            toAddress = transactionModelDAPP.transactionDetails[0].to,
-                                                            gasLimit = "$txGasLimit",
-                                                            gasPrice = "0",
-                                                            data = transactionModelDAPP.transactionDetails[0].data,
-                                                            value = txValue
-
-                                                        ) { success, transactionHash, wrapData ->
-                                                            if (success) {
-                                                                CoroutineScope(Dispatchers.Main).launch {
-                                                                    try {
-                                                                        SessionRequestViewModel().approve(
-                                                                            transactionModelDAPP,
-                                                                            transactionHash!!
-                                                                        ) { uri ->
-                                                                            sendResponseDeepLink(uri)
-                                                                        }
-                                                                        bottomSheetDialog.dismiss()
-                                                                    } catch (e: Throwable) {
-                                                                        e.printStackTrace()
-                                                                        bottomSheetDialog.dismiss()
-                                                                    }
-                                                                }
-                                                            } else {
-                                                                loge("BaseActivity", "transactionHash : failed")
-                                                                bottomSheetDialog.dismiss()
-                                                                showToast(transactionHash!!)
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                        */
                     } else {
                         CoroutineScope(Dispatchers.Main).launch {
                             try {
@@ -882,7 +845,7 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
                 startActivityForResult(intent, reqCode)
             } catch (ex: java.lang.Exception) {
                 ex.printStackTrace()
-                startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
+                startActivity(Intent(ACTION_SECURITY_SETTINGS))
             }
         }
         dialog.show()
@@ -980,6 +943,7 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
             if (task.isSuccessful) {
                 val token = task.result
                 preferenceHelper.firebaseToken = token.toString()
+                loge("Token", "FirebaseToken==>" + preferenceHelper.firebaseToken)
                 retryCount = 0
             } else {
                 val exception = task.exception
@@ -998,11 +962,16 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
                         )
                     }
                 }
+
+                loge("Token", "FirebaseToken==>" + preferenceHelper.firebaseToken)
+
             }
         }
 
         FirebaseInstallations.getInstance().id.addOnSuccessListener {
-            preferenceHelper.deviceId = it.toString()
+            // preferenceHelper.deviceId = it.toString()
+
+            // loge("DeviceID","deviceID => ${preferenceHelper.deviceId}")
         }
     }
 
@@ -1098,7 +1067,12 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
 
     private fun Intent.handle() {
         // val data = intent.data
+
+        preferenceHelper.deviceId = getAndroidId()
+
+        loge("DeviceIDDDD ::", getAndroidId())
         loge("TAG", "showDeepLinkOffer: ${this.dataString}")
+
         when (this.scheme) {
             "wc" -> {
                 val uri = dataString.toString()
@@ -1161,9 +1135,12 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
         loge("TAG", "http  : $appLinkAction  :: $appLinkData")
         if (Intent.ACTION_VIEW == appLinkAction && appLinkData != null) {
             val referralCode: String? = appLinkData.getQueryParameter("referral")
+
+            preferenceHelper.referralCode = referralCode!!
+
             loge("showDeepLinkOffer", "referralCode:  $referralCode")
 
-          //  showToast("Your referralCode is : $referralCode")
+            //  showToast("Your referralCode is : $referralCode")
 
         }
     }
@@ -1171,28 +1148,33 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         loge("InternetConnection", "$isConnected")
         if (!isConnected) {
-            binding.layoutNoInternetConnection.visibility = View.VISIBLE
-            binding.txtNoInternet.text = getString(R.string.no_internet_connection)
-            binding.layoutNoInternetConnection.setBackgroundColor(
-                resources.getColor(
-                    R.color.red,
-                    null
+            runOnUiThread {
+                binding.layoutNoInternetConnection.visibility = View.VISIBLE
+                binding.txtNoInternet.text = getString(R.string.no_internet_connection)
+                binding.layoutNoInternetConnection.setBackgroundColor(
+                    resources.getColor(
+                        R.color.red,
+                        null
+                    )
                 )
-            )
+            }
+
         } else {
 
-            val mColors = arrayOf(
-                ColorDrawable(resources.getColor(R.color.green_099817, null)),
-                ColorDrawable(resources.getColor(R.color.green_4DCC59, null)),
-                ColorDrawable(resources.getColor(R.color.light_green_22d1ee, null))
-            )
-            val mTransition = TransitionDrawable(mColors)
-            mTransition.startTransition(5000)
-            binding.txtNoInternet.text = getString(R.string.now_you_are_online)
-            binding.layoutNoInternetConnection.background = mTransition
-            CoroutineScope(Dispatchers.Main).launch {
-                delay(5000)
-                binding.layoutNoInternetConnection.visibility = View.GONE
+            runOnUiThread {
+                val mColors = arrayOf(
+                    ColorDrawable(resources.getColor(R.color.green_099817, null)),
+                    ColorDrawable(resources.getColor(R.color.green_4DCC59, null)),
+                    ColorDrawable(resources.getColor(R.color.light_green_22d1ee, null))
+                )
+                val mTransition = TransitionDrawable(mColors)
+                mTransition.startTransition(5000)
+                binding.txtNoInternet.text = getString(R.string.now_you_are_online)
+                binding.layoutNoInternetConnection.background = mTransition
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(5000)
+                    binding.layoutNoInternetConnection.visibility = View.GONE
+                }
             }
 
 

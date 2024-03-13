@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.plutope.R
 import com.app.plutope.databinding.RowTransactionListBinding
 import com.app.plutope.model.TransactionLists
+import com.app.plutope.utils.loge
 
 
 class TransactionListAdapter(
@@ -24,23 +25,40 @@ class TransactionListAdapter(
         fun bind(model: TransactionLists) {
             binding.transactionModel = model
 
-
+            loge("TransactionModel", "$model\n")
             binding.txtPrice.text = model.priceToShow
 
             if(model.isSwap){
-                binding.txtTransactionName.text = "Swap"
+                binding.txtTransactionName.text =
+                    binding.txtTransactionName.context.getString(R.string.swap)
             }else {
                 if (model.methodId == "" && model.isToContract) {
-                    binding.txtTransactionName.text = "Transfer"
+
+                    /*  if (model.from == model.to){
+                          binding.txtTransactionName.text = binding.txtTransactionName.context.getString(R.string.self_transfer)
+                      }else{
+                          binding.txtTransactionName.text = binding.txtTransactionName.context.getString(R.string.transfer)
+                      }*/
+
+                    binding.txtTransactionName.text =
+                        binding.txtTransactionName.context.getString(R.string.transfer)
 
                 } else {
-                    if (addressToken == "" && model.amount.toDouble()<=0.0 ) {
-                        binding.txtTransactionName.text = "Smart Contract Call"
+                    if (addressToken == "" && model.amount.toDouble() <= 0.0000000000000000) {
+                        binding.txtTransactionName.text =
+                            binding.txtTransactionName.context.getString(R.string.smart_contract_call)
                         binding.txtPrice.text =
-                            "-0.00 ${model.priceToShow?.split(" ")?.lastOrNull()}"
+                            "0.00 ${model.priceToShow?.split(" ")?.lastOrNull()}"
 
                     } else {
-                        binding.txtTransactionName.text = "Transfer"
+                        /* if (model.from == model.to){
+                             binding.txtTransactionName.text = binding.txtTransactionName.context.getString(R.string.self_transfer)
+                         }else{
+                             binding.txtTransactionName.text = binding.txtTransactionName.context.getString(R.string.transfer)
+                         }*/
+
+                        binding.txtTransactionName.text =
+                            binding.txtTransactionName.context.getString(R.string.transfer)
                     }
                 }
             }

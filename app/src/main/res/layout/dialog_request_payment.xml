@@ -68,7 +68,7 @@
                     android:layout_marginStart="@dimen/_16mdp"
                     android:layout_marginTop="@dimen/_25mdp"
                     android:fontFamily="@font/montserrat_medium"
-                    android:text="@{`Amount `+model.t_symbol}"
+                    android:text="@{@string/amount_label +` `+model.t_symbol}"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12msp"
                     app:layout_constrainedWidth="true"

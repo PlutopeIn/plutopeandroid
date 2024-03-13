@@ -398,10 +398,11 @@
                     android:layout_marginHorizontal="@dimen/_16mdp"
                     android:layout_marginTop="@dimen/_19mdp"
                     android:background="@drawable/bg_corner_radius_17"
-                    app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
+                    app:layout_constraintBottom_toTopOf="@+id/btn_view"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintVertical_bias="0"
                     app:layout_constraintTop_toBottomOf="@+id/layout_basic_detail"
                     app:layout_constraintVertical_chainStyle="packed">
 
@@ -508,7 +509,24 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:textAllCaps="false"
                     android:layout_marginBottom="@dimen/_80mdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_finance_detail"
+                    app:layout_constraintVertical_bias="1" />
 
+                <View
+                    android:id="@+id/btn_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50mdp"
+                    android:layout_marginHorizontal="@dimen/_30mdp"
+                    android:layout_marginTop="@dimen/_50mdp"
+                    android:layout_marginBottom="@dimen/_80mdp"
+                    android:focusable="true"
+                    android:minHeight="@dimen/_50mdp"
+                    android:text="@string/confirm"
+                    android:visibility="visible"
+                    app:layout_constrainedHeight="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

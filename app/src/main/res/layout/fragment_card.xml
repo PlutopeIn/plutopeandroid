@@ -373,8 +373,7 @@
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_speed="2"
-                app:lottie_rawRes="@raw/coming_soon"
-                />
+                app:lottie_rawRes="@raw/coming_soon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

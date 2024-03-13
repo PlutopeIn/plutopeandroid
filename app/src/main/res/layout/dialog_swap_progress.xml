@@ -75,6 +75,7 @@
                     app:layout_constraintTop_toBottomOf="@id/txt_title" />
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:visibility="gone"
                     android:id="@+id/img_cancel"
                     android:layout_width="@dimen/_23mdp"
                     android:layout_height="@dimen/_23mdp"

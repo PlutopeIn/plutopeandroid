@@ -148,10 +148,10 @@
 
             <ImageView
                 android:id="@+id/img_add_custom_token"
-                android:layout_width="@dimen/_20mdp"
-                android:layout_height="@dimen/_20mdp"
-                android:layout_marginEnd="@dimen/_29mdp"
-                android:padding="@dimen/_3mdp"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginEnd="@dimen/_8mdp"
+                android:padding="@dimen/_18mdp"
                 android:src="@drawable/ic_add_single"
                 app:layout_constraintBottom_toBottomOf="@id/tabLayout"
                 app:layout_constraintEnd_toEndOf="parent"

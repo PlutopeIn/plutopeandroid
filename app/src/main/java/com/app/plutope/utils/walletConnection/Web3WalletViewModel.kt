@@ -8,9 +8,9 @@ import com.app.plutope.utils.loge
 import com.app.plutope.utils.walletConnection.state.AuthEvent
 import com.app.plutope.utils.walletConnection.state.ConnectionState
 import com.app.plutope.utils.walletConnection.state.NoAction
+import com.app.plutope.utils.walletConnection.state.PairingState
 import com.app.plutope.utils.walletConnection.state.SignEvent
 import com.app.plutope.utils.walletConnection.state.connectionStateFlow
-import com.walletconnect.sample.wallet.ui.state.PairingState
 import com.walletconnect.web3.wallet.client.Wallet
 import com.walletconnect.web3.wallet.client.Web3Wallet
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -127,7 +127,9 @@ class Web3WalletViewModel @Inject constructor() : BaseViewModel<CommonNavigator>
             _pairingStateSharedFlow.emit(PairingState.Loading)
         }
 
+
         val pairingParams = Wallet.Params.Pair(pairingUri)
+
         Web3Wallet.pair(pairingParams) { error ->
             viewModelScope.launch {
                 _pairingStateSharedFlow.emit(PairingState.Error(error.throwable.message ?: ""))

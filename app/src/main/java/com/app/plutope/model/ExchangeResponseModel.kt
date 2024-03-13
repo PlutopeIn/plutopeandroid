@@ -15,7 +15,8 @@ data class ExchangeResponseModel(
     val toAmount: Double,
     val toCurrency: String,
     val toNetwork: String,
-    val type: String
+    val type: String,
+    var lastEnteredAmount: String
 ):Parcelable
 
 

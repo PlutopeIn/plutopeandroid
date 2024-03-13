@@ -27,6 +27,7 @@ import com.app.plutope.dialogs.DeviceLockFullScreenDialog
 import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.utils.constant.ABOUT_US_URL
+import com.app.plutope.utils.constant.Language
 import com.app.plutope.utils.extras.BiometricResult
 import com.app.plutope.utils.extras.PreferenceHelper
 import com.app.plutope.utils.extras.isDeviceSecure
@@ -91,13 +92,13 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
 
     override fun setupUI() {
         setOnClickListner()
+        // setLanguage()
         viewDataBinding?.txtCurrencySelected?.text = preferenceHelper.getSelectedCurrency()?.code
 
         val popupMenu = PopupMenu(requireContext(), viewDataBinding!!.cardLanguage)
         popupMenu.menuInflater.inflate(R.menu.language_menu, popupMenu.menu)
 
         viewDataBinding!!.cardLanguage.setOnClickListener {
-//            popupMenu.show()
             showSortPopup()
         }
 
@@ -106,44 +107,46 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
         }
 
         viewDataBinding!!.cardHelpCenter.setOnClickListener {
-
+            val url = "https://www.plutope.io/contact-us"
+            val intent = CustomTabsIntent.Builder()
+                .build()
+            intent.launchUrl(requireContext(), Uri.parse(url))
         }
 
-        viewDataBinding!!.txtLanguageSelected.text = preferenceHelper.currentLanguage
-
-        clickOnPopupMenu(popupMenu)
-
-    }
-
-    private fun clickOnPopupMenu(popupMenu: PopupMenu) {
-        popupMenu.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.english -> {
-                    viewDataBinding!!.txtLanguageSelected.text = getString(R.string.english)
-                    preferenceHelper.currentLanguage = "English"
-                    (activity as BaseActivity).changeLanguage("en", true)
-                }
-
-                R.id.thai -> {
-                    viewDataBinding!!.txtLanguageSelected.text = getString(R.string.thai)
-                    preferenceHelper.currentLanguage = "Thai"
-                    (activity as BaseActivity).changeLanguage("th", true)
-                }
-
-                R.id.hindi -> {
-                    viewDataBinding!!.txtLanguageSelected.text = getString(R.string.hindi)
-                    preferenceHelper.currentLanguage = "Hindi"
-                    (activity as BaseActivity).changeLanguage("hi", true)
-                }
-                R.id.arabic -> {
-                    viewDataBinding!!.txtLanguageSelected.text = getString(R.string.arabic)
-                    preferenceHelper.currentLanguage = "Arabic"
-                    (activity as BaseActivity).changeLanguage("ar", true)
-                }
+        Language.values().forEach {
+            if (it.code == preferenceHelper.currentLanguage) {
+                viewDataBinding!!.txtLanguageSelected.text = it.displayName
             }
-            return@setOnMenuItemClickListener true
         }
+
+
     }
+
+    /*
+        private fun setLanguage() {
+            if (preferenceHelper.currentLanguage == Language.ARABIC.code) {
+
+                val drawableBackword =
+                    ResourcesCompat.getDrawable(resources, R.drawable.ic_backword_new, null)
+                viewDataBinding!!.imgSecurityArrow.setImageDrawable(drawableBackword)
+                viewDataBinding!!.imgContactArrow.setImageDrawable(drawableBackword)
+                viewDataBinding!!.imgHelpCenterArrow.setImageDrawable(drawableBackword)
+                viewDataBinding!!.imgAboutArrow.setImageDrawable(drawableBackword)
+
+            } else {
+                val drawableForword =
+                    ResourcesCompat.getDrawable(resources, R.drawable.ic_forword_new, null)
+                viewDataBinding!!.imgSecurityArrow.setImageDrawable(drawableForword)
+                viewDataBinding!!.imgContactArrow.setImageDrawable(drawableForword)
+                viewDataBinding!!.imgHelpCenterArrow.setImageDrawable(drawableForword)
+                viewDataBinding!!.imgAboutArrow.setImageDrawable(drawableForword)
+
+            }
+
+        }
+    */
+
+
 
     private fun showSortPopup() {
 
@@ -194,32 +197,32 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
 
                 when (p2) {
                     0 -> {
-                        viewDataBinding!!.txtLanguageSelected.text = "English"
-                        preferenceHelper.currentLanguage = "English"
-                        (activity as BaseActivity).changeLanguage("en", true)
+                        changeLangEffect(Language.ENGLISH)
                     }
 
                     1 -> {
-                        viewDataBinding!!.txtLanguageSelected.text = "Thai"
-                        preferenceHelper.currentLanguage = "Thai"
-                        (activity as BaseActivity).changeLanguage("th", true)
+                        //  changeLangEffect("Thai","th")
+                        changeLangEffect(Language.THAI)
                     }
 
                     2 -> {
-                        viewDataBinding!!.txtLanguageSelected.text = "Hindi"
-                        preferenceHelper.currentLanguage = "Hindi"
-                        (activity as BaseActivity).changeLanguage("hi", true)
+                        //  changeLangEffect("Hindi","hi")
+                        changeLangEffect(Language.HINDI)
                     }
 
                     /* 3 -> {
-                         viewDataBinding!!.txtLanguageSelected.text = "Arabic"
-                         preferenceHelper.currentLanguage = "Arabic"
-                         (activity as BaseActivity).changeLanguage("ar", true)
-
+                         changeLangEffect(Language.ARABIC)
                      }*/
                 }
                 popupWindow.dismiss()
             }
+    }
+
+    private fun changeLangEffect(languageName: Language) {
+        viewDataBinding!!.txtLanguageSelected.text = languageName.displayName
+        // preferenceHelper.previousLanguage = preferenceHelper.currentLanguage
+        preferenceHelper.currentLanguage = languageName.code
+        (activity as? BaseActivity)?.changeLanguage(languageName.code, true)
     }
 
 
@@ -273,6 +276,7 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
         viewDataBinding?.cardWalletConnect?.setOnClickListener {
             findNavController().safeNavigate(SettingDirections.actionSettingToWalletConnect())
         }
+
 
     }
 

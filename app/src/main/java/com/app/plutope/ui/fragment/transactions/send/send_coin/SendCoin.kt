@@ -14,10 +14,10 @@ import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.core.os.postDelayed
 import androidx.core.text.HtmlCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -52,10 +52,11 @@ import com.app.plutope.utils.constant.lastSelectedSlippage
 import com.app.plutope.utils.convertAmountToCurrency
 import com.app.plutope.utils.convertWeiToEther
 import com.app.plutope.utils.customSnackbar.CustomSnackbar
+import com.app.plutope.utils.enableDisableButton
 import com.app.plutope.utils.extractQRCodeScannerInfo
 import com.app.plutope.utils.extras.BiometricResult
 import com.app.plutope.utils.extras.InputFilterMinMax
-import com.app.plutope.utils.extras.PreferenceHelper
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.extras.setBioMetric
 import com.app.plutope.utils.extras.setSafeOnClickListener
 import com.app.plutope.utils.formatDecimal
@@ -88,8 +89,9 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
     private var currencyPrice: BigDecimal? = BigDecimal.ZERO
     private var selectedCurrency: CurrencyModel? = null
 
-    // private val sendCoinViewModel: SendCoinViewModel by viewModels()
-    private lateinit var sendCoinViewModel: SendCoinViewModel
+    private val sendCoinViewModel: SendCoinViewModel by activityViewModels()
+
+    //  private lateinit var sendCoinViewModel: SendCoinViewModel
     private val contactViewModel: ContactListViewModel by viewModels()
     private val tokenViewModel: TokenViewModel by viewModels()
     private var isCurrencySelected: Boolean = false
@@ -159,7 +161,7 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
     }
 
     override fun getViewModel(): SendCoinViewModel {
-        sendCoinViewModel = ViewModelProvider(requireActivity())[SendCoinViewModel::class.java]
+        // sendCoinViewModel = ViewModelProvider(requireActivity())[SendCoinViewModel::class.java]
         return sendCoinViewModel
     }
 
@@ -173,7 +175,7 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
 
     override fun setupToolbarText(): String {
         //  return "Send ${args.tokenModel.t_symbol}(${args.tokenModel.t_type})"
-        return "Send ${args.tokenModel.t_symbol}"
+        return "${context?.getString(R.string.send)} ${args.tokenModel.t_symbol}"
 
 
     }
@@ -311,25 +313,28 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
 
             }
 
-            txtCoinType.setSafeOnClickListener {
+            txtCoinType.setOnClickListener {
                 isCurrencySelected = !isCurrencySelected
                 viewDataBinding?.edtAmount?.setText("")
+                loge("isCurrencySelected", "=>$isCurrencySelected")
                 if (isCurrencySelected) {
                     viewDataBinding!!.txtMax.visibility = GONE
                     viewDataBinding!!.txtCoinType.text = selectedCurrency?.code
-                    viewDataBinding!!.amountBtc.text = "Amount " + selectedCurrency?.code
+                    viewDataBinding!!.amountBtc.text =
+                        getString(R.string.amount_label) + " " + selectedCurrency?.code
                 } else {
                     viewDataBinding!!.txtMax.visibility = VISIBLE
                     viewDataBinding!!.txtCoinType.text = viewDataBinding!!.model?.t_symbol
-                    viewDataBinding!!.amountBtc.text = "Amount " + model?.t_symbol
-
+                    viewDataBinding!!.amountBtc.text =
+                        getString(R.string.amount_label) + " " + model?.t_symbol
 
                 }
+
             }
 
 
 
-            btnContinue.setSafeOnClickListener {
+            btnContinue.buttonClickedWithEffect {
 
                 requireContext().hideKeyboard(requireActivity().window.decorView.windowToken)
 
@@ -354,6 +359,20 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
 
 
                     else -> {
+
+                        /*
+                                                sendCoinViewModel?.sendBTCTransactionCall(
+                                                    Securities.encrypt(Wallet.getPrivateKeyData(CoinType.BITCOIN)),
+                                                    if (!isCurrencySelected) viewDataBinding?.edtAmount?.text.toString()
+                                                    else currencyPrice.toString(),
+                                                    viewDataBinding?.edtContractAddress?.text.toString(),
+                                                    "mainnet",
+                                                    Wallet.getPublicWalletAddress(CoinType.BITCOIN)!!
+                                                )
+                        */
+
+
+
 
                         if (!isCurrencySelected && viewDataBinding?.edtAmount?.text.toString()
                                 .toBigDecimal() > args.tokenModel.t_balance.toBigDecimal()
@@ -574,8 +593,7 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                             CustomSnackbar.make(
                                 requireActivity().window.decorView.rootView as ViewGroup,
                                 networkState.message.toString()
-                            )
-                                .show()
+                            ).show()
                         }
 
                         else -> {
@@ -592,7 +610,7 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                 sendCoinViewModel.setWalletActive.collect {
                     when (it) {
                         is NetworkState.Success -> {
-                            hideLoader()
+                            //  hideLoader()
 
                         }
 
@@ -601,36 +619,43 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                         }
 
                         is NetworkState.Error -> {
-                            hideLoader()
+                            //  hideLoader()
                         }
 
                         is NetworkState.SessionOut -> {}
 
                         else -> {
-                            hideLoader()
+                            //  hideLoader()
                         }
                     }
                 }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 sendCoinViewModel.sendBTCTransactionResponse.collect {
                     when (it) {
                         is NetworkState.Success -> {
-                            if (!PreferenceHelper.getInstance().isActiveWallet) {
-                                sendCoinViewModel.setWalletActiveCall(
-                                    Wallet.getPublicWalletAddress(
-                                        CoinType.BITCOIN
-                                    )!!
-                                )
-                            }
+                            /* if (!PreferenceHelper.getInstance().isActiveWallet) {
+                                 sendCoinViewModel.setWalletActiveCall(
+                                     Wallet.getPublicWalletAddress(
+                                         CoinType.BITCOIN
+                                     )!!, viewDataBinding?.edtContractAddress?.text.toString()
+                                 )
+                             }*/
+
+                            sendCoinViewModel.setWalletActiveCall(
+                                Wallet.getPublicWalletAddress(
+                                    CoinType.BITCOIN
+                                )!!, viewDataBinding?.edtContractAddress?.text.toString()
+                            )
+
 
                             Handler(Looper.getMainLooper()).postDelayed(5000) {
-                                hideLoader()
                                 requireContext().showToast(it.toString())
                                 findNavController().safeNavigate(SendCoinDirections.actionSendCoinToDashboard())
+                                hideLoader()
 
                             }
 
@@ -664,97 +689,93 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
         isFromCustomised: Boolean = sendCoinViewModel.isFromLaverageChange.value!!
     ) {
 
-
+        viewDataBinding!!.btnContinue.enableDisableButton(false)
         requireContext().showLoaderAnyHow()
-                if (!isFromCustomised) {
-                    loge("Amount", "==> $amount")
-                    args.tokenModel.callFunction.sendTokenOrCoin(
-                        address,
-                        amount,
-                        tokenList
-                    ) { success, errorMessage, code ->
+        if (!isFromCustomised) {
+            loge("Amount", "==> $amount")
+            args.tokenModel.callFunction.sendTokenOrCoin(
+                address, amount, tokenList
+            ) { success, errorMessage, code ->
 
-                        if (success) {
-                            requireActivity().runOnUiThread {
-                                if (!PreferenceHelper.getInstance().isActiveWallet) {
-                                    sendCoinViewModel.setWalletActiveCall(
-                                        Wallet.getPublicWalletAddress(
-                                            CoinType.ETHEREUM
-                                        )!!
-                                    )
-                                }
+                if (success) {
+                    requireActivity().runOnUiThread {
+                        sendCoinViewModel.setWalletActiveCall(
+                            Wallet.getPublicWalletAddress(
+                                CoinType.ETHEREUM
+                            )!!, address
+                        )
 
-                                Handler(Looper.getMainLooper()).postDelayed(5000) {
-                                    hideLoader()
-                                    requireContext().showToast("Success")
-                                    findNavController().safeNavigate(SendCoinDirections.actionSendCoinToDashboard())
 
-                                }
-
-                            }
-
-                        } else {
-                            requireActivity().runOnUiThread {
-                                hideLoader()
-                                if (code?.isEmpty() == true) {
-                                    requireContext().showToast(errorMessage.toString())
-                                } else {
-                                    requireContext().showToast(errorMessage.toString())
-                                }
-                            }
+                        Handler(Looper.getMainLooper()).postDelayed(5000) {
+                            requireContext().showToast("Success")
+                            findNavController().safeNavigate(SendCoinDirections.actionSendCoinToDashboard())
+                            hideLoader()
+                            viewDataBinding?.btnContinue?.enableDisableButton(true)
                         }
 
                     }
 
                 } else {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        args.tokenModel.callFunction.sendTokenOrCoinWithLavrageFee(
-                            receiverAddress = address,
-                            tokenAmount = amount,
-                            nonce = stringToBigInteger(sendCoinViewModel.customNonce.value!!),
-                            gasAmount = bigIntegerToString(sendCoinViewModel.customGasPrice.value!!),
-                            gasLimit = stringToBigInteger(sendCoinViewModel.customGasLimit.value!!),
-                            decimal = sendCoinViewModel.decimal.value!!,
-                            tokenList = tokenList
-                        ) { success, errorMessage, code ->
+                    requireActivity().runOnUiThread {
+                        hideLoader()
+                        if (code?.isEmpty() == true) {
+                            requireContext().showToast(errorMessage.toString())
+                        } else {
+                            requireContext().showToast(errorMessage.toString())
+                        }
+                        viewDataBinding?.btnContinue?.enableDisableButton(true)
+                    }
+                }
 
-                            if (success) {
-                                requireActivity().runOnUiThread {
-                                    if (!PreferenceHelper.getInstance().isActiveWallet) {
-                                        sendCoinViewModel.setWalletActiveCall(
-                                            Wallet.getPublicWalletAddress(
-                                                CoinType.ETHEREUM
-                                            )!!
-                                        )
-                                    }
+            }
 
-                                    Handler(Looper.getMainLooper()).postDelayed(5000) {
-                                        hideLoader()
-                                        requireContext().showToast("Success")
-                                        findNavController().safeNavigate(SendCoinDirections.actionSendCoinToDashboard())
+        } else {
+            CoroutineScope(Dispatchers.Main).launch {
+                args.tokenModel.callFunction.sendTokenOrCoinWithLavrageFee(
+                    receiverAddress = address,
+                    tokenAmount = amount,
+                    nonce = stringToBigInteger(sendCoinViewModel.customNonce.value!!),
+                    gasAmount = bigIntegerToString(sendCoinViewModel.customGasPrice.value!!),
+                    gasLimit = stringToBigInteger(sendCoinViewModel.customGasLimit.value!!),
+                    decimal = sendCoinViewModel.decimal.value!!,
+                    tokenList = tokenList
+                ) { success, errorMessage, code ->
 
-                                    }
+                    if (success) {
+                        requireActivity().runOnUiThread {
+                            sendCoinViewModel.setWalletActiveCall(
+                                Wallet.getPublicWalletAddress(
+                                    CoinType.ETHEREUM
+                                )!!, address
+                            )
 
-                                }
-
-                            } else {
-                                requireActivity().runOnUiThread {
-                                    hideLoader()
-                                    if (code?.isEmpty() == true) {
-                                        requireContext().showToast(errorMessage.toString())
-                                    } else {
-                                        requireContext().showToast(errorMessage.toString())
-                                    }
-                                }
+                            Handler(Looper.getMainLooper()).postDelayed(5000) {
+                                requireContext().showToast("Success")
+                                findNavController().safeNavigate(SendCoinDirections.actionSendCoinToDashboard())
+                                hideLoader()
+                                viewDataBinding?.btnContinue?.enableDisableButton(true)
                             }
 
+                        }
 
+                    } else {
+                        requireActivity().runOnUiThread {
+                            hideLoader()
+                            if (code?.isEmpty() == true) {
+                                requireContext().showToast(errorMessage.toString())
+                            } else {
+                                requireContext().showToast(errorMessage.toString())
+                            }
+                            viewDataBinding?.btnContinue?.enableDisableButton(true)
                         }
                     }
 
-                }
-    }
 
+                }
+            }
+
+        }
+    }
 
 
     private fun sendTransactionCall() {
@@ -764,7 +785,6 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
             viewDataBinding?.edtContractAddress?.text.toString()
         )
     }
-
 
 
     private fun handleQRCodeResult(result: String) {

@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
 @Keep
 @Parcelize
 data class OkxSwapResponse(
+    var lastEnteredAmount: String = "0",
     val code: String,
     @SerializedName("data") val data1: List<Data1>,
     val msg: String

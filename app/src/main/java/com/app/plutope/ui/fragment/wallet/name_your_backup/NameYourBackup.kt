@@ -8,8 +8,8 @@ import com.app.plutope.R
 import com.app.plutope.databinding.FragmentNameYourBackupBinding
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.utils.constant.backupnamecantempty
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.safeNavigate
-import com.app.plutope.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,7 +41,7 @@ class NameYourBackup : BaseFragment<FragmentNameYourBackupBinding, NameYourBacku
             findNavController().navigateUp()
         }
 
-        viewDataBinding!!.btnContinue.setOnClickListener {
+        viewDataBinding!!.btnContinue.buttonClickedWithEffect {
             when {
                 viewDataBinding?.edtBackUpName?.text?.toString()
                     ?.isEmpty() == true -> viewDataBinding?.edtBackUpName?.error =

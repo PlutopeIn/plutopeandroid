@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:fitsSystemWindows="true"
         android:orientation="vertical">
@@ -20,7 +20,7 @@
             android:id="@+id/layout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_170mdp"
+            android:layout_marginTop="@dimen/_50mdp"
             android:background="@drawable/bg_corner_top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:paddingTop="@dimen/_30mdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -55,7 +55,7 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/purple_7576D"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_10mdp"
+                    android:textSize="@dimen/_14mdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -87,7 +87,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_shift_type_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/_16mdp"
                     android:layout_marginTop="@dimen/_20mdp"
                     android:minHeight="@dimen/_350mdp"
@@ -99,8 +99,65 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edt_search"
-                    tools:itemCount="10"
+                    tools:itemCount="1"
+                    android:layout_marginBottom="@dimen/_60mdp"
                     tools:listitem="@layout/row_coin_list_search" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_16mdp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:animateLayoutChanges="true"
+                    android:animationCache="true"
+                    android:visibility="visible"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_search"
+                    app:shimmer_repeat_delay="10"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="linear"
+                    tools:listitem="@layout/row_assets_list">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                        <include layout="@layout/row_simmer_assets_list" />
+
+                    </LinearLayout>
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

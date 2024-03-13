@@ -1,4 +1,4 @@
-package com.walletconnect.sample.wallet.ui.state
+package com.app.plutope.utils.walletConnection.state
 
 sealed class PairingState {
     object Loading : PairingState()

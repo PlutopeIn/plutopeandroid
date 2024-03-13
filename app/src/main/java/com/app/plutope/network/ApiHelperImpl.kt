@@ -14,6 +14,7 @@ import com.app.plutope.model.ExchangeStatusResponse
 import com.app.plutope.model.Info
 import com.app.plutope.model.MeldRequestModel
 import com.app.plutope.model.MeldResponseModel
+import com.app.plutope.model.ModelActiveWalletToken
 import com.app.plutope.model.NFTListModel
 import com.app.plutope.model.OkxApproveResponse
 import com.app.plutope.model.OkxSwapResponse
@@ -231,8 +232,18 @@ class ApiHelperImpl @Inject constructor(private val apiService: ApiService) : Ap
     ): Response<ResponseBody> =
         apiService.registerWallet(walletAddress, 0, deviceId, fcmToken)
 
-    override suspend fun setWalletActive(walletAddress: String): Response<ResponseBody> =
-        apiService.setWalletActive(walletAddress)
+    override suspend fun registerWalletMaster(
+        deviceId: String,
+        walletAddress: String,
+        referralCode: String
+    ): Response<ResponseBody> =
+        apiService.registerWalletMaster(deviceId, 0, walletAddress, referralCode)
+
+    override suspend fun setWalletActive(
+        walletAddress: String,
+        receiverAddress: String
+    ): Response<ResponseBody> =
+        apiService.setWalletActive(walletAddress, receiverAddress)
 
     override suspend fun sendBTCTransaction(
         privateKey: String,
@@ -247,5 +258,8 @@ class ApiHelperImpl @Inject constructor(private val apiService: ApiService) : Ap
     override suspend fun domainCheck(domainSearchModel: DomainSearchModel) =
         apiService.domainCheck(body = domainSearchModel)
 
+
+    override suspend fun getAllActiveTokenList(url: String): Response<MutableList<ModelActiveWalletToken>> =
+        apiService.getAllActiveTokenList(url)
 
 }

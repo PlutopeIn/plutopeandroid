@@ -1,5 +1,6 @@
 package com.app.plutope.ui.fragment.dashboard
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.app.plutope.data.repository.DashboardRepo
 import com.app.plutope.model.Info
@@ -14,8 +15,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DashboardViewModel @Inject constructor(val dashboardRepo: DashboardRepo) : BaseViewModel<CommonNavigator>() {
+class DashboardViewModel @Inject constructor(private val dashboardRepo: DashboardRepo) :
+    BaseViewModel<CommonNavigator>() {
 
+
+    var getBalance = MutableLiveData<String>("0.0")
 
     //Get Assets
     private val _tagGetAssets =

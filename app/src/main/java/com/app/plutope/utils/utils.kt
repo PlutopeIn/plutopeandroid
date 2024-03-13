@@ -418,6 +418,7 @@ fun Context.showLoader() {
 }
 
 fun Context.showLoaderAnyHow() {
+    LoadingDialog.getClearInstence()
     LoadingDialog.getInstance()?.show(this@showLoaderAnyHow)
 
 
@@ -796,7 +797,7 @@ fun setBalanceText(balance: Double, symbol: String, decimalPoints: Int = 6): Str
 }
 
 fun setBalanceText(balance: BigDecimal, symbol: String, decimal: Int = 6): String {
-    val formattedBalance = if (balance.toDouble() <= 0.0) "0" else {
+    val formattedBalance = if (balance <= BigDecimal.ZERO) "0" else {
         balance.setScale(decimal, RoundingMode.DOWN).stripTrailingZeros().toPlainString()
     }
 
@@ -1205,7 +1206,9 @@ fun loge(tag: String = "TAG", message: String = "") {
     when {
         BuildConfig.DEBUG -> {
             Log.e(tag, message)
-        }
+        }/*else -> {
+           Log.e(tag, message)
+        }*/
     }
 }
 

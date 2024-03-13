@@ -59,11 +59,8 @@ class WalletConnectionDetail :
         // val connectionUI by remember { connectionsViewModel.currentConnectionUI }
         CoroutineScope(Dispatchers.Main).launch {
             connectionUI = connectionsViewModel.currentConnectionUI.value
-
             loge("Detail", "$connectionUI")
-
             setDetail()
-
         }
 
 
@@ -82,11 +79,14 @@ class WalletConnectionDetail :
                             else -> null
                         }
                         if (topic != null) {
+
                             Web3Wallet.disconnectSession(
                                 Wallet.Params.SessionDisconnect(topic)
                             ) { error ->
                                 Firebase.crashlytics.recordException(error.throwable)
                             }
+
+
                             connectionsViewModel.refreshConnections()
                             findNavController().popBackStack()
                         } else {

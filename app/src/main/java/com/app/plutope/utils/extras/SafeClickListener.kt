@@ -1,6 +1,7 @@
 package com.app.plutope.utils.extras
 
 import android.os.SystemClock
+import android.view.MotionEvent
 import android.view.View
 
 class SafeClickListener(
@@ -22,4 +23,21 @@ fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
         onSafeClick(it)
     }
     setOnClickListener(safeClickListener)
+}
+
+fun View.buttonClickedWithEffect(clicked: () -> Unit) {
+    this.setOnTouchListener { view, event ->
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(0).start()
+            }
+
+            MotionEvent.ACTION_UP -> {
+                view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(50).start()
+                clicked.invoke()
+                view.performClick()
+            }
+        }
+        true
+    }
 }

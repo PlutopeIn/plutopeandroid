@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.app.plutope.databinding.RowSecretPhraseBinding
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 
 
 class PhraseGenerateListAdapter(
@@ -18,7 +19,7 @@ class PhraseGenerateListAdapter(
             binding.txtCount.text = (layoutPosition + 1).toString()+"."
             binding.txtPhrases.text = model
 
-            itemView.setOnClickListener {
+            itemView.buttonClickedWithEffect {
                 providerClick.invoke(model, layoutPosition)
             }
 

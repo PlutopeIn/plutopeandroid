@@ -118,7 +118,7 @@ class AddContactFragment : BaseFragment<FragmentAddContactBinding, ContactListVi
     }
 
     override fun setupToolbarText(): String {
-        return  "Add Contact"
+        return getString(R.string.add_contact)
     }
 
     override fun setupUI() {

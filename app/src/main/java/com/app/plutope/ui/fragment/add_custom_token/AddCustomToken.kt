@@ -15,6 +15,7 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentAddCustomTokanBinding
 import com.app.plutope.model.Tokens
+import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.transactions.receive.Receive
@@ -59,6 +60,7 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
     }
 
     override fun setupUI() {
+        (activity as BaseActivity).showToolbarTransparentBack()
         setDetail()
         setOnClickListeners()
 
@@ -66,6 +68,8 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
             selectedValue = bundle.getParcelable(Receive.keyReceive) as? Tokens
             viewDataBinding?.txtNetworkName?.text = selectedValue?.t_name
         }
+
+
     }
 
 
@@ -84,26 +88,32 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
                     } else {
                         viewDataBinding?.edtContractAddress?.setText("")
                         viewDataBinding!!.edtContractAddress.setText(qrResult.first)
-                        val resultModel =
-                            tokenList.filter {
-                                it.t_address?.lowercase() == qrResult.first
-                                    .lowercase() && it.t_type?.lowercase() == selectedValue?.t_type?.lowercase()
-                            }
-                        if (resultModel.isNotEmpty()) {
-                            isAlreadyToken = true
-                            tokenAlreadyModel = resultModel[0]
-                            setTokenDetail(resultModel[0])
-                            enableDisableInput(false)
-                        } else {
-                            isAlreadyToken = false
-                            enableDisableInput(true)
-                        }
+
+                        setAddressWithDetail(qrResult.first)
+
+
+                        /* val resultModel =
+                             tokenList.filter {
+                                 it.t_address?.lowercase() == qrResult.first
+                                     .lowercase() && it.t_type?.lowercase() == selectedValue?.t_type?.lowercase()
+                             }
+                         if (resultModel.isNotEmpty()) {
+                             isAlreadyToken = true
+                             tokenAlreadyModel = resultModel[0]
+                             setTokenDetail(resultModel[0])
+                             enableDisableInput(false)
+                         } else {
+                             isAlreadyToken = false
+                             enableDisableInput(true)
+                         }*/
                     }
 
 
                 } else {
                     //  viewDataBinding!!.edtContractAddress.setText(cleanEthereumAddress(result))
                     viewDataBinding!!.edtContractAddress.setText(result.content.rawValue)
+                    setAddressWithDetail(result.content.rawValue)
+
                 }
 
 
@@ -170,6 +180,23 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
         }
 
 
+    }
+
+    private fun setAddressWithDetail(address: String) {
+        val resultModel =
+            tokenList.filter {
+                it.t_address?.lowercase() == address
+                    .lowercase() && it.t_type?.lowercase() == selectedValue?.t_type?.lowercase()
+            }
+        if (resultModel.isNotEmpty()) {
+            isAlreadyToken = true
+            tokenAlreadyModel = resultModel[0]
+            setTokenDetail(resultModel[0])
+            enableDisableInput(false)
+        } else {
+            isAlreadyToken = false
+            enableDisableInput(true)
+        }
     }
 
     private fun setOnClickListeners() {

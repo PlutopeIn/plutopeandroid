@@ -263,6 +263,8 @@ class RecoveryWalletFragment :
                                 Wallet.refreshWallet()
                             }
                             viewDataBinding?.btnSave?.visibility = GONE
+
+                            findNavController().popBackStack()
                         }
 
                         is NetworkState.Loading -> {

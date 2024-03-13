@@ -430,7 +430,7 @@ enum class Chains(
         icon = Chain.Ethereum.icon,
         symbol = Chain.Ethereum.symbol,
         type = Chain.Ethereum.tokenStandard,
-        walletAddress = Chain.Ethereum.walletAddress!!,
+        walletAddress = getWalletAddress(Chain.Ethereum.coinType)!!,
         currentPrice = "0",
         order = 1
     ),
@@ -444,7 +444,7 @@ enum class Chains(
         icon = Chain.BinanceSmartChain.icon,
         symbol = Chain.BinanceSmartChain.symbol,
         type = Chain.BinanceSmartChain.tokenStandard,
-        walletAddress = Chain.BinanceSmartChain.walletAddress!!,
+        walletAddress = getWalletAddress(Chain.BinanceSmartChain.coinType)!!,
         currentPrice = "0",
         order = 2
     ),
@@ -458,7 +458,7 @@ enum class Chains(
         icon = Chain.Polygon.icon,
         symbol = Chain.Polygon.symbol,
         type = Chain.Polygon.tokenStandard,
-        walletAddress = Chain.Polygon.walletAddress!!,
+        walletAddress = getWalletAddress(Chain.Polygon.coinType)!!,
         currentPrice = "0",
         order = 3
     ),
@@ -472,7 +472,7 @@ enum class Chains(
         icon = Chain.OKC.icon,
         symbol = Chain.OKC.symbol,
         type = Chain.OKC.tokenStandard,
-        walletAddress = Chain.OKC.walletAddress!!,
+        walletAddress = getWalletAddress(Chain.OKC.coinType)!!,
         currentPrice = "0",
         order = 4
     ),

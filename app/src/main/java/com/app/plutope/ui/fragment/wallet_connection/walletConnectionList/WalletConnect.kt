@@ -3,6 +3,7 @@ package com.app.plutope.ui.fragment.wallet_connection.walletConnectionList
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -13,13 +14,15 @@ import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.safeNavigate
-import com.app.plutope.utils.showLoaderAnyHow
 import com.app.plutope.utils.walletConnection.Web3WalletViewModel
 import com.app.plutope.utils.walletConnection.compose_ui.connections.ConnectionsViewModel
-import com.walletconnect.sample.wallet.ui.state.PairingState
+import com.app.plutope.utils.walletConnection.state.CoreEvent
+import com.app.plutope.utils.walletConnection.state.PairingState
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -49,6 +52,9 @@ class WalletConnect : BaseFragment<FragmentWalletConnectBinding, WalletConnectVi
 
     override fun setupUI() {
         // connectionsViewModel.refreshConnections()
+        handleCoreEvents(connectionsViewModel)
+
+
 
         adapter = WalletConnectionListAdapter {
             findNavController().safeNavigate(
@@ -79,15 +85,18 @@ class WalletConnect : BaseFragment<FragmentWalletConnectBinding, WalletConnectVi
 
         // Observe pairingStateSharedFlow in the fragment
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 web3walletViewModel.pairingStateSharedFlow.collect { pairingState ->
+                    loge("pairingState", "loading => $pairingState")
                     when (pairingState) {
                         is PairingState.Loading -> {
-                            requireContext().showLoaderAnyHow()
+                            loge("pairingState", "loading => ${PairingState.Loading}")
+                            //  requireContext().showLoaderAnyHow()
 
                         }
 
                         is PairingState.Success -> {
+                            loge("pairingState", "Success => $pairingState")
                             hideLoader()
 
                         }
@@ -98,7 +107,8 @@ class WalletConnect : BaseFragment<FragmentWalletConnectBinding, WalletConnectVi
                         }
 
                         else -> {
-
+                            loge("pairingState", "else => $pairingState")
+                            hideLoader()
                         }
                     }
                 }
@@ -159,6 +169,22 @@ class WalletConnect : BaseFragment<FragmentWalletConnectBinding, WalletConnectVi
             } else null
         }
     */
+
+    private fun handleCoreEvents(connectionsViewModel: ConnectionsViewModel) {
+        connectionsViewModel.coreEvents
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .onEach { event ->
+                when (event) {
+                    is CoreEvent.Disconnect -> {
+                        connectionsViewModel.refreshConnections()
+                        // navController.navigate(Route.Connections.path)
+                    }
+
+                    else -> Unit
+                }
+            }
+            .launchIn(lifecycleScope)
+    }
 
 
 }

@@ -29,13 +29,78 @@ class Currency : BaseFragment<FragmentCurrencyBinding, CurrencyViewModel>() {
     private val currencyViewModel: CurrencyViewModel by viewModels()
     private var currencyListAdapter: CurrencyListAdapter? = null
     val currencyList = arrayListOf<CurrencyModel>()
-    val args:CurrencyArgs by navArgs()
+    val args: CurrencyArgs by navArgs()
 
+    var supportedCurrencyList = mutableListOf(
+        "btc",
+        "eth",
+        "ltc",
+        "bch",
+        "bnb",
+        "eos",
+        "xrp",
+        "xlm",
+        "link",
+        "dot",
+        "yfi",
+        "usd",
+        "aed",
+        "ars",
+        "aud",
+        "bdt",
+       /* "bhd",*/
+        "bmd",
+        "brl",
+        "cad",
+        "chf",
+        "clp",
+        "cny",
+        "czk",
+        "dkk",
+        "eur",
+        "gbp",
+        "gel",
+        "hkd",
+        "huf",
+        "idr",
+        "ils",
+        "inr",
+        "jpy",
+        "krw",
+        "kwd",
+        "lkr",
+        "mmk",
+        "mxn",
+        "myr",
+        "ngn",
+        "nok",
+        "nzd",
+        "php",
+        "pkr",
+        "pln",
+        "rub",
+        "sar",
+        "sek",
+        "sgd",
+        "thb",
+        "try",
+        "twd",
+        "uah",
+        "vef",
+        "vnd",
+        "zar",
+        "xdr",
+        "xag",
+        "xau",
+        "bits",
+        "sats"
+    )
 
     companion object {
-        const val keyCurrency= "Currency"
+        const val keyCurrency = "Currency"
         const val keyBundleCurrency = "BundleCurrency"
     }
+
     override fun getViewModel(): CurrencyViewModel {
         return currencyViewModel
     }
@@ -64,6 +129,8 @@ class Currency : BaseFragment<FragmentCurrencyBinding, CurrencyViewModel>() {
                 preferenceHelper.setSelectedCurrency(model)
                 findNavController().safeNavigate(CurrencyDirections.actionCurrencyToDashboard())
             }
+
+
         }
 
         currencyListAdapter?.submitList(currencyList)
@@ -85,11 +152,23 @@ class Currency : BaseFragment<FragmentCurrencyBinding, CurrencyViewModel>() {
                     when (it) {
                         is NetworkState.Success -> {
                             hideLoader()
-                            if(it.data?.isNotEmpty() == true){
+                            if (it.data?.isNotEmpty() == true) {
                                 viewDataBinding?.rvCurrencyList?.visibility = View.VISIBLE
                                 currencyList.clear()
-                                currencyList.addAll(it.data as MutableList<CurrencyModel>)
-                                currencyList.filter { it.code.lowercase()==preferenceHelper.getSelectedCurrency()?.code?.lowercase() }.forEach { it.isSelected=true }
+                                val tempList = mutableListOf<CurrencyModel>()
+                                it.data.forEach {
+                                    supportedCurrencyList.forEach { supportedCode ->
+                                        if (supportedCode.lowercase() == it?.code?.lowercase()) {
+                                            tempList.add(it)
+                                        }
+                                    }
+
+                                }
+
+                                // currencyList.addAll(it.data as MutableList<CurrencyModel>)
+                                currencyList.addAll(tempList)
+                                currencyList.filter { it.code.lowercase() == preferenceHelper.getSelectedCurrency()?.code?.lowercase() }
+                                    .forEach { it.isSelected = true }
                                 currencyListAdapter?.submitList(currencyList)
                                 currencyListAdapter?.notifyDataSetChanged()
                             }
@@ -113,6 +192,7 @@ class Currency : BaseFragment<FragmentCurrencyBinding, CurrencyViewModel>() {
                     }
                 }
             }
+
         }
     }
 

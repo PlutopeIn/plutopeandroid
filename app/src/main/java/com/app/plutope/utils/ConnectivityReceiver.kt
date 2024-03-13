@@ -6,6 +6,12 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class ConnectivityReceiver : BroadcastReceiver() {
@@ -17,7 +23,9 @@ class ConnectivityReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context != null) {
             if (connectivityReceiverListener != null) {
-                connectivityReceiverListener?.onNetworkConnectionChanged(isConnected(context))
+                GlobalScope.launch(Dispatchers.IO) {
+                    connectivityReceiverListener?.onNetworkConnectionChanged(isConnected(context))
+                }
             }
         }
     }
@@ -42,10 +50,16 @@ class ConnectivityReceiver : BroadcastReceiver() {
 
     private fun isInternetAvailable(): Boolean {
         return try {
-            // Try to establish a connection to Google's public DNS
-            val address = java.net.InetAddress.getByName("8.8.8.8")
-            !address.equals("")
-        } catch (e: Exception) {
+            // Try to connect to a known server (e.g., Google's DNS)
+            val url = URL("http://www.google.com")
+            val urlConnection = url.openConnection() as HttpURLConnection
+            urlConnection.connectTimeout = 3000 // Timeout in milliseconds
+            urlConnection.connect()
+            urlConnection.responseCode == HttpURLConnection.HTTP_OK
+
+
+        } catch (e: IOException) {
+            loge("ConnectivityReceiver", "Error checking internet connection :: ${e.message}")
             false
         }
     }

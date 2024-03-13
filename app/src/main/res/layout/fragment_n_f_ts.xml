@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16mdp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -37,6 +37,45 @@
                 app:spanCount="2"
                 tools:itemCount="10"
                 tools:listitem="@layout/row_nft_list_item" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/_16mdp"
+                android:animateLayoutChanges="true"
+                android:animationCache="true"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shimmer_repeat_delay="10"
+                app:shimmer_repeat_mode="restart"
+                app:shimmer_shape="linear"
+                tools:listitem="@layout/row_nft_list_item_shimmer">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/row_nft_list_item_shimmer" />
+
+                    <include layout="@layout/row_nft_list_item_shimmer" />
+
+                    <include layout="@layout/row_nft_list_item_shimmer" />
+
+                    <include layout="@layout/row_nft_list_item_shimmer" />
+
+                    <include layout="@layout/row_nft_list_item_shimmer" />
+
+                </LinearLayout>
+
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_no_found"

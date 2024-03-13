@@ -94,10 +94,15 @@ class BuyDetailsViewModel @Inject constructor(
     val setWalletActive: StateFlow<NetworkState<String?>>
         get() = _tagSetWalletActive
 
-    fun setWalletActiveCall(address: String) {
+    fun setWalletActiveCall(address: String, receiverAddress: String) {
         viewModelScope.launch {
             _tagSetWalletActive.emit(NetworkState.Loading())
-            _tagSetWalletActive.collectStateFlow(tokenRepo.setWalletActive(address))
+            _tagSetWalletActive.collectStateFlow(
+                tokenRepo.setWalletActive(
+                    address,
+                    receiverAddress
+                )
+            )
         }
     }
 

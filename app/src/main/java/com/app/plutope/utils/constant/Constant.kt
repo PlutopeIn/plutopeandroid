@@ -1,11 +1,25 @@
 package com.app.plutope.utils.constant
 
+import com.app.plutope.model.Tokens
+
 const val getNotificationType = "Notification_Type"
 const val key_notification_type = "key_notification_type"
 const val networkErrorMessage = "Network Error"
 const val serverErrorMessage = "Server Error"
 
 const val btcImplementationMessage = "BTC in not available now implemented coming soon"
+
+enum class Language(val displayName: String, val code: String) {
+    ENGLISH("English", "en"),
+    THAI("Thai", "th"),
+    HINDI("Hindi", "hi"),
+    ARABIC("Arabic", "ar")
+}
+
+class JJ {
+    var selectedLanguage: String = "en"
+}
+
 
 const val RELAY_URL = "relay.walletconnect.com"
 
@@ -65,7 +79,7 @@ const val INFURA_KEY = "3c01e09390db4731bfebd48d42c7dde0"
 //
 
 const val BASE_URL_PLUTO_PE = "https://plutope.app/api/"
-const val BASE_URL_PLUTO_PE_LOCAL = "http://194.233.77.156:3043/api/"
+const val BASE_URL_PLUTO_PE_LOCAL = "http://192.168.29.77:3011/api/"
 
 
 //change now api
@@ -129,6 +143,17 @@ const val COIN_GEKO_MARKETPRICE = "${COIN_GEKO_API_URL}coins/"
 const val COIN_GEKO_PRO_API_URL = "${COIN_GEKO_PRO_BASE_URL}api/v3/"
 const val COIN_GEKO_MARKET_API = "${COIN_GEKO_API_URL}coins/markets"
 const val COIN_GEKO_PRO_MARKET_API = "${COIN_GEKO_PRO_API_URL}coins/markets"
+
+
+/*
+const val COIN_GEKO_PLUTO_PE_SERVER_URL = "https://plutope.app/api/markets-price?currency="
+const val COIN_GEKO_PLUTO_PE_SERVER_URL_NEW = "https://plutope.app/api/markets-price-new?currency="
+*/
+
+const val COIN_GEKO_PLUTO_PE_SERVER_URL =
+    "https://plutope.app/api/markets-price-v2-filter?currency="
+const val COIN_GEKO_PLUTO_PE_SERVER_URL_NEW =
+    "https://plutope.app/api/markets-price-v2-filter?currency="
 
 //const val COIN_GEKO_COIN_LIST_API = "${COIN_GEKO_MARKETPRICE}list?include_platform=true"
 const val COIN_GEKO_COIN_DETAIL = "$COIN_GEKO_MARKETPRICE"
@@ -224,3 +249,5 @@ var UNLIMIT = "UNLIMIT"
 
 const val UNLIMITE_GATEFI_BASE_URL = "https://api-sandbox.gatefi.com/"
 const val UNLIMITE_GATEFI_API_URL = "onramp/v1/"
+
+var storedTokenList = listOf<Tokens>()

@@ -35,6 +35,7 @@ class PreferenceHelper @Inject constructor(@ApplicationContext context: Context)
     private val KEY_LANGUAGE = "KEY_LANGUAGE"
     private val KEY_FIREBASE_TOKEN = "KEY_FIREBASE_TOKEN"
     private val KEY_DEVICE_ID = "KEY_DEVICE_ID"
+    private val KEY_REFERRAL_CODE = "KEY_REFERRAL_CODE"
 
     private val KEY_UPDATE_APP = "KEY_UPDATE_APP"
 
@@ -57,6 +58,11 @@ class PreferenceHelper @Inject constructor(@ApplicationContext context: Context)
         get() = Securities.decrypt(preferences.getString(KEY_DEVICE_ID, ""))
         set(deviceId) = preferences.edit().putString(KEY_DEVICE_ID, Securities.encrypt(deviceId))
             .apply()
+    var referralCode
+        get() = Securities.decrypt(preferences.getString(KEY_REFERRAL_CODE, ""))
+        set(referralCode) = preferences.edit()
+            .putString(KEY_REFERRAL_CODE, Securities.encrypt(referralCode))
+            .apply()
 
     var appUpdatedFlag
         get() = preferences.getString(KEY_UPDATE_APP, "")
@@ -68,7 +74,7 @@ class PreferenceHelper @Inject constructor(@ApplicationContext context: Context)
         get() = Securities.decrypt(
             preferences.getString(
                 KEY_LANGUAGE,
-                Securities.encrypt("English")
+                Securities.encrypt("en")
             )
         )
         set(value) = preferences.edit().putString(KEY_LANGUAGE, Securities.encrypt(value))

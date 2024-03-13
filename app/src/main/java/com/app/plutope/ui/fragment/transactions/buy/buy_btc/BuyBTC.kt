@@ -573,29 +573,13 @@ class BuyBTC : BaseFragment<FragmentBuyBTCBinding, BuyBTCViewModel>() {
                 }
 
 
-                if (!PreferenceHelper.getInstance().isActiveWallet) {
-                    buyBTCViewModel.setWalletActiveCall(
-                        Wallet.getPublicWalletAddress(
-                            CoinType.ETHEREUM
-                        )!!
-                    )
-                }
-
-
-                /*  findNavController().safeNavigate(
-                      BuyBTCDirections.actionBuyBTCToWebView(
-                          url,
-                          "",
-                          "Rampable"
-                      )
-                  )*/
-
-
-                /*
-                                findNavController().safeNavigate(
-                                    BuyBTCDirections.actionBuyBTCToBrowser(url)
-                                )
-                */
+                /* if (!PreferenceHelper.getInstance().isActiveWallet) {*/
+                buyBTCViewModel.setWalletActiveCall(
+                    Wallet.getPublicWalletAddress(
+                        CoinType.ETHEREUM
+                    )!!, ""
+                )
+                /*  }*/
 
 
                 val intent = CustomTabsIntent.Builder().build()
@@ -754,8 +738,14 @@ class BuyBTC : BaseFragment<FragmentBuyBTCBinding, BuyBTCViewModel>() {
             .into(viewDataBinding?.imgProviderView!!)
 
 
-        viewDataBinding!!.txtToolbarTitle.text =
-            getString(R.string.type_t_symbol, args.pageType, args.tokenModel.t_symbol)
+        if (args.pageType == "Buy") {
+            viewDataBinding!!.txtToolbarTitle.text =
+                getString(R.string.type_t_symbol, getString(R.string.buy), args.tokenModel.t_symbol)
+        } else {
+            viewDataBinding!!.txtToolbarTitle.text =
+                getString(R.string.type_t_symbol, args.pageType, args.tokenModel.t_symbol)
+        }
+
         val num = if (buyBTCViewModel.holdBestPrice != null) buyBTCViewModel.holdBestPrice else 0.0
 
         viewDataBinding!!.txtCoinMargin.text =

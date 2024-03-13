@@ -14,20 +14,26 @@ import com.app.plutope.R
 import com.app.plutope.databinding.DialogWalletConnectionConfirmationBinding
 import com.app.plutope.model.TransactionModelDApp
 import com.app.plutope.networkConfig.Chains
+import com.app.plutope.networkConfig.getWalletAddress
 import com.app.plutope.ui.fragment.wallet_connection.walletConnectionList.NetworkListAdapter
 import com.app.plutope.ui.fragment.wallet_connection.walletConnectionList.Permission
 import com.app.plutope.ui.fragment.wallet_connection.walletConnectionList.PermissionListAdapter
+import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.showToast
+import com.app.plutope.utils.walletConnection.ACCOUNTS_1_EIP155_ADDRESS
 import com.app.plutope.utils.walletConnection.compose_ui.peer.Validation
 import com.app.plutope.utils.walletConnection.compose_ui.peer.getDescriptionContent
 import com.app.plutope.utils.walletConnection.compose_ui.peer.getDescriptionTitle
 import com.app.plutope.utils.walletConnection.compose_ui.peer.getValidationIcon
 import com.app.plutope.utils.walletConnection.compose_ui.session_proposal.SessionProposalUI
 import com.app.plutope.utils.walletConnection.compose_ui.session_proposal.SessionProposalViewModel
+import com.app.plutope.utils.walletConnection.compose_ui.session_proposal.walletMetaData
 import com.app.plutope.utils.walletConnection.sendResponseDeepLink
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.walletconnect.web3.wallet.client.Wallet
+import com.walletconnect.web3.wallet.client.Web3Wallet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -86,10 +92,22 @@ class DialogWalletConnectionConfirmation private constructor() {
         val optionalChains = getOptionalChains(sessionProposalViewModel.sessionProposal)
         val allChain = requiredChains + optionalChains
 
+        val sessionProposal: Wallet.Model.SessionProposal = requireNotNull(
+            Web3Wallet.getSessionProposals().find {
+                it.proposerPublicKey == sessionProposalViewModel.sessionProposal.pubKey
+            })
+
+        loge("ProposalData", " proposalData => $sessionProposal")
+        loge(
+            "ActiveAccount",
+            "ActiveAccount=>${ACCOUNTS_1_EIP155_ADDRESS} :: namespaces =>   ${walletMetaData.namespaces}"
+        )
+
         val chainList = arrayListOf<Chains>()
         Chains.values().forEach {
             allChain.forEach { chain ->
                 if (it.chainId == chain) {
+                    it.walletAddress = getWalletAddress(CoinType.ETHEREUM)!!
                     chainList.add(it)
                 }
             }

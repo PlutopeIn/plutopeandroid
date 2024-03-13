@@ -26,7 +26,6 @@ import com.app.plutope.model.CoinCode
 import com.app.plutope.model.Data1
 import com.app.plutope.model.ExchangeRequestModel
 import com.app.plutope.model.PreviewSwapDetail
-import com.app.plutope.model.SwapExchangeStatus
 import com.app.plutope.model.Tokens
 import com.app.plutope.model.Wallet
 import com.app.plutope.ui.base.BaseActivity
@@ -39,11 +38,12 @@ import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.constant.COIN_GEKO_MARKET_API
 import com.app.plutope.utils.constant.DEFAULT_CHAIN_ADDRESS
 import com.app.plutope.utils.constant.EXCHANGE_API
-import com.app.plutope.utils.constant.EXCHANGE_STATUS_API
 import com.app.plutope.utils.constant.KIP_20
 import com.app.plutope.utils.convertScientificToBigDecimal
 import com.app.plutope.utils.convertWeiToEther
 import com.app.plutope.utils.customSnackbar.CustomSnackbar
+import com.app.plutope.utils.date_formate.toAny
+import com.app.plutope.utils.date_formate.ymdHMS
 import com.app.plutope.utils.extras.PreferenceHelper
 import com.app.plutope.utils.getActualDigits
 import com.app.plutope.utils.getNetworkForRangoExchange
@@ -56,7 +56,6 @@ import com.app.plutope.utils.safeNavigate
 import com.app.plutope.utils.setBalanceText
 import com.app.plutope.utils.setProgress
 import com.app.plutope.utils.showLoader
-import com.app.plutope.utils.showLoaderAnyHow
 import com.app.plutope.utils.showSnackBar
 import com.app.plutope.utils.showToast
 import com.app.plutope.utils.weiToEther
@@ -69,9 +68,11 @@ import org.web3j.utils.Convert
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.RoundingMode
+import java.util.Calendar
 
 @AndroidEntryPoint
 class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
+    var latestEnteredValue = "0"
     private var storedDecimalInRango: Int? = 18
     private var routerListData: Data1? = null
     private var dexCotractAddress: String? = ""
@@ -119,8 +120,8 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
     }
 
     override fun setupUI() {
-
-
+        (activity as BaseActivity).showToolbarTransparentBack()
+        loge("PairCall", "Start 1: ${Calendar.getInstance().toAny(ymdHMS)}")
         setFragmentResultListeners()
         setProgress(viewDataBinding!!.root, 1, (requireActivity() as BaseActivity))
         tokenModel = args.tokenModel
@@ -130,10 +131,9 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
         originalWidth = viewDataBinding?.imgSwapChange?.width!!
         originalHeight = viewDataBinding?.imgSwapChange?.height!!
 
-
+        startShimmerInnerCard(false)
         setData()
         addProviders(youPayObj)
-
         setOnClickListner()
 
         viewDataBinding!!.txtMax.setOnClickListener {
@@ -142,9 +142,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
         }
 
         viewDataBinding!!.cardBestProvider.setOnClickListener {
-
-            DialogSwapProviderList.getInstance().show(
-                requireContext(),
+            DialogSwapProviderList.getInstance().show(requireContext(),
                 providerList.filter { it.bestPrice.toDouble() > 0.0 } as MutableList<ProviderModel>,
                 youPayObj,
                 youGetObj,
@@ -159,8 +157,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
                             viewDataBinding?.edtYouGet?.setText(
                                 String.format(
-                                    "%.7f",
-                                    selectedProvider.bestPrice.toDouble()
+                                    "%.7f", selectedProvider.bestPrice.toDouble()
                                 ) + " ${youGetObj.t_symbol}"
                             )
 
@@ -170,7 +167,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                             val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
 
                             viewDataBinding!!.txtConvertedYouGet.text =
-                                if (selectedProvider.bestPrice.toDouble() > 0.0) "${
+                                if (selectedProvider.bestPrice.toBigDecimal() > 0.toBigDecimal()) "${
                                     PreferenceHelper.getInstance().getSelectedCurrency()?.symbol
                                 }$formattedPrice" else {
                                     ""
@@ -189,14 +186,19 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
             true,
             youPayObj.chain?.symbol?.lowercase(),
             youPayObj.t_symbol.toString(),
-            youGetObj.chain?.symbol?.lowercase() ?: "bsc", payObj = youPayObj, getObj = youGetObj,
+            youGetObj.chain?.symbol?.lowercase() ?: "bsc",
+            payObj = youPayObj,
+            getObj = youGetObj,
             dialogDismissListner = { token, dismissed ->
+
+                loge("isFromGet", "isDissmised : $dismissed  :: $isFromGet")
+
                 lifecycleScope.launch(Dispatchers.Main) {
-                    requireContext().showLoaderAnyHow()
+                    // requireContext().showLoaderAnyHow()
+
+                    startShimmerInnerCard(!dismissed)
                     token.callFunction.getBalance {
-
                         token.t_balance = it.toString()
-
                         requireActivity().runOnUiThread {
                             viewDataBinding?.apply {
                                 edtYouPay.setText("")
@@ -213,7 +215,8 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                 addProviders(youPayObj)
 
                             }
-                            hideLoader()
+                            // hideLoader()
+                            stopShimmerInnerCard(!dismissed)
                             setDetail()
                         }
 
@@ -221,15 +224,21 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                 }
             })
 
+        loge("PairCall", "Start 2: ${Calendar.getInstance().toAny(ymdHMS)}")
 
         if (youPayObj.t_type?.lowercase() != KIP_20.lowercase()) {
             if (!isApiCalled) {
-                requireContext().showLoader()
+                /*
+                                requireActivity().runOnUiThread {
+                                    requireContext().showLoader()
+                                }
+                */
+                loge("PairCall", "Start 3: ${Calendar.getInstance().toAny(ymdHMS)}")
+                // requireContext().showLoader()
                 exchangePair(indexPairApi)
             }
         } else {
             lifecycleScope.launch(Dispatchers.IO) {
-
                 val tokenList = tokenViewModel.getAllTokensList() as MutableList<Tokens>
                 try {
                     requireActivity().runOnUiThread {
@@ -252,6 +261,32 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
             }
         }
 
+
+    }
+
+    private fun startShimmerInnerCard(isPayObject: Boolean) {
+        if (isPayObject) {
+            viewDataBinding?.shimmerLayoutPay?.startShimmer()
+            viewDataBinding?.shimmerLayoutPay?.visibility = VISIBLE
+            viewDataBinding?.cardInnerCoin?.visibility = GONE
+        } else {
+            viewDataBinding?.shimmerLayout?.startShimmer()
+            viewDataBinding?.shimmerLayout?.visibility = VISIBLE
+            viewDataBinding?.cardInnerCoinSwapped?.visibility = GONE
+        }
+
+    }
+
+    private fun stopShimmerInnerCard(isPayObject: Boolean) {
+        if (isPayObject) {
+            viewDataBinding?.shimmerLayoutPay?.stopShimmer()
+            viewDataBinding?.shimmerLayoutPay?.visibility = GONE
+            viewDataBinding?.cardInnerCoin?.visibility = VISIBLE
+        } else {
+            viewDataBinding?.shimmerLayout?.stopShimmer()
+            viewDataBinding?.shimmerLayout?.visibility = GONE
+            viewDataBinding?.cardInnerCoinSwapped?.visibility = VISIBLE
+        }
 
     }
 
@@ -290,18 +325,22 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                     .isNotEmpty() && (viewDataBinding?.edtYouPay?.text.toString().toDouble() > 0.0)
             ) {
 
-                /* findNavController().safeNavigate(
-                     SwapDirections.actionSwapToPreviewSwapFragment(
-                         PreviewSwapDetail(
-                             youPayObj,
-                             youGetObj,
-                             routerListData,
-                             viewDataBinding?.edtYouPay?.text.toString(),
-                             viewDataBinding?.edtYouGet?.text.toString(),
-                             viewDataBinding?.txtFirstPrice?.text.toString()
-                         ), selectedProvider
-                     )
-                 )*/
+
+                /*
+                                findNavController().safeNavigate(
+                                    SwapDirections.actionSwapToPreviewSwapFragment(
+                                        PreviewSwapDetail(
+                                            youPayObj,
+                                            youGetObj,
+                                            routerListData,
+                                            viewDataBinding?.edtYouPay?.text.toString(),
+                                            viewDataBinding?.edtYouGet?.text.toString(),
+                                            viewDataBinding?.txtFirstPrice?.text.toString(),
+                                            ""
+                                        ), selectedProvider
+                                    )
+                                )
+                */
 
 
 
@@ -315,64 +354,18 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                         requireContext().showToast("Provider not found!")
                     } else {
 
-
-                        when (selectedProvider.coinCode.name) {
-
-                            CoinCode.RANGO.name -> {
-                                if (selectedProvider.swapperFees.toBigDecimal() >= youPayObj.t_balance.toBigDecimal()) {
-                                    requireContext().showToast("You don't have enough ${youPayObj.t_symbol} in your account. make sure you have to (${selectedProvider.swapperFees} + ${selectedProvider.bestPrice}) = ${selectedProvider.swapperFees.toBigDecimal() + selectedProvider.bestPrice.toBigDecimal()} ${youPayObj.t_symbol} in your account")
-                                } else {
-                                    findNavController().safeNavigate(
-                                        SwapDirections.actionSwapToPreviewSwapFragment(
-                                            PreviewSwapDetail(
-                                                youPayObj,
-                                                youGetObj,
-                                                routerListData,
-                                                viewDataBinding?.edtYouPay?.text.toString(),
-                                                viewDataBinding?.edtYouGet?.text.toString(),
-                                                viewDataBinding?.txtFirstPrice?.text.toString()
-                                            ), selectedProvider
-                                        )
-                                    )
-
-                                }
-
-                            }
-
-                            else -> {
-                                findNavController().safeNavigate(
-                                    SwapDirections.actionSwapToPreviewSwapFragment(
-                                        PreviewSwapDetail(
-                                            youPayObj,
-                                            youGetObj,
-                                            routerListData,
-                                            viewDataBinding?.edtYouPay?.text.toString(),
-                                            viewDataBinding?.edtYouGet?.text.toString(),
-                                            viewDataBinding?.txtFirstPrice?.text.toString()
-                                        ), selectedProvider
-                                    )
-                                )
-
-                            }
-
-                        }
-
-
-                        /*
-                                                findNavController().safeNavigate(
-                                                    SwapDirections.actionSwapToPreviewSwapFragment(
-                                                        PreviewSwapDetail(
-                                                            youPayObj,
-                                                            youGetObj,
-                                                            routerListData,
-                                                            viewDataBinding?.edtYouPay?.text.toString(),
-                                                            viewDataBinding?.edtYouGet?.text.toString(),
-                                                            viewDataBinding?.txtFirstPrice?.text.toString()
-                                                        ), selectedProvider
-                                                    )
-                                                )
-                        */
-
+                        findNavController().safeNavigate(
+                            SwapDirections.actionSwapToPreviewSwapFragment(
+                                PreviewSwapDetail(
+                                    youPayObj,
+                                    youGetObj,
+                                    routerListData,
+                                    viewDataBinding?.edtYouPay?.text.toString(),
+                                    viewDataBinding?.edtYouGet?.text.toString(),
+                                    viewDataBinding?.txtFirstPrice?.text.toString()
+                                ), selectedProvider
+                            )
+                        )
 
                     }
 
@@ -405,49 +398,62 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
         }
 
         viewDataBinding?.edtYouPay?.addTextChangedListener(object : TextWatcher {
+
+            private val handler = Handler(Looper.getMainLooper())
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                /*if (viewDataBinding != null && viewDataBinding?.edtYouPay != null) {
-                handler.removeCallbacks(runnable!!)
-                runnable = Runnable {
-*/
 
-                if (!isProgrammaticChange) {
-                    if (s.toString().isNotEmpty()) {
-                        val inputValue = s.toString()
-                        try {
-                            // Check if the input starts with a dot
-                            val numericValue = if (inputValue.startsWith(".")) {
-                                "0$inputValue"
-                            } else {
-                                inputValue
-                            }.toDouble()
+                latestEnteredValue = s.toString()
 
-                            if (numericValue > 0.0) {
-                                requireActivity().runOnUiThread {
-                                    Handler(Looper.getMainLooper()).postDelayed(2000) {
+                //  debouncingPriceCalulation()
 
-                                        // convertAmountToCurrency(numericValue.toString())
+                /*
+                                if (!isProgrammaticChange) {
+                                    if (latestEnteredValue.isNotEmpty()) {
+                                        val inputValue = latestEnteredValue
+                                        try {
+                                            // Check if the input starts with a dot
+                                            val numericValue = if (inputValue.startsWith(".")) {
+                                                "0$inputValue"
+                                            } else {
+                                                inputValue
+                                            }.toDouble()
+
+                                            if (numericValue > 0.0) {
 
 
-                                        val price =
-                                            numericValue.toBigDecimal() * youPayObj.t_price!!.toBigDecimal()
-                                        val formattedPrice =
-                                            price.setScale(2, RoundingMode.DOWN).toString()
-                                        viewDataBinding!!.txtConvertedYouPay.text =
-                                            if (price.toDouble() > 0.0) "${
-                                                PreferenceHelper.getInstance()
-                                                    .getSelectedCurrency()?.symbol
-                                            }$formattedPrice" else {
-                                                ""
-                                            }
+                                                // convertAmountToCurrency(numericValue.toString())
 
-                                        apiCallForAllProviderBestPrice(numericValue.toString())
+                                                val price =
+                                                    numericValue.toBigDecimal() * youPayObj.t_price!!.toBigDecimal()
+                                                val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
+                                               loge("Price")
+                                                viewDataBinding!!.txtConvertedYouPay.text = */
+                /*if (price > 0.toBigDecimal()) *//*
+"${PreferenceHelper.getInstance().getSelectedCurrency()?.symbol}$formattedPrice"*/
+                /* else { "" }*//*
+
+
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    requireActivity().runOnUiThread {
+                                        viewDataBinding!!.progressAmount.visibility = VISIBLE
+                                        viewDataBinding!!.edtYouGet.visibility = GONE
+                                        viewDataBinding!!.edtYouGet.setText("0")
+                                        viewDataBinding!!.txtConvertedYouGet.text = ""
                                     }
+
+                                    loge(
+                                        "TimeDuration",
+                                        "Start => ${Calendar.getInstance().toAny()}"
+                                    )
+                                   // delay(5000)
+                                    apiCallForAllProviderBestPrice(numericValue.toString())
                                 }
+
 
                             } else {
                                 try {
@@ -491,15 +497,59 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                     }
 
                 }
+*/
 
 
-            }
-            /*   handler.postDelayed(runnable!!, 1000)
+            }/*   handler.postDelayed(runnable!!, 1000)
            }*/
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
                     val inputValue = s.toString()
+                    latestEnteredValue = inputValue
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        requireActivity().runOnUiThread {
+                            viewDataBinding!!.progressAmount.visibility = VISIBLE
+                            viewDataBinding!!.edtYouGet.visibility = GONE
+                            viewDataBinding!!.edtYouGet.setText("0")
+                            viewDataBinding!!.txtConvertedYouGet.text = ""
+                        }
+
+                    }
+
+
+                    handler.removeCallbacksAndMessages(null)
+                    handler.postDelayed({
+                        loge("InputValue==>", latestEnteredValue)
+                        if (latestEnteredValue != "") {
+                            debouncingPriceCalulation()
+                        } else {
+                            try {
+                                requireActivity().runOnUiThread {
+                                    viewDataBinding!!.progressAmount.visibility = GONE
+                                    viewDataBinding!!.edtYouGet.visibility = VISIBLE
+                                    viewDataBinding?.edtYouGet?.setText("0")
+                                    viewDataBinding!!.txtConvertedYouPay.text = ""
+                                    viewDataBinding!!.txtConvertedYouGet.text = ""
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                    }, 5000)
+
+                } else {
+                    try {
+                        requireActivity().runOnUiThread {
+                            viewDataBinding?.edtYouGet?.setText("0")
+                            viewDataBinding!!.txtConvertedYouPay.text = ""
+                            viewDataBinding!!.txtConvertedYouGet.text = ""
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
 
                 }
 
@@ -509,22 +559,97 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
     }
 
-    private fun clearValues() {
-
-        requireActivity().runOnUiThread {
-
-            Handler(Looper.getMainLooper()).postDelayed(1000) {
+    private fun debouncingPriceCalulation() {
+        if (!isProgrammaticChange) {
+            if (latestEnteredValue.isNotEmpty()) {
+                val inputValue = latestEnteredValue
                 try {
-                    viewDataBinding?.edtYouGet?.setText("")
-                    viewDataBinding?.edtYouPay?.setText("")
-                    viewDataBinding?.txtConvertedYouPay?.text = ""
-                    viewDataBinding?.txtConvertedYouGet?.text = ""
+                    // Check if the input starts with a dot
+                    val numericValue = if (inputValue.startsWith(".")) {
+                        "0$inputValue"
+                    } else {
+                        inputValue
+                    }.toDouble()
+
+                    if (numericValue > 0.0) {
+
+
+                        // convertAmountToCurrency(numericValue.toString())
+
+                        val price =
+                            numericValue.toBigDecimal() * youPayObj.t_price!!.toBigDecimal()
+                        val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
+                        loge("Price")
+                        viewDataBinding!!.txtConvertedYouPay.text = "${
+                            PreferenceHelper.getInstance().getSelectedCurrency()?.symbol
+                        }$formattedPrice"
+
+                        /*
+                                                CoroutineScope(Dispatchers.Main).launch {
+                                                    requireActivity().runOnUiThread {
+                                                        viewDataBinding!!.progressAmount.visibility = VISIBLE
+                                                        viewDataBinding!!.edtYouGet.visibility = GONE
+                                                        viewDataBinding!!.edtYouGet.setText("0")
+                                                        viewDataBinding!!.txtConvertedYouGet.text = ""
+                                                    }
+
+                                                    loge(
+                                                        "TimeDuration",
+                                                        "Start => ${Calendar.getInstance().toAny()}"
+                                                    )
+                                                    // delay(5000)
+                                                    apiCallForAllProviderBestPrice(numericValue.toString())
+                                                }
+                        */
+
+                        apiCallForAllProviderBestPrice(numericValue.toString())
+
+
+                    } else {
+                        try {
+                            requireActivity().runOnUiThread {
+                                Handler(Looper.getMainLooper()).postDelayed(1000) {
+                                    viewDataBinding?.edtYouGet?.setText("0")
+                                    viewDataBinding!!.txtConvertedYouPay.text = ""
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                } catch (e: NumberFormatException) {
+                    e.printStackTrace()
+                }
+
+            } else {
+                try {
+                    requireActivity().runOnUiThread {
+                        viewDataBinding?.edtYouGet?.setText("0")
+                        viewDataBinding!!.txtConvertedYouPay.text = ""
+                        viewDataBinding!!.txtConvertedYouGet.text = ""
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+
             }
+
+        } else {
+            try {
+                requireActivity().runOnUiThread {
+                    Handler(Looper.getMainLooper()).postDelayed(1000) {
+                        viewDataBinding?.edtYouGet?.setText("0")
+                        viewDataBinding!!.txtConvertedYouPay.text = ""
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
         }
+
     }
+
 
     private fun swapChangeBlankObject() {
         val temp: Tokens = youPayObj
@@ -546,12 +671,10 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun setDetail() {
-
+        loge("PairCall", "Start detail: ${Calendar.getInstance().toAny(ymdHMS)}")
         // viewDataBinding?.txtFromBalanceValue?.text =  String.format("%.6f", youPayObj.t_balance.toDouble())
         viewDataBinding?.txtFromBalanceValue?.text = setBalanceText(
-            youPayObj.t_balance.toBigDecimal() ?: 0.toBigDecimal(),
-            "",
-            6
+            youPayObj.t_balance.toBigDecimal() ?: 0.toBigDecimal(), "", 6
         )
 
 
@@ -561,9 +684,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
         // viewDataBinding?.txtYouGetBalanceValue?.text = String.format("%.6f", youGetObj.t_balance.toDouble())
         viewDataBinding?.txtYouGetBalanceValue?.text = setBalanceText(
-            youGetObj.t_balance.toBigDecimal() ?: 0.toBigDecimal(),
-            "",
-            6
+            youGetObj.t_balance.toBigDecimal() ?: 0.toBigDecimal(), "", 6
         )
 
 
@@ -575,8 +696,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
             .into(viewDataBinding?.imgCoinSwapped!!)
 
 
-        if (/*!isApiCalled && */indexPairApi == 3)
-            graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=${youGetObj.tokenId},${youPayObj.tokenId}")
+        if (indexPairApi == 3) graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=${youGetObj.tokenId},${youPayObj.tokenId}")
 
         /* if (youPayObj.t_type?.lowercase() == youGetObj.t_type?.lowercase()) {
              viewDataBinding?.btnSwap?.text = "Preview Swap"
@@ -586,156 +706,13 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
         viewDataBinding?.btnSwap?.text = getString(R.string.preview_swap)
 
+        loge("PairCall", "end detail: ${Calendar.getInstance().toAny(ymdHMS)}")
+
     }
 
     @SuppressLint("SetTextI18n")
     override fun setupObserver() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                swapViewModel.executeExchangeResponse.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-                            val response = it.data
 
-                            viewDataBinding?.edtYouGet?.setText(
-                                String.format(
-                                    "%.7f",
-                                    response?.toAmount
-                                ) + " ${youGetObj.t_symbol}"
-                            )
-                            val payingAddress = response?.payinAddress
-                            transactionID = response?.id
-
-
-                            val tokenList = tokenViewModel.getAllTokensList()
-                            youPayObj.callFunction.sendTokenOrCoin(
-                                payingAddress,
-                                viewDataBinding?.edtYouPay?.text.toString().toDouble(),
-                                tokenList
-                            ) { success, errorMessage, _ ->
-
-                                if (success) {
-                                    URL_BY_ID = "$EXCHANGE_STATUS_API?id=$transactionID"
-                                    requireActivity().runOnUiThread {
-                                        Handler(Looper.getMainLooper()).postDelayed(5000) {
-                                            hideLoader()
-                                            viewDataBinding?.apply {
-                                                edtYouPay.setText("0.0")
-                                                edtYouGet.setText("0.0")
-
-                                            }
-                                            openSwapProgressDialog(
-                                                "Processing....",
-                                                "It might take a few minutes."
-                                            )
-                                        }
-                                    }
-                                    // swapViewModel.executeExchangeStatus(URL_BY_ID)
-                                } else {
-                                    requireActivity().runOnUiThread {
-                                        hideLoader()
-                                        requireContext().showToast(errorMessage.toString())
-                                    }
-                                }
-
-                            }
-                        }
-
-                        is NetworkState.Loading -> {
-                            requireContext().showLoader()
-                        }
-
-                        is NetworkState.Error -> {
-                            requireContext().showToast(it.message.toString())
-                            hideLoader()
-                        }
-
-                        is NetworkState.SessionOut -> {
-                            hideLoader()
-                            CustomSnackbar.make(
-                                requireActivity().window.decorView.rootView as ViewGroup,
-                                it.message.toString()
-                            )
-                                .show()
-                        }
-
-                        else -> {
-                           // hideLoader()
-                        }
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                swapViewModel.executeExchangeStatusResponse.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-
-                            when {
-                                it.data?.status?.lowercase() == SwapExchangeStatus.finished.name.lowercase() -> {
-                                    requireActivity().runOnUiThread {
-                                        hideLoader()
-                                        setProgress(
-                                            viewDataBinding!!.root,
-                                            3,
-                                            (requireActivity() as BaseActivity)
-                                        )
-                                        findNavController().safeNavigate(SwapDirections.actionSwapToDashboard())
-
-                                    }
-                                }
-
-                                it.data?.status?.lowercase() == SwapExchangeStatus.failed.name -> {
-                                    requireContext().showToast("Failed Transaction")
-                                    hideLoader()
-                                    return@collect
-                                }
-
-                                else -> {
-                                    if (it.data?.status?.lowercase() == SwapExchangeStatus.confirming.name || it.data?.status?.lowercase() == SwapExchangeStatus.exchanging.name) {
-                                        setProgress(
-                                            viewDataBinding!!.root,
-                                            2,
-                                            (requireActivity() as BaseActivity)
-                                        )
-                                    } else if (it.data?.status?.lowercase() == SwapExchangeStatus.waiting.name) {
-                                        setProgress(
-                                            viewDataBinding!!.root,
-                                            1,
-                                            (requireActivity() as BaseActivity)
-                                        )
-                                    }
-                                    swapViewModel.executeExchangeStatus(URL_BY_ID)
-                                }
-                            }
-                        }
-
-                        is NetworkState.Loading -> {
-                            requireContext().showLoader()
-                        }
-
-                        is NetworkState.Error -> {
-                            hideLoader()
-                        }
-
-                        is NetworkState.SessionOut -> {
-                            hideLoader()
-                            CustomSnackbar.make(
-                                requireActivity().window.decorView.rootView as ViewGroup,
-                                it.message.toString()
-                            )
-                                .show()
-                        }
-
-                        else -> {
-                          //  hideLoader()
-                        }
-                    }
-                }
-            }
-        }
 
         lifecycleScope.launch {
             swapViewModel.executeSwapUsingOkxResponse.collect {
@@ -744,11 +721,9 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                         if (it.data?.data1?.isNotEmpty() == true) {
                             val response = it.data.data1[0].tx
 
-                            val amountSend: BigInteger =
-                                Convert.toWei(
-                                    viewDataBinding?.edtYouPay?.text.toString(),
-                                    Convert.Unit.ETHER
-                                ).toBigInteger()
+                            val amountSend: BigInteger = Convert.toWei(
+                                viewDataBinding?.edtYouPay?.text.toString(), Convert.Unit.ETHER
+                            ).toBigInteger()
 
                             viewDataBinding?.edtYouGet?.setText(
                                 String.format(
@@ -757,15 +732,14 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                 ) + " ${youGetObj.t_symbol}"
                             )
 
-
-
                             youPayObj.callFunction.swapTokenOrCoinOkx(
                                 response.to,
                                 response.data,
                                 response.gasPrice,
                                 response.gas,
                                 amountSend,
-                                dexCotractAddress, { success, errorMessage, _ ->
+                                dexCotractAddress,
+                                { success, errorMessage, _ ->
 
                                     if (success) {
                                         requireActivity().runOnUiThread {
@@ -789,7 +763,8 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                         }
                                     }
 
-                                }, { success, _, _ ->
+                                },
+                                { success, _, _ ->
                                     if (success) {
                                         requireActivity().runOnUiThread {
                                             setProgress(
@@ -810,7 +785,9 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                     }
 
                     is NetworkState.Loading -> {
-                        requireContext().showLoader()
+                        requireActivity().runOnUiThread {
+                            requireContext().showLoader()
+                        }
                     }
 
                     is NetworkState.Error -> {
@@ -823,8 +800,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                         CustomSnackbar.make(
                             requireActivity().window.decorView.rootView as ViewGroup,
                             it.message.toString()
-                        )
-                            .show()
+                        ).show()
                     }
 
                     else -> {
@@ -835,15 +811,15 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
         }
 
 
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.Main) {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 swapViewModel.executeSwapUsingSwapPairResponse.collect {
                     when (it) {
                         is NetworkState.Success -> {
+                            loge("PairCall", "Start : ${Calendar.getInstance().toAny(ymdHMS)}")
                             val response = it.data as MutableList<AvailablePairsResponseModel>
                             val filterResult = swapViewModel.filterTokensFromPair(
-                                response,
-                                tokenViewModel.getAllTokensList() as MutableList<Tokens>
+                                response, tokenViewModel.getAllTokensList() as MutableList<Tokens>
                             )
                             filterList.addAll(filterResult)
                             if (indexPairApi == 0) {
@@ -859,24 +835,24 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                 exchangePair(indexPairApi)
                             } else {
                                 filterList.distinct()
+                                stopShimmerInnerCard(false)
                                 setDetail()
-                                //hideLoader()
                                 viewDataBinding?.progressToken?.visibility = GONE
                                 tokenListDialog.setSwapPairTokenList(filterList)
                             }
+
+                            loge("PairCall", "end : ${Calendar.getInstance().toAny(ymdHMS)}")
+
                         }
 
                         is NetworkState.Loading -> {
-                            if(indexPairApi==0) {
-                                requireContext().showLoader()
-                            }
-                               // viewDataBinding?.progressToken?.visibility=VISIBLE
+                            // viewDataBinding?.progressToken?.visibility=VISIBLE
                         }
 
                         is NetworkState.Error -> {
-                            hideLoader()
                             try {
                                 requireActivity().runOnUiThread {
+
                                     lifecycleScope.launch(Dispatchers.IO) {
                                         val tokenList =
                                             tokenViewModel.getAllTokensList() as MutableList<Tokens>
@@ -890,6 +866,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                                     filterList.addAll(newTokenList)
                                                     youGetObj = newTokenList[0]
                                                     setDetail()
+                                                    stopShimmerInnerCard(false)
                                                     tokenListDialog.setSwapPairTokenList(filterList)
                                                 }
                                             }
@@ -897,6 +874,9 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                             e.printStackTrace()
                                         }
                                     }
+
+                                    hideLoader()
+                                    stopShimmerInnerCard(false)
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -905,6 +885,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
                         is NetworkState.SessionOut -> {
                             hideLoader()
+                            stopShimmerInnerCard(false)
                             CustomSnackbar.make(
                                 requireActivity().window.decorView.rootView as ViewGroup,
                                 it.message.toString()
@@ -912,7 +893,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                         }
 
                         else -> {
-                           // hideLoader()
+                            // hideLoader()
                         }
                     }
                 }
@@ -924,7 +905,6 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                 graphDetailViewModel.getGetMarketResponse.collect { networkState ->
                     when (networkState) {
                         is NetworkState.Success -> {
-
                             if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
                                 val cryptoList = networkState.data
                                 if (cryptoList?.isNotEmpty() == true) {
@@ -945,14 +925,13 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
                                     viewDataBinding!!.edtYouPay.setText("")
                                     estimatePrice(youGetObj, youPayObj)
-
                                     hideLoader()
                                 }
                             }
                         }
 
                         is NetworkState.Loading -> {
-                            requireContext().showLoaderAnyHow()
+                            // requireContext().showLoaderAnyHow()
                         }
 
                         is NetworkState.Error -> {
@@ -964,82 +943,17 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                             CustomSnackbar.make(
                                 requireActivity().window.decorView.rootView as ViewGroup,
                                 networkState.message.toString()
-                            )
-                                .show()
+                            ).show()
                         }
 
                         else -> {
-                           // hideLoader()
+                            // hideLoader()
                         }
                     }
                 }
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                swapViewModel.executeApproveUsingOkxResponse.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-                            hideLoader()
-
-                            if (it.data?.data1?.isNotEmpty() == true) {
-
-                                dexCotractAddress = it.data.data1[0].dexContractAddress
-
-                                var decimal: Int?
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    youPayObj.callFunction.getDecimal { dec ->
-                                        decimal = dec
-
-                                        swapViewModel.executeSwapOkx(
-                                            viewDataBinding?.edtYouPay?.text.toString(),
-                                            youPayObj.chain?.chainIdHex.toString(),
-                                            youGetObj.t_address.toString()
-                                                .ifEmpty { DEFAULT_CHAIN_ADDRESS },
-                                            youPayObj.t_address.toString()
-                                                .ifEmpty { DEFAULT_CHAIN_ADDRESS },
-                                            Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)
-                                                .toString(),
-                                            decimal = decimal
-                                        )
-
-
-                                    }
-                                }
-
-
-                            }
-
-
-                        }
-
-                        is NetworkState.Loading -> {
-                            requireContext().showLoader()
-                        }
-
-                        is NetworkState.Error -> {
-                            hideLoader()
-                            requireContext().showToast(it.message.toString())
-
-                        }
-
-                        is NetworkState.SessionOut -> {
-                            hideLoader()
-                            CustomSnackbar.make(
-                                requireActivity().window.decorView.rootView as ViewGroup,
-                                it.message.toString()
-                            )
-                                .show()
-                        }
-
-                        else -> {
-                           // hideLoader()
-                        }
-                    }
-                }
-            }
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -1049,7 +963,6 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
                             if (it.data?.data1?.isNotEmpty() == true) {
                                 routerListData = it.data.data1[0]
-
                                 //here
                                 var decimal: Int
                                 CoroutineScope(Dispatchers.IO).launch {
@@ -1060,26 +973,21 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                             if (decimal == 0) 8 else decimal
                                         )
 
-                                        // Convert.Unit.WEI.weiFactor=de
-
-                                        /*   val amountSend: BigInteger = convertToWei(
-                                               it.data.data1[0].routerResult.toTokenAmount.toDouble(),
-                                               decimal
-                                           )
-                                           val wai: BigInteger = convertToWei(amt.toDouble(), decimal)*/
-
                                         loge("OKX_response", amt)
+                                        loge(
+                                            "OkxEstimet",
+                                            "edittext ${viewDataBinding!!.edtYouPay.text.toString()} == ${it.data.lastEnteredAmount}"
+                                        )
 
-                                        providerList.filter { provider -> provider.coinCode == CoinCode.OKX }
-                                            .forEach { provideModel ->
-
-                                                val price = setBalanceText(
-                                                    amt.toBigDecimal(),
-                                                    "",
-                                                    6
-                                                )
-                                                provideModel.bestPrice = price
-                                            }
+                                        if (it.data.lastEnteredAmount == viewDataBinding!!.edtYouPay.text.toString()) {
+                                            providerList.filter { provider -> provider.coinCode == CoinCode.OKX }
+                                                .forEach { provideModel ->
+                                                    val price = setBalanceText(
+                                                        amt.toBigDecimal(), "", 6
+                                                    )
+                                                    provideModel.bestPrice = price
+                                                }
+                                        }
 
                                         checkAllAPIsCompleted()
                                     }
@@ -1117,8 +1025,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                             CustomSnackbar.make(
                                 requireActivity().window.decorView.rootView as ViewGroup,
                                 it.message.toString()
-                            )
-                                .show()
+                            ).show()
                         }
 
                         else -> {
@@ -1135,35 +1042,25 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                     when (it) {
                         is NetworkState.Success -> {
                             //hideLoader()
+                            loge(
+                                "ChangeNow",
+                                "edittext ${viewDataBinding!!.edtYouPay.text} == ${it.data?.lastEnteredAmount}"
+                            )
                             val response = it.data
+                            if (it.data?.lastEnteredAmount == viewDataBinding!!.edtYouPay.text.toString()) {
+                                providerList.filter { provider -> provider.coinCode == CoinCode.CHANGENOW }
+                                    .forEach { provider ->
+                                        val price = setBalanceText(
+                                            response?.toAmount?.toBigDecimal() ?: 0.toBigDecimal(),
+                                            "",
+                                            6
+                                        )
+                                        provider.bestPrice = price
+                                    }
+                            }
 
-                            providerList.filter { provider -> provider.coinCode == CoinCode.CHANGENOW }
-                                .forEach { provider ->
-
-                                    val price = setBalanceText(
-                                        response?.toAmount?.toBigDecimal() ?: 0.toBigDecimal(),
-                                        "",
-                                        6
-                                    )
-
-                                    provider.bestPrice = price
-                                    // provider.bestPrice = String.format("%.6f", response?.toAmount)
-                                }
-
-
-                            /*  viewDataBinding?.edtYouGet?.setText(
-                                  String.format(
-                                      "%.7f",
-                                      response?.toAmount
-                                  ) + " ${youGetObj.t_symbol}"
-                              )
-  */
-
-                            val payingAddress = response?.payinAddress
                             transactionID = response?.id
-
                             checkAllAPIsCompleted()
-
                         }
 
                         is NetworkState.Loading -> {
@@ -1189,8 +1086,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                             CustomSnackbar.make(
                                 requireActivity().window.decorView.rootView as ViewGroup,
                                 it.message.toString()
-                            )
-                                .show()
+                            ).show()
                         }
 
                         else -> {
@@ -1212,75 +1108,57 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                             //hideLoader()
                             val response = it.data
 
-                            if (response?.route != null) {
+                            loge(
+                                "RangoSwap",
+                                "edittext : ${viewDataBinding!!.edtYouPay.text.toString()} == ${response?.enteredAmount}"
+                            )
 
+                            if (response?.route != null && viewDataBinding!!.edtYouPay.text.toString() == response.enteredAmount) {
                                 val amount = response.route!!.outputAmount
-
                                 CoroutineScope(Dispatchers.IO).launch {
                                     youGetObj.callFunction.getDecimal { dec ->
                                         val decimal = dec!!
-                                        val amt = convertWeiToEther(
-                                            amount!!, decimal
-                                            /*if (decimal == 0) 8 else decimal*/
-                                        )
-
-
+                                        val amt = convertWeiToEther(amount!!, decimal)
                                         var feesAmount: BigDecimal = 0.toBigDecimal()
-                                        it.data.route?.fee?.forEach {
-                                            feesAmount += it?.amount!!.toBigDecimal()
-                                        }
+                                        it.data.route?.fee?.forEach { swapperFees ->
+                                            loge(
+                                                "calculateFee",
+                                                "${swapperFees?.expenseType} == ${swapperFees?.amount}"
+                                            )
 
-                                        val fees = convertWeiToEther(
-                                            feesAmount.toString(),
-                                            it.data.route?.fee?.get(0)?.token?.decimals!!
-                                            /* if (decimal == 0) 8 else decimal*/
-                                        )
+                                            feesAmount += if (swapperFees?.expenseType == "FROM_SOURCE_WALLET" && swapperFees.name == "Swapper Fee") {
+                                                convertWeiToEther(
+                                                    swapperFees.amount!!,
+                                                    swapperFees.token?.decimals!!
+                                                ).toBigDecimal()
+                                            } else 0.toBigDecimal()
+                                        }
 
                                         loge(
                                             "Decimal",
-                                            "Rango: $decimal  :: amount =>${getActualDigits(amt)}   feesAmount : $feesAmount : actualfee : ${
-                                                convertScientificToBigDecimal(
-                                                    "$feesAmount"
-                                                )
-                                            } :: $fees"
+                                            "Rango: $decimal :: amount =>${getActualDigits(amt)} feesAmount : $feesAmount : actualfee : ${
+                                                convertScientificToBigDecimal("$feesAmount")
+                                            } :: $feesAmount"
                                         )
 
 
                                         val amount =
                                             if (youGetObj.chain?.coinType == CoinType.BITCOIN) {
-                                                /* String.format(
-                                                     "%.18f",
-                                                     getActualDigits(amt).toDouble()
-                                                 )*/
-
                                                 setBalanceText(
-                                                    getActualDigits(amt).toBigDecimal(),
-                                                    "",
-                                                    18
+                                                    getActualDigits(amt).toBigDecimal(), "", 18
                                                 )
                                             } else {
-
                                                 setBalanceText(
-                                                    getActualDigits(amt).toBigDecimal(),
-                                                    "",
-                                                    decimal
+                                                    getActualDigits(amt).toBigDecimal(), "", decimal
                                                 )
-
-                                                /* String.format(
-                                                     "%.6f",
-                                                     getActualDigits(amt).toDouble()
-                                                 )*/
                                             }
 
                                         providerList.filter { it.coinCode == CoinCode.RANGO }
-                                            .forEach {
-                                                it.bestPrice = amount
-                                                it.swapperFees = setBalanceText(
-                                                    fees.toBigDecimal(),
-                                                    "",
-                                                    6
+                                            .forEach { provider ->
+                                                provider.bestPrice = amount
+                                                provider.swapperFees = setBalanceText(
+                                                    feesAmount, "", 6
                                                 )
-                                                // String.format("%.6f", fees.toDouble())
                                             }
 
 
@@ -1327,8 +1205,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                             CustomSnackbar.make(
                                 requireActivity().window.decorView.rootView as ViewGroup,
                                 it.message.toString()
-                            )
-                                .show()
+                            ).show()
                         }
 
                         else -> {
@@ -1342,21 +1219,6 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
     }
 
-    private fun executeExchangeCall() {
-        fromNetwork = getNetworkString(youPayObj.chain)
-        toNetwork = getNetworkString(youGetObj.chain)
-        swapViewModel.executeExchange(
-            EXCHANGE_API, ExchangeRequestModel(
-                youPayObj.t_symbol.toString().lowercase(),
-                youGetObj.t_symbol.toString().lowercase(),
-                fromNetwork.toString(),
-                toNetwork.toString(),
-                viewDataBinding?.edtYouPay?.text.toString().ifEmpty { "0.0" },
-                Wallet.getPublicWalletAddress(tokenModel.chain?.coinType ?: CoinType.ETHEREUM)
-                    .toString()
-            )
-        )
-    }
 
     @SuppressLint("SetTextI18n")
     private fun estimatePrice(getCoinDetail: Tokens?, payCoinDetail: Tokens?) {
@@ -1376,8 +1238,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
     }
 
     private fun openSwapProgressDialog(title: String, subtitle: String) {
-        SwapProgressDialog.getInstance().show(
-            requireContext(),
+        SwapProgressDialog.getInstance().show(requireContext(),
             title,
             subtitle,
             listener = object : SwapProgressDialog.DialogOnClickBtnListner {
@@ -1389,13 +1250,13 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        if (isProgrammaticChange)
-            isProgrammaticChange = false
+        if (isProgrammaticChange) isProgrammaticChange = false
     }
 
 
     private fun apiCallForAllProviderBestPrice(numericValue: String) {
 
+        loge("TimeDuration", "times => ${Calendar.getInstance().toAny()}")
         viewDataBinding!!.progressAmount.visibility = VISIBLE
         viewDataBinding!!.edtYouGet.visibility = GONE
         viewDataBinding!!.edtYouGet.setText("0")
@@ -1419,7 +1280,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                             Wallet.getPublicWalletAddress(
                                 youGetObj.chain?.coinType ?: CoinType.ETHEREUM
                             ).toString()
-                        )
+                        ), lastEnteredAmount = viewDataBinding!!.edtYouPay.text.toString()
                     )
 
 
@@ -1443,7 +1304,8 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                         .ifEmpty { DEFAULT_CHAIN_ADDRESS },
                                     Wallet.getPublicWalletAddress(youPayObj.chain?.coinType!!)
                                         .toString(),
-                                    it
+                                    it,
+                                    lastEnteredAmount = viewDataBinding!!.edtYouPay.text.toString()
                                 )
                             }
                         }
@@ -1479,14 +1341,13 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                 numericValue,
                                 decimal = storedDecimalInRango,
                                 fromWalletAddress = Wallet.getPublicWalletAddress(youPayObj.chain?.coinType!!)!!,
-                                toWalletAddress = Wallet.getPublicWalletAddress(youGetObj.chain?.coinType!!)!!
+                                toWalletAddress = Wallet.getPublicWalletAddress(youGetObj.chain?.coinType!!)!!,
+                                lastEnteredAmount = viewDataBinding!!.edtYouPay.text.toString()
 
                             )
 
 
                         }
-
-
 
 
                     }
@@ -1544,16 +1405,12 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                         // String.format("%.15f", maxBestPriceModel.bestPrice.toDouble())
 
                         setBalanceText(
-                            maxBestPriceModel.bestPrice.toBigDecimal(),
-                            "",
-                            18
+                            maxBestPriceModel.bestPrice.toBigDecimal(), "", 18
                         )
                     } else {
 
                         setBalanceText(
-                            maxBestPriceModel.bestPrice.toBigDecimal(),
-                            "",
-                            6
+                            maxBestPriceModel.bestPrice.toBigDecimal(), "", 6
                         )
 
                         //  String.format("%.6f", maxBestPriceModel.bestPrice.toDouble())
@@ -1568,7 +1425,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                 }
 
                 viewDataBinding!!.txtConvertedYouGet.text =
-                    if (maxBestPriceModel.bestPrice.toDouble() > 0.0) "${
+                    if (maxBestPriceModel.bestPrice.toBigDecimal() > 0.toBigDecimal()) "${
                         PreferenceHelper.getInstance().getSelectedCurrency()?.symbol
                     }$formattedPrice" else {
                         ""

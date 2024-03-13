@@ -47,7 +47,7 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
     fun executeExchange(url: String, body: ExchangeRequestModel) {
         viewModelScope.launch {
             _tagExecuteExchange.emit(NetworkState.Loading())
-            _tagExecuteExchange.collectStateFlow(swapRepo.executeExchange(url, body))
+            _tagExecuteExchange.collectStateFlow(swapRepo.executeExchange(url, body, "0"))
         }
     }
 
@@ -104,7 +104,14 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
             OKX_SWAP_API + "amount=${amountSend}&chainId=${chainId}&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&slippage=0.1&userWalletAddress=${userWalletAddress}"
         viewModelScope.launch {
             _tagSwapUsingOkx.emit(NetworkState.Loading())
-            _tagSwapUsingOkx.collectStateFlow(swapRepo.executeSwapUsingOkx(url, sign, timestamp))
+            _tagSwapUsingOkx.collectStateFlow(
+                swapRepo.executeSwapUsingOkx(
+                    url,
+                    sign,
+                    timestamp,
+                    "0"
+                )
+            )
         }
     }
 
@@ -208,7 +215,7 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
         toTokenAddress: String,
         fromTokenAddress: String,
         userWalletAddress: String,
-        decimal: Int? = 18
+        decimal: Int? = 18, lastEnteredAmount: String
     ) {
         // val amountSend: BigInteger = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
 
@@ -227,7 +234,14 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
             OKX_SWAP_API + "amount=${amountSend}&chainId=${chainId}&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&slippage=0.1&userWalletAddress=${userWalletAddress}"
         viewModelScope.launch {
             _tagSwapUsingOkxEstimate.emit(NetworkState.Loading())
-            _tagSwapUsingOkxEstimate.collectStateFlow(swapRepo.executeSwapUsingOkx(url, sign, timestamp))
+            _tagSwapUsingOkxEstimate.collectStateFlow(
+                swapRepo.executeSwapUsingOkx(
+                    url,
+                    sign,
+                    timestamp,
+                    lastEnteredAmount
+                )
+            )
         }
     }
 
@@ -239,10 +253,20 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
     val executeEstimateExchangeResponse: StateFlow<NetworkState<ExchangeResponseModel?>>
         get() = _tagExecuteEstimateExchange
 
-    fun executeEstimateExchange(url: String, body: ExchangeRequestModel) {
+    fun executeEstimateExchange(
+        url: String,
+        body: ExchangeRequestModel,
+        lastEnteredAmount: String
+    ) {
         viewModelScope.launch {
             _tagExecuteEstimateExchange.emit(NetworkState.Loading())
-            _tagExecuteEstimateExchange.collectStateFlow(swapRepo.executeExchange(url, body))
+            _tagExecuteEstimateExchange.collectStateFlow(
+                swapRepo.executeExchange(
+                    url,
+                    body,
+                    lastEnteredAmount
+                )
+            )
         }
     }
 
@@ -265,7 +289,7 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
         price: String,
         decimal: Int? = 18,
         fromWalletAddress: String,
-        toWalletAddress: String,
+        toWalletAddress: String, lastEnteredAmount: String
     ) {
         viewModelScope.launch {
             _tagRangoEstimationQuote.emit(NetworkState.Loading())
@@ -284,6 +308,7 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
                     amountSend.toString(),
                     fromWalletAddress,
                     toWalletAddress,
+                    lastEnteredAmount
                 )
             )
         }
@@ -307,6 +332,7 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
         price: String, decimal: Int? = 18,
         fromWalletAddress: String,
         toWalletAddress: String,
+        isFromButtonCliked: Boolean
     ) {
         viewModelScope.launch {
             _tagRangoSwapSubmit.emit(NetworkState.Loading())
@@ -324,6 +350,7 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
                     amountSend.toString(),
                     fromWalletAddress,
                     toWalletAddress,
+                    isFromButtonCliked
                 )
             )
         }
@@ -339,10 +366,15 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
     val setWalletActive: StateFlow<NetworkState<String?>>
         get() = _tagSetWalletActive
 
-    fun setWalletActiveCall(address: String) {
+    fun setWalletActiveCall(address: String, receiverAddress: String) {
         viewModelScope.launch {
             _tagSetWalletActive.emit(NetworkState.Loading())
-            _tagSetWalletActive.collectStateFlow(tokensRepo.setWalletActive(address))
+            _tagSetWalletActive.collectStateFlow(
+                tokensRepo.setWalletActive(
+                    address,
+                    receiverAddress
+                )
+            )
         }
     }
 

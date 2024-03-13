@@ -12,5 +12,6 @@ data class PreviewSwapDetail(
     val routerResult: Data1?,
     val payAmount: String,
     val getAmount: String,
-    val quote: String
+    val quote: String,
+    var getRealAmount: String = "0"
 ) : Parcelable

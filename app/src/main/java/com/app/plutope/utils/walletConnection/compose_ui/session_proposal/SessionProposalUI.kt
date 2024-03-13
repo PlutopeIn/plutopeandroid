@@ -1,6 +1,6 @@
 package com.app.plutope.utils.walletConnection.compose_ui.session_proposal
 
-import com.app.plutope.utils.walletConnection.ACCOUNTS_1_EIP155_ADDRESS
+import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.walletConnection.compose_ui.peer.PeerContextUI
 import com.app.plutope.utils.walletConnection.compose_ui.peer.PeerUI
 import com.walletconnect.web3.wallet.client.Wallet
@@ -17,11 +17,12 @@ data class SessionProposalUI(
 data class WalletMetaData(
     val peerUI: PeerUI,
     val namespaces: Map<String, Wallet.Model.Namespace.Session>,
+
 )
 
 val walletMetaData = WalletMetaData(
     peerUI = PeerUI(
-        peerIcon = "https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/Icon/Gradient/Icon.png",
+        peerIcon = "https://plutope.app/api/images/applogo.png",
         peerName = "plutope",
         peerUri = "com.app",
         peerDescription = ""
@@ -41,21 +42,24 @@ val walletMetaData = WalletMetaData(
                 "eth_signTransaction",
                 "eth_signTypedData",
                 "eth_signTypedData_v3",
-                "eth_signTypedData_v4", "stellar_signXDR", "stellar_signAndSubmitXDR"
+                "eth_signTypedData_v4",
+                "stellar_signXDR",
+                "stellar_signAndSubmitXDR",
+                "solana_signTransaction",
+                "solana_signMessage",
+                "wallet_switchEthereumChain",
+                "wallet_addEthereumChain",
+                "eth_chainId"
+
             ),
             events = listOf("chainChanged", "accountsChanged"),
             accounts = listOf(
-                "eip155:1:$ACCOUNTS_1_EIP155_ADDRESS",
-                "eip155:137:$ACCOUNTS_1_EIP155_ADDRESS",
-                "eip155:56:$ACCOUNTS_1_EIP155_ADDRESS",
-                "eip155:66:$ACCOUNTS_1_EIP155_ADDRESS"
+                "eip155:1:${com.app.plutope.model.Wallet.getPublicWalletAddress(CoinType.ETHEREUM)}",
+                "eip155:137:${com.app.plutope.model.Wallet.getPublicWalletAddress(CoinType.ETHEREUM)}",
+                "eip155:56:${com.app.plutope.model.Wallet.getPublicWalletAddress(CoinType.ETHEREUM)}",
+                "eip155:66:${com.app.plutope.model.Wallet.getPublicWalletAddress(CoinType.ETHEREUM)}"
             )
         ),
-//        "cosmos" to Wallet.Model.Namespace.Session(
-//            chains = listOf("cosmos:cosmoshub-4", "cosmos:cosmoshub-1"),
-//            methods = listOf("accountsChanged", "personalSign"),
-//            events = listOf("chainChanged", "chainChanged"),
-//            accounts = listOf("cosmos:cosmoshub-4:cosmos1w605a5ejjlhp04eahjqxhjhmg8mj6nqhp8v6xc", "cosmos:cosmoshub-1:cosmos1w605a5ejjlhp04eahjqxhjhmg8mj6nqhp8v6xc")
-//        )
-    )
+
+        )
 )

@@ -12,7 +12,10 @@
         <item name="windowNoTitle">true</item>
         <item name="bottomSheetDialogTheme">
             @style/Theme.QuinableFacilityApp.BottomSheet.Dialog.Navigation
-        </item><!--
+        </item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+
+        <!--
                 <item name="android:windowLightStatusBar">true</item>
         -->
     </style>

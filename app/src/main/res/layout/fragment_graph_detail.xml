@@ -200,7 +200,7 @@
                 android:layout_marginTop="@dimen/_50mdp"
                 android:layout_marginEnd="@dimen/_10mdp"
                 android:fontFamily="@font/quicksand_medium"
-                android:text="@{`About `+model.t_name}"
+                android:text='@{@string/about_model_name(model.t_name)}'
                 android:textColor="@color/white"
                 android:textSize="@dimen/_16msp"
                 app:layout_constrainedWidth="true"

@@ -82,7 +82,7 @@ class CoinListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])
 
-        if (position == currentList.lastIndex) {
+        /*if (position == currentList.lastIndex) {
             val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
             params.bottomMargin = 300
             holder.itemView.layoutParams = params
@@ -90,7 +90,7 @@ class CoinListAdapter(
             val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
             params.bottomMargin = 15
             holder.itemView.layoutParams = params
-        }
+        }*/
 
     }
 

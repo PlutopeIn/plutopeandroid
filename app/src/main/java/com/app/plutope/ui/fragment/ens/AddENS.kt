@@ -134,22 +134,6 @@ class AddENS : BaseFragment<FragmentAddENSBinding, AddENSViewModel>() {
         val ensResolver = EnsResolver(web3, ENS_CACHE_TIME_VALIDITY)
         CoroutineScope(Dispatchers.IO).launch {
 
-/*
-             web3.ethSyncing().sendAsync().apply {
-                 loge("ENS","${this.get().isSyncing}")
-
-                 if (this.get().isSyncing){
-
-                 }else{
-
-                 }
-                 val name= ensResolver.resolve("web3j.eth")
-                 loge("ENS_name", name)
-
-
-             }
-*/
-
             ensResolver.syncThreshold = ENS_CACHE_TIME_VALIDITY
             val name = ensResolver.reverseResolve("0xD02D090F8f99B61D65d8e8876Ea86c2720aB27BC")
             loge("isValidEnsName", "${isValidEnsName("web3j.eth")} :: $name")

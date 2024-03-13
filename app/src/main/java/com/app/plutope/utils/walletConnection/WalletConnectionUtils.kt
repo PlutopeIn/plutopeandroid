@@ -54,7 +54,7 @@ object WalletConnectionUtils {
         val appMetaData = Core.Model.AppMetaData(
             name = "PlutoPe Wallet",
             description = "PlutoPe Wallet Implementation",
-            url = "kotlin.wallet.walletconnect.com",
+            url = "https://www.plutope.io/",
             icons = listOf("https://plutope.app/api/images/applogo.png"),
             redirect = "kotlin-web3wallet:/request"
         )

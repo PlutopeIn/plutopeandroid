@@ -13,6 +13,10 @@ import com.app.plutope.databinding.FragmentSplashBinding
 import com.app.plutope.utils.extras.PreferenceHelper
 import com.app.plutope.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -32,33 +36,44 @@ class Splash : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (preferenceHelper.menomonicWallet != "") {
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(1000)
+                if (preferenceHelper.appUpdatedFlag == "") {
+                    findNavController().safeNavigate(SplashDirections.actionSplashToUpdateAnything())
+                } else {
+                    findNavController().safeNavigate(SplashDirections.actionSplashToDashboard())
+                }
+
+            }
+
+        } else {
+            binding.videoView.visibility = View.VISIBLE
+            playVideoSplash()
+        }
+
+
+    }
+
+    private fun playVideoSplash() {
         val videoPath =
             "android.resource://" + requireContext().packageName + "/" + R.raw.splash_video_short
         val videoUri = Uri.parse(videoPath)
         binding.videoView.setVideoURI(videoUri)
         binding.videoView.start()
-
         binding.videoView.setOnCompletionListener { mp ->
             binding.videoView.stopPlayback()
             if (preferenceHelper.menomonicWallet != "") {
-
                 if (preferenceHelper.appUpdatedFlag == "") {
-                   // findNavController().safeNavigate(SplashDirections.actionSplashToWalletSetup())
-
                     findNavController().safeNavigate(SplashDirections.actionSplashToUpdateAnything())
-
                 }else {
                     findNavController().safeNavigate(SplashDirections.actionSplashToDashboard())
-
-                    // findNavController().safeNavigate(SplashDirections.actionSplashToUpdateAnything())
                 }
-
 
             } else {
                 findNavController().safeNavigate(SplashDirections.actionSplashToWalletSetup())
             }
         }
-
     }
 
     override fun onDestroyView() {

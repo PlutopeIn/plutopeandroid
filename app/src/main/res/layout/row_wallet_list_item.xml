@@ -68,14 +68,20 @@
 
         <ImageView
             android:id="@+id/img_menu"
-            android:layout_width="@dimen/_20mdp"
-            android:layout_height="@dimen/_16mdp"
+            android:layout_width="@dimen/_50mdp"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingStart="@dimen/_23mdp"
+            android:paddingTop="@dimen/_25mdp"
+            android:paddingEnd="@dimen/_23mdp"
+            android:paddingBottom="@dimen/_25mdp"
             android:layout_marginStart="@dimen/_14mdp"
-            android:layout_marginEnd="@dimen/_19mdp"
             android:src="@drawable/ic_menu_dots_vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constrainedHeight="true"
 
             />
 

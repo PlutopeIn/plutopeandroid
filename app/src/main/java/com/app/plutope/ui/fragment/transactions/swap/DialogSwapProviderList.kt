@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.WindowManager
+import com.app.plutope.R
 import com.app.plutope.databinding.DialogSwapProviderListBinding
 import com.app.plutope.model.Tokens
 import com.app.plutope.ui.fragment.providers.ProviderModel
@@ -58,7 +59,8 @@ class DialogSwapProviderList private constructor() {
             dismiss()
         }
 
-        binding.txtReceiveAmount.text = "${youGetObj.t_symbol} \nReceiving"
+        binding.txtReceiveAmount.text =
+            context.getString(R.string.receiving_coin, youGetObj.t_symbol)
         binding.rvProviderList.adapter = adapter
 
 

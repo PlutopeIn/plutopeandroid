@@ -24,7 +24,7 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
     //execute exchange
     suspend fun executeExchange(
         url: String,
-        body: ExchangeRequestModel
+        body: ExchangeRequestModel, lastEnteredAmount: String
     ): NetworkState<ExchangeResponseModel?> {
         return try {
             val response = apiHelper.executeExchange(url,body)
@@ -33,8 +33,11 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
                 NetworkState.Error(serverErrorMessage)
             } else {
                 if (response.isSuccessful && result?.id != null) {
-                    NetworkState.Success("", result)
+                    val res = result
+                    res.lastEnteredAmount = lastEnteredAmount
+                    NetworkState.Success("", res)
                 } else {
+
                     val jsonString=response.errorBody()?.string()
                     try {
                         val jsonObject = JSONObject(jsonString)
@@ -86,17 +89,23 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
     }
 
 
-    suspend fun executeSwapUsingOkx(url: String,headerOkxSignKey: String,
-                                    headerTimeStamp: String) : NetworkState<OkxSwapResponse?>{
+    suspend fun executeSwapUsingOkx(
+        url: String, headerOkxSignKey: String,
+        headerTimeStamp: String, lastEnteredAmount: String
+    ): NetworkState<OkxSwapResponse?> {
         return try {
-            val response = apiHelper.executeSwapUsingOkx(url,headerOkxSignKey,
-                headerTimeStamp)
+            val response = apiHelper.executeSwapUsingOkx(
+                url, headerOkxSignKey,
+                headerTimeStamp
+            )
             val result = response.body()
             if (response.code() == responseServerError) {
                 NetworkState.Error(serverErrorMessage)
             } else {
                 if (response.isSuccessful && result?.data1 != null) {
-                    NetworkState.Success(result.code, result)
+                    val res = result
+                    res.lastEnteredAmount = lastEnteredAmount
+                    NetworkState.Success(result.code, res)
                 } else {
                     NetworkState.Error(response.message())
                 }
@@ -172,6 +181,7 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
         price: String,
         fromWalletAddress: String,
         toWalletAddress: String,
+        lastEnteredAmount: String
     ): NetworkState<RangSwapQuoteModel?> {
         return try {
             val response = apiHelper.rangSwapQuoteCall(
@@ -191,7 +201,9 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
                 NetworkState.Error(serverErrorMessage)
             } else {
                 if (response.isSuccessful && result?.route != null) {
-                    NetworkState.Success("", result)
+                    val res = result
+                    res.enteredAmount = lastEnteredAmount
+                    NetworkState.Success(lastEnteredAmount, res)
                 } else {
 
 
@@ -222,6 +234,7 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
         price: String,
         fromWalletAddress: String,
         toWalletAddress: String,
+        isFromButtonCliked: Boolean
     ): NetworkState<RangoSwapResponseModel?> {
         return try {
             val response = apiHelper.rangSwapSubmitCall(
@@ -239,9 +252,10 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
                 NetworkState.Error(serverErrorMessage)
             } else {
                 if (response.isSuccessful && result?.route != null) {
+                    val res = result
+                    res.isFromButtonCliked = isFromButtonCliked
                     NetworkState.Success("", result)
                 } else {
-
 
                     NetworkState.Error("null")
                 }

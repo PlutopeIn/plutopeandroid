@@ -7,6 +7,7 @@ import android.view.Window
 import android.view.WindowManager
 import com.airbnb.lottie.LottieAnimationView
 import com.app.plutope.R
+import com.app.plutope.utils.loge
 import java.util.Timer
 import java.util.TimerTask
 
@@ -29,6 +30,7 @@ class LoadingDialog  {
     private var loadingDialog: Dialog? = null
     fun show(context: Context) {
 
+        loge("LoadingDialog", "Status $loadingDialog")
         if (loadingDialog != null && loadingDialog!!.isShowing) {
             return
         }
@@ -53,6 +55,7 @@ class LoadingDialog  {
         if (!loadingDialog!!.isShowing && loadingDialog != null) {
             lottieAnimationView.playAnimation()
             loadingDialog?.show()
+
         } else {
 
             Timer().schedule(object : TimerTask() {

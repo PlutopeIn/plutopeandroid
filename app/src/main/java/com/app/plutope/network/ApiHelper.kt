@@ -14,6 +14,7 @@ import com.app.plutope.model.ExchangeStatusResponse
 import com.app.plutope.model.Info
 import com.app.plutope.model.MeldRequestModel
 import com.app.plutope.model.MeldResponseModel
+import com.app.plutope.model.ModelActiveWalletToken
 import com.app.plutope.model.NFTListModel
 import com.app.plutope.model.OkxApproveResponse
 import com.app.plutope.model.OkxSwapResponse
@@ -160,7 +161,18 @@ interface ApiHelper {
         fcmToken: String
     ): Response<ResponseBody>
 
-    suspend fun setWalletActive(walletAddress: String): Response<ResponseBody>
+    suspend fun registerWalletMaster(
+        deviceId: String,
+        walletAddress: String,
+        referralCode: String
+    ): Response<ResponseBody>
+
+
+    suspend fun setWalletActive(
+        walletAddress: String,
+        receiverAddress: String
+    ): Response<ResponseBody>
+
     suspend fun sendBTCTransaction(
         privateKey: String,
         value: String,
@@ -171,5 +183,6 @@ interface ApiHelper {
 
     suspend fun domainCheck(domainSearchModel: DomainSearchModel): Response<ENSListModel>
 
+    suspend fun getAllActiveTokenList(url: String): Response<MutableList<ModelActiveWalletToken>>
 
 }

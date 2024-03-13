@@ -6,7 +6,7 @@ import com.app.plutope.utils.coinTypeEnum.CoinType
 
 import io.ipfs.multibase.Base16
 
-val ACCOUNTS_1_EIP155_ADDRESS by lazy { Wallet.getPublicWalletAddress(CoinType.ETHEREUM) }
+var ACCOUNTS_1_EIP155_ADDRESS = Wallet.getPublicWalletAddress(CoinType.ETHEREUM)
 
 val accounts: List<Pair<Chain, String?>> by lazy {
     listOf(

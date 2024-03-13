@@ -68,4 +68,7 @@
     <color name="light_blue">#44456E</color>
     <color name="yellow_color">#F0B90B</color>
 
+
+    <color name="color_shimmer_gray">#B3B3B3</color>
+
 </resources>

@@ -9,10 +9,9 @@ import com.app.plutope.R
 import com.app.plutope.databinding.DialogWalletAprooveTransactionBinding
 import com.app.plutope.model.Tokens
 import com.app.plutope.model.TransactionModelDApp
-import com.app.plutope.model.Wallet
 import com.app.plutope.ui.fragment.transactions.send.send_coin.TransferNetworkDetail
-import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.convertWeiToEther
+import com.app.plutope.utils.enableDisableButton
 import com.app.plutope.utils.extras.PreferenceHelper
 import com.app.plutope.utils.hexToMaticWithDecimal
 import com.app.plutope.utils.loge
@@ -87,7 +86,8 @@ class DialogWalletApproveTransaction private constructor() {
                 approveDialog?.dismiss()
             }
             txtAssetValue.text = "${token.t_name}(${token.t_symbol})"
-            txtFromValue.text = Wallet.getPublicWalletAddress(CoinType.ETHEREUM)
+            txtFromValue.text =
+                model.transactionDetails[0].from /*Wallet.getPublicWalletAddress(CoinType.ETHEREUM)*/
             txtToValue.text = model.transactionDetails[0].to
 
             txtDAppConnectorName.text = model.exchange
@@ -121,6 +121,7 @@ class DialogWalletApproveTransaction private constructor() {
             }
 
             btnConfirm.setOnClickListener {
+                btnConfirm.enableDisableButton(false)
                 unit.invoke(approveDialog!!, model, true)
                 // dismiss()
 

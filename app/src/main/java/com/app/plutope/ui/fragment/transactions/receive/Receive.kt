@@ -11,6 +11,7 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentReceiveBinding
 import com.app.plutope.model.Tokens
+import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.transactions.send.CoinListAdapter
@@ -51,7 +52,7 @@ class Receive : BaseFragment<FragmentReceiveBinding, TokenViewModel>() {
     }
 
     override fun setupUI() {
-
+        (activity as BaseActivity).showToolbarTransparentBack()
         adapter = CoinListAdapter(providerClick = { model ->
             if (args.pageType == AddCustomTokenPageType) {
                 val bundle = Bundle()

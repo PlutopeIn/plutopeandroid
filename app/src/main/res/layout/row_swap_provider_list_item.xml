@@ -16,13 +16,30 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_2mdp"
+        android:layout_marginBottom="@dimen/_2mdp">
 
-        >
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guid1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.32"
+
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guid2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.65"
+
+            />
 
         <TextView
             android:id="@+id/txt_receive_amount"
-            android:layout_width="@dimen/_100mdp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_5mdp"
             android:fontFamily="@font/quicksand_regular"
@@ -32,64 +49,69 @@
             android:textSize="@dimen/_14mdp"
             app:layout_constrainedWidth="true"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guid1"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2.55" />
 
         <TextView
             android:id="@+id/txt_best_price"
-            android:layout_width="@dimen/_60mdp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_5mdp"
             android:fontFamily="@font/quicksand_regular"
             android:gravity="start"
             android:paddingVertical="@dimen/_10mdp"
-            android:text="@{model.percentageBestPrice}"
-            android:textColor="@color/white"
+            android:text="@{model.isBestPrise ? `best` : model.percentageBestPrice}"
+            android:textColor="@{model.isBestPrise ? @color/green_4DCC59 : @color/red}"
             android:textSize="@dimen/_14mdp"
             app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toStartOf="@id/txt_swapper_price"
-            app:layout_constraintStart_toEndOf="@id/txt_receive_amount"
+            app:layout_constraintEnd_toStartOf="@id/guid2"
+            app:layout_constraintStart_toEndOf="@id/guid1"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="2.55" />
+            tools:text="0.0%" />
 
         <TextView
             android:id="@+id/txt_swapper_price"
-            android:layout_width="@dimen/_90mdp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_5mdp"
             android:fontFamily="@font/quicksand_regular"
-            android:gravity="center_horizontal"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
             android:paddingVertical="@dimen/_10mdp"
-            android:text="@{model.swapperFees}"
+            android:text="@{ model.swapperFees == `0.0`? `0` :  model.swapperFees}"
             android:textColor="@color/white"
             android:textSize="@dimen/_14mdp"
             app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toStartOf="@id/txt_lable_best_price"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/txt_best_price"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="2.55" />
+            tools:text="2.5500000000000000000" />
 
 
-        <TextView
-            android:id="@+id/txt_lable_best_price"
-            android:layout_width="@dimen/_50mdp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_6mdp"
-            android:background="@drawable/bg_corner_radius_2"
-            android:fontFamily="@font/quicksand_regular"
-            android:gravity="center"
-            android:paddingHorizontal="@dimen/_4mdp"
-            android:paddingVertical="@dimen/_1mdp"
-            android:text="Best"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_10msp"
-            android:visibility="@{model.isBestPrise ? View.VISIBLE : View.GONE}"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toBottomOf="@id/txt_best_price"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/txt_best_price"
+        <!--
+                <TextView
+                    android:id="@+id/txt_lable_best_price"
+                    android:layout_width="@dimen/_50mdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_6mdp"
+                    android:background="@drawable/bg_corner_radius_2"
+                    android:fontFamily="@font/quicksand_regular"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_4mdp"
+                    android:paddingVertical="@dimen/_1mdp"
+                    android:text="Best"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10msp"
+                    android:visibility="@{model.isBestPrise ? View.VISIBLE : View.GONE}"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_best_price"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_best_price"
 
-            />
+                    />
+        -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

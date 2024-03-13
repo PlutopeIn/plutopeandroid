@@ -18,6 +18,7 @@ import com.app.plutope.utils.constant.PARENT_FOLDER_ID
 import com.app.plutope.utils.convertDateTimeToDDMMMYYYY
 import com.app.plutope.utils.extras.DriveServiceHelper
 import com.app.plutope.utils.extras.DriveServiceHelper.ContentCallback
+import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.showLoader
 import com.app.plutope.utils.showSnackBar
@@ -73,7 +74,7 @@ class SelectWalletBackup :
 
         viewDataBinding!!.rvWalletList.adapter = walletBackupListAdapter
 
-        viewDataBinding!!.layoutWarning.setOnClickListener {
+        viewDataBinding!!.layoutWarning.buttonClickedWithEffect {
             signIn()
         }
 
