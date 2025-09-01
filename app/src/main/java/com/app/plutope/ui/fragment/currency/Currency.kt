@@ -15,7 +15,10 @@ import com.app.plutope.R
 import com.app.plutope.databinding.FragmentCurrencyBinding
 import com.app.plutope.model.CurrencyModel
 import com.app.plutope.ui.base.BaseFragment
+import com.app.plutope.utils.extras.FirebaseAnalyticsHelper
+import com.app.plutope.utils.extras.FirebaseAnalyticsHelper.logEvent
 import com.app.plutope.utils.hideLoader
+import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.safeNavigate
 import com.app.plutope.utils.showLoader
@@ -48,7 +51,7 @@ class Currency : BaseFragment<FragmentCurrencyBinding, CurrencyViewModel>() {
         "ars",
         "aud",
         "bdt",
-       /* "bhd",*/
+        /* "bhd",*/
         "bmd",
         "brl",
         "cad",
@@ -118,9 +121,14 @@ class Currency : BaseFragment<FragmentCurrencyBinding, CurrencyViewModel>() {
     }
 
     override fun setupUI() {
+        this.logEvent()
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         currencyListAdapter = CurrencyListAdapter {
             val model = it
-            if(!args.isFromSetting){
+            if (!args.isFromSetting) {
                 val bundle = Bundle()
                 bundle.putParcelable(keyCurrency, it)
                 setFragmentResult(keyBundleCurrency, bundle)
@@ -154,6 +162,7 @@ class Currency : BaseFragment<FragmentCurrencyBinding, CurrencyViewModel>() {
                             hideLoader()
                             if (it.data?.isNotEmpty() == true) {
                                 viewDataBinding?.rvCurrencyList?.visibility = View.VISIBLE
+                                loge("ˇˇ", "==> $it")
                                 currencyList.clear()
                                 val tempList = mutableListOf<CurrencyModel>()
                                 it.data.forEach {
@@ -176,7 +185,7 @@ class Currency : BaseFragment<FragmentCurrencyBinding, CurrencyViewModel>() {
                         }
 
                         is NetworkState.Loading -> {
-                             requireContext().showLoader()
+                            requireContext().showLoader()
                         }
 
                         is NetworkState.Error -> {

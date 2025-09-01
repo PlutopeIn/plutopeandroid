@@ -4,7 +4,8 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.walletconnect.web3.wallet.client.Wallet
+import com.app.plutope.utils.loge
+import com.reown.walletkit.client.Wallet
 
 
 var sessionProposalEvent: Pair<Wallet.Model.SessionProposal, Wallet.Model.VerifyContext>? = null
@@ -12,6 +13,7 @@ var sessionRequestEvent: Pair<Wallet.Model.SessionRequest, Wallet.Model.VerifyCo
 
 fun Context.sendResponseDeepLink(sessionRequestDeeplinkUri: Uri) {
     try {
+        loge("sendResponseDeepLink", "sessionRequestDeeplinkUri => $sessionRequestDeeplinkUri")
         startActivity(Intent(Intent.ACTION_VIEW, sessionRequestDeeplinkUri))
     } catch (exception: ActivityNotFoundException) {
         exception.printStackTrace()

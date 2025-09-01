@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#0C0D2D</color>
     <color name="colorSplash">#EEEBED</color>
-    <color name="colorPrimaryDark">#050626</color>
-    <color name="colorAccent">#20173D</color>
+    <color name="colorPrimaryDark">#232436</color>
+    <color name="colorAccent">#9A302E3A</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryVariant">#B1CDE7</color> <!-- Slightly darker blue -->
+    <color name="colorOnPrimary">#FC575E9D</color>
+    <color name="colorOnSecondary">#000000</color>
 
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
 
     <color name="gray_767691">#767691</color>
+
+    <color name="blue">#2B5AF3</color>
+    <color name="orange">#FF5722</color>
+    <!-- <color name="gold">#C3AC88</color>-->
+    <color name="gold">#cbb28b</color>
+    <color name="purple">#800080</color>
 
     <color name="blue_00C6FB">#00C6FB</color>
     <color name="blue_121C3D">#121C3D</color>
@@ -17,6 +24,9 @@
 
 
     <color name="green_02303B">#02303B</color>
+    <color name="green_success_24BE74">#24BE74</color>
+    <color name="yellow_pending">#E5E11C</color>
+
 
     <color name="purple_25264D">#25264D</color>
     <color name="purple_7576D">#75769D</color>
@@ -27,11 +37,9 @@
     <color name="yellow_46443C">#46443C</color>
     <color name="yellow_F7931A">#F7931A</color>
     <color name="yellow_FADF68">#FADF68</color>
-    <color name="transparent">#00000000</color>
 
-    <color name="red">#D50000</color>
+    <color name="red_failed">#ED4337</color>
 
-    <color name="green_099817">#099817</color>
     <color name="green_4DCC59">#4DCC59</color>
 
     <color name="blue_22d1ee">#22d1ee</color>
@@ -65,10 +73,72 @@
         <item>@color/dot_dark_screen4</item>
     </array>
 
-    <color name="light_blue">#44456E</color>
+    <color name="light_blue_transparent">#2067676E</color>
+    <color name="light_blue">#F8BDBDC3</color>
     <color name="yellow_color">#F0B90B</color>
 
 
+    <color name="header_blue">#2B5AF3</color>
+    <color name="transparent_header_blue">#0D2B5AF3</color>
+    <color name="green">#38FF8E</color>
     <color name="color_shimmer_gray">#B3B3B3</color>
+    <color name="white_text">#F5F5F5</color>
+    <color name="black">#000000</color>
+    <color name="light_gray">#0D000000</color>
+    <color name="dark_gray">#BF000000</color>
+    <color name="bg_white">#FEFEFE</color>
+    <color name="red">#F14336</color>
+    <color name="green_00A323">#00A323</color>
+    <color name="button_disable">#D3D3D3</color>
+    <color name="transparent">#00000000</color>
+    <color name="gray_7576D">#5C5C6D</color>
+    <color name="black_both_themed">#000000</color>
+    <color name="white_both_themed">#FFFFFF</color>
+    <color name="bottom_icon_grey">#B3B3B3</color>
+    <color name="text_gray">#747474</color>
+    <color name="border_gray">#1A000000</color>
+    <color name="sub_title_gray">#99000000</color>
+    <color name="warning_red">#80FF0000</color>
+    <color name="transparent_red">#0FFF0000</color>
+    <color name="search_box_gray">#F4F4F4</color>
+    <color name="icon_gray">#3D3D3D</color>
+    <color name="transparent_black">#C9FFFFFF</color>
+    <color name="bg_copy">#CC4E6FE2</color>
+    <color name="keyboard_button_white">#15FFFFFF</color>
+    <color name="value_gray">#66000000</color>
+    <color name="transparent_green">#1A38FF8E</color>
+    <color name="drop_down_gray">#333333</color>
+    <color name="warning_yellow">#FFCC00</color>
+    <color name="yellow_text">#FF9900</color>
+    <color name="yellow_FFB71B">#FFB71B</color>
+    <color name="red_BFFF0000">#BFFF0000</color>
+    <color name="switch_off">#E9E9EB</color>
+    <color name="switch_on">#38FF8E</color>
+    <color name="vertical_divider">#33000000</color>
+    <color name="transparent_blue">#1F2B5AF3</color>
+    <color name="transparent_green_header">#2638FF8E</color>
+    <color name="card_border_gray">#26000000</color>
+
+
+    <color name="color_border_black">#26000000</color>
+    <color name="bg_checkbox">#96000000</color>
+    <color name="transparent_red_new">#0FFF0004</color>
+    <color name="bottom_switch_bg">#3B4A4A4A</color>
+    <color name="transparent_gray">#80000000</color>
+    <color name="bottom_bar">#FEFEFE</color>
+
+
+    <color name="sms_text">#80000000</color>
+    <color name="color_profile">#030303</color>
+    <color name="color_profile_email">#66000000</color>
+    <color name="border_color_gray_new">#4D000000</color>
+    <color name="background_color_card">#0A000000</color>
+    <color name="visa_background_gray">#6B6B6B</color>
+    <color name="tag_gray">#D9D9D9</color>
+
+    <color name="blue_0015FF">#0015FF</color>
+    <color name="setting_red_delete">#FF3B3B</color>
+    <color name="back_bg">#000000</color>
+
 
 </resources>

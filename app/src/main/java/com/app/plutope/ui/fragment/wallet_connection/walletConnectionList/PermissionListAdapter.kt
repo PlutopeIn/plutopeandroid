@@ -1,8 +1,8 @@
 package com.app.plutope.ui.fragment.wallet_connection.walletConnectionList
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +20,7 @@ class PermissionListAdapter(
             binding.model = model
             binding.imgPermissionIcon.setImageResource(model.icon)
             binding.txtPermissionTitle.text = model.title
-            binding.txtPermissionTitle.setTextColor(model.color)
+            binding.txtPermissionTitle.setTextColor(ResourcesCompat.getColor(binding.txtPermissionTitle.context.resources,model.color,null))
             binding.executePendingBindings()
 
         }
@@ -65,5 +65,5 @@ class PermissionListAdapter(
 data class Permission(
     val title: String,
     val icon: Int = R.drawable.ic_check_2,
-    val color: Int = Color.WHITE
+    val color: Int = R.color.black
 )

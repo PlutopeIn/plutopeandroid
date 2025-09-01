@@ -1,19 +1,10 @@
 package com.app.plutope.ui.fragment.setting
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.ListView
 import android.widget.PopupMenu
-import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.browser.customtabs.CustomTabsIntent
@@ -24,6 +15,7 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentSettingBinding
 import com.app.plutope.dialogs.DeviceLockFullScreenDialog
+import com.app.plutope.dialogs.walletConnectionDialog.LanguageBottomSheet
 import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.utils.constant.ABOUT_US_URL
@@ -43,6 +35,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
 
     private val settingViewModel: SettingViewModel by viewModels()
+    val languageList = arrayListOf<Language>()
+    val tempList = mutableListOf<Language>()
+    private var languageAdapter: LanguageAdapter? = null
 
     private var biometricListener = object : BiometricResult {
         override fun success() {
@@ -91,12 +86,17 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
     }
 
     override fun setupUI() {
-        setOnClickListner()
+
+        setOnClickListener()
         // setLanguage()
         viewDataBinding?.txtCurrencySelected?.text = preferenceHelper.getSelectedCurrency()?.code
-
+        viewDataBinding?.txtAppVersion?.text = getAppVersion()
         val popupMenu = PopupMenu(requireContext(), viewDataBinding!!.cardLanguage)
         popupMenu.menuInflater.inflate(R.menu.language_menu, popupMenu.menu)
+
+        viewDataBinding!!.cardReferrals.setOnClickListener {
+            findNavController().safeNavigate(SettingDirections.actionSettingToMyReferralsFragment())
+        }
 
         viewDataBinding!!.cardLanguage.setOnClickListener {
             showSortPopup()
@@ -113,10 +113,19 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
             intent.launchUrl(requireContext(), Uri.parse(url))
         }
 
-        Language.values().forEach {
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        Language.entries.forEach {
             if (it.code == preferenceHelper.currentLanguage) {
                 viewDataBinding!!.txtLanguageSelected.text = it.displayName
             }
+        }
+        Language.entries.filter {
+            it.code == preferenceHelper.currentLanguage
+        }.forEach {
+            it.isSelected = true
         }
 
 
@@ -147,8 +156,7 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
     */
 
 
-
-    private fun showSortPopup() {
+    /*private fun showSortPopup() {
 
         val inflater = LayoutInflater.from(context)
         val popupView = inflater.inflate(R.layout.language_list, null)
@@ -189,7 +197,7 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
 
         listView.adapter = ArrayAdapter(
             requireContext(), android.R.layout.simple_list_item_1,
-            arrayListOf("English", "Thai", "Hindi"/*, "Arabic"*/)
+            arrayListOf("English", "Thai", "Hindi"*//*, "Arabic"*//*)
         )
 
         listView.onItemClickListener =
@@ -199,34 +207,38 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
                     0 -> {
                         changeLangEffect(Language.ENGLISH)
                     }
-
                     1 -> {
-                        //  changeLangEffect("Thai","th")
                         changeLangEffect(Language.THAI)
                     }
-
                     2 -> {
-                        //  changeLangEffect("Hindi","hi")
                         changeLangEffect(Language.HINDI)
                     }
 
-                    /* 3 -> {
+                     3 -> {
                          changeLangEffect(Language.ARABIC)
-                     }*/
+                     }
                 }
                 popupWindow.dismiss()
             }
+    }*/
+
+    private fun showSortPopup() {
+        val bottomSheet = LanguageBottomSheet.newInstance { selectedLanguage ->
+            changeLangEffect(selectedLanguage)
+        }
+
+        bottomSheet.show(childFragmentManager, bottomSheet.tag)
     }
+
 
     private fun changeLangEffect(languageName: Language) {
         viewDataBinding!!.txtLanguageSelected.text = languageName.displayName
-        // preferenceHelper.previousLanguage = preferenceHelper.currentLanguage
         preferenceHelper.currentLanguage = languageName.code
         (activity as? BaseActivity)?.changeLanguage(languageName.code, true)
     }
 
 
-    private fun setOnClickListner() {
+    private fun setOnClickListener() {
         viewDataBinding!!.cardWallets.setOnClickListener {
             findNavController().safeNavigate(SettingDirections.actionSettingToWallets())
         }
@@ -288,12 +300,7 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-
             lock_request_code -> if (resultCode == AppCompatActivity.RESULT_OK && isDeviceSecure()) {
-                //If screen lock authentication is success update text
-                // showToast("Success passcode")
-
-
                 (requireActivity() as BaseActivity).bioMetricDialog?.dismiss()
                 Handler(Looper.getMainLooper()).postDelayed(3000) {
                     (requireActivity() as BaseActivity).openDefaultPass = false
@@ -302,8 +309,6 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
 
 
             } else {
-                //If screen lock authentication is failed update text
-                //"unlock failed".showToast(this)
                 if (!isDeviceSecure())
                     (requireActivity() as BaseActivity).continueWithoutBiometric(
                         "Can not use app without device credentials",
@@ -316,27 +321,29 @@ class Setting : BaseFragment<FragmentSettingBinding, SettingViewModel>() {
             }
 
             security_setting_request_code -> {
-                //When user is enabled Security settings then we don't get any kind of RESULT_OK
-                //So we need to check whether device has enabled screen lock or not
                 if (resultCode == AppCompatActivity.RESULT_OK && isDeviceSecure()) {
-                    //If screen lock enabled show toast and start intent to authenticate user
                     openDeviceLock()
                 } else {
-                    //If screen lock is not enabled just update text
                     (requireActivity() as BaseActivity).continueWithoutBiometric(
                         "Can not use app without device credentials",
                         true
                     )
                 }
-
-
             }
 
             else -> {
 
             }
+        }
+    }
 
-
+    private fun getAppVersion(): String {
+        val context = requireContext()
+        return try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            "Version : " + packageInfo.versionName
+        } catch (e: Exception) {
+            ""
         }
     }
 

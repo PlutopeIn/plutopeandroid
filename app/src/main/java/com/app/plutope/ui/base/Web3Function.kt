@@ -4,27 +4,34 @@ import com.app.plutope.model.Tokens
 import com.app.plutope.ui.fragment.transactions.send.send_coin.TransferNetworkDetail
 import com.app.plutope.utils.bigIntegerToString
 import com.app.plutope.utils.loge
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.RawTransaction
 import org.web3j.crypto.TransactionEncoder
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
+import org.web3j.protocol.core.methods.request.Transaction
 import org.web3j.protocol.core.methods.response.EthEstimateGas
 import org.web3j.protocol.core.methods.response.EthSendTransaction
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 
 suspend fun getTransactionCount(web3: Web3j, address: String): BigInteger {
-    web3.ethGetTransactionCount(
-        address,
-        DefaultBlockParameterName.LATEST
-    ).sendAsync().get().apply {
+    withContext(Dispatchers.IO) {
+        web3.ethGetTransactionCount(
+            address,
+            DefaultBlockParameterName.LATEST
+        ).sendAsync().get()
+    }.apply {
         return this.transactionCount
     }
 }
 
 suspend fun getGasPrice(web3: Web3j): BigInteger {
-    web3.ethGasPrice().sendAsync().get().apply {
+    withContext(Dispatchers.IO) {
+        web3.ethGasPrice().sendAsync().get()
+    }.apply {
         return this.gasPrice
     }
 }
@@ -37,12 +44,14 @@ suspend fun estimateGas(
     toAddress: String?,
     data: String
 ): EthEstimateGas {
-    web3.ethEstimateGas(
-        org.web3j.protocol.core.methods.request.Transaction(
-            address, nonce, gasPrice,
-            BigInteger.ONE, toAddress, BigInteger.ZERO, data
-        )
-    ).sendAsync().get().apply {
+    withContext(Dispatchers.IO) {
+        web3.ethEstimateGas(
+            Transaction(
+                address, nonce, gasPrice,
+                BigInteger.ONE, toAddress, BigInteger.ZERO, data
+            )
+        ).sendAsync().get()
+    }.apply {
         return this
     }
 }
@@ -82,7 +91,9 @@ fun signTransaction(rawTransaction: RawTransaction, chainId: String, privateKey:
 }
 
 suspend fun sendRawTransaction(web3: Web3j, signedTransaction: String): EthSendTransaction {
-    web3.ethSendRawTransaction(signedTransaction).sendAsync().get().apply {
+    withContext(Dispatchers.IO) {
+        web3.ethSendRawTransaction(signedTransaction).sendAsync().get()
+    }.apply {
         return this
     }
 
@@ -109,7 +120,7 @@ fun handleTransactionResult(
                 gasLimit,
                 txValue.toString(),
                 bigIntegerToString(gasPrice),
-                tokenDetails.t_decimal!!.toInt()
+                tokenDetails.t_decimal
             )
         )
     } else {
@@ -124,7 +135,7 @@ fun handleTransactionResult(
                 gasLimit,
                 txValue.toString(),
                 bigIntegerToString(gasPrice),
-                tokenDetails.t_decimal!!.toInt()
+                tokenDetails.t_decimal
             )
         )
     }

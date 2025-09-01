@@ -41,7 +41,7 @@
                 android:layout_marginEnd="@dimen/_10mdp"
                 android:fontFamily="@font/quicksand_semibold"
                 android:text="@{notificationModel.notificationTitle}"
-                android:textColor="@color/white"
+                android:textColor="@color/bg_white"
                 android:textSize="@dimen/_13msp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toStartOf="@id/txt_time"

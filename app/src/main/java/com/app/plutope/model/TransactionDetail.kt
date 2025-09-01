@@ -45,7 +45,7 @@ data class TransactionDetail(
     val txid: String,
     val virtualSize: String,
     val weight: String
-):Parcelable
+) : Parcelable
 
 @Keep
 @Parcelize
@@ -54,7 +54,7 @@ data class InputDetail(
     val inputHash: String,
     val isContract: Boolean,
     val tag: String
-):Parcelable
+) : Parcelable
 
 @Keep
 @Parcelize
@@ -63,7 +63,7 @@ data class OutputDetail(
     val isContract: Boolean,
     val outputHash: String,
     val tag: String
-):Parcelable
+) : Parcelable
 
 @Keep
 @Parcelize
@@ -85,7 +85,7 @@ data class TokenTransferDetail(
 @Parcelize
 data class TransactionModelDApp(
     val hash: String = "",
-    val iconUrl: String = "",
+    val iconUrl: String? = "",
     val exchange: String = "",
     val timestamp: String = "",
     val transactionDetails: List<TransactionDetailDApp> = arrayListOf(),
@@ -106,7 +106,7 @@ data class TransactionDetailDApp(
 
 fun parseData(inputList: ArrayList<String?>): TransactionModelDApp {
     val hash = inputList[0] as String
-    val iconUrl = inputList[1] as String
+    val iconUrl = inputList[1]
     val exchange = inputList[2] as String
     val timestamp = (inputList[3] as String)
     val transactionDetails = parseTransactionDetails(inputList[4]!!)

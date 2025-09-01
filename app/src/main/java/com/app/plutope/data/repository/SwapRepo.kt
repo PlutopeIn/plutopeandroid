@@ -9,10 +9,15 @@ import com.app.plutope.model.OkxSwapResponse
 import com.app.plutope.model.RangSwapQuoteModel
 import com.app.plutope.network.ApiHelper
 import com.app.plutope.network.NoConnectivityException
+import com.app.plutope.ui.fragment.transactions.swap.SwapQuoteRequestModel
+import com.app.plutope.ui.fragment.transactions.swap.SwapQuoteResponseModel
+import com.app.plutope.ui.fragment.transactions.swap.previewSwap.ExodusSwapResponseModel
 import com.app.plutope.ui.fragment.transactions.swap.previewSwap.RangoSwapResponseModel
+import com.app.plutope.utils.constant.BASE_URL_PLUTO_PE
 import com.app.plutope.utils.constant.NO_INTERNET_CONNECTION
 import com.app.plutope.utils.constant.responseServerError
 import com.app.plutope.utils.constant.serverErrorMessage
+import com.app.plutope.utils.generateRequestBody
 import com.app.plutope.utils.network.NetworkState
 import org.json.JSONObject
 import java.net.ConnectException
@@ -27,7 +32,7 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
         body: ExchangeRequestModel, lastEnteredAmount: String
     ): NetworkState<ExchangeResponseModel?> {
         return try {
-            val response = apiHelper.executeExchange(url,body)
+            val response = apiHelper.executeExchange(url, body)
             val result = response.body()
             if (response.code() == responseServerError) {
                 NetworkState.Error(serverErrorMessage)
@@ -38,11 +43,11 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
                     NetworkState.Success("", res)
                 } else {
 
-                    val jsonString=response.errorBody()?.string()
+                    val jsonString = response.errorBody()?.string()
                     try {
-                        val jsonObject = JSONObject(jsonString)
-                        val errorMessage = jsonObject.getString("message")
-                        return NetworkState.Error(errorMessage)
+                        val jsonObject = jsonString?.let { JSONObject(it) }
+                        val errorMessage = jsonObject?.getString("message")
+                        return NetworkState.Error(errorMessage ?: "Error occurred")
                     } catch (e: Exception) {
                         // Handle any parsing or JSON-related exceptions here
                         e.printStackTrace()
@@ -53,9 +58,9 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
+            if (e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
                 NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
-            }else {
+            } else {
                 NetworkState.Error(e.message.toString())
             }
 
@@ -64,7 +69,7 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
     }
 
 
-    suspend fun executeExchangeStatus(url: String):NetworkState<ExchangeStatusResponse?>{
+    suspend fun executeExchangeStatus(url: String): NetworkState<ExchangeStatusResponse?> {
         return try {
             val response = apiHelper.executeExchangeStatus(url)
             val result = response.body()
@@ -80,9 +85,9 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
         } catch (e: Exception) {
             e.printStackTrace()
 
-            if(e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
+            if (e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
                 NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
-            }else {
+            } else {
                 NetworkState.Error(e.message.toString())
             }
         }
@@ -112,15 +117,15 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
+            if (e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
                 NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
-            }else {
+            } else {
                 NetworkState.Error(e.message.toString())
             }
         }
     }
 
-    suspend fun executeSwapAvailablePairs(url: String):NetworkState<MutableList<AvailablePairsResponseModel>?>{
+    suspend fun executeSwapAvailablePairs(url: String): NetworkState<MutableList<AvailablePairsResponseModel>?> {
         return try {
             val response = apiHelper.executeAvailablePairs(url)
             val result = response.body()
@@ -130,25 +135,27 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
                 if (response.isSuccessful && result?.isNotEmpty() != null) {
                     NetworkState.Success("", result)
                 } else {
-                    val jsonObject = JSONObject(response.errorBody()?.string())
+                    val jsonObject = response.errorBody()?.string()?.let { JSONObject(it) }
 
-                    NetworkState.Error(jsonObject.getString("error"))
+                    NetworkState.Error(jsonObject!!.getString("error"))
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
+            if (e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
                 NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
-            }else {
+            } else {
                 NetworkState.Error(e.message.toString())
             }
         }
     }
 
-    suspend fun executeApproveUsingOkx(url: String,headerOkxSignKey: String,
-                                       headerTimeStamp: String) : NetworkState<OkxApproveResponse?>{
+    suspend fun executeApproveUsingOkx(
+        url: String, headerOkxSignKey: String,
+        headerTimeStamp: String
+    ): NetworkState<OkxApproveResponse?> {
         return try {
-            val response = apiHelper.executeApproveUsingOkx(url,headerOkxSignKey,headerTimeStamp)
+            val response = apiHelper.executeApproveUsingOkx(url, headerOkxSignKey, headerTimeStamp)
             val result = response.body()
             if (response.code() == responseServerError) {
                 NetworkState.Error(serverErrorMessage)
@@ -272,5 +279,90 @@ class SwapRepo @Inject constructor(private val apiHelper: ApiHelper) {
 
     }
 
+
+    suspend fun swapQuoteSingleCall(body: SwapQuoteRequestModel): NetworkState<SwapQuoteResponseModel?> {
+        return try {
+            val response = apiHelper.swapQuoteSingleCall(body)
+            val result = response.body()
+            if (response.code() == responseServerError) {
+                NetworkState.Error(serverErrorMessage)
+            } else {
+                if (response.isSuccessful && result != null) {
+                    NetworkState.Success(result.status.toString(), result)
+                } else {
+                    NetworkState.Error(response.message())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
+                NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
+            } else {
+                NetworkState.Error(e.message.toString())
+            }
+        }
+    }
+
+    suspend fun exodusSwapUpdateOrderCall(
+        id: String,
+        transactionId: String
+    ): NetworkState<ExodusSwapResponseModel?> {
+        return try {
+
+            val params = mapOf(
+                "id" to id,
+                "transactionId" to transactionId,
+            )
+
+            val response = apiHelper.exodusSwapUpdateOrderCall(
+                body = generateRequestBody(params)
+            )
+
+
+            // val response = apiHelper.exodusSwapUpdateOrderCall(body)
+            val result = response.body()
+            if (response.code() == responseServerError) {
+                NetworkState.Error(serverErrorMessage)
+            } else {
+                if (response.isSuccessful && result != null) {
+                    NetworkState.Success("", result)
+                } else {
+                    NetworkState.Error(response.message())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
+                NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
+            } else {
+                NetworkState.Error(e.message.toString())
+            }
+        }
+    }
+
+
+    suspend fun exodusTransactionStatusCall(id: String): NetworkState<ExodusSwapResponseModel?> {
+        return try {
+            val response =
+                apiHelper.exodusTransactionStatusCall(BASE_URL_PLUTO_PE + "exodus-swap-single-orders/$id")
+            val result = response.body()
+            if (response.code() == responseServerError) {
+                NetworkState.Error(serverErrorMessage)
+            } else {
+                if (response.isSuccessful && result != null) {
+                    NetworkState.Success("", result)
+                } else {
+                    NetworkState.Error(response.message())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
+                NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
+            } else {
+                NetworkState.Error(e.message.toString())
+            }
+        }
+    }
 
 }

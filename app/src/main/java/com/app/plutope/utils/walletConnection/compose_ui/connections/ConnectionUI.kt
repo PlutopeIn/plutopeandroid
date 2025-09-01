@@ -1,7 +1,6 @@
 package com.app.plutope.utils.walletConnection.compose_ui.connections
 
-import com.walletconnect.web3.wallet.client.Wallet
-
+import com.reown.walletkit.client.Wallet
 
 data class ConnectionUI(
     val id: Int,

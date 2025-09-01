@@ -13,25 +13,55 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/bg_white"
         tools:context=".ui.fragment.wallet.legal.Legal">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/_50mdp"
+            android:layout_height="@dimen/_50mdp"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect"
+            android:padding="@dimen/_8mdp"
+            android:src="@drawable/ic_back_new"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_toolbar_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_80mdp"
+            android:ellipsize="end"
+            android:fontFamily="@font/violet_sans"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:text="@string/legal"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20mdp"
+            app:layout_constraintBottom_toBottomOf="@id/img_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/img_back" />
 
         <TextView
             android:id="@+id/txt_legal_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_17mdp"
-            android:layout_marginTop="@dimen/_30mdp"
-            android:fontFamily="@font/quicksand_regular"
+            android:layout_marginHorizontal="@dimen/_23mdp"
+            android:layout_marginTop="@dimen/_25mdp"
+            android:fontFamily="@font/inter"
             android:gravity="start"
-            android:lineSpacingExtra="@dimen/_15mdp"
+            android:lineSpacingExtra="@dimen/_10mdp"
             android:paddingEnd="@dimen/_15mdp"
             android:text="@string/please_review_the_plutope_terms_of_services_and_privacy_policy"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_13msp"
+            android:textColor="@color/red_BFFF0000"
+            android:textSize="@dimen/_14msp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_toolbar_title"
 
             />
 
@@ -40,8 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_45mdp"
+            android:paddingVertical="@dimen/_19mdp"
             app:layout_constrainedWidth="true"
-            android:paddingVertical="@dimen/_15mdp"
             app:layout_constraintEnd_toEndOf="@id/txt_legal_info"
             app:layout_constraintStart_toStartOf="@id/txt_legal_info"
             app:layout_constraintTop_toBottomOf="@id/txt_legal_info">
@@ -50,61 +80,83 @@
                 android:id="@+id/txt_privacy_policy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/quicksand_bold"
+                android:fontFamily="@font/violet_sans"
                 android:text="@string/privacy_policy"
-                android:textColor="@color/blue_00C6FB"
-                android:textSize="@dimen/_15msp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
 
                 />
 
             <ImageView
-                android:layout_width="@dimen/_25mdp"
-                android:layout_height="@dimen/_25mdp"
+                android:id="@+id/img_arrow_privacy_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/img_right_arrow"
                 app:layout_constraintBottom_toBottomOf="@id/txt_privacy_policy"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/txt_privacy_policy"
+                app:tint="@color/black" />
 
-                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="@color/border_gray"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="@+id/layout_privacy_policy"
+            app:layout_constraintStart_toStartOf="@id/layout_privacy_policy"
+            app:layout_constraintTop_toBottomOf="@+id/layout_privacy_policy" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_terms_of_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/_15mdp"
+            android:paddingVertical="@dimen/_19mdp"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="@id/txt_legal_info"
             app:layout_constraintStart_toStartOf="@id/txt_legal_info"
-            app:layout_constraintTop_toBottomOf="@id/layout_privacy_policy">
+            app:layout_constraintTop_toBottomOf="@id/view1">
 
             <TextView
                 android:id="@+id/txt_terms_of_service"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/quicksand_bold"
+                android:fontFamily="@font/violet_sans"
                 android:text="@string/terms_of_service"
-                android:textColor="@color/blue_00C6FB"
-                android:textSize="@dimen/_15msp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
 
                 />
 
             <ImageView
-                android:layout_width="@dimen/_25mdp"
-                android:layout_height="@dimen/_25mdp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/img_right_arrow"
                 app:layout_constraintBottom_toBottomOf="@id/txt_terms_of_service"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/txt_terms_of_service"
-
-                />
+                app:tint="@color/black" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="@color/border_gray"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="@+id/layout_terms_of_service"
+            app:layout_constraintStart_toStartOf="@id/layout_terms_of_service"
+            app:layout_constraintTop_toBottomOf="@+id/layout_terms_of_service" />
 
 
         <CheckBox
@@ -122,18 +174,18 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_17mdp"
             android:layout_marginTop="@dimen/_30mdp"
-            android:fontFamily="@font/quicksand_regular"
-            android:gravity="start"
-            android:lineSpacingExtra="@dimen/_15mdp"
+            android:fontFamily="@font/inter"
+            android:gravity="top"
+            android:lineSpacingExtra="@dimen/_5mdp"
             android:text="@string/i_ve_read_and_accept_the_terms_of_services_and_privacy_policy"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_13msp"
+            android:textColor="@color/sub_title_gray"
+            android:textSize="@dimen/_14msp"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@id/btn_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/checkbox"
             app:layout_constraintTop_toBottomOf="@id/layout_terms_of_service"
-            app:layout_constraintVertical_bias=".8" />
+            app:layout_constraintVertical_bias="0" />
 
 
         <Button
@@ -141,8 +193,8 @@
             style="@style/button_disable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_30mdp"
-            android:layout_marginBottom="@dimen/_80mdp"
+            android:layout_marginHorizontal="@dimen/_25mdp"
+            android:layout_marginBottom="@dimen/_45mdp"
             android:text="@string/_continue"
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent" />

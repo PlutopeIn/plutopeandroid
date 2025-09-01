@@ -1,5 +1,6 @@
 package com.app.plutope.ui.fragment.transactions.send.send_coin
 
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -8,11 +9,12 @@ import com.app.plutope.model.Tokens
 import com.app.plutope.ui.base.BaseViewModel
 import com.app.plutope.utils.common.CommonNavigator
 import com.app.plutope.utils.network.NetworkState
-import com.app.plutope.utils.stringToBigInteger
+import com.app.plutope.utils.stringToBigDecimal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 import java.math.BigInteger
 import javax.inject.Inject
@@ -39,7 +41,7 @@ class SendCoinViewModel @Inject constructor(private val tokensRepo: TokensRepo) 
 
 
     var isFromLaverageChange = MutableLiveData<Boolean>(false)
-    var customGasPrice = MutableLiveData<BigInteger>(stringToBigInteger("0"))
+    var customGasPrice = MutableLiveData<BigDecimal>(stringToBigDecimal("0"))
     var customGasLimit = MutableLiveData<String>("0")
     var customNonce = MutableLiveData<String>("0")
     var customTransactionData = MutableLiveData<String>("")
@@ -101,15 +103,17 @@ class SendCoinViewModel @Inject constructor(private val tokensRepo: TokensRepo) 
 
 
 }
+
+@Parcelize
 data class SendCoinDetail(
     val address: String,
     val amount: BigDecimal,
     val tokenModel: Tokens,
-    val tokenList:List<Tokens> = listOf(),
-    val convertedPrice:String
-)
+    val tokenList: List<Tokens> = listOf(),
+    val convertedPrice: String
+) : Parcelable
 
-
+@Parcelize
 data class TransferNetworkDetail(
     val gasLimit: BigInteger,
     val nonce: Int,
@@ -117,4 +121,4 @@ data class TransferNetworkDetail(
     val gasAmount: String,
     var gasPrice: String = "",
     var decimal: Int? = 18
-)
+) : Parcelable

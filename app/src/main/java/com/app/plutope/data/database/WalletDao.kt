@@ -20,7 +20,7 @@ interface WalletDao {
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(list: List<Wallets>?)
+    suspend fun insertAll(list: List<Wallets>)
 
 
     @Query("SELECT * FROM Wallets WHERE w_id = :wId")
@@ -34,7 +34,10 @@ interface WalletDao {
     fun getWalletMaxId(): Int?
 
     @Query("Update Wallets set w_isprimary=(CASE WHEN w_id =:w_id THEN 1 ELSE 0 END)")
-    suspend fun updateWalletPrimary(w_id:Int):Int
+    suspend fun updateWalletPrimary(w_id: Int): Int
+
+//    @Query("Update Wallets set walletReferCode=:userCode where w_wallet_name")
+//    suspend fun updateWalletUserCode(userCode:String):Int
 
     @Query("SELECT * FROM Wallets where w_isprimary=1 LIMIT 1")
     fun getPrimaryWallet(): Flow<Wallets>?
@@ -53,7 +56,7 @@ interface WalletDao {
     suspend fun deleteWallet(walletId: Int): Int
 
     @Update
-    suspend fun updateWallets(wallets: List<Wallets?>): Int
+    suspend fun updateWallets(wallets: List<Wallets>): Int
 
 
 }

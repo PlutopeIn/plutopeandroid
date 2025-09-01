@@ -27,8 +27,8 @@
                 android:layout_width="@dimen/_35mdp"
                 android:layout_height="@dimen/_2mdp"
                 android:layout_marginTop="@dimen/_10mdp"
-                android:visibility="visible"
                 android:background="@drawable/bg_corner_radius_20"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -49,6 +49,32 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:itemCount="2"
                 tools:listitem="@layout/row_dialog_button_list" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1mdp"
+                android:background="@color/gray_7576D"
+                app:layout_constraintTop_toBottomOf="@id/rv_dialog_button_list" />
+
+            <TextView
+                android:id="@+id/txt_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45mdp"
+                android:background="@drawable/ripple"
+                android:gravity="center"
+                android:text="Cancel"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_18mdp"
+                android:visibility="visible"
+                app:fontFamily="@font/quicksand_medium"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/view"
+                app:layout_constraintTop_toBottomOf="@id/view"
+                app:layout_goneMarginBottom="@dimen/_20mdp"
+                tools:text="Cancel" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

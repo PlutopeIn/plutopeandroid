@@ -6,14 +6,14 @@
 
         <variable
             name="updateViewModel"
-            type="com.app.plutope.ui.fragment.phrase.verify_phrase.VerifySecretPhraseViewModel" />
+            type="com.app.plutope.ui.fragment.phrase.recovery_phrase.VerifySecretPhraseViewModel" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:background="@color/bg_white">
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -32,7 +32,7 @@
             android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:text="Plutope update"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/_27msp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
             android:fontFamily="@font/quicksand_regular"
             android:gravity="center"
             android:text="We've just released an update for PlutoPe to enhance your experience and improve security. This update includes bug fixes and performance improvements."
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/_16msp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
             android:gravity="center"
             android:text="Update"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/bg_white"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

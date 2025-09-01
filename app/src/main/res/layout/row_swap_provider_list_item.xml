@@ -16,78 +16,129 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_2mdp">
+        android:layout_marginBottom="@dimen/_10mdp"
+        android:background="@drawable/bg_corner_radius_10_border"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground">
 
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guid1"
-            android:layout_width="wrap_content"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_provider"
+            android:layout_width="@dimen/_30mdp"
+            android:layout_height="@dimen/_30mdp"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:src="@drawable/img_pluto_pe_logo_with_bg"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_provider_name"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.32"
+            android:layout_marginStart="@dimen/_15mdp"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:layout_marginEnd="@dimen/_15mdp"
+            android:fontFamily="@font/violet_sans"
+            android:gravity="start"
+            android:text="@{model.name}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/txt_receive_amount"
+            app:layout_constraintEnd_toStartOf="@id/txt_best_price"
+            app:layout_constraintStart_toEndOf="@id/img_provider"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text ="Provider name" />
 
-            />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guid2"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.65"
-
-            />
 
         <TextView
             android:id="@+id/txt_receive_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_5mdp"
-            android:fontFamily="@font/quicksand_regular"
-            android:paddingVertical="@dimen/_10mdp"
+            android:layout_marginTop="@dimen/_5mdp"
             android:text="@{model.bestPrice}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_14mdp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="@dimen/_10mdp"
+            android:fontFamily="@font/violet_sans"
             app:layout_constrainedWidth="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/guid1"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="@dimen/_13mdp"
+            app:layout_constraintBottom_toTopOf="@id/txt_swapper_price"
+            app:layout_constraintEnd_toEndOf="@id/txt_provider_name"
+            app:layout_constraintStart_toStartOf="@id/txt_provider_name"
+            app:layout_constraintTop_toBottomOf="@id/txt_provider_name"
             tools:text="2.55" />
 
         <TextView
             android:id="@+id/txt_best_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_5mdp"
-            android:fontFamily="@font/quicksand_regular"
+            android:layout_marginEnd="@dimen/_10mdp"
+            android:fontFamily="@font/violet_sans"
             android:gravity="start"
+            android:visibility="gone"
             android:paddingVertical="@dimen/_10mdp"
-            android:text="@{model.isBestPrise ? `best` : model.percentageBestPrice}"
+            android:text="@{model.isBestPrise ? `best` : ``}"
             android:textColor="@{model.isBestPrise ? @color/green_4DCC59 : @color/red}"
             android:textSize="@dimen/_14mdp"
             app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toStartOf="@id/guid2"
-            app:layout_constraintStart_toEndOf="@id/guid1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="0.0%" />
+        <TextView
+            android:id="@+id/txtBest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/best"
+            android:textColor="@color/green_4DCC59"
+            android:visibility="gone"
+            android:textSize="@dimen/_14mdp"
+            android:fontFamily="@font/violet_sans"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <TextView
+            android:layout_height="match_parent"
             android:id="@+id/txt_swapper_price"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_5mdp"
-            android:fontFamily="@font/quicksand_regular"
+            android:layout_marginBottom="@dimen/_5mdp"
+            android:fontFamily="@font/violet_sans"
+            android:gravity="start"
             android:ellipsize="end"
-            android:gravity="center"
+            android:text="@{model.swapperFees == `0.0`? `Swapper fee : 0` :  `Swapper fee : `+model.swapperFees}"
             android:maxLines="1"
-            android:paddingVertical="@dimen/_10mdp"
-            android:text="@{ model.swapperFees == `0.0`? `0` :  model.swapperFees}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_14mdp"
+            android:textSize="@dimen/_11mdp"
+            android:textColor="@color/black"
+            android:visibility="gone"
             app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/txt_best_price"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/txt_receive_amount"
+            app:layout_constraintStart_toStartOf="@id/txt_receive_amount"
+            app:layout_constraintTop_toBottomOf="@id/txt_receive_amount"
             tools:text="2.5500000000000000000" />
+
+
+<!--
+        <ImageView
+            android:id="@+id/img_best_provider"
+            android:layout_width="@dimen/_25mdp"
+            android:layout_height="@dimen/_25mdp"
+            android:layout_marginEnd="@dimen/_10mdp"
+            android:src="@drawable/ic_tick"
+            android:visibility="@{model.isBestPrise ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/green_4DCC59" />
+-->
+
 
 
         <!--

@@ -14,612 +14,885 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/bg_white"
         tools:context=".ui.fragment.setting.Setting">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_wallets"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_20mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
+                android:padding="@dimen/_8mdp"
+                android:src="@drawable/ic_back_new"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
 
-                <ImageView
-                    android:id="@+id/img_wallet"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_20mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:src="@drawable/ic_wallet_setting"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                />
 
+            <TextView
+                android:id="@+id/txt_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/settings"
 
-                <TextView
-                    android:id="@+id/txt_wallets"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/wallets"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_wallet"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20msp"
+                app:layout_constraintBottom_toBottomOf="@id/img_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/img_back" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_currency"
+        <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_5mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_13mdp"
+            android:fillViewport="true"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_wallets">
+            app:layout_constraintTop_toBottomOf="@+id/layout_toolbar"
+            app:layout_constraintVertical_bias="0.0">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_main"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_profile_title">
 
-                <ImageView
-                    android:id="@+id/img_currency"
-                    android:layout_width="@dimen/_25mdp"
-                    android:layout_height="@dimen/_25mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:src="@drawable/ic_doller_with_bg_2"
-                    app:layout_constraintBottom_toBottomOf="parent"
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_wallets"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_wallet"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:src="@drawable/ic_setting_wallet"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
 
 
-                <TextView
-                    android:id="@+id/txt_currency"
-                    android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/txt_wallets"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_19mdp"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/wallets"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16msp"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_wallet"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/img_right_arrow_wallets"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_24mdp"
+                            android:src="@drawable/img_right_arrow"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/txt_wallets"
+                            app:tint="@color/black" />
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.8dp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:background="@color/border_gray"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toEndOf="@+id/img_right_arrow_wallets"
+                            app:layout_constraintStart_toStartOf="@id/img_wallet"
+                            app:layout_constraintTop_toBottomOf="@+id/img_wallet" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_currency"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:layout_marginTop="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/currency"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintStart_toEndOf="@id/img_currency"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/txt_currency_selected"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:layout_marginTop="@dimen/_2mdp"
-                    android:layout_marginBottom="@dimen/_8mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_currency"
-                    app:layout_constraintTop_toBottomOf="@id/txt_currency"
-                    tools:text="INR" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_language"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_5mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_currency">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/img_language"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_20mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:src="@drawable/img_language"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/white" />
+                    app:layout_constraintTop_toBottomOf="@id/card_wallets">
 
-                <TextView
-                    android:id="@+id/txt_language"
-                    android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_currency"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:src="@drawable/ic_currency_new"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+
+                        <TextView
+                            android:id="@+id/txt_currency"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/currency"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16msp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+
+                            app:layout_constraintStart_toEndOf="@id/img_currency"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/txt_currency_selected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:layout_marginTop="@dimen/_2mdp"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/text_gray"
+                            android:textSize="@dimen/_13msp"
+                            app:layout_constraintStart_toEndOf="@id/txt_currency"
+                            app:layout_constraintTop_toTopOf="@id/txt_currency"
+                            tools:text="INR" />
+
+
+                        <ImageView
+                            android:id="@+id/img_right_arrow_currency"
+                            android:layout_width="@dimen/_20mdp"
+                            android:layout_height="@dimen/_20mdp"
+                            android:layout_marginEnd="@dimen/_24mdp"
+                            android:src="@drawable/img_right_arrow"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/txt_currency"
+                            app:tint="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.8dp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:background="@color/border_gray"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toEndOf="@+id/img_right_arrow_currency"
+                            app:layout_constraintStart_toStartOf="@id/img_currency"
+                            app:layout_constraintTop_toBottomOf="@+id/img_currency" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_language"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:layout_marginTop="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/language"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintStart_toEndOf="@id/img_language"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/txt_language_selected"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:layout_marginTop="@dimen/_2mdp"
-                    android:layout_marginBottom="@dimen/_8mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_language"
-                    app:layout_constraintTop_toBottomOf="@id/txt_language"
-                    tools:text="English" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_security"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_30mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_language">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/img_security"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_20mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:src="@drawable/ic_security"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_currency">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_language"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:src="@drawable/ic_language_new"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                        <TextView
+                            android:id="@+id/txt_language"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/inter"
+                            android:includeFontPadding="false"
+                            android:text="@string/language"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16msp"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_language"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/txt_language_selected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:layout_marginTop="@dimen/_2mdp"
+                            android:fontFamily="@font/inter"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/text_gray"
+                            android:textSize="@dimen/_13msp"
+                            app:layout_constrainedHeight="true"
+                            app:layout_constraintBottom_toBottomOf="@id/txt_language"
+                            app:layout_constraintStart_toEndOf="@id/txt_language"
+                            app:layout_constraintTop_toTopOf="@id/txt_language"
+                            tools:text="English" />
+
+                        <ImageView
+                            android:id="@+id/img_right_arrow_language"
+                            android:layout_width="@dimen/_20mdp"
+                            android:layout_height="@dimen/_20mdp"
+                            android:layout_marginEnd="@dimen/_24mdp"
+                            android:src="@drawable/img_right_arrow"
+                            app:layout_constraintBottom_toBottomOf="@id/txt_language_selected"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/txt_language"
+                            app:tint="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.8dp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:background="@color/border_gray"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toEndOf="@+id/img_right_arrow_language"
+                            app:layout_constraintStart_toStartOf="@id/img_language"
+                            app:layout_constraintTop_toBottomOf="@+id/img_language" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_referrals"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_language">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_referral"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:padding="@dimen/_1mdp"
+                            android:src="@drawable/ic_setting_referral"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                        <TextView
+                            android:id="@+id/txt_referrals"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_19mdp"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/my_referrals"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16msp"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_referral"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/img_right_arrow_referrals"
+                            android:layout_width="@dimen/_20mdp"
+                            android:layout_height="@dimen/_20mdp"
+                            android:layout_marginEnd="@dimen/_24mdp"
+                            android:src="@drawable/img_right_arrow"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/txt_referrals"
+                            app:tint="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.8dp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:background="@color/border_gray"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toEndOf="@+id/img_right_arrow_referrals"
+                            app:layout_constraintStart_toStartOf="@id/img_referral"
+                            app:layout_constraintTop_toBottomOf="@id/img_referral" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
 
 
-                    />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_security"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_referrals">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_security"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:src="@drawable/ic_setting_security"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black"
+
+
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_security"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_19mdp"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/security"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16msp"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_security"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <ImageView
+                            android:id="@+id/img_right_arrow_security"
+                            android:layout_width="@dimen/_20mdp"
+                            android:layout_height="@dimen/_20mdp"
+                            android:layout_marginEnd="@dimen/_24mdp"
+                            android:src="@drawable/img_right_arrow"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/txt_security"
+                            app:tint="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.8dp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:background="@color/border_gray"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toEndOf="@+id/img_right_arrow_security"
+                            app:layout_constraintStart_toStartOf="@id/img_security"
+                            app:layout_constraintTop_toBottomOf="@id/img_security" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_contacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_security">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_contacts"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:background="@drawable/ic_contacts_new"
+                            android:backgroundTint="@color/black"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black"
+
+
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_contacts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_19mdp"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/contacts"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16msp"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_contacts"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <ImageView
+                            android:id="@+id/img_right_arrow_contacts"
+                            android:layout_width="@dimen/_20mdp"
+                            android:layout_height="@dimen/_20mdp"
+                            android:layout_marginEnd="@dimen/_24mdp"
+                            android:src="@drawable/img_right_arrow"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/txt_contacts"
+                            app:tint="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.8dp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:background="@color/border_gray"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toEndOf="@+id/img_right_arrow_contacts"
+                            app:layout_constraintStart_toStartOf="@id/img_contacts"
+                            app:layout_constraintTop_toBottomOf="@id/img_contacts" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_ens"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_contacts">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <!--  <ImageView
+                              android:id="@+id/img_ens"
+                              android:layout_width="@dimen/_40mdp"
+                              android:layout_height="@dimen/_40mdp"
+                            app:tint="@color/black"
+
+                              android:layout_marginStart="@dimen/_15mdp"
+                              android:background="@drawable/ic_user"
+                              android:backgroundTint="@color/white"
+                              app:layout_constraintBottom_toBottomOf="parent"
+                              app:layout_constraintStart_toStartOf="parent"
+                              app:layout_constraintTop_toTopOf="parent"
+                              />-->
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/img_ens"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:src="@drawable/img_ens"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_ens"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_19mdp"
+                            android:layout_marginStart="@dimen/_8mdp"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16msp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_ens"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_17mdp"
+                            android:contentDescription="@string/forword_arrow_for_show_forword_redirection"
+                            android:src="@drawable/ic_forword_new"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_wallet_connect"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:visibility="visible"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_ens">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_wallet_connection"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:background="@drawable/bg_ract_light_gray"
+                            android:padding="@dimen/_10mdp"
+                            android:src="@drawable/ic_wallet_connection"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+
+
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_wallet_connect"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_19mdp"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/wallet_connect"
+                            android:textColor="@color/black"
+
+                            android:textSize="@dimen/_16msp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_wallet_connection"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <ImageView
+                            android:id="@+id/img_right_arrow_wallet_connection"
+                            android:layout_width="@dimen/_20mdp"
+                            android:layout_height="@dimen/_20mdp"
+                            android:layout_marginEnd="@dimen/_24mdp"
+                            android:src="@drawable/img_right_arrow"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.8dp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:background="@color/border_gray"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toEndOf="@+id/img_right_arrow_wallet_connection"
+                            app:layout_constraintStart_toStartOf="@id/img_wallet_connection"
+                            app:layout_constraintTop_toBottomOf="@id/img_wallet_connection" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_push_notification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_wallet_connect">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_push_notification"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:src="@drawable/ic_push_notification"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black"
+
+
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_push_notifications"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_19mdp"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/quicksand_medium"
+                            android:text="@string/push_notifications"
+                            android:textColor="@color/colorOnSecondary"
+                            android:textSize="@dimen/_13msp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_push_notification"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_17mdp"
+                            android:src="@drawable/ic_forword_new"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+
+                            />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_help_center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_push_notification">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_card_help_center"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:src="@drawable/ic_help_center_new"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black"
+
+
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_help_center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_19mdp"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/help_center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16msp"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_card_help_center"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <ImageView
+                            android:id="@+id/img_right_arrow_help"
+                            android:layout_width="@dimen/_20mdp"
+                            android:layout_height="@dimen/_20mdp"
+                            android:layout_marginEnd="@dimen/_24mdp"
+                            android:src="@drawable/img_right_arrow"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/txt_help_center"
+                            app:tint="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.8dp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:background="@color/border_gray"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toEndOf="@+id/img_right_arrow_help"
+                            app:layout_constraintStart_toStartOf="@id/img_card_help_center"
+                            app:layout_constraintTop_toBottomOf="@id/img_card_help_center" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_about_plutope"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/bg_white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_help_center">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_about_plutope"
+                            android:layout_width="@dimen/_40mdp"
+                            android:layout_height="@dimen/_40mdp"
+                            android:layout_marginStart="@dimen/_15mdp"
+                            android:src="@drawable/ic_setting_about"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black"
+
+
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_about_plutope"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_19mdp"
+                            android:layout_marginStart="@dimen/_7mdp"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/about_plutope"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16msp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_about_plutope"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <ImageView
+                            android:id="@+id/img_right_arrow_about"
+                            android:layout_width="@dimen/_20mdp"
+                            android:layout_height="@dimen/_20mdp"
+                            android:layout_marginEnd="@dimen/_24mdp"
+                            android:src="@drawable/img_right_arrow"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/txt_about_plutope"
+                            app:tint="@color/black" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.8dp"
+                            android:layout_marginTop="@dimen/_11mdp"
+                            android:background="@color/border_gray"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toEndOf="@+id/img_right_arrow_about"
+                            app:layout_constraintStart_toStartOf="@id/img_about_plutope"
+                            app:layout_constraintTop_toBottomOf="@id/img_about_plutope" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
 
                 <TextView
-                    android:id="@+id/txt_security"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/txt_app_version"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/security"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_security"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_17mdp"
-                    android:src="@drawable/ic_forword_new"
+                    android:layout_marginHorizontal="@dimen/_10mdp"
+                    android:layout_marginVertical="@dimen/_10mdp"
+                    android:ellipsize="middle"
+                    android:fontFamily="@font/inter"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12msp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="@string/forword_arrow_for_show_forword_redirection"
-                    />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_contacts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_5mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_security">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/img_contacts"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_20mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:background="@drawable/ic_user"
-                    android:backgroundTint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_about_plutope"
+                    app:layout_constraintVertical_bias="0.95"
+                    tools:text="0.0" />
 
-
-                    />
-
-                <TextView
-                    android:id="@+id/txt_contacts"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/contacts"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_contacts"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_17mdp"
-                    android:src="@drawable/ic_forword_new"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="@string/forword_arrow_for_show_forword_redirection" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:visibility="gone"
-            android:id="@+id/card_ens"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_5mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_contacts">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!--  <ImageView
-                      android:id="@+id/img_ens"
-                      android:layout_width="@dimen/_20mdp"
-                      android:layout_height="@dimen/_20mdp"
-                      android:layout_marginStart="@dimen/_15mdp"
-                      android:background="@drawable/ic_user"
-                      android:backgroundTint="@color/white"
-                      app:layout_constraintBottom_toBottomOf="parent"
-                      app:layout_constraintStart_toStartOf="parent"
-                      app:layout_constraintTop_toTopOf="parent"
-                      />-->
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/img_ens"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_20mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:src="@drawable/img_ens"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-
-                    />
-
-                <TextView
-                    android:id="@+id/txt_ens"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
-                    android:layout_marginStart="@dimen/_8mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/ens"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_ens"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_17mdp"
-                    android:contentDescription="@string/forword_arrow_for_show_forword_redirection"
-                    android:src="@drawable/ic_forword_new"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:visibility="gone"
-            android:id="@+id/card_wallet_connect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_5mdp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_ens">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/img_wallet_connection"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_18mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:background="@drawable/ic_wallet_connection"
-                    android:backgroundTint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-
-
-                    />
-
-                <TextView
-                    android:id="@+id/txt_wallet_connect"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/wallet_connect"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_wallet_connection"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_17mdp"
-                    android:src="@drawable/ic_forword_new"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-
-                    />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_push_notification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_5mdp"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_wallet_connect">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/img_push_notification"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_20mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:src="@drawable/ic_push_notification"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-
-
-                    />
-
-                <TextView
-                    android:id="@+id/txt_push_notifications"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/push_notifications"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_push_notification"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_17mdp"
-                    android:src="@drawable/ic_forword_new"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-
-                    />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_help_center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_35mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_push_notification">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/img_card_help_center"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_20mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:src="@drawable/ic_help_center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-
-
-                    />
-
-                <TextView
-                    android:id="@+id/txt_help_center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/help_center"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_card_help_center"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_17mdp"
-                    android:src="@drawable/ic_forword_new"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="@string/forword_arrow_for_show_forword_redirection"
-                    />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_about_plutope"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_5mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_help_center">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/img_about_plutope"
-                    android:layout_width="@dimen/_20mdp"
-                    android:layout_height="@dimen/_20mdp"
-                    android:layout_marginStart="@dimen/_15mdp"
-                    android:src="@drawable/img_single_logo"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-
-
-                    />
-
-                <TextView
-                    android:id="@+id/txt_about_plutope"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
-                    android:layout_marginStart="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:text="@string/about_plutope"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/img_about_plutope"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_17mdp"
-                    android:src="@drawable/ic_forword_new"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:contentDescription="@string/forword_arrow_for_show_forword_redirection"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-
+        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

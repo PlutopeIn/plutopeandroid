@@ -22,17 +22,17 @@ import com.app.plutope.model.Wallet
 import com.app.plutope.networkConfig.Chain
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.token.TokenViewModel
-import com.app.plutope.utils.coinTypeEnum.CoinType
-import com.app.plutope.utils.constant.OK_LINK_TRANSACTION_DETAIL
+import com.app.plutope.ui.fragment.transactions.buy.buy_detail.TransferHistoryModel
+import com.app.plutope.utils.constant.isFromTransactionDetail
 import com.app.plutope.utils.convertAmountToCurrency
 import com.app.plutope.utils.customSnackbar.CustomSnackbar
+import com.app.plutope.utils.date_formate.toCal
 import com.app.plutope.utils.getDateFromTimeStamp
 import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
-import com.app.plutope.utils.setBalanceText
 import com.app.plutope.utils.shareUrl
-import com.app.plutope.utils.showLoader
+import com.app.plutope.utils.showLoaderAnyHow
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +41,7 @@ import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
+    private lateinit var transactionsModel: TransferHistoryModel.Transactions
     private val transferViewModel: TransferViewModel by viewModels()
     private val tokenViewModel: TokenViewModel by viewModels()
     val args: TransferArgs by navArgs()
@@ -63,6 +64,9 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
     override fun setupUI() {
 
         loge("GroupList", "transaaction=>${args.transaction}")
+        loge("t_decimal", "transaaction=>${args.tokenModel.t_decimal}")
+        isFromTransactionDetail = true
+        transactionsModel = args.transaction
 
         viewDataBinding!!.imgBack.setOnClickListener {
             findNavController().navigateUp()
@@ -74,345 +78,132 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
             startActivity(intent)
         }
         viewDataBinding?.imgNotification?.setOnClickListener {
-            shareUrl(requireContext(),getUrlDetail())
+            shareUrl(requireContext(), getUrlDetail())
         }
-        transferViewModel.executeGetTransactionHistoryDetailOkLink(OK_LINK_TRANSACTION_DETAIL + "chainShortName=${args.tokenModel.chain?.chainName?.lowercase()}&txid=${args.transaction.txId}")
 
+        setDetail(transaction = transactionsModel)
     }
 
     private fun getUrlDetail(): String {
         val urlToOpen: String = when (args.tokenModel.chain) {
-            Chain.BinanceSmartChain -> "https://bscscan.com/tx/${args.transaction.txId ?: ""}"
-            Chain.Ethereum -> "https://etherscan.io/tx/${args.transaction.txId ?: ""}"
-            Chain.OKC -> "https://www.okx.com/explorer/oktc/tx/${args.transaction.txId?:""}"
-            Chain.Polygon -> "https://polygonscan.com/tx/${args.transaction.txId ?: ""}"
-            Chain.Bitcoin -> "https://btcscan.org/tx/${args.transaction.txId ?: ""}"
+            Chain.BinanceSmartChain -> "https://bscscan.com/tx/${transactionsModel.hash}"
+            Chain.Ethereum -> "https://etherscan.io/tx/${transactionsModel.hash}"
+            Chain.OKC -> "https://www.okx.com/explorer/oktc/tx/${transactionsModel.hash}"
+            Chain.Polygon -> "https://polygonscan.com/tx/${transactionsModel.hash}"
+            Chain.Bitcoin -> "https://btcscan.org/tx/${transactionsModel.hash}"
+            Chain.Optimism -> "https://optimistic.etherscan.io/tx/${transactionsModel.hash}"
+            Chain.Arbitrum -> "https://arbiscan.io/tx/${transactionsModel.hash}"
+            Chain.Avalanche -> "https://subnets.avax.network/c-chain/block/${transactionsModel.hash}"
             else -> ""
         }
         return urlToOpen
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setDetail(transaction: TransactionDetail) {
+    private fun setDetail(transaction: TransferHistoryModel.Transactions) {
         val tokenModel = args.tokenModel
 
+        viewDataBinding?.txtToolbarTitle?.text = transaction.transactionTitle
 
-        /*
-                if(model.isSwap){
-                    binding.txtTransactionName.text = "Swap"
-                }else {
-                    if (model.methodId == "" && model.isToContract) {
-                        binding.txtTransactionName.text = "Transfer"
 
-                    } else {
-                        if (addressToken == "" && model.amount.toDouble()<=0.0 ) {
-                            binding.txtTransactionName.text = "Smart Contract Call"
-                            binding.txtPrice.text =
-                                "-0.00 ${model.priceToShow?.split(" ")?.lastOrNull()}"
-
-                        } else {
-                            binding.txtTransactionName.text = "Transfer"
-                        }
-                    }
+        if (tokenModel.isCustomTokens) {
+            val img = when (tokenModel.t_type.lowercase()) {
+                "erc20" -> R.drawable.ic_erc
+                "bep20" -> R.drawable.ic_bep
+                "polygon" -> R.drawable.ic_polygon
+                "kip20" -> R.drawable.ic_kip
+                else -> {
+                    R.drawable.ic_erc
                 }
-        */
-
-
-
-        if (transaction.tokenTransferDetails.isEmpty()) {
-            if (tokenModel.t_address != "") {
-                setTokenTransferDetails(transaction)
-            } else {
-                setCoinDetail(transaction)
             }
+            Glide.with(requireContext()).load(img).into(viewDataBinding?.imgCoin!!)
+
         } else {
-            if (transaction.tokenTransferDetails.size > 1) {
-                // setTokenTransferSwapDetails(transaction)
-                if (args.transaction.isSwap) {
-                    setSwapAmountDetail(transaction)
-                } else {
-                    setTokenTransferDetails(transaction/*,true*/)
-                }
-
-            }else{
-                setTokenTransferDetails(transaction/*,true*/)
-            }
+            Glide.with(requireContext()).load(tokenModel.t_logouri).into(viewDataBinding?.imgCoin!!)
         }
+
 
         val textColorStatus =
-            if (transaction.state == "success") viewDataBinding?.txtBalance?.context?.resources?.getColor(
-                R.color.green_099817,
-                null
-            ) else viewDataBinding?.txtBalance?.context?.resources?.getColor(R.color.red, null)
-
-        viewDataBinding?.txtStatusValue?.setTextColor(textColorStatus!!)
-
-        viewDataBinding?.txtDateValue?.text =
-            getDateFromTimeStamp(transaction.transactionTime.toLong())
-
-
-        viewDataBinding?.txtStatusValue?.text =
-            if (transaction.state == "success") "Completed" else "Failed"
-        viewDataBinding?.txtNonceValue?.text = transaction.nonce
-        val convertedGasValue = transaction.txfee ?: ""
-        val chainList = tokenViewModel.getAllTokensList()
-            .filter { it.t_address == "" && it.t_type?.lowercase() == args.tokenModel.t_type?.lowercase() && it.t_symbol?.lowercase() == args.tokenModel.chain?.symbol?.lowercase() }
-        var chainPrice = args.tokenModel.t_price?.toDoubleOrNull()
-        if (chainList.isNotEmpty()) {
-            chainPrice = chainList[0].t_price?.toDoubleOrNull()
-        }
-        val gasPrice = if (args.tokenModel.t_address != "") ((convertedGasValue.toDoubleOrNull()
-            ?: 0.0) * (chainPrice ?: 0.0)) / 1 else ((convertedGasValue.toDoubleOrNull()
-            ?: 0.0) * (args.tokenModel.t_price?.toDoubleOrNull() ?: 0.0)) / 1
-
-        viewDataBinding?.txtNetworkFeeValue?.text = convertedGasValue + " " + transaction.transactionSymbol+" " + "(${preferenceHelper.getSelectedCurrency()?.symbol}${
-                String.format(
-                    "%.2f",
-                    gasPrice
-                ) 
-            })"
-    }
-
-    /* @SuppressLint("SetTextI18n")
-     private fun setTokenTransferDetails(transaction: TransactionDetail) {
-         if (transaction.tokenTransferDetails[0].from.lowercase() == Wallet.getPublicWalletAddress(
-                 args.tokenModel.chain?.coinType!!
-             )?.lowercase()
-         ) {
-             viewDataBinding?.txtRecipientValue?.text = transaction.tokenTransferDetails[0].to
-
-             setAmountLabel(
-                 "-" + transaction.tokenTransferDetails[0].amount + " " + args.tokenModel.t_symbol,
-                 viewDataBinding?.txtBalance?.context?.resources?.getColor(R.color.red, null)
-             )
-         } else {
-             viewDataBinding?.txtRecipientValue?.text = transaction.tokenTransferDetails[0].from
-             setAmountLabel(
-                 "+" + transaction.tokenTransferDetails[0].amount + " " + args.tokenModel.t_symbol,
-                 viewDataBinding?.txtBalance?.context?.resources?.getColor(
-                     R.color.green_099817,
-                     null
-                 )
-             )
-         }
-
-         if (args.tokenModel.t_address == "" && args.transaction.amount.toDouble() <= 0.0) {
-             viewDataBinding?.txtToolbarTitle?.text = "Smart Contract Call"
-
-             setAmountLabel(
-                 "-" + transaction.amount + " " + args.tokenModel.t_symbol,
-                 viewDataBinding?.txtBalance?.context?.resources?.getColor(R.color.red, null)
-             )
-
-
-         } else {
-             viewDataBinding?.txtToolbarTitle?.text = "Transfer"
-         }
-
-         viewDataBinding?.groupSwap?.visibility = VISIBLE
-         viewDataBinding?.constraintSwap?.visibility = GONE
-
-     }*/
-
-
-    private fun setTokenTransferDetails(
-        firstTransaction: TransactionDetail,
-        isFromSec: Boolean = false
-    ) {
-
-
-        if (args.transaction.methodId == "" && args.transaction.isToContract) {
-            viewDataBinding?.txtToolbarTitle?.text =
-                context?.getString(R.string.transfer) /*"Transfer"*/
-
-        } else {
-
-            if (args.tokenModel.t_address == "" && args.transaction.amount.toDouble() <= 0.0) {
-                viewDataBinding?.txtToolbarTitle?.text = /*"Smart Contract Call" */
-                    context?.getString(R.string.smart_contract_call)
-
-            } else {
-                viewDataBinding?.txtToolbarTitle?.text = context?.getString(R.string.transfer)
-            }
-        }
-
-
-        val availableSender = firstTransaction.tokenTransferDetails.firstOrNull {
-            it.from.lowercase() == Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)
-                ?.lowercase()
-        }
-        val availableReceiver = firstTransaction.tokenTransferDetails.firstOrNull {
-            it.to.lowercase() == Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)
-                ?.lowercase()
-        }
-
-
-        val tokenTransferDetails = firstTransaction.tokenTransferDetails.firstOrNull()
-
-        loge("transactionDetail", "$tokenTransferDetails")
-
-        if (tokenTransferDetails != null) {
-
-            if (args.tokenModel.t_symbol?.lowercase() == "btc") {
-                val obj = firstTransaction.outputDetails.filter {
-                    it.outputHash == Wallet.getPublicWalletAddress(CoinType.BITCOIN)
-                }
-                val amount = if (obj.isNotEmpty()) obj[0].amount else "0.0"
-
-                loge("BTCamount=>", "$amount")
-            }
-
-
-            val amount =
-                if (args.tokenModel.t_address == "" && args.transaction.amount.toDouble() <= 0.0) {
-                    setBalanceText(
-                        firstTransaction.txfee.toBigDecimal() ?: 0.toBigDecimal(),
-                        "",
-                        8
-                    )
-                } else {
-
-
-                    setBalanceText(
-                        args.transaction.amount.toBigDecimal() ?: 0.toBigDecimal(),
-                        "",
-                        8
-                    )
-                }
-
-            viewDataBinding?.txtRecipientValue?.text = when (tokenTransferDetails.from) {
-                args.tokenModel.chain?.walletAddress?.lowercase() -> tokenTransferDetails.to ?: ""
-                else -> tokenTransferDetails.from ?: ""
-            }
-
-
-            val symbolValue =
-                if (args.transaction.priceToShow?.startsWith("+") == true) "+" else "-"
-
-            setAmountLabel(
-
-                text = if (tokenTransferDetails.from == args.tokenModel.chain?.walletAddress?.lowercase()) {
-                    "$symbolValue$amount"
-                } else {
-                    "$symbolValue$amount"
-                },
-                color = Color.WHITE
+            if (transaction.isTransactionFailed) viewDataBinding?.txtBalance?.context?.resources?.getColor(
+                R.color.red, null
+            )
+            else viewDataBinding?.txtBalance?.context?.resources?.getColor(
+                R.color.green_00A323, null
             )
 
+        viewDataBinding?.txtStatusValue?.setTextColor(textColorStatus!!)
+        // viewDataBinding?.txtDateValue?.text = transaction.transactionTime
+        viewDataBinding?.txtDateValue?.text =
+            getDateFromTimeStamp(transaction.timestamp?.toCal("yyyy-MM-dd'T'HH:mm:ss.SSSX")?.timeInMillis!!)
 
-            /*
-                        setAmountLabel(
-
-                            //firstTransaction.inputDetails[0].inputHash
-
-                            text = if (firstTransaction.inputDetails[0].inputHash == args.tokenModel.chain?.walletAddress?.lowercase()) {
-                                "-$amount"
-                            } else {
-                                "+$amount"
-                            },
-                            color = Color.WHITE
-                        )
-            */
-
+        viewDataBinding?.txtStatusValue?.text =
+            if (transaction.isTransactionFailed) "Failed" else "Completed"
+        val convertedGasValue = transaction.transactionFee?.toDouble() ?: 0.0
+        val chainList = tokenViewModel.getAllTokensList()
+            .filter { it.t_address == "" && it.t_type.lowercase() == args.tokenModel.t_type.lowercase() && it.t_symbol.lowercase() == args.tokenModel.chain?.symbol?.lowercase() }
+        var chainPrice = args.tokenModel.t_price.toDoubleOrNull()
+        if (chainList.isNotEmpty()) {
+            chainPrice = chainList[0].t_price.toDoubleOrNull()
         }
+        val gasPrice = if (args.tokenModel.t_address != "") (convertedGasValue * (chainPrice
+            ?: 0.0)) / 1 else (convertedGasValue * (args.tokenModel.t_price.toDoubleOrNull()
+            ?: 0.0)) / 1
+
+        viewDataBinding?.txtNetworkFeeValue?.text = convertedGasValue.toBigDecimal()
+            .toPlainString() + " " + tokenModel.chain?.symbol + " " + "(${preferenceHelper.getSelectedCurrency()?.symbol}${
+            String.format(
+                "%.2f", gasPrice
+            )
+        })"
+
+        viewDataBinding?.txtNonceValue?.text = transaction.nonce
+        setTokenTransferDetails()
     }
 
 
-    private fun setAmountLabel(text: String, color: Int?) {
-        // viewDataBinding?.txtBalance?.setTextColor(color!!)
+    private fun setTokenTransferDetails() {
+        viewDataBinding?.txtToolbarTitle?.text = args.transaction.transactionTitle
+        val amount =
+            if (args.tokenModel.t_address == "") {
+                transactionsModel.priceToShow
+            } else {
+                transactionsModel.formattedValue + " " + args.tokenModel.t_symbol
+            }
+        viewDataBinding?.txtRecipientValue?.text = transactionsModel.addressShow
+        setAmountLabel(text = amount, color = Color.WHITE)
+
+    }
+
+
+    private fun setAmountLabel(text: String?, color: Int?) {
+        loge("")
         viewDataBinding?.txtBalance?.text = ""
-        val textStr = text.replace("-", "")
-        val convertedValue = textStr.replace(args.tokenModel.t_symbol.toString(), "").toDouble()
+        val textStr = text?.replace("-", "")
+        val convertedValue = textStr?.replace(args.tokenModel.t_symbol.toString(), "")?.toDouble()
 
         val coinPrice = args.tokenModel.t_price
 
         if (convertedValue != 0.0) {
             viewDataBinding?.txtBalance?.text = text
-            /* viewDataBinding?.txtPrice?.text =
-                 if (coinPrice?.isNotEmpty() == true && convertedValue.toDouble() > 0.0
-                 ) "≈" + preferenceHelper.getSelectedCurrency()?.symbol + "" + convertAmountToCurrency(
-                     convertedValue.toBigDecimal(),
-                     args.tokenModel.t_price.toString().toDouble().toBigDecimal()
-                 ).toString() else ""*/
 
         } else {
             viewDataBinding?.txtPrice?.text = ""
-            viewDataBinding?.txtBalance?.text = "0.00 ${args.tokenModel?.t_symbol}"
+            viewDataBinding?.txtBalance?.text = "0.00 ${args.tokenModel.t_symbol}"
         }
 
         val price = convertAmountToCurrency(
-            convertedValue.toBigDecimal(),
-            args.tokenModel.t_price.toString().toDouble().toBigDecimal()
+            convertedValue?.toBigDecimal() ?: 0.toBigDecimal(),
+            args.tokenModel.t_price.toDouble().toBigDecimal()
         )
 
-        val formatedPrice = String.format("%.2f", price)
+        val formatedPrice = String.format("%.5f", price)
 
         viewDataBinding?.txtPrice?.text =
-            if (coinPrice?.isNotEmpty() == true)  preferenceHelper.getSelectedCurrency()?.symbol + "" + formatedPrice else ""
+            if (coinPrice.isNotEmpty() == true) preferenceHelper.getSelectedCurrency()?.symbol + "" + formatedPrice else ""
 
 
     }
 
-    private fun setCoinDetail(transaction: TransactionDetail) {
-
-        if (args.transaction.methodId == "" && args.transaction.isToContract) {
-            viewDataBinding?.txtToolbarTitle?.text = context?.getString(R.string.transfer)
-
-        } else {
-
-            if (args.tokenModel.t_address == "" && args.transaction.amount.toDouble() <= 0.0) {
-                viewDataBinding?.txtToolbarTitle?.text =
-                    context?.getString(R.string.smart_contract_call)
-
-            } else {
-                viewDataBinding?.txtToolbarTitle?.text = context?.getString(R.string.transfer)
-            }
-        }
-
-
-        // val formatedAmount = String.format("%.8f", transaction.amount.toDouble())
-        var btcAmount = "0.0"
-        if (args.tokenModel.t_symbol?.lowercase() == "btc") {
-            val obj = transaction.outputDetails.filter {
-                it.outputHash == Wallet.getPublicWalletAddress(CoinType.BITCOIN)
-            }
-            btcAmount = if (obj.isNotEmpty()) obj[0].amount else "0.0"
-
-            loge("BTCamount=>", "$btcAmount")
-        }
-
-
-        val formatedAmount = setBalanceText(
-            if (args.tokenModel.t_symbol?.lowercase() == "btc") btcAmount.toBigDecimal() else transaction.amount.toBigDecimal()
-                ?: 0.toBigDecimal(),
-            "",
-            8
-        )
-
-
-        if (transaction.inputDetails.first().inputHash.lowercase() == Wallet.getPublicWalletAddress(
-                args.tokenModel.chain?.coinType!!
-            )?.lowercase()
-        ) {
-            viewDataBinding?.txtRecipientValue?.text =
-                transaction.outputDetails.first().outputHash ?: ""
-            setAmountLabel(
-                text = "-${formatedAmount} ${args.tokenModel.t_symbol}",
-                viewDataBinding?.txtBalance?.context?.resources?.getColor(R.color.red, null)
-            )
-        } else {
-            viewDataBinding?.txtRecipientValue?.text =
-                transaction.inputDetails.first().inputHash ?: ""
-
-            setAmountLabel(
-                text = "+${formatedAmount} ${args.tokenModel.t_symbol}",
-                viewDataBinding?.txtBalance?.context?.resources?.getColor(
-                    R.color.green_099817,
-                    null
-                )
-            )
-        }
-    }
 
     override fun setupObserver() {
         lifecycleScope.launch {
@@ -420,14 +211,14 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
                 transferViewModel.transactionHistoryOkLinkResponse.collect {
                     when (it) {
                         is NetworkState.Success -> {
-                            hideLoader()
                             if (it.data?.isNotEmpty() == true) {
-                                setDetail(it.data[0])
+                                // setDetail(it.data[0])
                             }
+                            hideLoader()
                         }
 
                         is NetworkState.Loading -> {
-                            requireContext().showLoader()
+                            requireContext().showLoaderAnyHow()
                         }
 
                         is NetworkState.Error -> {
@@ -436,8 +227,10 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
 
                         is NetworkState.SessionOut -> {
                             hideLoader()
-                            CustomSnackbar.make(requireActivity().window.decorView.rootView as ViewGroup, it.message.toString())
-                                .show()
+                            CustomSnackbar.make(
+                                requireActivity().window.decorView.rootView as ViewGroup,
+                                it.message.toString()
+                            ).show()
                         }
 
                         else -> {
@@ -451,17 +244,50 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setTokenTransferSwapDetails(transaction: TransactionDetail) {
-        if (transaction.tokenTransferDetails[0].from.lowercase() == Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)?.lowercase()) {
-            viewDataBinding?.txtRecipientValue?.text = transaction.tokenTransferDetails[0].to
-            setAmountLabel("-"+transaction.tokenTransferDetails[0].amount +" "+ args.tokenModel.t_symbol, viewDataBinding?.txtBalance?.context?.resources?.getColor(R.color.red, null))
-        } else {
-            viewDataBinding?.txtRecipientValue?.text = transaction.tokenTransferDetails[0].from
+    private fun setTokenTransferSwapDetails(transaction: TransferHistoryModel.Transactions) {
+
+        viewDataBinding?.txtToolbarTitle?.text = transaction.transactionTitle
+        viewDataBinding?.txtDateValue?.text =
+            getDateFromTimeStamp(transaction.timestamp?.toCal("yyyy-MM-dd'T'HH:mm:ss.SSSX")?.timeInMillis!!)
+
+        viewDataBinding?.txtStatusValue?.text =
+            if (transaction.isTransactionFailed) "Failed" else "Completed"
+        val convertedGasValue = transaction.transactionFee?.toDouble() ?: 0.0
+        val chainList = tokenViewModel.getAllTokensList()
+            .filter { it.t_address == "" && it.t_type.lowercase() == args.tokenModel.t_type.lowercase() && it.t_symbol.lowercase() == args.tokenModel.chain?.symbol?.lowercase() }
+        var chainPrice = args.tokenModel.t_price.toDoubleOrNull()
+        if (chainList.isNotEmpty()) {
+            chainPrice = chainList[0].t_price.toDoubleOrNull()
+        }
+        val gasPrice = if (args.tokenModel.t_address != "") (convertedGasValue * (chainPrice
+            ?: 0.0)) / 1 else (convertedGasValue * (args.tokenModel.t_price.toDoubleOrNull()
+            ?: 0.0)) / 1
+
+        viewDataBinding?.txtNetworkFeeValue?.text = convertedGasValue.toBigDecimal()
+            .toPlainString() + " " + args.tokenModel.chain?.symbol + " " + "(${preferenceHelper.getSelectedCurrency()?.symbol}${
+            String.format(
+                "%.2f", gasPrice
+            )
+        })"
+
+        viewDataBinding?.txtNonceValue?.text = transaction.nonce
+
+
+        if (transaction.swapTranscation[0].from?.lowercase() == Wallet.getPublicWalletAddress(
+                args.tokenModel.chain?.coinType!!
+            )?.lowercase()
+        ) {
+            viewDataBinding?.txtRecipientValue?.text = transaction.swapTranscation[0].to
             setAmountLabel(
-                "+" + transaction.tokenTransferDetails[0].amount + " " + args.tokenModel.t_symbol,
+                "-" + transaction.swapTranscation[0].value + " " + args.tokenModel.t_symbol,
+                viewDataBinding?.txtBalance?.context?.resources?.getColor(R.color.red, null)
+            )
+        } else {
+            viewDataBinding?.txtRecipientValue?.text = transaction.swapTranscation[0].from
+            setAmountLabel(
+                "+" + transaction.swapTranscation[0].value + " " + args.tokenModel.t_symbol,
                 viewDataBinding?.txtBalance?.context?.resources?.getColor(
-                    R.color.green_099817,
-                    null
+                    R.color.green_00A323, null
                 )
             )
         }
@@ -469,22 +295,16 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
         viewDataBinding?.groupSwap?.visibility = GONE
         viewDataBinding?.constraintSwap?.visibility = VISIBLE
 
-        if (args.tokenModel.t_address == "" && args.transaction.amount.toDouble() <= 0.0) {
-            viewDataBinding?.txtToolbarTitle?.text =/* "Smart Contract Call"*/
-                context?.getString(R.string.smart_contract_call)
-        } else {
-            viewDataBinding?.txtToolbarTitle?.text = /*"Swap" */context?.getString(R.string.swap)
-        }
 
         viewDataBinding?.txtRecipientValue?.text = args.transaction.addressShow
 
 
-        if (transaction.tokenTransferDetails.size > 1) {
+        if (transaction.swapTranscation.size > 1) {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     val contractAddressList = listOf(
-                        transaction.tokenTransferDetails[0].tokenContractAddress,
-                        transaction.tokenTransferDetails[transaction.tokenTransferDetails.size - 1].tokenContractAddress
+                        transaction.swapTranscation[0].contract,
+                        transaction.swapTranscation[transaction.swapTranscation.size - 1].contract
                     )
                     val tokenListTransaction =
                         tokenViewModel.getTokenListByContractAddress(contractAddressList)
@@ -494,19 +314,18 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
                         requireActivity().runOnUiThread {
                             tokenListTransaction.forEach {
 
-                                if (it.t_address == transaction.tokenTransferDetails[0].tokenContractAddress) {
-
+                                if (it.t_address == transaction.swapTranscation[0].contract) {
 
                                     Glide.with(requireContext()).load(it.t_logouri)
                                         .into(viewDataBinding?.imgFromSwap!!)
                                     viewDataBinding?.txtFromBalance?.text =
-                                        transaction.tokenTransferDetails/*.distinctBy { it.tokenContractAddress }*/[0].amount + " " + transaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }[0].symbol
+                                        transaction.swapTranscation/*.distinctBy { it.tokenContractAddress }*/[0].value + " " + transaction.swapTranscation.distinctBy { it.contract }[0].foundToken?.symbol
                                     viewDataBinding?.txtFromType?.text = it.t_type
                                 } else {
                                     Glide.with(requireContext()).load(it.t_logouri)
                                         .into(viewDataBinding?.imgToSwap!!)
                                     viewDataBinding?.txtToBalance?.text =
-                                        transaction.tokenTransferDetails/*.distinctBy { it.tokenContractAddress }*/[1].amount + " " + transaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }[1].symbol
+                                        transaction.swapTranscation/*.distinctBy { it.tokenContractAddress }*/[1].value + " " + transaction.swapTranscation.distinctBy { it.contract }[1].foundToken?.symbol
                                     viewDataBinding?.txtToType?.text = it.t_type
                                 }
                             }
@@ -527,29 +346,27 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
         viewDataBinding?.groupSwap?.visibility = GONE
         viewDataBinding?.constraintSwap?.visibility = VISIBLE
 
-        if (args.tokenModel.t_address == "" && args.transaction.amount.toDouble() <= 0.0) {
-            viewDataBinding?.txtToolbarTitle?.text = /*"Smart Contract Call"*/
+        if (args.tokenModel.t_address == "" && args.transaction!!.value!!.toDouble() <= 0.0) {
+            viewDataBinding?.txtToolbarTitle?.text =
                 context?.getString(R.string.smart_contract_call)
         } else {
-            viewDataBinding?.txtToolbarTitle?.text = /*"Swap"*/ context?.getString(R.string.swap)
+            viewDataBinding?.txtToolbarTitle?.text = context?.getString(R.string.swap)
         }
 
         // val payTokenTransferDetails = firstTransaction.tokenTransferDetails.firstOrNull()
 
-        val payTokenTransferDetails =
-            firstTransaction.tokenTransferDetails.firstOrNull {
-                it.from.lowercase() == Wallet.getPublicWalletAddress(
-                    args.tokenModel.chain?.coinType!!
-                )?.lowercase()
-            }
+        val payTokenTransferDetails = firstTransaction.tokenTransferDetails.firstOrNull {
+            it.from.lowercase() == Wallet.getPublicWalletAddress(
+                args.tokenModel.chain?.coinType!!
+            )?.lowercase()
+        }
 
         // val getTokenTransferDetails = if (firstTransaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }.size > 1) firstTransaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }[1] else firstTransaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }[0]
-        val getTokenTransferDetails =
-            firstTransaction.tokenTransferDetails.firstOrNull {
-                it.to.lowercase() == Wallet.getPublicWalletAddress(
-                    args.tokenModel.chain?.coinType!!
-                )?.lowercase()
-            }
+        val getTokenTransferDetails = firstTransaction.tokenTransferDetails.firstOrNull {
+            it.to.lowercase() == Wallet.getPublicWalletAddress(
+                args.tokenModel.chain?.coinType!!
+            )?.lowercase()
+        }
 
 
         if (payTokenTransferDetails != null && getTokenTransferDetails != null) {
@@ -558,30 +375,30 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
             viewDataBinding?.txtToBalance?.text =
                 "${getTokenTransferDetails.amount} ${getTokenTransferDetails.symbol}"
 
-            val contractAddressList = listOf(
-                firstTransaction.tokenTransferDetails[0].tokenContractAddress,
-                if (firstTransaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }.size > 1) firstTransaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }[1].tokenContractAddress else firstTransaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }[0].tokenContractAddress
-            )
+            val contractAddressList =
+                listOf(firstTransaction.tokenTransferDetails[0].tokenContractAddress,
+                    if (firstTransaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }.size > 1) firstTransaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }[1].tokenContractAddress else firstTransaction.tokenTransferDetails.distinctBy { it.tokenContractAddress }[0].tokenContractAddress
+                )
 
             val allToken = tokenViewModel.getTokenListByContractAddress(contractAddressList)
 
             if (allToken != null) {
                 val payToken =
-                    allToken.firstOrNull { it.t_address?.lowercase() == payTokenTransferDetails.tokenContractAddress.lowercase() }
+                    allToken.firstOrNull { it.t_address.lowercase() == payTokenTransferDetails.tokenContractAddress.lowercase() }
                 if (payToken != null) {
                     viewDataBinding?.imgFromSwap!!.loadImage(payToken.t_logouri)
-                    viewDataBinding?.txtFromType?.text = payToken.t_type ?: ""
+                    viewDataBinding?.txtFromType?.text = payToken.t_type
                 }
 
 
                 val getToken = allToken.firstOrNull {
 
-                it.t_address?.lowercase() == getTokenTransferDetails.tokenContractAddress?.lowercase()
+                    it.t_address.lowercase() == getTokenTransferDetails.tokenContractAddress.lowercase()
                 }
 
                 if (getToken != null) {
                     viewDataBinding?.imgToSwap!!.loadImage(getToken.t_logouri)
-                    viewDataBinding?.txtToType?.text = getToken.t_type ?: ""
+                    viewDataBinding?.txtToType?.text = getToken.t_type
                 }
             }
         }
@@ -590,9 +407,7 @@ class Transfer : BaseFragment<FragmentTransferBinding, TransferViewModel>() {
     }
 
     private fun ImageView.loadImage(url: String?) {
-        Glide.with(this)
-            .load(url)
-            .into(this)
+        Glide.with(this).load(url).into(this)
     }
 
     // Extension function to load an image into an ImageView

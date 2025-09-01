@@ -2,8 +2,11 @@ package com.app.plutope.data.repository
 
 import com.app.plutope.data.database.ContactDao
 import com.app.plutope.model.ContactModel
+import com.app.plutope.model.Tokens
+import com.app.plutope.model.Wallet
 import com.app.plutope.network.NoConnectivityException
 import com.app.plutope.utils.constant.NO_INTERNET_CONNECTION
+import com.app.plutope.utils.constant.serverErrorMessage
 import com.app.plutope.utils.network.NetworkState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -33,6 +36,20 @@ class ContactRepo @Inject constructor(private val contactDao: ContactDao) {
             }else {
                 NetworkState.Error(e.message.toString())
             }
+        }
+
+    }
+
+
+    suspend fun deleteContact(addressId: Int
+    ): NetworkState<ContactModel?> {
+        return try {
+                contactDao.deleteContact(addressId)
+            NetworkState.Success("", null)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            NetworkState.Error(serverErrorMessage)
         }
 
     }

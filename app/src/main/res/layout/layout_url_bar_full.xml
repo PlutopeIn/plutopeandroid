@@ -42,7 +42,7 @@
 
         </LinearLayout>
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/url_tv_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:layout_toStartOf="@id/network_holder"
             android:layout_toEndOf="@id/layout_navigator"
             android:elevation="0dp"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="@color/bg_white"
             app:cardCornerRadius="5dp">
 
             <RelativeLayout
@@ -95,7 +95,7 @@
 
             </RelativeLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
             android:id="@+id/network_holder"

@@ -18,7 +18,7 @@ import com.app.plutope.model.Tokens
 import com.app.plutope.model.Wallet
 import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
-import com.app.plutope.ui.fragment.phrase.verify_phrase.VerifySecretPhraseViewModel
+import com.app.plutope.ui.fragment.phrase.recovery_phrase.VerifySecretPhraseViewModel
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.wallet.backup.PhraseBackupFragment
 import com.app.plutope.utils.Securities
@@ -342,7 +342,7 @@ class ConfirmEncryptionPassword :
                 isEnabled = true
                 background =
                     ResourcesCompat.getDrawable(resources, R.drawable.button_gradient_26, null)
-                setTextColor(ResourcesCompat.getColor(resources, R.color.white, null))
+                setTextColor(ResourcesCompat.getColor(resources, R.color.bg_white, null))
             }
         } else {
             // viewDataBinding?.txtValidationMessage?.setTextColor(resources.getColor(R.color.red,null))
@@ -373,6 +373,7 @@ class ConfirmEncryptionPassword :
         startActivityForResult(client.signInIntent, PhraseBackupFragment.REQUEST_CODE_SIGN_IN)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {

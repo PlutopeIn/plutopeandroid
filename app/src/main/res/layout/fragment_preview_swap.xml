@@ -14,34 +14,48 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/bg_white"
         tools:context=".ui.fragment.transfer.Transfer">
 
-        <ImageView
-            android:id="@+id/img_semi_circle"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="-50dp"
-            android:layout_marginTop="-250dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_circle_bg"
-            app:layout_constrainedHeight="true"
-            app:layout_constraintBottom_toTopOf="@id/guid2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/img_back"
-            android:layout_width="@dimen/_30mdp"
-            android:layout_height="@dimen/_30mdp"
-            android:layout_marginStart="@dimen/_17mdp"
-            android:layout_marginTop="@dimen/_20mdp"
-            android:padding="@dimen/_8mdp"
-            android:src="@drawable/ic_back_arrow"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_white"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
+                android:padding="@dimen/_8mdp"
+                android:src="@drawable/ic_back_new"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
 
-            />
+                />
+
+            <TextView
+                android:id="@+id/txt_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/swap"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20msp"
+                app:layout_constraintBottom_toBottomOf="@id/img_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/img_back" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guid1"
@@ -58,19 +72,6 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".40" />
 
-        <TextView
-            android:id="@+id/txt_toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/quicksand_medium"
-            android:text="@string/swap"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_18msp"
-            app:layout_constraintBottom_toBottomOf="@id/img_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/img_back" />
-
         <ImageView
             android:id="@+id/img_notification"
             android:layout_width="@dimen/_40mdp"
@@ -79,9 +80,9 @@
             android:src="@drawable/ic_share_with_bg"
             android:visibility="gone"
             app:layout_constrainedHeight="true"
-            app:layout_constraintBottom_toBottomOf="@id/txt_toolbar_title"
+            app:layout_constraintBottom_toBottomOf="@id/layout_toolbar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/txt_toolbar_title" />
+            app:layout_constraintTop_toTopOf="@id/layout_toolbar" />
 
 
         <TextView
@@ -92,110 +93,284 @@
             android:layout_marginTop="@dimen/_20mdp"
             android:fontFamily="@font/quicksand_medium"
             android:gravity="center_horizontal"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/_26msp"
             app:layout_constraintBottom_toTopOf="@id/guid1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="-0.00123454365BTC" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guid_swap"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".15" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_swap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
             android:layout_marginHorizontal="@dimen/_18mdp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/_50mdp"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guid_swap">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_toolbar">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/img_from_swap"
-                android:layout_width="@dimen/_35mdp"
-                android:layout_height="@dimen/_35mdp"
-                android:src="@drawable/img_pluto_pe_logo_with_bg"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-            <TextView
-                android:id="@+id/txt_from_balance"
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lyt_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10mdp"
-                android:fontFamily="@font/quicksand_medium"
-                app:layout_constrainedWidth="true"
-                android:textColor="@color/white"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textSize="@dimen/_20msp"
-                app:layout_constraintTop_toTopOf="@id/img_from_swap"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/img_from_swap"
-                tools:text="-0.00123454365BTC" />
-            <TextView
-                android:id="@+id/txt_from_type"
-                android:layout_width="wrap_content"
+                android:background="@drawable/bg_border_card_radius_23"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_from_swap"
+                    android:layout_width="@dimen/_34mdp"
+                    android:layout_height="@dimen/_34mdp"
+                    android:layout_marginStart="@dimen/_17mdp"
+                    android:src="@drawable/img_pluto_pe_logo_with_bg"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_coin_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7mdp"
+                    android:fontFamily="@font/violet_sans"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14msp"
+
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintStart_toEndOf="@+id/img_from_swap"
+                    app:layout_constraintTop_toTopOf="@+id/img_from_swap"
+                    tools:text="Bitcoin" />
+
+                <TextView
+                    android:id="@+id/txt_chain_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7mdp"
+                    android:layout_marginTop="@dimen/_5mdp"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/violet_sans"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textColor="@color/sub_title_gray"
+                    android:textSize="@dimen/_11msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@id/guidline_middle_price"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toEndOf="@id/img_from_swap"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_coin_name"
+                    tools:text="Bitcoin jdscnkmsdnclvksdmnc gfdgg" />
+
+                <TextView
+                    android:id="@+id/txt_network_name_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_4mdp"
+                    android:background="@drawable/bg_gray_border_radius_2"
+                    android:fontFamily="@font/violet_sans"
+
+                    android:padding="@dimen/_2mdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_7msp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_coin_name"
+                    app:layout_constraintStart_toEndOf="@+id/txt_coin_name"
+                    app:layout_constraintTop_toTopOf="@+id/txt_coin_name"
+                    tools:text="BTC"
+
+                    />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidline_middle_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.50" />
+
+                <TextView
+                    android:id="@+id/txt_from_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_18mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/violet_sans"
+                    android:maxLines="2"
+                    android:textColor="@color/sub_title_gray"
+                    android:textSize="@dimen/_12msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toEndOf="@id/guidline_middle_price"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="-0.00123454365456455436546 BSC-USD" />
+
+                <TextView
+                    android:id="@+id/txt_from_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/_7mdp"
+                    android:layout_marginBottom="@dimen/_16mdp"
+                    android:background="@drawable/bg_transparent_green"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/inter"
+                    android:maxWidth="@dimen/_180mdp"
+
+                    android:maxLines="2"
+                    android:paddingHorizontal="@dimen/_7mdp"
+                    android:paddingVertical="@dimen/_2mdp"
+                    android:textColor="@color/green_00A323"
+                    android:textSize="@dimen/_11msp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/txt_from_balance"
+                    app:layout_constraintTop_toBottomOf="@id/txt_from_balance"
+                    app:layout_constraintVertical_bias="0"
+                    tools:text="" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lyt_bottom"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_7mdp"
-                android:drawablePadding="@dimen/_6mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_11msp"
-                app:layout_constraintStart_toStartOf="@id/txt_from_balance"
-                app:layout_constraintTop_toBottomOf="@id/txt_from_balance"
-                tools:text="BEP20" />
+                android:layout_marginTop="@dimen/_22mdp"
+                android:background="@drawable/bg_border_card_radius_23"
+                app:layout_constraintEnd_toEndOf="@+id/lyt_top"
+                app:layout_constraintStart_toStartOf="@+id/lyt_top"
+                app:layout_constraintTop_toBottomOf="@+id/lyt_top">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidline_middle_price_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.50" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_to_swap"
+                    android:layout_width="@dimen/_34mdp"
+                    android:layout_height="@dimen/_34mdp"
+                    android:layout_marginStart="@dimen/_17mdp"
+                    android:src="@drawable/img_pluto_pe_logo_with_bg"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_to_coin_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7mdp"
+                    android:fontFamily="@font/violet_sans"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14msp"
+
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintStart_toEndOf="@+id/img_to_swap"
+                    app:layout_constraintTop_toTopOf="@+id/img_to_swap"
+                    tools:text="Bitcoin" />
+
+                <TextView
+                    android:id="@+id/txt_to_chain_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7mdp"
+                    android:layout_marginTop="@dimen/_5mdp"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/violet_sans"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textColor="@color/sub_title_gray"
+                    android:textSize="@dimen/_11msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@id/guidline_middle_price_2"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toEndOf="@id/img_to_swap"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_to_coin_name"
+                    tools:text="Bitcoin" />
+
+                <TextView
+                    android:id="@+id/txt_to_network_name_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_4mdp"
+                    android:background="@drawable/bg_gray_border_radius_2"
+                    android:fontFamily="@font/violet_sans"
+
+                    android:padding="@dimen/_2mdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_7msp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_to_coin_name"
+                    app:layout_constraintStart_toEndOf="@+id/txt_to_coin_name"
+                    app:layout_constraintTop_toTopOf="@+id/txt_to_coin_name"
+                    tools:text="BTC"
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/txt_to_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_18mdp"
+                    android:layout_marginEnd="@dimen/_16mdp"
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/violet_sans"
+                    android:maxLines="2"
+                    android:textColor="@color/sub_title_gray"
+                    android:textSize="@dimen/_12msp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toEndOf="@id/guidline_middle_price_2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="-0.00123454365789789789543789 BTC" />
+
+                <TextView
+                    android:id="@+id/txt_to_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_7mdp"
+                    android:layout_marginBottom="@dimen/_16mdp"
+                    android:background="@drawable/bg_transparent_green"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/inter"
+                    android:maxWidth="@dimen/_180mdp"
+
+                    android:maxLines="2"
+                    android:paddingHorizontal="@dimen/_7mdp"
+                    android:paddingVertical="@dimen/_2mdp"
+                    android:textColor="@color/green_00A323"
+                    android:textSize="@dimen/_11msp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/txt_to_balance"
+                    app:layout_constraintTop_toBottomOf="@id/txt_to_balance"
+                    app:layout_constraintVertical_bias="0"
+                    tools:text="" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_down_arrow"
-                android:layout_width="@dimen/_20mdp"
-                android:layout_height="@dimen/_20mdp"
-                android:src="@drawable/ic_down_arrow_big"
-                app:tint="@color/white"
-                android:layout_marginTop="@dimen/_20mdp"
-                app:layout_constraintEnd_toEndOf="@id/img_from_swap"
-                app:layout_constraintStart_toStartOf="@id/img_from_swap"
-                app:layout_constraintTop_toBottomOf="@id/img_from_swap"/>
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/img_to_swap"
-                android:layout_width="@dimen/_35mdp"
-                android:layout_height="@dimen/_35mdp"
-                android:layout_marginTop="@dimen/_20mdp"
-                android:src="@drawable/img_pluto_pe_logo_with_bg"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/img_down_arrow" />
-            <TextView
-                android:id="@+id/txt_to_balance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10mdp"
-                android:fontFamily="@font/quicksand_medium"
-                app:layout_constrainedWidth="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_20msp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                app:layout_constraintTop_toTopOf="@id/img_to_swap"
+                android:layout_width="@dimen/_52mdp"
+                android:layout_height="@dimen/_52mdp"
+                android:src="@drawable/arrow_down_with_bg"
+                app:layout_constraintBottom_toTopOf="@+id/lyt_bottom"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/img_to_swap"
-                tools:text="-0.00123454365BTC" />
-            <TextView
-                android:id="@+id/txt_to_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_7mdp"
-                android:drawablePadding="@dimen/_6mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_11msp"
-                app:layout_constraintStart_toStartOf="@id/txt_to_balance"
-                app:layout_constraintTop_toBottomOf="@id/txt_to_balance"
-                tools:text="BEP20" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/lyt_top" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -204,7 +379,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="txt_balance,txt_equal,txt_price"/>
+            app:constraint_referenced_ids="txt_balance,txt_equal,txt_price" />
 
         <TextView
             android:id="@+id/txt_equal"
@@ -215,7 +390,7 @@
             android:backgroundTint="@color/purple_7576D"
             android:fontFamily="@font/quicksand_medium"
             android:gravity="center_vertical"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/_26msp"
             app:layout_constraintBottom_toBottomOf="@id/txt_price"
             app:layout_constraintEnd_toStartOf="@id/txt_price"
@@ -227,8 +402,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_7mdp"
             android:drawablePadding="@dimen/_6mdp"
-            android:fontFamily="@font/quicksand_regular"
-            android:textColor="@color/purple_7576D"
             android:textSize="@dimen/_16msp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -241,11 +414,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_19mdp"
-            android:background="@drawable/bg_corner_radius_17"
+            android:layout_marginTop="@dimen/_44mdp"
+            android:background="@drawable/bg_border_card_radius_23"
+            android:paddingVertical="@dimen/_28mdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guid2">
+            app:layout_constraintTop_toBottomOf="@id/constraint_swap">
+
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidline1"
                 android:layout_width="wrap_content"
@@ -260,11 +435,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
-                android:layout_marginTop="@dimen/_29mdp"
-                android:fontFamily="@font/quicksand_regular"
+                android:fontFamily="@font/violet_sans"
                 android:text="@string/from"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14msp"
+                android:textColor="@color/black"
+
+                android:textSize="@dimen/_13msp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toStartOf="@id/guidline1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -275,17 +450,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
-                android:ellipsize="middle"
-                android:maxLines="1"
                 android:layout_marginEnd="@dimen/_10mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_14msp"
+                android:ellipsize="middle"
+                android:fontFamily="@font/violet_sans"
                 android:gravity="end"
+
+                android:maxLines="1"
+                android:textColor="@color/value_gray"
+                android:textSize="@dimen/_13msp"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintStart_toEndOf="@id/guidline1"
                 app:layout_constraintBottom_toBottomOf="@id/txt_from"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guidline1"
                 app:layout_constraintTop_toTopOf="@id/txt_from"
                 tools:text="May 5, 06:10 PM" />
 
@@ -295,14 +471,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
-                android:layout_marginTop="@dimen/_20mdp"
-                android:fontFamily="@font/quicksand_regular"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:fontFamily="@font/violet_sans"
                 android:text="@string/quote"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14msp"
-                android:layout_marginBottom="@dimen/_33mdp"
+                android:textColor="@color/black"
+
+                android:textSize="@dimen/_13msp"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/guidline1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_from" />
@@ -313,11 +488,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginEnd="@dimen/_10mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:text=""
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_14msp"
+                android:fontFamily="@font/violet_sans"
                 android:gravity="end"
+                android:text=""
+
+                android:textColor="@color/value_gray"
+                android:textSize="@dimen/_13msp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="@id/txt_quote_title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -325,78 +501,22 @@
                 app:layout_constraintTop_toTopOf="@id/txt_quote_title" />
 
 
-            <!-- <TextView
-                 android:id="@+id/txt_recipient_title"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginStart="@dimen/_12mdp"
-                 android:layout_marginTop="@dimen/_20mdp"
-                 android:fontFamily="@font/quicksand_regular"
-                 android:text="@string/recipient"
-                 android:textColor="@color/white"
-                 android:textSize="@dimen/_14msp"
-                 app:layout_constrainedWidth="true"
-                 app:layout_constraintEnd_toStartOf="@id/txt_recipient_value"
-                 app:layout_constraintStart_toStartOf="parent"
-                 app:layout_constraintTop_toBottomOf="@id/txt_quote_title" />-->
-
-            <!-- <TextView
-                 android:id="@+id/txt_recipient_value"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_marginStart="@dimen/_5mdp"
-                 android:layout_marginBottom="@dimen/_33mdp"
-                 android:ellipsize="middle"
-                 android:fontFamily="@font/quicksand_regular"
-                 android:maxLines="1"
-                 android:textColor="@color/purple_7576D"
-                 android:textSize="@dimen/_14msp"
-                 app:layout_constrainedWidth="true"
-                 app:layout_constraintBottom_toBottomOf="parent"
-                 app:layout_constraintEnd_toEndOf="@id/txt_from_value"
-                 app:layout_constraintStart_toEndOf="@id/guidline1"
-                 app:layout_constraintTop_toTopOf="@id/txt_recipient_title"
-                 tools:text="0x78bjvbjjsdfbybgbhsfbbbhbfhbhfbhbfhbfhf1adkmgmgmgmkmgk5hhnkjn54" />
-
-             <androidx.constraintlayout.widget.Guideline
-                 android:id="@+id/guidline1"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 app:layout_constraintGuide_begin="151dp"
-                 app:layout_constraintStart_toStartOf="@id/txt_recipient_title" />-->
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:visibility="visible"
-            android:id="@+id/layout_finance_detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_19mdp"
-            android:background="@drawable/bg_corner_radius_17"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_basic_detail">
-
-
             <TextView
                 android:id="@+id/txt_network_fee_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
-                android:layout_marginTop="@dimen/_20mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:text="@string/network_fee"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14msp"
-                app:layout_constrainedWidth="true"
+                android:layout_marginTop="@dimen/_10mdp"
                 android:layout_marginBottom="@dimen/_20mdp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/network_fee"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13msp"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toTopOf="@id/txt_swapper_fee_title"
-                app:layout_constraintTop_toBottomOf="@id/txt_provider_fee" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_provider_value" />
 
             <TextView
                 android:id="@+id/txt_network_fee_value"
@@ -404,33 +524,46 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginEnd="@dimen/_10mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_14msp"
-                android:maxLines="2"
+                android:fontFamily="@font/violet_sans"
                 android:gravity="end"
+
+                android:maxLines="1"
+                android:textColor="@color/value_gray"
+                android:textSize="@dimen/_13msp"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintStart_toEndOf="@id/txt_network_fee_title"
                 app:layout_constraintBottom_toBottomOf="@id/txt_network_fee_title"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/txt_network_fee_title"
                 app:layout_constraintTop_toTopOf="@id/txt_network_fee_title"
                 tools:text="126.93854369785643fhdsjhjkfjdshfjkgdshjkfjdhfdsjkh" />
 
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginTop="@dimen/_24mdp"
+                android:background="@color/button_disable"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_quote_title" />
 
             <TextView
                 android:id="@+id/txt_provider_fee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
-                android:layout_marginTop="@dimen/_29mdp"
-                android:fontFamily="@font/quicksand_regular"
+                android:layout_marginTop="@dimen/_23mdp"
+                android:fontFamily="@font/violet_sans"
                 android:text="@string/max_slipage"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14msp"
+                android:textColor="@color/black"
+
+                android:textSize="@dimen/_13msp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                 />
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
 
             <TextView
                 android:id="@+id/txt_provider_value"
@@ -438,84 +571,81 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginEnd="@dimen/_10mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_14msp"
-                android:text="@string/_0_01"
+                android:fontFamily="@font/violet_sans"
                 android:gravity="end"
+
+                android:maxLines="1"
+                android:text="@string/_0_01"
+                android:textColor="@color/header_blue"
+                android:textSize="@dimen/_13msp"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintStart_toEndOf="@id/txt_network_fee_title"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/txt_network_fee_title"
                 app:layout_constraintTop_toTopOf="@id/txt_provider_fee"
                 tools:text="126.93895074548908 :::  (₹126.94) fdhgfuyhg" />
 
 
             <TextView
-                android:text="@string/swapper_fee"
                 android:id="@+id/txt_swapper_fee_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
-                android:layout_marginBottom="@dimen/_30mdp"
-                android:fontFamily="@font/quicksand_regular"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/swapper_fee"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13msp"
+
                 android:visibility="visible"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14msp"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/txt_network_fee_value"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_network_fee_title" />
+                app:layout_constraintTop_toBottomOf="@id/txt_network_fee_title"
+                app:layout_constraintVertical_bias="0" />
 
             <TextView
-                android:gravity="end"
                 android:id="@+id/txt_swapper_fee_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginEnd="@dimen/_10mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:maxLines="2"
+                android:fontFamily="@font/violet_sans"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textColor="@color/value_gray"
+                android:textSize="@dimen/_13msp"
+
                 android:visibility="visible"
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_14msp"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintStart_toEndOf="@id/txt_swapper_fee_title"
-                app:layout_constraintBottom_toBottomOf="@id/txt_swapper_fee_title"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/txt_swapper_fee_title"
                 app:layout_constraintTop_toTopOf="@id/txt_swapper_fee_title"
                 tools:text="0.0001534 BNB($0.02)hfjkdshgjkfgiorejhgio" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/layoutFinanceDetail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:constraint_referenced_ids="divider,txt_provider_fee,txt_provider_value,txt_network_fee_title,txt_swapper_fee_value,txt_network_fee_value,txt_swapper_fee_title" />
 
-        <!--  <TextView
-              android:id="@+id/txt_more_details"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="@dimen/_20mdp"
-              android:fontFamily="@font/quicksand_medium"
-              android:gravity="center_horizontal"
-              android:text="@string/more_details"
-              android:textAllCaps="false"
-              android:textColor="@color/blue_00C6FB"
-              android:textSize="@dimen/_15msp"
-              app:layout_constraintBottom_toBottomOf="@id/guid"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintVertical_bias="1" />-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/btn_swap"
-            style="@style/wallet_button_gradient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_30mdp"
             android:layout_marginTop="@dimen/_67mdp"
+            android:background="@drawable/button_bg_border_blue"
+            android:focusable="true"
+            android:fontFamily="@font/violet_sans"
+            android:foreground="?attr/selectableItemBackground"
             android:text="@string/confirm_swap"
             android:textAllCaps="false"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
+            android:textColor="@color/bg_white"
+            android:textSize="@dimen/_18msp"
             app:layout_constraintBottom_toBottomOf="@id/guid"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

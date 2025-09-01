@@ -15,7 +15,6 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentAddCustomTokanBinding
 import com.app.plutope.model.Tokens
-import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.transactions.receive.Receive
@@ -56,17 +55,16 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
     }
 
     override fun setupToolbarText(): String {
-        return getString(R.string.add_custom_token)
+        return ""
     }
 
     override fun setupUI() {
-        (activity as BaseActivity).showToolbarTransparentBack()
         setDetail()
         setOnClickListeners()
 
         setFragmentResultListener(Receive.keyReceiveCustomToken) { _, bundle ->
             selectedValue = bundle.getParcelable(Receive.keyReceive) as? Tokens
-            viewDataBinding?.txtNetworkName?.text = selectedValue?.t_name
+            viewDataBinding?.txtNetwork?.text = selectedValue?.t_name
         }
 
 
@@ -201,6 +199,10 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
 
     private fun setOnClickListeners() {
         viewDataBinding?.apply {
+            imgBack.setOnClickListener {
+                findNavController().navigateUp()
+            }
+
             layoutNetwork.setOnClickListener {
                 findNavController().safeNavigate(
                     AddCustomTokenDirections.actionGlobalToReceive(
@@ -218,7 +220,6 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
             }
 
             txtPaste.setOnClickListener {
-                viewDataBinding?.edtContractAddress?.setText("")
                 val clipboard =
                     requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val item = clipboard.primaryClip?.getItemAt(0)
@@ -226,6 +227,7 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
                 if (!isValidTokenContractAddress(pasteData.toString())) {
                     viewDataBinding?.constRoot?.showSnackBar("Invalid Address")
                 } else {
+                    viewDataBinding?.edtContractAddress?.setText("")
                     viewDataBinding?.edtContractAddress?.setText(pasteData)
                     viewDataBinding?.edtContractAddress?.setSelection(viewDataBinding!!.edtContractAddress.length())
 
@@ -260,8 +262,8 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
                         } else {
                             tokenViewModel.executeInsertNewTokens(
                                 Tokens(
-                                    t_decimal = viewDataBinding?.edtDecimal?.text.toString().toInt()
-                                        ?: 18,
+                                    t_decimal = viewDataBinding?.edtDecimal?.text.toString()
+                                        .toInt(),
                                     t_address = viewDataBinding?.edtContractAddress?.text.toString()
                                         .replace("...", ""),
                                     t_name = viewDataBinding?.edtName?.text.toString(),
@@ -357,7 +359,12 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
             })
 
             txtTokenInstruction.setOnClickListener {
-                findNavController().safeNavigate(AddCustomTokenDirections.actionAddCustomTokenToWebViewToolbar(WHAT_IS_CUSTOM_TOKEN_URL,"What is Custom Tokens?"))
+                findNavController().safeNavigate(
+                    AddCustomTokenDirections.actionAddCustomTokenToWebViewToolbar(
+                        WHAT_IS_CUSTOM_TOKEN_URL,
+                        "What is Custom Tokens?"
+                    )
+                )
             }
         }
 
@@ -416,12 +423,23 @@ class AddCustomToken : BaseFragment<FragmentAddCustomTokanBinding, AddCustomToke
 
     private fun setDetail() {
         viewDataBinding?.btnSave?.enableDisableButton(false)
-        tokenList = tokenViewModel.getAllTokensList() as MutableList<Tokens>
-        val ethModel = tokenList.filter { it.t_symbol == "ETH" }
-        selectedValue = ethModel[0]
+        tokenViewModel.fetchAllTokensList()
+
+        /*  tokenList = tokenViewModel.getAllTokensList() as MutableList<Tokens>
+         val ethModel = tokenList.filter { it.t_symbol == "ETH" }
+         selectedValue = ethModel[0]*/
+
+
     }
 
     override fun setupObserver() {
+
+        tokenViewModel.tokenList.observe(viewLifecycleOwner) { tokens ->
+            tokenList = tokens as MutableList<Tokens>
+            val ethModel = tokenList.filter { it.t_symbol == "ETH" }
+            selectedValue = ethModel[0]
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 tokenViewModel.updateTokenResp.collect {

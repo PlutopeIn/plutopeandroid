@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.app.plutope.model.Tokens
+import com.app.plutope.utils.loge
 
 abstract class SwipeToDeleteCallback internal constructor(
     mContext: Context,
@@ -21,7 +22,7 @@ abstract class SwipeToDeleteCallback internal constructor(
     var backgroundColor: Int = Color.parseColor("#b80f0a")
     var textPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var deleteText: String = "Delete"
-    val textSize: Float = 40f
+    val textSize: Float = 30f
 
     init {
         mClearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
@@ -58,8 +59,10 @@ abstract class SwipeToDeleteCallback internal constructor(
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         val itemView = viewHolder.itemView
         val itemHeight = itemView.height
-        val isCancelled = dX == 0f && !isCurrentlyActive
 
+        loge("Swipe","dx: $dX :: dy : $dY :: isCurrentlyActive : $isCurrentlyActive")
+
+        val isCancelled = dX == 0f && !isCurrentlyActive
 
         val position = viewHolder.adapterPosition
 
@@ -100,8 +103,10 @@ abstract class SwipeToDeleteCallback internal constructor(
 
 
     override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
-        return 0.7f
+        return 0.8f
     }
 
     abstract override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int)
+
+
 }

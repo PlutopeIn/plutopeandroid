@@ -1,18 +1,23 @@
 package com.app.plutope.ui.fragment.token
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.app.plutope.data.repository.TokensRepo
 import com.app.plutope.model.ModelActiveWalletToken
 import com.app.plutope.model.TokenListImageModel
 import com.app.plutope.model.Tokens
+import com.app.plutope.model.TransferTraceDetail
 import com.app.plutope.model.Wallet
 import com.app.plutope.model.WalletTokens
 import com.app.plutope.ui.base.BaseViewModel
+import com.app.plutope.ui.fragment.dashboard.GenerateTokenModel
 import com.app.plutope.utils.common.CommonNavigator
 import com.app.plutope.utils.constant.BASE_URL_PLUTO_PE
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -22,7 +27,7 @@ import javax.inject.Inject
 class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
     BaseViewModel<CommonNavigator>() {
 
-  //  val wallet: Wallet = Wallet
+    //  val wallet: Wallet = Wallet
 
     //Insert Tokens
     private val _tagInsertTokens =
@@ -39,15 +44,39 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
     }
 
 
-     fun getEnableTokens(isEnable: Int): List<Tokens> {
-         return tokenRepo.getAllIsEnableToken(isEnable)
-     }
+    fun getEnableTokens(isEnable: Int): List<Tokens> {
+        return tokenRepo.getAllIsEnableToken(isEnable)
+    }
 
     fun getAllTokensList(): List<Tokens> {
         return tokenRepo.getAllTokenList()
     }
 
-    fun getAllTokensWithBalance() : List<Tokens>{
+    fun getChainTokenList(): List<Tokens> {
+        return tokenRepo.getChainTokenList()
+    }
+
+    private val _tokenList = MutableLiveData<List<Tokens>>()
+    val tokenList: LiveData<List<Tokens>> get() = _tokenList
+
+    fun fetchAllTokensList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = tokenRepo.getAllTokenList()
+            _tokenList.postValue(list)
+        }
+    }
+
+    /* private val _tokenList2 = MutableStateFlow<List<Tokens>>(emptyList())
+     val tokenList2: StateFlow<List<Tokens>> get() = _tokenList2
+
+     fun fetchAllTokensList2() {
+         viewModelScope.launch(Dispatchers.IO) {
+             val list = tokenRepo.getAllTokenList()
+             _tokenList2.value = list // Use value instead of postValue
+         }
+     }*/
+
+    fun getAllTokensWithBalance(): List<Tokens> {
         return tokenRepo.getAllTokensWithBalance()
     }
 
@@ -66,6 +95,20 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         viewModelScope.launch {
             _tagUpdateTokens.emit(NetworkState.Loading())
             _tagUpdateTokens.collectStateFlow(tokenRepo.updateAllTokens(tokens))
+        }
+    }
+
+    //update Tokens
+    private val _tagUpdateAndInsertTokens =
+        MutableStateFlow<NetworkState<Tokens?>>(NetworkState.Empty())
+
+    val updateAndInsertTokensResponse: StateFlow<NetworkState<Tokens?>>
+        get() = _tagUpdateAndInsertTokens
+
+    fun executeUpdateAndInsertTokens(tokens: MutableList<Tokens>?) {
+        viewModelScope.launch {
+            _tagUpdateAndInsertTokens.emit(NetworkState.Loading())
+            _tagUpdateAndInsertTokens.collectStateFlow(tokenRepo.updateAndInsertTokens(tokens))
         }
     }
 
@@ -99,6 +142,35 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         }
     }
 
+    //update wallet Token for enable
+    /*  private val _replaceWalletToken =
+          MutableStateFlow<NetworkState<List<Tokens?>>>(NetworkState.Empty())
+
+      val replaceWalletTokens: StateFlow<NetworkState<List<Tokens?>>>
+          get() = _replaceWalletToken*/
+
+    private val _replaceWalletToken =
+        MutableStateFlow<NetworkState<Tokens?>>(NetworkState.Empty())
+    val replaceWalletTokens: StateFlow<NetworkState<Tokens?>>
+        get() = _replaceWalletToken
+
+    fun replaceWalletToken(oldToken: Tokens, newToken: Tokens) {
+        viewModelScope.launch {
+            _replaceWalletToken.emit(NetworkState.Loading())
+            _replaceWalletToken.collectStateFlow(
+                tokenRepo.replaceWalletToken(
+                    oldToken,
+                    newToken
+                )
+            )
+            /*  _replaceWalletToken.emit(NetworkState.Loading())
+              tokenRepo.replaceWalletToken(oldToken,newToken).collect { networkState ->
+                  _replaceWalletToken.value = networkState
+              }*/
+
+        }
+    }
+
 
     //Insert Wallet Tokens
     private val _tagInsertWalletTokens =
@@ -107,12 +179,45 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
     val insertWalletTokenResponse: StateFlow<NetworkState<WalletTokens?>>
         get() = _tagInsertWalletTokens
 
-    private fun executeInsertWalletTokens(tokens: MutableList<WalletTokens>) {
+    fun executeInsertWalletTokens(tokens: MutableList<WalletTokens>) {
         viewModelScope.launch {
             _tagInsertWalletTokens.emit(NetworkState.Loading())
             _tagInsertWalletTokens.collectStateFlow(tokenRepo.insertAllWalletTokens(tokens))
         }
     }
+
+    //Update Wallet Tokens
+    private val _tagUpdateWalletTokens =
+        MutableStateFlow<NetworkState<WalletTokens?>>(NetworkState.Empty())
+
+    val updateWalletTokenResponse: StateFlow<NetworkState<WalletTokens?>>
+        get() = _tagUpdateWalletTokens
+
+    fun executeUpdateWalletTokens(tokens: MutableList<WalletTokens>) {
+        viewModelScope.launch {
+            _tagInsertWalletTokens.emit(NetworkState.Loading())
+            _tagInsertWalletTokens.collectStateFlow(tokenRepo.updateAllWalletTokens(tokens))
+        }
+    }
+
+    //Update Wallet Tokens
+    private val _tagUpdateAndInsertWalletTokens =
+        MutableStateFlow<NetworkState<WalletTokens?>>(NetworkState.Empty())
+
+    val updateAndInsertWalletTokensResponse: StateFlow<NetworkState<WalletTokens?>>
+        get() = _tagUpdateAndInsertWalletTokens
+
+    fun executeUpdateAndInsertWalletTokens(tokens: MutableList<WalletTokens>) {
+        viewModelScope.launch {
+            _tagUpdateAndInsertWalletTokens.emit(NetworkState.Loading())
+            _tagUpdateAndInsertWalletTokens.collectStateFlow(
+                tokenRepo.updateAndInsertWalletTokens(
+                    tokens
+                )
+            )
+        }
+    }
+
 
     //get WalletTokens
     private val _getWalletTokensResponse =
@@ -121,7 +226,7 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         get() = _getWalletTokensResponse
 
     fun getWalletTokenOfSpecificWalletId(walletId: Int) {
-
+        loge("getWalletTokenOfSpecificWalletId", "enter in call")
         viewModelScope.launch {
             _getWalletTokensResponse.emit(NetworkState.Loading())
             tokenRepo.getAllSpecificWalletTokens(walletId).collect { networkState ->
@@ -141,11 +246,14 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         } else {
             setChains(tokenViewModel)
         }
+
+        //  setChains(tokenViewModel)
+
     }
 
 
-    private fun setChains(tokenViewModel:TokenViewModel) {
-        if(Wallet.prefHelper.menomonicWallet?.isNotEmpty()==true){
+    private fun setChains(tokenViewModel: TokenViewModel) {
+        if (Wallet.prefHelper.menomonicWallet.isNotEmpty() == true) {
             tokenViewModel.getCoinGeckoTokensList()
         }
     }
@@ -160,7 +268,7 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         // val defaultTokenslist =getEnableTokens(1) + tokenList
         loge(
             "insertInWalletTokens",
-            "condition => ${isFromRefresh}   :: ${getEnableTokens(1).size} :: ${tokenList}"
+            "condition => ${isFromRefresh}   :: ${getEnableTokens(1)} :: ${tokenList}"
         )
         val defaultTokenslist = if (isFromRefresh) tokenList else getEnableTokens(1) + tokenList
 
@@ -177,6 +285,8 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         loge("executeInsertWalletTokens", "${defaultTokenslist}   ==>${listWalletTokens}")
 
         tokenViewModel.executeInsertWalletTokens(listWalletTokens.distinct().toMutableList())
+
+
     }
 
 
@@ -187,7 +297,7 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
     val insertNewTokenResponse: StateFlow<NetworkState<Tokens?>>
         get() = _tagInsertNewTokens
 
-    fun executeInsertNewTokens(tokens:Tokens) {
+    fun executeInsertNewTokens(tokens: Tokens) {
         viewModelScope.launch {
             _tagInsertNewTokens.emit(NetworkState.Loading())
             _tagInsertNewTokens.collectStateFlow(tokenRepo.insertNewToken(tokens))
@@ -200,7 +310,7 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
     val coinGeckoTokensResponse: StateFlow<NetworkState<MutableList<Tokens>?>>
         get() = _getTokenListResponse
 
-    private fun getCoinGeckoTokensList() {
+    fun getCoinGeckoTokensList() {
 
         viewModelScope.launch {
             _getTokenListResponse.emit(NetworkState.Loading())
@@ -211,8 +321,8 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
 
     //get coin gecko token list
     private val _getTokenImageListResponse =
-        MutableStateFlow<NetworkState<List<TokenListImageModel>?>>(NetworkState.Empty())
-    val tokenImageListResponse: StateFlow<NetworkState<List<TokenListImageModel>?>>
+        MutableStateFlow<NetworkState<MutableList<TokenListImageModel>?>>(NetworkState.Empty())
+    val tokenImageListResponse: StateFlow<NetworkState<MutableList<TokenListImageModel>?>>
         get() = _getTokenImageListResponse
 
     fun getTokenImageList() {
@@ -225,11 +335,20 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
         }
     }
 
+    suspend fun updateTokenImages(tokenImage: TokenListImageModel) {
+        return tokenRepo.updateTokenImages(tokenImage)
+    }
+
+    suspend fun deleteToken(tokenId: String) {
+        return tokenRepo.deleteToken(tokenId)
+    }
+
     fun getAllTokensImageList(): List<TokenListImageModel> {
         return tokenRepo.getAllTokenImageList()
     }
 
-    fun getTokenListByContractAddress(contractAdd:List<String>): List<Tokens> {
+
+    fun getTokenListByContractAddress(contractAdd: List<String>): List<Tokens> {
         return tokenRepo.getTokenByContractAddress(contractAdd)
     }
 
@@ -276,16 +395,30 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
     val getRegisterWallet: StateFlow<NetworkState<String?>>
         get() = _tagRegisterWallet
 
-    fun registerWalletCall(address: String, fcmToken: String) {
+    fun registerWalletCall(
+        address: String,
+        fcmToken: String,
+        type: String,
+        refferalCode: String,
+    ) {
         viewModelScope.launch {
             _tagRegisterWallet.emit(NetworkState.Loading())
-            _tagRegisterWallet.collectStateFlow(tokenRepo.registerWallet(address, fcmToken))
+            _tagRegisterWallet.collectStateFlow(
+                tokenRepo.registerWallet(
+                    address,
+                    fcmToken,
+                    type,
+                    refferalCode
+                )
+            )
         }
     }
 
+    /*
+    */
     /**
      * Get register wallet with referralCode
-     * */
+     * *//*
 
     private val _tagRegisterWalletMaster =
         MutableStateFlow<NetworkState<String?>>(NetworkState.Empty())
@@ -304,7 +437,7 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
                 )
             )
         }
-    }
+    }*/
 
 
     /**
@@ -325,9 +458,40 @@ class TokenViewModel @Inject constructor(private val tokenRepo: TokensRepo) :
                     BASE_URL_PLUTO_PE + "get-wallet-tokens/" + walletAddress
                 )
             )
-
         }
     }
 
 
+    /**
+     *  Trace all transaction activity log
+     */
+
+    private val _traceActivityLog =
+        MutableStateFlow<NetworkState<String?>>(NetworkState.Empty())
+    val trackActivityLogResponse: StateFlow<NetworkState<String?>>
+        get() = _traceActivityLog
+
+    fun traceActivityLogCall(body: TransferTraceDetail) {
+        viewModelScope.launch {
+            _traceActivityLog.emit(NetworkState.Loading())
+            _traceActivityLog.collectStateFlow(
+                tokenRepo.transactionTrackActivityLog(body)
+            )
+
+        }
+    }
+
+    private val _tagGetGenerateToken =
+        MutableStateFlow<NetworkState<GenerateTokenModel?>>(NetworkState.Empty())
+
+    val getGenerateTokenResponse: StateFlow<NetworkState<GenerateTokenModel?>>
+        get() = _tagGetGenerateToken
+
+    fun executeGetGenerateToken() {
+        viewModelScope.launch {
+            _tagGetGenerateToken.emit(NetworkState.Loading())
+            _tagGetGenerateToken.collectStateFlow(tokenRepo.getGenerateToken())
+        }
+
+    }
 }

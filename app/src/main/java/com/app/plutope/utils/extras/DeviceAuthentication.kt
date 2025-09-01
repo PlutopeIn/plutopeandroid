@@ -10,9 +10,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.app.plutope.custom_views.CustomAlertDialog
 import com.app.plutope.dialogs.DeviceLockFullScreenDialog
+import com.app.plutope.utils.loge
 
 
-const val rc_biometric_enroll = 1001
 const val lock_request_code = 1002
 const val security_setting_request_code = 1003
 
@@ -24,21 +24,6 @@ fun Fragment.openDeviceLock() {
     )
     try {
         startActivityForResult(i, lock_request_code)
-
-        /*
-                DeviceLockFullScreenDialog.getInstance().show(requireContext(),
-                    object : DeviceLockFullScreenDialog.DialogOnClickBtnListner {
-                        override fun onSubmitClicked(selectedList: String) {
-                            // openPasscodeScreen()
-
-                           // listener.success()
-
-
-
-                        }
-                    })
-        */
-
     } catch (e: Exception) {
         openDialog(
             "Please set device lock screen to set up secure login.", Intent(
@@ -89,13 +74,15 @@ fun Fragment.setBioMetric(listener: BiometricResult) {
     val biometricManager = BiometricManager.from(requireActivity())
     when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
         BiometricManager.BIOMETRIC_SUCCESS -> {
+
+
+            instanceOfBiometricPrompt(listener).authenticate(getPromptInfo())
             DeviceLockFullScreenDialog.getInstance().show(requireContext(),
                 object : DeviceLockFullScreenDialog.DialogOnClickBtnListner {
                     override fun onSubmitClicked(selectedList: String) {
                         listener.successCustomPasscode()
                     }
                 })
-            instanceOfBiometricPrompt(listener).authenticate(getPromptInfo())
         }
 
         else -> {
@@ -103,6 +90,7 @@ fun Fragment.setBioMetric(listener: BiometricResult) {
                 requireContext(),
                 object : DeviceLockFullScreenDialog.DialogOnClickBtnListner {
                     override fun onSubmitClicked(selectedList: String) {
+                        loge("", "")
                         listener.successCustomPasscode()
                     }
                 })
@@ -115,16 +103,19 @@ fun Fragment.instanceOfBiometricPrompt(listener: BiometricResult): androidx.biom
     val callback = object : androidx.biometric.BiometricPrompt.AuthenticationCallback() {
         override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
             super.onAuthenticationError(errorCode, errString)
-            listener.failure(errorCode, errString.toString())
+            loge("instanceOfBiometricPrompt", "onAuthenticationError  $errorCode : $errString ")
+            //  listener.failure(errorCode, errString.toString())
         }
 
         override fun onAuthenticationFailed() {
             super.onAuthenticationFailed()
+            loge("instanceOfBiometricPrompt", "onAuthenticationFailed")
             //   "Authentication failed for an unknown reason".showToast(requireContext())
         }
 
         override fun onAuthenticationSucceeded(result: androidx.biometric.BiometricPrompt.AuthenticationResult) {
             super.onAuthenticationSucceeded(result)
+            loge("instanceOfBiometricPrompt", "onAuthenticationSucceeded")
             PreferenceHelper.getInstance().isBiometricAllow = true
             DeviceLockFullScreenDialog.getInstance().dismiss()
             listener.success()
@@ -137,7 +128,6 @@ fun Fragment.instanceOfBiometricPrompt(listener: BiometricResult): androidx.biom
 interface BiometricResult {
     fun success()
     fun failure(errorCode: Int, errorMessage: String)
-
     fun successCustomPasscode()
 }
 

@@ -42,7 +42,7 @@
                     android:layout_marginVertical="@dimen/_19mdp"
                     android:fontFamily="@font/quicksand_regular"
                     android:text="@string/choose_the_backup_for_the_wallet_you_want_to_restore"
-                    android:textColor="@color/white"
+                    android:textColor="@color/bg_white"
                     android:textSize="@dimen/_12msp"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintBottom_toBottomOf="parent"

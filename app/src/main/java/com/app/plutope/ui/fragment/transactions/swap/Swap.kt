@@ -20,51 +20,42 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentSwapBinding
 import com.app.plutope.dialogs.CoinSearchBottomSheetDialog
-import com.app.plutope.dialogs.SwapProgressDialog
-import com.app.plutope.model.AvailablePairsResponseModel
 import com.app.plutope.model.CoinCode
 import com.app.plutope.model.Data1
-import com.app.plutope.model.ExchangeRequestModel
 import com.app.plutope.model.PreviewSwapDetail
 import com.app.plutope.model.Tokens
 import com.app.plutope.model.Wallet
-import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.providers.ProviderModel
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.transactions.buy.graph.GraphDetailViewModel
 import com.app.plutope.ui.fragment.transactions.swap.previewSwap.PreviewSwapFragment.Companion.KEY_BUNDLE_PREVIEWSWAP
 import com.app.plutope.utils.coinTypeEnum.CoinType
-import com.app.plutope.utils.constant.COIN_GEKO_MARKET_API
+import com.app.plutope.utils.constant.BASE_URL_PLUTO_PE_IMAGES
 import com.app.plutope.utils.constant.DEFAULT_CHAIN_ADDRESS
-import com.app.plutope.utils.constant.EXCHANGE_API
 import com.app.plutope.utils.constant.KIP_20
-import com.app.plutope.utils.convertScientificToBigDecimal
+import com.app.plutope.utils.convertToWei
 import com.app.plutope.utils.convertWeiToEther
 import com.app.plutope.utils.customSnackbar.CustomSnackbar
 import com.app.plutope.utils.date_formate.toAny
 import com.app.plutope.utils.date_formate.ymdHMS
 import com.app.plutope.utils.extras.PreferenceHelper
+import com.app.plutope.utils.extras.setSafeOnClickListener
 import com.app.plutope.utils.getActualDigits
 import com.app.plutope.utils.getNetworkForRangoExchange
 import com.app.plutope.utils.getNetworkString
 import com.app.plutope.utils.hideLoader
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
-import com.app.plutope.utils.roundTo
 import com.app.plutope.utils.safeNavigate
 import com.app.plutope.utils.setBalanceText
-import com.app.plutope.utils.setProgress
-import com.app.plutope.utils.showLoader
 import com.app.plutope.utils.showSnackBar
 import com.app.plutope.utils.showToast
-import com.app.plutope.utils.weiToEther
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.web3j.utils.Convert
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.RoundingMode
@@ -72,6 +63,9 @@ import java.util.Calendar
 
 @AndroidEntryPoint
 class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
+    private var allTokenList: MutableList<Tokens> = mutableListOf()
+    private var payObjDecimal: Int? = 18
+    private var getObjDecimal: Int? = 18
     var latestEnteredValue = "0"
     private var storedDecimalInRango: Int? = 18
     private var routerListData: Data1? = null
@@ -120,10 +114,11 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
     }
 
     override fun setupUI() {
-        (activity as BaseActivity).showToolbarTransparentBack()
         loge("PairCall", "Start 1: ${Calendar.getInstance().toAny(ymdHMS)}")
         setFragmentResultListeners()
-        setProgress(viewDataBinding!!.root, 1, (requireActivity() as BaseActivity))
+
+
+//        setProgress(viewDataBinding!!.root, 1, (requireActivity() as BaseActivity))
         tokenModel = args.tokenModel
         fromNetwork = getNetworkString(youPayObj.chain)
         toNetwork = getNetworkString(youGetObj.chain)
@@ -131,18 +126,29 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
         originalWidth = viewDataBinding?.imgSwapChange?.width!!
         originalHeight = viewDataBinding?.imgSwapChange?.height!!
 
-        startShimmerInnerCard(false)
+
+//        startShimmerInnerCard(false)
         setData()
-        addProviders(youPayObj)
+        // addProviders(youPayObj)
         setOnClickListner()
 
-        viewDataBinding!!.txtMax.setOnClickListener {
+        viewDataBinding!!.txtAll.setOnClickListener {
             //viewDataBinding!!.edtYouPay.setText(String.format("%.6f", youPayObj.t_balance.toDouble()))
             viewDataBinding!!.edtYouPay.setText(youPayObj.t_balance)
+            viewDataBinding!!.edtYouPay.setSelection(youPayObj.t_balance.length)
+        }
+        viewDataBinding!!.txtMin.setOnClickListener {
+            viewDataBinding!!.edtYouPay.setText((youPayObj.t_balance.toDouble() * 20 / 100).toString())
+            viewDataBinding!!.edtYouPay.setSelection(viewDataBinding!!.edtYouPay.text.toString().length)
+        }
+        viewDataBinding!!.txtHalf.setOnClickListener {
+            viewDataBinding!!.edtYouPay.setText((youPayObj.t_balance.toDouble() / 2).toString())
+            viewDataBinding!!.edtYouPay.setSelection(viewDataBinding!!.edtYouPay.text.toString().length)
         }
 
-        viewDataBinding!!.cardBestProvider.setOnClickListener {
-            DialogSwapProviderList.getInstance().show(requireContext(),
+        viewDataBinding!!.layoutBestProvider.setOnClickListener {
+            DialogSwapProviderList.getInstance().show(
+                requireContext(),
                 providerList.filter { it.bestPrice.toDouble() > 0.0 } as MutableList<ProviderModel>,
                 youPayObj,
                 youGetObj,
@@ -151,37 +157,44 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                     override fun onSubmitClicked(model: ProviderModel) {
                         selectedProvider = model
                         requireActivity().runOnUiThread {
-
-                            /* viewDataBinding!!.progressAmount.visibility = GONE
-                             viewDataBinding!!.edtYouGet.visibility = VISIBLE*/
-
                             viewDataBinding?.edtYouGet?.setText(
                                 String.format(
-                                    "%.7f", selectedProvider.bestPrice.toDouble()
+                                    "%.7f",
+                                    selectedProvider.bestPrice.toDouble()
                                 ) + " ${youGetObj.t_symbol}"
                             )
 
-
                             val price = selectedProvider.bestPrice.toDouble()
-                                .toBigDecimal() * youGetObj.t_price!!.toBigDecimal()
+                                .toBigDecimal() * youGetObj.t_price.toBigDecimal()
                             val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
 
                             viewDataBinding!!.txtConvertedYouGet.text =
-                                if (selectedProvider.bestPrice.toBigDecimal() > 0.toBigDecimal()) "${
-                                    PreferenceHelper.getInstance().getSelectedCurrency()?.symbol
-                                }$formattedPrice" else {
+                                if (selectedProvider.bestPrice.toBigDecimal() > 0.toBigDecimal()) {
+                                    "${
+                                        PreferenceHelper.getInstance().getSelectedCurrency()?.symbol
+                                    }$formattedPrice"
+                                } else {
                                     ""
                                 }
+                            viewDataBinding!!.txtConvertedYouGet.visibility = VISIBLE
 
+                            viewDataBinding!!.txtBestQuote.text = selectedProvider.name
+                            Glide.with(requireContext()).load(selectedProvider.providerIcon)
+                                .placeholder(R.drawable.img_pluto_pe_logo_with_bg)
+                                .into(viewDataBinding!!.imgProvider)
 
+                            val filteredList = providerList.filter { it.bestPrice.toDouble() > 0.0 }
+                            viewDataBinding!!.txtBestPrice.visibility =
+                                if (filteredList.isNotEmpty() && model == filteredList[0]) VISIBLE else GONE
                         }
-
-
                     }
-                })
+                }
+            )
         }
 
-        tokenListDialog = CoinSearchBottomSheetDialog(
+        loge("SetGetObj", "$youGetObj")
+
+        tokenListDialog = CoinSearchBottomSheetDialog.newInstance(
             isFromGet,
             true,
             youPayObj.chain?.symbol?.lowercase(),
@@ -190,117 +203,199 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
             payObj = youPayObj,
             getObj = youGetObj,
             dialogDismissListner = { token, dismissed ->
-
                 loge("isFromGet", "isDissmised : $dismissed  :: $isFromGet")
 
-                lifecycleScope.launch(Dispatchers.Main) {
-                    // requireContext().showLoaderAnyHow()
-
-                    startShimmerInnerCard(!dismissed)
-                    token.callFunction.getBalance {
-                        token.t_balance = it.toString()
-                        requireActivity().runOnUiThread {
-                            viewDataBinding?.apply {
-                                edtYouPay.setText("")
-                                edtYouGet.setText("")
-                                viewDataBinding!!.txtConvertedYouPay.text = ""
-                                viewDataBinding!!.txtConvertedYouGet.text = ""
-
-                            }
-                            if (dismissed) {
-                                youGetObj = token
-
-                            } else {
-                                youPayObj = token
-                                addProviders(youPayObj)
-
-                            }
-                            // hideLoader()
-                            stopShimmerInnerCard(!dismissed)
-                            setDetail()
-                        }
-
-                    }
+                if (token.t_name == "Base") {
+                    token.t_address = "0xd07379a755a8f11b57610154861d694b2a0f615a"
                 }
+                if (token.t_name == "Arbitrum") {
+                    token.t_address = "0x912ce59144191c1204e64559fe8253a0e49e6548"
+                }
+
+                setSelectedTokenDetail(token, dismissed)
+
             })
 
+
+
         loge("PairCall", "Start 2: ${Calendar.getInstance().toAny(ymdHMS)}")
-
-        if (youPayObj.t_type?.lowercase() != KIP_20.lowercase()) {
-            if (!isApiCalled) {
-                /*
-                                requireActivity().runOnUiThread {
-                                    requireContext().showLoader()
-                                }
-                */
-                loge("PairCall", "Start 3: ${Calendar.getInstance().toAny(ymdHMS)}")
-                // requireContext().showLoader()
-                exchangePair(indexPairApi)
-            }
-        } else {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val tokenList = tokenViewModel.getAllTokensList() as MutableList<Tokens>
-                try {
-                    requireActivity().runOnUiThread {
+        lifecycleScope.launch(Dispatchers.IO) {
+            allTokenList = tokenViewModel.getAllTokensList() as MutableList<Tokens>
+            val tokenList = allTokenList.sortedByDescending { it.t_balance.toBigDecimalOrNull() }
+                .distinctBy { it.t_pk }
+            try {
+                requireActivity().runOnUiThread {
+                    if (youPayObj.t_type.lowercase() == KIP_20.lowercase()) {
                         val newTokenList =
-                            tokenList.filter { it.t_type?.lowercase() == KIP_20.lowercase() && it.tokenId?.lowercase() != youPayObj.tokenId?.lowercase() }
-
+                            tokenList.filter { it.t_type.lowercase() == KIP_20.lowercase() && it.tokenId.lowercase() != youPayObj.tokenId.lowercase() }
                         if (newTokenList.isNotEmpty()) {
+//                            stopShimmerInnerCard(false)
                             youGetObj = newTokenList[0]
                             setDetail()
                             filterList.clear()
                             filterList.addAll(newTokenList)
                             filterList.distinct()
                             tokenListDialog.setSwapPairTokenList(filterList)
-                        }
 
+                        }
+                    } else {
+                        val newTokenList = tokenList.filter { it != youPayObj }
+                        if (newTokenList.isNotEmpty()) {
+//                            stopShimmerInnerCard(false)
+                            youGetObj = newTokenList[0]
+                            setDetail()
+                            filterList.clear()
+                            filterList.addAll(newTokenList)
+                            filterList.distinct()
+                            tokenListDialog.setSwapPairTokenList(filterList)
+
+                        }
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+
+                    if (allTokenList.isNotEmpty())
+                        quickSwapData()
+                    else {
+                        viewDataBinding!!.txtLabelQuickSwap.visibility = GONE
+                        viewDataBinding!!.rvQuickSwap.visibility = GONE
+                    }
+
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
 
-
     }
 
-    private fun startShimmerInnerCard(isPayObject: Boolean) {
-        if (isPayObject) {
-            viewDataBinding?.shimmerLayoutPay?.startShimmer()
-            viewDataBinding?.shimmerLayoutPay?.visibility = VISIBLE
-            viewDataBinding?.cardInnerCoin?.visibility = GONE
-        } else {
-            viewDataBinding?.shimmerLayout?.startShimmer()
-            viewDataBinding?.shimmerLayout?.visibility = VISIBLE
-            viewDataBinding?.cardInnerCoinSwapped?.visibility = GONE
+    private fun setSelectedTokenDetail(token: Tokens, dismissed: Boolean) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            token.callFunction.getBalance {
+                token.t_balance = it.toString()
+                requireActivity().runOnUiThread {
+                    viewDataBinding?.apply {
+                        edtYouPay.setText("")
+                        edtYouGet.setText("")
+                        viewDataBinding!!.txtConvertedYouPay.text = ""
+                        viewDataBinding!!.txtConvertedYouGet.text = ""
+                        viewDataBinding!!.txtConvertedYouGet.visibility = GONE
+                        viewDataBinding!!.txtConvertedYouPay.visibility = GONE
+                        providerList.clear()
+                        viewDataBinding!!.layoutBestProvider.visibility = GONE
+                        viewDataBinding!!.txtLabelChooseProvider.visibility = GONE
+                        viewDataBinding!!.txtProviderNotFound.visibility = GONE
+                    }
+                    if (dismissed) {
+                        youGetObj = token
+                    } else {
+                        youPayObj = token
+                    }
+                    setDetail()
+                }
+
+            }
+        }
+    }
+
+    private fun quickSwapData() {
+        val quickSwapPairList: ArrayList<Pair<Tokens, Tokens>> = arrayListOf()
+        val enabledTokenList =
+            allTokenList.filter { it.t_address == "" && (it.isEnable == true || it.t_balance.toDouble() > 0.0) }
+
+        val trendingTokenPairs = ArrayList<Pair<String, String>>()
+        trendingTokenPairs.add(Pair("Ethereum", "Bitcoin"))
+        trendingTokenPairs.add(Pair("Ethereum", "BNB"))
+        trendingTokenPairs.add(Pair("BNB", "POL (ex-MATIC)"))
+        trendingTokenPairs.add(Pair("POL (ex-MATIC)", "Arbitrum"))
+        trendingTokenPairs.add(Pair("Ethereum", "POL (ex-MATIC)"))
+
+        for (pair in trendingTokenPairs) {
+            val token1 = enabledTokenList.find {
+                it.t_name.equals(
+                    pair.first,
+                    ignoreCase = true
+                )
+            }
+            loge("Pair1Token", "${token1}")
+            val token2 =
+                enabledTokenList.find { it.t_name.equals(pair.second, ignoreCase = true) }
+            if (token1 != null && token2 != null) {
+                quickSwapPairList.add(Pair(token1, token2))
+            }
         }
 
-    }
+        /*
+        //Random pairs from enabled token list
+        for (i in 0 until enabledTokenList.size - 1 step 2) {
+            val pair = Pair(enabledTokenList[i], enabledTokenList[i + 1])
+            quickSwapPairList.add(pair)
+        }*/
 
-    private fun stopShimmerInnerCard(isPayObject: Boolean) {
-        if (isPayObject) {
-            viewDataBinding?.shimmerLayoutPay?.stopShimmer()
-            viewDataBinding?.shimmerLayoutPay?.visibility = GONE
-            viewDataBinding?.cardInnerCoin?.visibility = VISIBLE
-        } else {
-            viewDataBinding?.shimmerLayout?.stopShimmer()
-            viewDataBinding?.shimmerLayout?.visibility = GONE
-            viewDataBinding?.cardInnerCoinSwapped?.visibility = VISIBLE
+        val adapter = QuickSwapAdapter(quickSwapPairList) {
+
+
+            youPayObj = it.first
+            youGetObj = it.second
+            // setDetail()
+
+            // chain.t_name == "Base" && chain.t_symbol == "Base" && chain.t_address == ""
+
+            if (youPayObj.t_name == "Base" && youPayObj.t_symbol == "Base" && youPayObj.t_address == "") {
+                youPayObj.t_address = "0xd07379a755a8f11b57610154861d694b2a0f615a"
+            }
+            if (youPayObj.t_name == "Arbitrum" && youPayObj.t_symbol == "Arbitrum" && youPayObj.t_address == "") {
+                youPayObj.t_address = "0x912ce59144191c1204e64559fe8253a0e49e6548"
+            }
+
+            if (youGetObj.t_name == "Base" && youGetObj.t_symbol == "Base" && youGetObj.t_address == "") {
+                youGetObj.t_address = "0xd07379a755a8f11b57610154861d694b2a0f615a"
+            }
+            if (youGetObj.t_name == "Arbitrum" && youGetObj.t_symbol == "Arbitrum" && youGetObj.t_address == "") {
+                youGetObj.t_address = "0x912ce59144191c1204e64559fe8253a0e49e6548"
+            }
+
+            viewDataBinding!!.edtYouPay.setText("")
+            viewDataBinding!!.edtYouGet.setText("")
+            viewDataBinding!!.txtConvertedYouPay.text = ""
+            viewDataBinding!!.txtConvertedYouGet.text = ""
+            viewDataBinding!!.txtConvertedYouPay.visibility = GONE
+            viewDataBinding!!.txtConvertedYouGet.visibility = GONE
+
+            setDetail()
+            providerList.clear()
+            viewDataBinding!!.layoutBestProvider.visibility = GONE
+            viewDataBinding!!.txtLabelChooseProvider.visibility = GONE
+            viewDataBinding!!.txtProviderNotFound.visibility = GONE
+
         }
-
+        viewDataBinding!!.rvQuickSwap.adapter = adapter
     }
 
-    private fun addProviders(token: Tokens) {
-        providerList.clear()
-        if (token.chain?.coinType == CoinType.BITCOIN) {
-            providerList.add(ProviderModel("CHANGENOW", CoinCode.CHANGENOW))
-        } else {
-            providerList.add(ProviderModel("OKX", CoinCode.OKX))
-            providerList.add(ProviderModel("CHANGENOW", CoinCode.CHANGENOW))
-            providerList.add(ProviderModel("RANGO", CoinCode.RANGO))
-        }
+    /*  private fun startShimmerInnerCard(isPayObject: Boolean) {
+          if (isPayObject) {
+              viewDataBinding?.shimmerLayoutPay?.startShimmer()
+              viewDataBinding?.shimmerLayoutPay?.visibility = VISIBLE
+              viewDataBinding?.cardInnerCoin?.visibility = GONE
+          } else {
+              viewDataBinding?.shimmerLayout?.startShimmer()
+              viewDataBinding?.shimmerLayout?.visibility = VISIBLE
+              viewDataBinding?.cardInnerCoinSwapped?.visibility = GONE
+          }
 
-    }
+      }
+
+      private fun stopShimmerInnerCard(isPayObject: Boolean) {
+          if (isPayObject) {
+              viewDataBinding?.shimmerLayoutPay?.stopShimmer()
+              viewDataBinding?.shimmerLayoutPay?.visibility = GONE
+              viewDataBinding?.cardInnerCoin?.visibility = VISIBLE
+          } else {
+              viewDataBinding?.shimmerLayout?.stopShimmer()
+              viewDataBinding?.shimmerLayout?.visibility = GONE
+              viewDataBinding?.cardInnerCoinSwapped?.visibility = VISIBLE
+          }
+
+      }*/
+
 
     private fun setFragmentResultListeners() {
         setFragmentResultListener(KEY_BUNDLE_PREVIEWSWAP) { _, _ ->
@@ -309,51 +404,40 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
         }
     }
 
-    private fun exchangePair(index: Int) {
-        val arrayChains = arrayOf("eth", "bsc", "matic", "btc")
-
-        swapViewModel.executeSwapPairResponse(
-            youPayObj.t_symbol.toString().lowercase(),
-            getNetworkString(youPayObj.chain),
-            arrayChains[index]
-        )
-    }
 
     private fun setOnClickListner() {
-        viewDataBinding?.btnSwap?.setOnClickListener {
+        viewDataBinding?.imgBack?.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        viewDataBinding?.btnSwap?.setSafeOnClickListener {
             if (viewDataBinding?.edtYouPay?.text.toString()
                     .isNotEmpty() && (viewDataBinding?.edtYouPay?.text.toString().toDouble() > 0.0)
             ) {
-
-
-                /*
-                                findNavController().safeNavigate(
-                                    SwapDirections.actionSwapToPreviewSwapFragment(
-                                        PreviewSwapDetail(
-                                            youPayObj,
-                                            youGetObj,
-                                            routerListData,
-                                            viewDataBinding?.edtYouPay?.text.toString(),
-                                            viewDataBinding?.edtYouGet?.text.toString(),
-                                            viewDataBinding?.txtFirstPrice?.text.toString(),
-                                            ""
-                                        ), selectedProvider
-                                    )
-                                )
-                */
-
-
 
                 if ((viewDataBinding?.edtYouPay?.text.toString()
                         .toDouble() > youPayObj.t_balance.toDouble())
                 ) {
                     viewDataBinding?.root?.showSnackBar("You don't have enough ${youPayObj.t_symbol} in your account.")
+
+                    /* findNavController().safeNavigate(
+                         SwapDirections.actionSwapToPreviewSwapFragment(
+                             PreviewSwapDetail(
+                                 youPayObj,
+                                 youGetObj,
+                                 routerListData,
+                                 viewDataBinding?.edtYouPay?.text.toString(),
+                                 viewDataBinding?.edtYouGet?.text.toString(),
+                                 viewDataBinding?.txtFirstPrice?.text.toString()
+                             ), selectedProvider
+                         )
+                     )*/
+
                 } else {
 
                     if (providerList.none { it.bestPrice.toDouble() > 0.0 }) {
                         requireContext().showToast("Provider not found!")
                     } else {
-
                         findNavController().safeNavigate(
                             SwapDirections.actionSwapToPreviewSwapFragment(
                                 PreviewSwapDetail(
@@ -362,7 +446,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                     routerListData,
                                     viewDataBinding?.edtYouPay?.text.toString(),
                                     viewDataBinding?.edtYouGet?.text.toString(),
-                                    viewDataBinding?.txtFirstPrice?.text.toString()
+                                    "1 " + viewDataBinding!!.txtCoinName.text.toString() + " = " + viewDataBinding!!.edtYouGet.text.toString()
                                 ), selectedProvider
                             )
                         )
@@ -370,8 +454,6 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                     }
 
                 }
-
-
             } else {
                 requireContext().showToast("Paying amount can't be empty or 0")
             }
@@ -383,125 +465,82 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
         viewDataBinding?.cardInnerCoin?.setOnClickListener {
             isFromGet = false
-            tokenListDialog.isFromGet = false
-            tokenListDialog.fromNetWork = youPayObj.chain?.symbol!!.lowercase()
-            tokenListDialog.fromCurrency = youPayObj.t_symbol.toString()
-            tokenListDialog.show(childFragmentManager, "")
+            /*  tokenListDialog.payObj = youPayObj
+              tokenListDialog.getObj = youGetObj
+              tokenListDialog.fromNetWork = youPayObj.chain?.symbol!!.lowercase()
+              tokenListDialog.fromCurrency = youPayObj.t_symbol.toString()
+              tokenListDialog.show(childFragmentManager, "")*/
+
+
+            CoinSearchBottomSheetDialog.newInstance(
+                isFromGet,
+                true,
+                youPayObj.chain?.symbol?.lowercase(),
+                youPayObj.t_symbol.toString(),
+                youGetObj.chain?.symbol?.lowercase() ?: "bsc",
+                payObj = youPayObj,
+                getObj = youGetObj,
+                dialogDismissListner = { token, dismissed ->
+                    loge("isFromGet", "isDissmised : $dismissed  :: $isFromGet")
+
+                    // chain.t_name == "Base" && chain.t_symbol == "Base" && chain.t_address == ""
+
+                    if (token.t_name == "Base" && token.t_symbol == "Base" && token.t_address == "") {
+                        token.t_address = "0xd07379a755a8f11b57610154861d694b2a0f615a"
+                    }
+                    if (token.t_name == "Arbitrum" && token.t_symbol == "Arbitrum" && token.t_address == "") {
+                        token.t_address = "0x912ce59144191c1204e64559fe8253a0e49e6548"
+                    }
+
+                    setSelectedTokenDetail(token, dismissed)
+
+                }).show(childFragmentManager, "")
+
         }
 
         viewDataBinding?.cardInnerCoinSwapped?.setOnClickListener {
             isFromGet = true
-            tokenListDialog.isFromGet = true
-            tokenListDialog.fromNetWork = youPayObj.chain?.symbol!!.lowercase()
-            tokenListDialog.fromCurrency = youPayObj.t_symbol.toString()
-            tokenListDialog.show(childFragmentManager, "")
+            /* tokenListDialog.payObj = youPayObj
+             tokenListDialog.getObj = youGetObj
+             tokenListDialog.fromNetWork = youPayObj.chain?.symbol!!.lowercase()
+             tokenListDialog.fromCurrency = youPayObj.t_symbol.toString()
+             tokenListDialog.show(childFragmentManager, "")*/
+
+
+
+            CoinSearchBottomSheetDialog.newInstance(
+                isFromGet,
+                true,
+                youPayObj.chain?.symbol?.lowercase(),
+                youPayObj.t_symbol.toString(),
+                youGetObj.chain?.symbol?.lowercase() ?: "bsc",
+                payObj = youPayObj,
+                getObj = youGetObj,
+                dialogDismissListner = { token, dismissed ->
+                    loge("isFromGet", "isDissmised : $dismissed  :: $isFromGet")
+
+                    if (token.t_name == "Base" && token.t_symbol == "Base" && token.t_address == "") {
+                        token.t_address = "0xd07379a755a8f11b57610154861d694b2a0f615a"
+                    }
+                    if (token.t_name == "Arbitrum" && token.t_symbol == "Arbitrum" && token.t_address == "") {
+                        token.t_address = "0x912ce59144191c1204e64559fe8253a0e49e6548"
+                    }
+
+                    setSelectedTokenDetail(token, dismissed)
+
+                }).show(childFragmentManager, "")
+
         }
 
         viewDataBinding?.edtYouPay?.addTextChangedListener(object : TextWatcher {
-
             private val handler = Handler(Looper.getMainLooper())
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
                 latestEnteredValue = s.toString()
-
-                //  debouncingPriceCalulation()
-
-                /*
-                                if (!isProgrammaticChange) {
-                                    if (latestEnteredValue.isNotEmpty()) {
-                                        val inputValue = latestEnteredValue
-                                        try {
-                                            // Check if the input starts with a dot
-                                            val numericValue = if (inputValue.startsWith(".")) {
-                                                "0$inputValue"
-                                            } else {
-                                                inputValue
-                                            }.toDouble()
-
-                                            if (numericValue > 0.0) {
-
-
-                                                // convertAmountToCurrency(numericValue.toString())
-
-                                                val price =
-                                                    numericValue.toBigDecimal() * youPayObj.t_price!!.toBigDecimal()
-                                                val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
-                                               loge("Price")
-                                                viewDataBinding!!.txtConvertedYouPay.text = */
-                /*if (price > 0.toBigDecimal()) *//*
-"${PreferenceHelper.getInstance().getSelectedCurrency()?.symbol}$formattedPrice"*/
-                /* else { "" }*//*
-
-
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    requireActivity().runOnUiThread {
-                                        viewDataBinding!!.progressAmount.visibility = VISIBLE
-                                        viewDataBinding!!.edtYouGet.visibility = GONE
-                                        viewDataBinding!!.edtYouGet.setText("0")
-                                        viewDataBinding!!.txtConvertedYouGet.text = ""
-                                    }
-
-                                    loge(
-                                        "TimeDuration",
-                                        "Start => ${Calendar.getInstance().toAny()}"
-                                    )
-                                   // delay(5000)
-                                    apiCallForAllProviderBestPrice(numericValue.toString())
-                                }
-
-
-                            } else {
-                                try {
-                                    requireActivity().runOnUiThread {
-                                        Handler(Looper.getMainLooper()).postDelayed(1000) {
-                                            viewDataBinding?.edtYouGet?.setText("0")
-                                            viewDataBinding!!.txtConvertedYouPay.text = ""
-                                        }
-                                    }
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            }
-                        } catch (e: NumberFormatException) {
-                            e.printStackTrace()
-                        }
-
-                    } else {
-                        try {
-                            requireActivity().runOnUiThread {
-                                viewDataBinding?.edtYouGet?.setText("0")
-                                viewDataBinding!!.txtConvertedYouPay.text = ""
-                                viewDataBinding!!.txtConvertedYouGet.text = ""
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-
-                    }
-
-                } else {
-                    try {
-                        requireActivity().runOnUiThread {
-                            Handler(Looper.getMainLooper()).postDelayed(1000) {
-                                viewDataBinding?.edtYouGet?.setText("0")
-                                viewDataBinding!!.txtConvertedYouPay.text = ""
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-                }
-*/
-
-
-            }/*   handler.postDelayed(runnable!!, 1000)
-           }*/
+            }
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
@@ -514,8 +553,8 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                             viewDataBinding!!.edtYouGet.visibility = GONE
                             viewDataBinding!!.edtYouGet.setText("0")
                             viewDataBinding!!.txtConvertedYouGet.text = ""
+                            viewDataBinding!!.txtConvertedYouGet.visibility = GONE
                         }
-
                     }
 
 
@@ -523,7 +562,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                     handler.postDelayed({
                         loge("InputValue==>", latestEnteredValue)
                         if (latestEnteredValue != "") {
-                            debouncingPriceCalulation()
+                            debouncingPriceCalculation()
                         } else {
                             try {
                                 requireActivity().runOnUiThread {
@@ -532,13 +571,23 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                     viewDataBinding?.edtYouGet?.setText("0")
                                     viewDataBinding!!.txtConvertedYouPay.text = ""
                                     viewDataBinding!!.txtConvertedYouGet.text = ""
+                                    viewDataBinding!!.txtConvertedYouPay.visibility = GONE
+                                    viewDataBinding!!.txtConvertedYouGet.visibility = GONE
+
+                                    providerList.clear()
+                                    viewDataBinding!!.layoutBestProvider.visibility = GONE
+                                    viewDataBinding!!.txtLabelChooseProvider.visibility = GONE
+                                    viewDataBinding!!.txtProviderNotFound.visibility = GONE
+
+
+                                    // checkAllAPIsCompleted()
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
                         }
 
-                    }, 5000)
+                    }, 3000)
 
                 } else {
                     try {
@@ -546,6 +595,9 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                             viewDataBinding?.edtYouGet?.setText("0")
                             viewDataBinding!!.txtConvertedYouPay.text = ""
                             viewDataBinding!!.txtConvertedYouGet.text = ""
+                            viewDataBinding!!.txtConvertedYouPay.visibility = GONE
+                            viewDataBinding!!.txtConvertedYouGet.visibility = GONE
+
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -559,12 +611,11 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
     }
 
-    private fun debouncingPriceCalulation() {
+    private fun debouncingPriceCalculation() {
         if (!isProgrammaticChange) {
             if (latestEnteredValue.isNotEmpty()) {
                 val inputValue = latestEnteredValue
                 try {
-                    // Check if the input starts with a dot
                     val numericValue = if (inputValue.startsWith(".")) {
                         "0$inputValue"
                     } else {
@@ -572,36 +623,14 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                     }.toDouble()
 
                     if (numericValue > 0.0) {
-
-
-                        // convertAmountToCurrency(numericValue.toString())
-
                         val price =
-                            numericValue.toBigDecimal() * youPayObj.t_price!!.toBigDecimal()
+                            numericValue.toBigDecimal() * youPayObj.t_price.toBigDecimal()
                         val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
                         loge("Price")
+                        viewDataBinding!!.txtConvertedYouPay.visibility = VISIBLE
                         viewDataBinding!!.txtConvertedYouPay.text = "${
                             PreferenceHelper.getInstance().getSelectedCurrency()?.symbol
                         }$formattedPrice"
-
-                        /*
-                                                CoroutineScope(Dispatchers.Main).launch {
-                                                    requireActivity().runOnUiThread {
-                                                        viewDataBinding!!.progressAmount.visibility = VISIBLE
-                                                        viewDataBinding!!.edtYouGet.visibility = GONE
-                                                        viewDataBinding!!.edtYouGet.setText("0")
-                                                        viewDataBinding!!.txtConvertedYouGet.text = ""
-                                                    }
-
-                                                    loge(
-                                                        "TimeDuration",
-                                                        "Start => ${Calendar.getInstance().toAny()}"
-                                                    )
-                                                    // delay(5000)
-                                                    apiCallForAllProviderBestPrice(numericValue.toString())
-                                                }
-                        */
-
                         apiCallForAllProviderBestPrice(numericValue.toString())
 
 
@@ -611,6 +640,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                                 Handler(Looper.getMainLooper()).postDelayed(1000) {
                                     viewDataBinding?.edtYouGet?.setText("0")
                                     viewDataBinding!!.txtConvertedYouPay.text = ""
+                                    viewDataBinding!!.txtConvertedYouPay.visibility = GONE
                                 }
                             }
                         } catch (e: Exception) {
@@ -627,11 +657,15 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                         viewDataBinding?.edtYouGet?.setText("0")
                         viewDataBinding!!.txtConvertedYouPay.text = ""
                         viewDataBinding!!.txtConvertedYouGet.text = ""
+                        viewDataBinding!!.txtConvertedYouPay.visibility = GONE
+                        viewDataBinding!!.txtConvertedYouGet.visibility = GONE
+                        providerList.clear()
+                        checkAllAPIsCompleted()
+
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
             }
 
         } else {
@@ -655,13 +689,19 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
         val temp: Tokens = youPayObj
         youPayObj = youGetObj
         youGetObj = temp
-
         viewDataBinding!!.edtYouPay.setText("")
         viewDataBinding!!.edtYouGet.setText("")
         viewDataBinding!!.txtConvertedYouPay.text = ""
         viewDataBinding!!.txtConvertedYouGet.text = ""
+        viewDataBinding!!.txtConvertedYouPay.visibility = GONE
+        viewDataBinding!!.txtConvertedYouGet.visibility = GONE
 
         setDetail()
+        providerList.clear()
+        viewDataBinding!!.layoutBestProvider.visibility = GONE
+        viewDataBinding!!.txtLabelChooseProvider.visibility = GONE
+        viewDataBinding!!.txtProviderNotFound.visibility = GONE
+
     }
 
     private fun setData() {
@@ -671,532 +711,196 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun setDetail() {
-        loge("PairCall", "Start detail: ${Calendar.getInstance().toAny(ymdHMS)}")
-        // viewDataBinding?.txtFromBalanceValue?.text =  String.format("%.6f", youPayObj.t_balance.toDouble())
+
         viewDataBinding?.txtFromBalanceValue?.text = setBalanceText(
-            youPayObj.t_balance.toBigDecimal() ?: 0.toBigDecimal(), "", 6
+            youPayObj.t_balance.toBigDecimal(), "", 6
         )
 
-
         viewDataBinding?.txtCoinName?.text = youPayObj.t_symbol
+        viewDataBinding?.txtChainName?.text = youPayObj.t_name
         viewDataBinding?.txtNetworkNameTop?.text = youPayObj.t_type
 
-
-        // viewDataBinding?.txtYouGetBalanceValue?.text = String.format("%.6f", youGetObj.t_balance.toDouble())
         viewDataBinding?.txtYouGetBalanceValue?.text = setBalanceText(
-            youGetObj.t_balance.toBigDecimal() ?: 0.toBigDecimal(), "", 6
+            youGetObj.t_balance.toBigDecimal(), "", 6
         )
 
 
         viewDataBinding?.txtCoinNameSwapped?.text = youGetObj.t_symbol
+        viewDataBinding?.txtChainNameSwapped?.text = youGetObj.t_name
         viewDataBinding?.txtNetworkNameBottom?.text = youGetObj.t_type
 
-        Glide.with(requireContext()).load(youPayObj.t_logouri).into(viewDataBinding?.imgCoin!!)
-        Glide.with(requireContext()).load(youGetObj.t_logouri)
+
+        val imageUrlPayObj =
+            if (youPayObj.t_logouri != "" || youPayObj.t_logouri.isNotEmpty()) youPayObj.t_logouri else youPayObj.chain?.icon
+        val imageUrlGetObj =
+            if (youGetObj.t_logouri != "" || youGetObj.t_logouri.isNotEmpty()) youGetObj.t_logouri else youGetObj.chain?.icon
+
+        val imgPayObj = when (youPayObj.t_type.lowercase()) {
+            "erc20" -> R.drawable.img_eth_logo
+            "bep20" -> R.drawable.ic_bep
+            "polygon" -> R.drawable.ic_polygon
+            "kip20" -> R.drawable.ic_kip
+            else -> {
+                R.drawable.img_eth_logo
+            }
+        }
+        val imgGetObj = when (youGetObj.t_type.lowercase()) {
+            "erc20" -> R.drawable.img_eth_logo
+            "bep20" -> R.drawable.ic_bep
+            "polygon" -> R.drawable.ic_polygon
+            "kip20" -> R.drawable.ic_kip
+            else -> {
+                R.drawable.img_eth_logo
+            }
+        }
+
+        Glide.with(viewDataBinding?.imgCoin!!.context).load(imageUrlPayObj)
+            .placeholder(imgPayObj)
+            .error(imgPayObj)
+            .into(viewDataBinding?.imgCoin!!)
+
+
+        Glide.with(viewDataBinding?.imgCoinSwapped!!.context).load(imageUrlGetObj)
+            .placeholder(imgGetObj)
+            .error(imgGetObj)
             .into(viewDataBinding?.imgCoinSwapped!!)
 
 
-        if (indexPairApi == 3) graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=${youGetObj.tokenId},${youPayObj.tokenId}")
+        // Glide.with(requireContext()).load(youPayObj.t_logouri).into(viewDataBinding?.imgCoin!!)
+        // Glide.with(requireContext()).load(youGetObj.t_logouri).into(viewDataBinding?.imgCoinSwapped!!)
 
-        /* if (youPayObj.t_type?.lowercase() == youGetObj.t_type?.lowercase()) {
-             viewDataBinding?.btnSwap?.text = "Preview Swap"
-         } else {
-             viewDataBinding?.btnSwap?.text = "Confirm Swap"
-         }*/
 
         viewDataBinding?.btnSwap?.text = getString(R.string.preview_swap)
 
-        loge("PairCall", "end detail: ${Calendar.getInstance().toAny(ymdHMS)}")
+        CoroutineScope(Dispatchers.IO).launch {
+            youPayObj.callFunction.getDecimal {
+                payObjDecimal = it
+            }
+
+            youGetObj.callFunction.getDecimal {
+                getObjDecimal = it
+            }
+        }
+
 
     }
 
     @SuppressLint("SetTextI18n")
     override fun setupObserver() {
 
-
-        lifecycleScope.launch {
-            swapViewModel.executeSwapUsingOkxResponse.collect {
-                when (it) {
-                    is NetworkState.Success -> {
-                        if (it.data?.data1?.isNotEmpty() == true) {
-                            val response = it.data.data1[0].tx
-
-                            val amountSend: BigInteger = Convert.toWei(
-                                viewDataBinding?.edtYouPay?.text.toString(), Convert.Unit.ETHER
-                            ).toBigInteger()
-
-                            viewDataBinding?.edtYouGet?.setText(
-                                String.format(
-                                    "%.7f",
-                                    weiToEther(it.data.data1[0].tx.minReceiveAmount.toBigInteger())
-                                ) + " ${youGetObj.t_symbol}"
-                            )
-
-                            youPayObj.callFunction.swapTokenOrCoinOkx(
-                                response.to,
-                                response.data,
-                                response.gasPrice,
-                                response.gas,
-                                amountSend,
-                                dexCotractAddress,
-                                { success, errorMessage, _ ->
-
-                                    if (success) {
-                                        requireActivity().runOnUiThread {
-                                            hideLoader()
-                                            setProgress(
-                                                viewDataBinding!!.root,
-                                                3,
-                                                (requireActivity() as BaseActivity)
-                                            )
-                                            Handler(Looper.getMainLooper()).postDelayed(5000) {
-                                                findNavController().safeNavigate(SwapDirections.actionSwapToDashboard())
-                                            }
-
-
-                                        }
-
-                                    } else {
-                                        requireActivity().runOnUiThread {
-                                            hideLoader()
-                                            requireContext().showToast(errorMessage.toString())
-                                        }
-                                    }
-
-                                },
-                                { success, _, _ ->
-                                    if (success) {
-                                        requireActivity().runOnUiThread {
-                                            setProgress(
-                                                viewDataBinding!!.root,
-                                                2,
-                                                (requireActivity() as BaseActivity)
-                                            )
-                                        }
-                                    } else {
-                                        requireActivity().runOnUiThread {
-                                            hideLoader()
-                                        }
-                                    }
-                                })
-
-                        }
-
-                    }
-
-                    is NetworkState.Loading -> {
-                        requireActivity().runOnUiThread {
-                            requireContext().showLoader()
-                        }
-                    }
-
-                    is NetworkState.Error -> {
-                        hideLoader()
-                        requireContext().showToast(it.message.toString())
-                    }
-
-                    is NetworkState.SessionOut -> {
-                        hideLoader()
-                        CustomSnackbar.make(
-                            requireActivity().window.decorView.rootView as ViewGroup,
-                            it.message.toString()
-                        ).show()
-                    }
-
-                    else -> {
-                        //hideLoader()
-                    }
-                }
-            }
-        }
-
-
-        lifecycleScope.launch(Dispatchers.Main) {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                swapViewModel.executeSwapUsingSwapPairResponse.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-                            loge("PairCall", "Start : ${Calendar.getInstance().toAny(ymdHMS)}")
-                            val response = it.data as MutableList<AvailablePairsResponseModel>
-                            val filterResult = swapViewModel.filterTokensFromPair(
-                                response, tokenViewModel.getAllTokensList() as MutableList<Tokens>
-                            )
-                            filterList.addAll(filterResult)
-                            if (indexPairApi == 0) {
-                                val randomObject =
-                                    filterList.first { token -> token.t_type?.lowercase() == "ERC20".lowercase() || token.t_type?.lowercase() == "btc" }
-                                youGetObj = randomObject
-                                // setData()
-                            }
-
-
-                            if (indexPairApi < 3) {
-                                indexPairApi += 1
-                                exchangePair(indexPairApi)
-                            } else {
-                                filterList.distinct()
-                                stopShimmerInnerCard(false)
-                                setDetail()
-                                viewDataBinding?.progressToken?.visibility = GONE
-                                tokenListDialog.setSwapPairTokenList(filterList)
-                            }
-
-                            loge("PairCall", "end : ${Calendar.getInstance().toAny(ymdHMS)}")
-
-                        }
-
-                        is NetworkState.Loading -> {
-                            // viewDataBinding?.progressToken?.visibility=VISIBLE
-                        }
-
-                        is NetworkState.Error -> {
-                            try {
-                                requireActivity().runOnUiThread {
-
-                                    lifecycleScope.launch(Dispatchers.IO) {
-                                        val tokenList =
-                                            tokenViewModel.getAllTokensList() as MutableList<Tokens>
-                                        try {
-                                            requireActivity().runOnUiThread {
-                                                val newTokenList =
-                                                    tokenList.filter { token -> token.t_type?.lowercase() == youPayObj.t_type?.lowercase() && token.tokenId?.lowercase() != youPayObj.tokenId?.lowercase() }
-
-                                                if (newTokenList.isNotEmpty()) {
-                                                    filterList.clear()
-                                                    filterList.addAll(newTokenList)
-                                                    youGetObj = newTokenList[0]
-                                                    setDetail()
-                                                    stopShimmerInnerCard(false)
-                                                    tokenListDialog.setSwapPairTokenList(filterList)
-                                                }
-                                            }
-                                        } catch (e: Exception) {
-                                            e.printStackTrace()
-                                        }
-                                    }
-
-                                    hideLoader()
-                                    stopShimmerInnerCard(false)
-                                }
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-
-                        is NetworkState.SessionOut -> {
-                            hideLoader()
-                            stopShimmerInnerCard(false)
-                            CustomSnackbar.make(
-                                requireActivity().window.decorView.rootView as ViewGroup,
-                                it.message.toString()
-                            ).show()
-                        }
-
-                        else -> {
-                            // hideLoader()
-                        }
-                    }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                graphDetailViewModel.getGetMarketResponse.collect { networkState ->
-                    when (networkState) {
-                        is NetworkState.Success -> {
-                            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
-                                val cryptoList = networkState.data
-                                if (cryptoList?.isNotEmpty() == true) {
-                                    cryptoList.forEach { coinMarket ->
-                                        if (coinMarket.id == youGetObj.tokenId) {
-                                            youGetObj.t_price = coinMarket.current_price
-                                            youGetObj.t_last_price_change_impact =
-                                                coinMarket.price_change_percentage_24h
-                                            youGetObj.t_logouri = coinMarket.image
-                                        } else {
-                                            youPayObj.t_price = coinMarket.current_price
-                                            youPayObj.t_last_price_change_impact =
-                                                coinMarket.price_change_percentage_24h
-                                            youPayObj.t_logouri = coinMarket.image
-                                        }
-
-                                    }
-
-                                    viewDataBinding!!.edtYouPay.setText("")
-                                    estimatePrice(youGetObj, youPayObj)
-                                    hideLoader()
-                                }
-                            }
-                        }
-
-                        is NetworkState.Loading -> {
-                            // requireContext().showLoaderAnyHow()
-                        }
-
-                        is NetworkState.Error -> {
-                            hideLoader()
-                        }
-
-                        is NetworkState.SessionOut -> {
-                            hideLoader()
-                            CustomSnackbar.make(
-                                requireActivity().window.decorView.rootView as ViewGroup,
-                                networkState.message.toString()
-                            ).show()
-                        }
-
-                        else -> {
-                            // hideLoader()
-                        }
-                    }
-                }
-            }
-        }
-
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                swapViewModel.executeSwapUsingOkxEstimatResponse.collect {
+                swapViewModel.swapQuoteSingleCallResponse.collect {
                     when (it) {
                         is NetworkState.Success -> {
+                            providerList.clear()
+                            val response = it.data
+                            if (response?.data!!.isNotEmpty()) {
+                                response.data.forEach { data ->
+                                    if (data?.providerName == "rangoexchange") {
+                                        if (data.response?.route != null) {
+                                            val amt = convertWeiToEther(
+                                                data.quoteAmount!!,
+                                                getObjDecimal!!
+                                            )
+                                            var feesAmount: BigDecimal = 0.toBigDecimal()
+                                            data.response.route.fee?.forEach { swapperFees ->
+                                                feesAmount += if (swapperFees?.expenseType == "FROM_SOURCE_WALLET" && swapperFees.name == "Swapper Fee") {
+                                                    convertWeiToEther(
+                                                        swapperFees.amount!!,
+                                                        swapperFees.token?.decimals!!
+                                                    ).toBigDecimal()
+                                                } else 0.toBigDecimal()
+                                            }
 
-                            if (it.data?.data1?.isNotEmpty() == true) {
-                                routerListData = it.data.data1[0]
-                                //here
-                                var decimal: Int
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    youGetObj.callFunction.getDecimal { dec ->
-                                        decimal = dec!!
-                                        val amt = convertWeiToEther(
-                                            it.data.data1[0].routerResult.toTokenAmount,
-                                            if (decimal == 0) 8 else decimal
-                                        )
-
-                                        loge("OKX_response", amt)
-                                        loge(
-                                            "OkxEstimet",
-                                            "edittext ${viewDataBinding!!.edtYouPay.text.toString()} == ${it.data.lastEnteredAmount}"
-                                        )
-
-                                        if (it.data.lastEnteredAmount == viewDataBinding!!.edtYouPay.text.toString()) {
-                                            providerList.filter { provider -> provider.coinCode == CoinCode.OKX }
-                                                .forEach { provideModel ->
-                                                    val price = setBalanceText(
-                                                        amt.toBigDecimal(), "", 6
+                                            val amount =
+                                                if (youGetObj.chain?.coinType == CoinType.BITCOIN) {
+                                                    setBalanceText(
+                                                        getActualDigits(amt).toBigDecimal(),
+                                                        "",
+                                                        18
                                                     )
-                                                    provideModel.bestPrice = price
+                                                } else {
+                                                    setBalanceText(
+                                                        getActualDigits(amt).toBigDecimal(),
+                                                        "",
+                                                        getObjDecimal!!
+                                                    )
                                                 }
-                                        }
-
-                                        checkAllAPIsCompleted()
-                                    }
-                                }
-
-                            } else {
-                                providerList.filter { provider -> provider.coinCode == CoinCode.OKX }
-                                    .forEach { innerProvider ->
-                                        innerProvider.bestPrice = "0.0"
-                                    }
-
-                                checkAllAPIsCompleted()
-                            }
 
 
-                        }
-
-                        is NetworkState.Loading -> {
-
-                        }
-
-                        is NetworkState.Error -> {
-
-                            providerList.filter { provider -> provider.coinCode == CoinCode.OKX }
-                                .forEach { provider ->
-                                    provider.bestPrice = "0.0"
-                                }
-
-                            checkAllAPIsCompleted()
-                            // requireContext().showToast(it.message.toString())
-                        }
-
-                        is NetworkState.SessionOut -> {
-                            hideLoader()
-                            CustomSnackbar.make(
-                                requireActivity().window.decorView.rootView as ViewGroup,
-                                it.message.toString()
-                            ).show()
-                        }
-
-                        else -> {
-
-                        }
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                swapViewModel.executeEstimateExchangeResponse.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-                            //hideLoader()
-                            loge(
-                                "ChangeNow",
-                                "edittext ${viewDataBinding!!.edtYouPay.text} == ${it.data?.lastEnteredAmount}"
-                            )
-                            val response = it.data
-                            if (it.data?.lastEnteredAmount == viewDataBinding!!.edtYouPay.text.toString()) {
-                                providerList.filter { provider -> provider.coinCode == CoinCode.CHANGENOW }
-                                    .forEach { provider ->
-                                        val price = setBalanceText(
-                                            response?.toAmount?.toBigDecimal() ?: 0.toBigDecimal(),
-                                            "",
-                                            6
-                                        )
-                                        provider.bestPrice = price
-                                    }
-                            }
-
-                            transactionID = response?.id
-                            checkAllAPIsCompleted()
-                        }
-
-                        is NetworkState.Loading -> {
-                            //  requireContext().showLoader()
-                        }
-
-                        is NetworkState.Error -> {
-                            //   hideLoader()
-
-                            providerList.filter { provider -> provider.coinCode == CoinCode.CHANGENOW }
-                                .forEach { provider ->
-                                    provider.bestPrice = "0.0"
-                                }
-
-                            checkAllAPIsCompleted()
-
-                            // requireContext().showToast(it.message.toString())
-
-                        }
-
-                        is NetworkState.SessionOut -> {
-                            hideLoader()
-                            CustomSnackbar.make(
-                                requireActivity().window.decorView.rootView as ViewGroup,
-                                it.message.toString()
-                            ).show()
-                        }
-
-                        else -> {
-                            //   hideLoader()
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                swapViewModel.responseRengoExcQuoteResponse.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-                            //hideLoader()
-                            val response = it.data
-
-                            loge(
-                                "RangoSwap",
-                                "edittext : ${viewDataBinding!!.edtYouPay.text.toString()} == ${response?.enteredAmount}"
-                            )
-
-                            if (response?.route != null && viewDataBinding!!.edtYouPay.text.toString() == response.enteredAmount) {
-                                val amount = response.route!!.outputAmount
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    youGetObj.callFunction.getDecimal { dec ->
-                                        val decimal = dec!!
-                                        val amt = convertWeiToEther(amount!!, decimal)
-                                        var feesAmount: BigDecimal = 0.toBigDecimal()
-                                        it.data.route?.fee?.forEach { swapperFees ->
-                                            loge(
-                                                "calculateFee",
-                                                "${swapperFees?.expenseType} == ${swapperFees?.amount}"
+                                            providerList.add(
+                                                ProviderModel(
+                                                    providerName = data.providerName,
+                                                    CoinCode.RANGO,
+                                                    name = data.name!!,
+                                                    bestPrice = amount,
+                                                    swapperFees = setBalanceText(
+                                                        feesAmount, "", 6
+                                                    ),
+                                                    providerIcon = BASE_URL_PLUTO_PE_IMAGES + data.image
+                                                )
                                             )
-
-                                            feesAmount += if (swapperFees?.expenseType == "FROM_SOURCE_WALLET" && swapperFees.name == "Swapper Fee") {
-                                                convertWeiToEther(
-                                                    swapperFees.amount!!,
-                                                    swapperFees.token?.decimals!!
-                                                ).toBigDecimal()
-                                            } else 0.toBigDecimal()
                                         }
 
-                                        loge(
-                                            "Decimal",
-                                            "Rango: $decimal :: amount =>${getActualDigits(amt)} feesAmount : $feesAmount : actualfee : ${
-                                                convertScientificToBigDecimal("$feesAmount")
-                                            } :: $feesAmount"
+                                    } else if (data?.providerName == "exodus") {
+
+                                        val exodusId = data.response?.id
+                                        val exodusTransactionId = data.response?.payInAddress
+
+                                        providerList.add(
+                                            ProviderModel(
+                                                providerName = data.providerName,
+                                                CoinCode.EXODUS,
+                                                name = data.name!!,
+                                                bestPrice = data.quoteAmount!!,
+                                                providerIcon = BASE_URL_PLUTO_PE_IMAGES + data.image,
+                                                exodusId = exodusId,
+                                                exodusTransactionId = exodusTransactionId
+
+                                            )
                                         )
 
-
-                                        val amount =
-                                            if (youGetObj.chain?.coinType == CoinType.BITCOIN) {
-                                                setBalanceText(
-                                                    getActualDigits(amt).toBigDecimal(), "", 18
-                                                )
-                                            } else {
-                                                setBalanceText(
-                                                    getActualDigits(amt).toBigDecimal(), "", decimal
-                                                )
-                                            }
-
-                                        providerList.filter { it.coinCode == CoinCode.RANGO }
-                                            .forEach { provider ->
-                                                provider.bestPrice = amount
-                                                provider.swapperFees = setBalanceText(
-                                                    feesAmount, "", 6
-                                                )
-                                            }
-
-
-                                        checkAllAPIsCompleted()
+                                    } else {
+                                        providerList.add(
+                                            ProviderModel(
+                                                providerName = data?.providerName!!,
+                                                CoinCode.CHANGENOW,
+                                                name = data.name!!,
+                                                bestPrice = data.quoteAmount!!,
+                                                providerIcon = BASE_URL_PLUTO_PE_IMAGES + data.image
+                                            )
+                                        )
                                     }
                                 }
 
+                                checkAllAPIsCompleted()
                             } else {
-
-                                providerList.filter { provider -> provider.coinCode == CoinCode.RANGO }
-                                    .forEach { provider ->
-                                        provider.bestPrice = "0.0"
-                                        provider.swapperFees = "0.0"
-                                    }
-
                                 checkAllAPIsCompleted()
                             }
-
 
                         }
 
                         is NetworkState.Loading -> {
-                            //  requireContext().showLoader()
+                            viewDataBinding!!.layoutBestProvider.visibility = GONE
+                            viewDataBinding!!.txtLabelChooseProvider.visibility = GONE
+                            viewDataBinding!!.txtProviderNotFound.visibility = VISIBLE
+                            viewDataBinding!!.txtProviderNotFound.text = "Provider finding...."
+
                         }
 
                         is NetworkState.Error -> {
-                            //   hideLoader()
+                            requireActivity().runOnUiThread {
+                                viewDataBinding!!.progressAmount.visibility = GONE
+                                viewDataBinding!!.edtYouGet.visibility = VISIBLE
+                                viewDataBinding!!.imgProvider.visibility = GONE
+                                viewDataBinding!!.layoutBestProvider.visibility = GONE
+                                viewDataBinding!!.txtLabelChooseProvider.visibility = GONE
+                                viewDataBinding!!.txtProviderNotFound.visibility = VISIBLE
+                                viewDataBinding!!.txtProviderNotFound.text = "Provider not found"
 
-                            providerList.filter { provider -> provider.coinCode == CoinCode.RANGO }
-                                .forEach { provider ->
-                                    provider.bestPrice = "0.0"
-                                    provider.swapperFees = "0.0"
-
-                                }
-
-                            checkAllAPIsCompleted()
-
-                            // requireContext().showToast(it.message.toString())
+                            }
+                            requireContext().showToast(it.message.toString())
 
                         }
 
@@ -1209,7 +913,7 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                         }
 
                         else -> {
-                            //   hideLoader()
+
                         }
                     }
                 }
@@ -1219,17 +923,6 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
     }
 
-
-    @SuppressLint("SetTextI18n")
-    private fun estimatePrice(getCoinDetail: Tokens?, payCoinDetail: Tokens?) {
-        val getPrice = getCoinDetail?.t_price?.toDoubleOrNull() ?: 0.0
-        val payPrice = payCoinDetail?.t_price?.toDoubleOrNull() ?: 0.0
-        var estPrice = payPrice / getPrice
-        estPrice = estPrice.roundTo(6)
-        viewDataBinding?.txtFirstPrice?.text =
-            "1 ${payCoinDetail?.t_symbol ?: ""} ≈ $estPrice ${getCoinDetail?.t_symbol ?: ""}"
-
-    }
 
     override fun onPause() {
         super.onPause()
@@ -1237,16 +930,6 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
         isProgrammaticChange = true
     }
 
-    private fun openSwapProgressDialog(title: String, subtitle: String) {
-        SwapProgressDialog.getInstance().show(requireContext(),
-            title,
-            subtitle,
-            listener = object : SwapProgressDialog.DialogOnClickBtnListner {
-                override fun onOkClick() {
-                    findNavController().safeNavigate(SwapDirections.actionSwapToDashboard())
-                }
-            })
-    }
 
     override fun onResume() {
         super.onResume()
@@ -1255,119 +938,107 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
 
     private fun apiCallForAllProviderBestPrice(numericValue: String) {
-
-        loge("TimeDuration", "times => ${Calendar.getInstance().toAny()}")
         viewDataBinding!!.progressAmount.visibility = VISIBLE
         viewDataBinding!!.edtYouGet.visibility = GONE
         viewDataBinding!!.edtYouGet.setText("0")
         viewDataBinding!!.txtConvertedYouGet.text = ""
-
-        providerList.forEach {
-
-            when (it.coinCode.name) {
-
-                CoinCode.CHANGENOW.name -> {
-                    fromNetwork = getNetworkString(youPayObj.chain)
-                    toNetwork = getNetworkString(youGetObj.chain)
-
-                    swapViewModel.executeEstimateExchange(
-                        EXCHANGE_API, ExchangeRequestModel(
-                            youPayObj.t_symbol.toString().lowercase(),
-                            youGetObj.t_symbol.toString().lowercase(),
-                            fromNetwork.toString(),
-                            toNetwork.toString(),
-                            numericValue.toString(),
-                            Wallet.getPublicWalletAddress(
-                                youGetObj.chain?.coinType ?: CoinType.ETHEREUM
-                            ).toString()
-                        ), lastEnteredAmount = viewDataBinding!!.edtYouPay.text.toString()
-                    )
+        viewDataBinding!!.txtConvertedYouGet.visibility = GONE
 
 
-                }
-
-
-                CoinCode.OKX.name -> {
-
-
-                    if (youGetObj.t_type == youPayObj.t_type && youGetObj.t_address != "" && youPayObj.t_address != "") {
-
-                        CoroutineScope(Dispatchers.IO).launch {
-                            youPayObj.callFunction.getDecimal {
-
-                                swapViewModel.executeSwapOkxEstimat(
-                                    numericValue.toString(),
-                                    youPayObj.chain?.chainIdHex.toString(),
-                                    youGetObj.t_address.toString()
-                                        .ifEmpty { DEFAULT_CHAIN_ADDRESS },
-                                    youPayObj.t_address.toString()
-                                        .ifEmpty { DEFAULT_CHAIN_ADDRESS },
-                                    Wallet.getPublicWalletAddress(youPayObj.chain?.coinType!!)
-                                        .toString(),
-                                    it,
-                                    lastEnteredAmount = viewDataBinding!!.edtYouPay.text.toString()
-                                )
-                            }
-                        }
-                    } else {
-                        checkAllAPIsCompleted()
-                    }
-                }
-
-                CoinCode.RANGO.name -> {
-
-
-                    fromNetwork = getNetworkForRangoExchange(youPayObj.chain)
-                    toNetwork = getNetworkForRangoExchange(youGetObj.chain)
-
-
-                    CoroutineScope(Dispatchers.IO).launch {
-                        youPayObj.callFunction.getDecimal { decimal ->
-                            storedDecimalInRango = decimal
-
-                            loge("storedDecimalInRango", "$storedDecimalInRango")
-
-                            swapViewModel.executeRangoExchangeQuote(
-                                fromBlockchain = fromNetwork!!,
-                                fromTokenSymbol = youPayObj.t_symbol.toString(),
-                                fromTokenAddress = youPayObj.t_address.toString()
-                                    .ifEmpty { DEFAULT_CHAIN_ADDRESS },
-                                toBlockchain = toNetwork!!,
-                                toTokenSymbol = youGetObj.t_symbol.toString().lowercase(),
-                                toTokenAddress = youGetObj.t_address.toString()
-                                    .ifEmpty { DEFAULT_CHAIN_ADDRESS },
-                                walletAddress = Wallet.getPublicWalletAddress(args.tokenModel.chain?.coinType!!)
-                                    .toString(),
-                                numericValue,
-                                decimal = storedDecimalInRango,
-                                fromWalletAddress = Wallet.getPublicWalletAddress(youPayObj.chain?.coinType!!)!!,
-                                toWalletAddress = Wallet.getPublicWalletAddress(youGetObj.chain?.coinType!!)!!,
-                                lastEnteredAmount = viewDataBinding!!.edtYouPay.text.toString()
-
-                            )
-
-
-                        }
-
-
-                    }
-
-
-                }
-
-
+        val amountInWei: BigInteger = convertToWei(numericValue.toDouble(), payObjDecimal!!)
+        loge("payObjDecimal :: ${payObjDecimal} :: ${amountInWei}")
+        CoroutineScope(Dispatchers.IO).launch {
+            youPayObj.callFunction.getDecimal {
+                payObjDecimal = it
             }
-
+            youGetObj.callFunction.getDecimal {
+                getObjDecimal = it
+            }
         }
+
+
+        val changeNow = ChangeNow(
+            address = Wallet.getPublicWalletAddress(youGetObj.chain?.coinType ?: CoinType.ETHEREUM)
+                .toString(),
+            fromAmount = numericValue.toString(),
+            fromCurrency = youPayObj.t_symbol.toString().lowercase(),
+            fromNetwork = getNetworkString(youPayObj.chain),
+            toAmount = "",
+            toCurrency = youGetObj.t_symbol.toString().lowercase(),
+            toNetwork = getNetworkString(youGetObj.chain)
+        )
+
+
+        val okx = Okx(
+            amount = amountInWei.toString(),
+            chainId = youPayObj.chain?.chainIdHex.toString(),
+            fromTokenAddress = youPayObj.t_address,
+            slippage = "0.1",
+            toTokenAddress = youGetObj.t_address,
+            userWalletAddress = Wallet.getPublicWalletAddress(youPayObj.chain?.coinType!!)
+                .toString()
+        )
+
+        val rango = Rango(
+            fromBlockchain = getNetworkForRangoExchange(youPayObj.chain).uppercase(),
+            fromTokenSymbol = youPayObj.t_symbol.toString().uppercase(),
+            fromWalletAddress = Wallet.getPublicWalletAddress(youPayObj.chain?.coinType!!)!!,
+            price = amountInWei.toString(),
+            rangotoTokenAddress = youGetObj.t_address.toString()
+                .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+            toBlockchain = getNetworkForRangoExchange(youGetObj.chain).uppercase(),
+            toTokenSymbol = youGetObj.t_symbol.toString().lowercase().uppercase(),
+            toWalletAddress = Wallet.getPublicWalletAddress(youGetObj.chain?.coinType!!)!!,
+            fromTokenAddress = youPayObj.t_address.toString()
+                .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+            toTokenAddress = youGetObj.t_address.toString()
+                .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+
+            )
+
+
+        loge("ChainName", youPayObj.chain!!.chainName)
+
+        swapViewModel.swapQuoteSingleCall(
+            SwapQuoteRequestModel(
+                changeNow = changeNow,
+                okx = okx,
+                rango = rango,
+                fromBlockchain = getNetworkForRangoExchange(youPayObj.chain).uppercase(),
+                fromTokenSymbol = youPayObj.t_symbol.toString().uppercase(),
+                toBlockchain = getNetworkForRangoExchange(youGetObj.chain).uppercase(),
+                toTokenSymbol = youGetObj.t_symbol.toString().lowercase().uppercase(),
+                amount = numericValue.toString(),
+                amountInGwei = amountInWei.toString(),
+                fromTokenAddress = youPayObj.t_address.toString()
+                    .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+                toTokenAddress = youGetObj.t_address.toString()
+                    .ifEmpty { DEFAULT_CHAIN_ADDRESS },
+                fromWalletAddress = Wallet.getPublicWalletAddress(youPayObj.chain?.coinType!!)!!,
+                toWalletAddress = Wallet.getPublicWalletAddress(youGetObj.chain?.coinType!!)!!
+
+
+            )
+        )
 
     }
 
     private fun checkAllAPIsCompleted() {
-        apiSuccessCount += 1
-        loge("TAG", "checkAllAPIsCompleted: apicount $apiSuccessCount")
-        if (apiSuccessCount == providerList.size) {
+        if (providerList.isNotEmpty()) {
             getBestPriceFromAllBestPrices()
+        } else {
+            requireActivity().runOnUiThread {
+                viewDataBinding!!.progressAmount.visibility = GONE
+                viewDataBinding!!.edtYouGet.visibility = VISIBLE
+                viewDataBinding!!.imgProvider.visibility = GONE
+                viewDataBinding!!.layoutBestProvider.visibility = GONE
+                viewDataBinding!!.txtLabelChooseProvider.visibility = GONE
+                viewDataBinding!!.txtProviderNotFound.visibility = VISIBLE
+                viewDataBinding!!.txtProviderNotFound.text = "Provider not found"
+
+            }
         }
+
 
     }
 
@@ -1382,42 +1053,40 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
         if (viewDataBinding?.edtYouPay?.text.toString() != "") {
 
-            val maxBestPriceModel = providerList.maxBy {
-                it.bestPrice.toDouble()
-            }
-
+            val maxBestPriceModel = providerList[0]
             selectedProvider = maxBestPriceModel
             apiSuccessCount = 0
 
 
             val price = maxBestPriceModel.bestPrice.toDouble()
-                .toBigDecimal() * youGetObj.t_price!!.toBigDecimal()
+                .toBigDecimal() * youGetObj.t_price.toBigDecimal()
+            loge(
+                "CurrencyConvert",
+                "price : ${price} :: ${maxBestPriceModel.bestPrice} * ${youGetObj.t_price}"
+            )
             val formattedPrice = price.setScale(2, RoundingMode.DOWN).toString()
 
             requireActivity().runOnUiThread {
-
-                /* viewDataBinding!!.progressAmount.visibility = GONE
-                 viewDataBinding!!.edtYouGet.visibility = VISIBLE*/
-
                 if (maxBestPriceModel.bestPrice.toDouble() > 0.0) {
-
                     val amount = if (youGetObj.chain?.coinType == CoinType.BITCOIN) {
-                        // String.format("%.15f", maxBestPriceModel.bestPrice.toDouble())
-
                         setBalanceText(
                             maxBestPriceModel.bestPrice.toBigDecimal(), "", 18
                         )
                     } else {
-
                         setBalanceText(
                             maxBestPriceModel.bestPrice.toBigDecimal(), "", 6
                         )
-
-                        //  String.format("%.6f", maxBestPriceModel.bestPrice.toDouble())
-
                     }
 
+                    viewDataBinding!!.layoutBestProvider.visibility = VISIBLE
+                    viewDataBinding!!.txtLabelChooseProvider.visibility = VISIBLE
                     viewDataBinding?.edtYouGet?.setText(amount + " ${youGetObj.t_symbol}")
+                    viewDataBinding!!.imgProvider.visibility = VISIBLE
+                    viewDataBinding!!.txtBestQuote.text = selectedProvider.name
+//                    viewDataBinding!!.txtBestQuotePrice.text = selectedProvider.bestPrice
+                    Glide.with(requireContext()).load(selectedProvider.providerIcon)
+                        .placeholder(R.drawable.img_pluto_pe_logo_with_bg)
+                        .into(viewDataBinding!!.imgProvider)
 
 
                 } else {
@@ -1430,6 +1099,10 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
                     }$formattedPrice" else {
                         ""
                     }
+                viewDataBinding!!.txtConvertedYouGet.visibility = VISIBLE
+
+                viewDataBinding!!.txtProviderNotFound.visibility = GONE
+
             }
 
             loge("Swap", "getBestPriceFromAllBestPrices: MaxBestPrice $maxBestPriceModel")
@@ -1443,10 +1116,10 @@ class Swap : BaseFragment<FragmentSwapBinding, SwapViewModel>() {
 
                 viewDataBinding?.edtYouGet?.setText("0" + " ${youGetObj.t_symbol}")
                 viewDataBinding!!.txtConvertedYouGet.text = ""
+                viewDataBinding!!.txtConvertedYouGet.visibility = GONE
                 apiSuccessCount = 0
             }
 
         }
     }
-
 }

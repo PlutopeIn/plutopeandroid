@@ -13,14 +13,18 @@ import com.app.plutope.model.OnRampResponseModel
 import com.app.plutope.model.OnRampSellBestPriceRequestModel
 import com.app.plutope.model.ProviderOnRampPriceDetail
 import com.app.plutope.model.ResultOnMeta
-import com.app.plutope.model.UnlimitBestPriceModel
 import com.app.plutope.network.ApiHelper
 import com.app.plutope.network.NoConnectivityException
+import com.app.plutope.ui.fragment.transactions.buy.buy_btc.BuyRequestModel
+import com.app.plutope.ui.fragment.transactions.buy.buy_btc.BuyResponseModel
+import com.app.plutope.ui.fragment.transactions.sell.SellProviderModel
 import com.app.plutope.utils.Event
 import com.app.plutope.utils.constant.NO_INTERNET_CONNECTION
+import com.app.plutope.utils.constant.responseBadRequest
 import com.app.plutope.utils.constant.responseServerError
 import com.app.plutope.utils.constant.serverErrorMessage
 import com.app.plutope.utils.network.NetworkState
+import java.net.ConnectException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
@@ -43,9 +47,9 @@ class ProviderDetailsRepo @Inject constructor(private val apiHelper: ApiHelper) 
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
+            if (e is NoConnectivityException || e is UnknownHostException) {
                 NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
-            }else {
+            } else {
                 NetworkState.Error(e.message.toString())
             }
         }
@@ -68,204 +72,32 @@ class ProviderDetailsRepo @Inject constructor(private val apiHelper: ApiHelper) 
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
+            if (e is NoConnectivityException || e is UnknownHostException) {
                 NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
-            }else {
-                NetworkState.Error(e.localizedMessage.toString())
+            } else {
+                NetworkState.Error(e.localizedMessage?.toString() ?: "Error occurred")
             }
 
         }
     }
-    fun executeOnMetaBestPrice( url: String,
-                                   body: OnMetaBestPriceModel) = liveData<Event<NetworkState<ResultOnMeta>>>{
+
+    fun executeOnMetaBestPrice(
+        url: String,
+        body: OnMetaBestPriceModel
+    ) = liveData<Event<NetworkState<ResultOnMeta>>> {
         emit(Event(NetworkState.Loading()))
         try {
-            val response = apiHelper.executeOnMetaBestPriceApi(url,body)
+            val response = apiHelper.executeOnMetaBestPriceApi(url, body)
             val result = response.body()
             if (response.isSuccessful) {
                 if (result != null) {
                     val empList = response.body()?.result
 
-                    if(empList!=null){
+                    if (empList != null) {
                         emit(Event(NetworkState.Success("", empList)))
-                    }else{
+                    } else {
                         emit(Event(NetworkState.Error(response.errorBody().toString())))
                     }
-                } else {
-                    emit(Event(NetworkState.Error(response.errorBody().toString())))
-                }
-            } else {
-                emit(Event(NetworkState.Error(response.errorBody().toString())))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
-                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
-            }else {
-                emit(Event(NetworkState.Error(e.message.toString())))
-            }
-
-        }
-    }
-
-    fun executeOnMetaSellBestPrice( url: String,
-                                body: OnMetaSellBestPriceModel) = liveData<Event<NetworkState<ResultOnMeta>>>{
-        emit(Event(NetworkState.Loading()))
-        try {
-            val response = apiHelper.executeOnMetaBestSellPriceApi(url,body)
-            val result = response.body()
-            if (response.isSuccessful) {
-                if (result != null) {
-                    val empList = response.body()?.result
-                    if(empList!=null){
-                        emit(Event(NetworkState.Success("", empList)))
-                    }else{
-                        emit(Event(NetworkState.Error(response.errorBody().toString())))
-                    }
-
-                } else {
-                    emit(Event(NetworkState.Error(response.errorBody().toString())))
-                }
-            } else {
-                emit(Event(NetworkState.Error(response.errorBody().toString())))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
-                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
-            }else {
-                emit(Event(NetworkState.Error(e.message.toString())))
-            }
-
-        }
-    }
-
-
-    fun executeChangeNowBestPriceApi( url: String) = liveData<Event<NetworkState<ChangeNowBestPriceResponse>>> {
-        emit(Event(NetworkState.Loading()))
-        try {
-            val response = apiHelper.executeChangeNowBestPrice(url)
-            val result = response.body()
-            if (response.isSuccessful) {
-                if (result != null) {
-
-                    emit(Event(NetworkState.Success("", result)))
-                } else {
-                    emit(Event(NetworkState.Error(response.errorBody().toString())))
-                }
-            } else {
-                emit(Event(NetworkState.Error(response.errorBody().toString())))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
-                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
-            }else {
-                emit(Event(NetworkState.Error(e.message.toString())))
-            }
-
-        }
-    }
-
-
-    fun executeOnRampBestPrice(  headerOnRampSignKey: String,
-                                 headerPayLoad:String,
-                                 url:String,
-                                 body: OnRampBestPriceRequestModel?) = liveData<Event<NetworkState<OnRampResponseModel>>> {
-        emit(Event(NetworkState.Loading()))
-        try {
-            val response = apiHelper.executeOnRampBestPrice(headerOnRampSignKey,headerPayLoad,url,body)
-            val result = response.body()
-            if (response.isSuccessful) {
-                if (result?.response != null) {
-
-                    emit( Event(NetworkState.Success("", result)))
-                } else {
-                    emit(Event(NetworkState.Error(response.errorBody().toString())))
-                }
-            } else {
-                emit(Event(NetworkState.Error(response.errorBody().toString())))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
-                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
-            }else {
-                emit(Event(NetworkState.Error(e.message.toString())))
-            }
-
-        }
-    }
-
-
-
-    fun executeMeldBestPrice(  url:String,
-                               body: MeldRequestModel?) = liveData<Event<NetworkState<MeldResponseModel>>> {
-        emit(Event(NetworkState.Loading()))
-        try {
-            val response = apiHelper.executeOnMeldBestPrice(url,body!!)
-            val result = response.body()
-            if (response.isSuccessful) {
-                if (result?.quotes != null) {
-
-                    emit(Event(NetworkState.Success("", result)))
-                } else {
-                    emit(Event(NetworkState.Error(response.errorBody().toString())))
-                }
-            } else {
-                emit(Event(NetworkState.Error(response.errorBody().toString())))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
-                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
-            }else {
-                emit(Event(NetworkState.Error(e.message.toString())))
-            }
-
-        }
-    }
-
-    fun executeAlchemyPayBestPrice(sign: String,
-                                      timeStamp:String,
-                                      url:String,) = liveData<Event<NetworkState<AlchemyPayResponseModel>>> {
-        emit(Event(NetworkState.Loading()))
-        try {
-            val response = apiHelper.executeAlchemyPayBestPrice(sign,timeStamp,url)
-            val result = response.body()
-            if (response.isSuccessful) {
-                if (result?.resultList != null) {
-
-                    emit(Event(NetworkState.Success("", result)))
-                } else {
-                    emit(Event(NetworkState.Error(response.errorBody().toString())))
-                }
-            } else {
-                emit(Event(NetworkState.Error(response.errorBody().toString())))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
-                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
-            }else {
-                emit(Event(NetworkState.Error(e.message.toString())))
-            }
-        }
-    }
-
-
-    fun executeOnRampSellBestPrice(  headerOnRampSignKey: String,
-                                 headerPayLoad:String,
-                                 url:String,
-                                 body: OnRampSellBestPriceRequestModel?) = liveData<Event<NetworkState<OnRampResponseModel>>> {
-        emit(Event(NetworkState.Loading()))
-        try {
-            val response = apiHelper.executeOnRampSellBestPrice(headerOnRampSignKey,headerPayLoad,url,body)
-            val result = response.body()
-            if (response.isSuccessful) {
-                if (result?.response != null) {
-
-                    emit( Event(NetworkState.Success("", result)))
                 } else {
                     emit(Event(NetworkState.Error(response.errorBody().toString())))
                 }
@@ -279,18 +111,54 @@ class ProviderDetailsRepo @Inject constructor(private val apiHelper: ApiHelper) 
             } else {
                 emit(Event(NetworkState.Error(e.message.toString())))
             }
+
+        }
+    }
+
+    fun executeOnMetaSellBestPrice(
+        url: String,
+        body: OnMetaSellBestPriceModel
+    ) = liveData<Event<NetworkState<ResultOnMeta>>> {
+        emit(Event(NetworkState.Loading()))
+        try {
+            val response = apiHelper.executeOnMetaBestSellPriceApi(url, body)
+            val result = response.body()
+            if (response.isSuccessful) {
+                if (result != null) {
+                    val empList = response.body()?.result
+                    if (empList != null) {
+                        emit(Event(NetworkState.Success("", empList)))
+                    } else {
+                        emit(Event(NetworkState.Error(response.errorBody().toString())))
+                    }
+
+                } else {
+                    emit(Event(NetworkState.Error(response.errorBody().toString())))
+                }
+            } else {
+                emit(Event(NetworkState.Error(response.errorBody().toString())))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException) {
+                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
+            } else {
+                emit(Event(NetworkState.Error(e.message.toString())))
+            }
+
         }
     }
 
 
-    fun executeUnlimitBestPrice(url: String) =
-        liveData<Event<NetworkState<UnlimitBestPriceModel>>> {
+    fun executeChangeNowBestPriceApi(url: String) =
+        liveData<Event<NetworkState<ChangeNowBestPriceResponse>>> {
             emit(Event(NetworkState.Loading()))
             try {
-                val response = apiHelper.executeUnlimitBestPrice(url)
+                val response = apiHelper.executeChangeNowBestPrice(url)
                 val result = response.body()
                 if (response.isSuccessful) {
                     if (result != null) {
+
                         emit(Event(NetworkState.Success("", result)))
                     } else {
                         emit(Event(NetworkState.Error(response.errorBody().toString())))
@@ -308,5 +176,181 @@ class ProviderDetailsRepo @Inject constructor(private val apiHelper: ApiHelper) 
 
             }
         }
+
+
+    fun executeOnRampBestPrice(
+        headerOnRampSignKey: String,
+        headerPayLoad: String,
+        url: String,
+        body: OnRampBestPriceRequestModel?
+    ) = liveData<Event<NetworkState<OnRampResponseModel>>> {
+        emit(Event(NetworkState.Loading()))
+        try {
+            val response =
+                apiHelper.executeOnRampBestPrice(headerOnRampSignKey, headerPayLoad, url, body)
+            val result = response.body()
+            if (response.isSuccessful) {
+                if (result?.response != null) {
+
+                    emit(Event(NetworkState.Success("", result)))
+                } else {
+                    emit(Event(NetworkState.Error(response.errorBody().toString())))
+                }
+            } else {
+                emit(Event(NetworkState.Error(response.errorBody().toString())))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException) {
+                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
+            } else {
+                emit(Event(NetworkState.Error(e.message.toString())))
+            }
+
+        }
+    }
+
+
+    fun executeMeldBestPrice(
+        url: String,
+        body: MeldRequestModel?
+    ) = liveData<Event<NetworkState<MeldResponseModel>>> {
+        emit(Event(NetworkState.Loading()))
+        try {
+            val response = apiHelper.executeOnMeldBestPrice(url, body!!)
+            val result = response.body()
+            if (response.isSuccessful) {
+                if (result?.quotes != null) {
+
+                    emit(Event(NetworkState.Success("", result)))
+                } else {
+                    emit(Event(NetworkState.Error(response.errorBody().toString())))
+                }
+            } else {
+                emit(Event(NetworkState.Error(response.errorBody().toString())))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException) {
+                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
+            } else {
+                emit(Event(NetworkState.Error(e.message.toString())))
+            }
+
+        }
+    }
+
+    fun executeAlchemyPayBestPrice(
+        sign: String,
+        timeStamp: String,
+        url: String,
+    ) = liveData<Event<NetworkState<AlchemyPayResponseModel>>> {
+        emit(Event(NetworkState.Loading()))
+        try {
+            val response = apiHelper.executeAlchemyPayBestPrice(sign, timeStamp, url)
+            val result = response.body()
+            if (response.isSuccessful) {
+                if (result?.resultList != null) {
+
+                    emit(Event(NetworkState.Success("", result)))
+                } else {
+                    emit(Event(NetworkState.Error(response.errorBody().toString())))
+                }
+            } else {
+                emit(Event(NetworkState.Error(response.errorBody().toString())))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException) {
+                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
+            } else {
+                emit(Event(NetworkState.Error(e.message.toString())))
+            }
+        }
+    }
+
+
+    fun executeOnRampSellBestPrice(
+        headerOnRampSignKey: String,
+        headerPayLoad: String,
+        url: String,
+        body: OnRampSellBestPriceRequestModel?
+    ) = liveData<Event<NetworkState<OnRampResponseModel>>> {
+        emit(Event(NetworkState.Loading()))
+        try {
+            val response =
+                apiHelper.executeOnRampSellBestPrice(headerOnRampSignKey, headerPayLoad, url, body)
+            val result = response.body()
+            if (response.isSuccessful) {
+                if (result?.response != null) {
+
+                    emit(Event(NetworkState.Success("", result)))
+                } else {
+                    emit(Event(NetworkState.Error(response.errorBody().toString())))
+                }
+            } else {
+                emit(Event(NetworkState.Error(response.errorBody().toString())))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException) {
+                emit(Event(NetworkState.SessionOut("", NO_INTERNET_CONNECTION)))
+            } else {
+                emit(Event(NetworkState.Error(e.message.toString())))
+            }
+        }
+    }
+
+
+    suspend fun buyQuoteSingleCall(body: BuyRequestModel): NetworkState<BuyResponseModel?> {
+        return try {
+            val response = apiHelper.buyQuoteSingleCall(body)
+            val result = response.body()
+            if (response.code() == responseServerError) {
+                NetworkState.Error(serverErrorMessage)
+            } else {
+                if (response.isSuccessful && result != null) {
+                    NetworkState.Success(result.status.toString(), result)
+                } else {
+                    NetworkState.Error(response.message())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException || e is ConnectException) {
+                NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
+            } else {
+                NetworkState.Error(e.message.toString())
+            }
+        }
+    }
+
+
+    suspend fun getSellProviderList(): NetworkState<SellProviderModel?> {
+        return try {
+            val response = apiHelper.getAllSellProvider()
+            val result = response.body()
+            if (response.code() == responseServerError) {
+                NetworkState.Error(serverErrorMessage)
+            } else if (response.code() == responseBadRequest) {
+                NetworkState.Error("data is not available")
+            } else {
+                if (response.isSuccessful && result != null) {
+                    NetworkState.Success("", result)
+                } else {
+                    NetworkState.Error("Error")
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is NoConnectivityException || e is UnknownHostException) {
+                NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
+            } else {
+                NetworkState.Error(serverErrorMessage)
+            }
+        }
+
+    }
+
 
 }

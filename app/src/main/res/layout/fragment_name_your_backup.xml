@@ -14,8 +14,8 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +31,6 @@
                 android:layout_marginTop="-350dp"
                 android:layout_marginEnd="-60dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_circle_bg"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toTopOf="@id/guid2"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -67,7 +66,7 @@
                 android:fontFamily="@font/quicksand_bold"
                 android:gravity="center"
                 android:text="@string/name_your_backup"
-                android:textColor="@color/white"
+                android:textColor="@color/bg_white"
                 android:textSize="@dimen/_27msp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +82,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_10msp"
                 android:text="@string/lorem_ipsum_dolor_sit_amet_consetetur_adipscing_elitr_sed_diam_nonumy_eirmod_tempor_invidunt_ut_labore_et_dolore_magna"
-                android:textColor="@color/white"
+                android:textColor="@color/bg_white"
                 android:textSize="@dimen/_13msp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -110,9 +109,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_11mdp"
                 android:layout_marginEnd="@dimen/_16mdp"
-                android:paddingStart="@dimen/_20mdp"
                 android:inputType="textPersonName"
                 android:maxLines="1"
+                android:paddingStart="@dimen/_20mdp"
                 android:paddingEnd="@dimen/_40mdp"
                 android:textCursorDrawable="@null"
                 app:layout_constrainedWidth="true"
@@ -160,11 +159,11 @@
                 android:text="@string/do_not_delete_this_backup_file_on_google_drive_or_you_risk_losing_all_your_crypto"
                 android:textColor="@color/yellow_FFD23D"
                 android:textSize="@dimen/_12msp"
-                app:layout_constraintTop_toBottomOf="@id/txt_validation_message"
-                app:layout_constraintVertical_bias="1"
                 app:layout_constraintBottom_toTopOf="@id/btn_continue"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_validation_message"
+                app:layout_constraintVertical_bias="1" />
 
             <ImageView
                 android:layout_width="wrap_content"

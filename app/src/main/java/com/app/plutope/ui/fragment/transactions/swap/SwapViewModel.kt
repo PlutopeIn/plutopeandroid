@@ -12,12 +12,11 @@ import com.app.plutope.model.OkxSwapResponse
 import com.app.plutope.model.RangSwapQuoteModel
 import com.app.plutope.model.Tokens
 import com.app.plutope.ui.base.BaseViewModel
+import com.app.plutope.ui.fragment.transactions.swap.previewSwap.ExodusSwapResponseModel
 import com.app.plutope.ui.fragment.transactions.swap.previewSwap.RangoSwapResponseModel
 import com.app.plutope.utils.common.CommonNavigator
 import com.app.plutope.utils.constant.CHANGE_NOW_AVAILABLE_PAIR
-import com.app.plutope.utils.constant.OKX_APPROVE_API
 import com.app.plutope.utils.constant.OKX_SECRETE_API_KEY
-import com.app.plutope.utils.constant.OKX_SWAP_API
 import com.app.plutope.utils.convertToWei
 import com.app.plutope.utils.network.NetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -84,24 +83,19 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
         // val amountSend: BigInteger = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
 
         val amountSend: BigInteger = convertToWei(amount.toDouble(), decimal!!)
+
         val timestamp = Date().toInstant().toString()
         val requestPath = "/api/v5/dex/aggregator/swap?"
         val queryParams =
             "amount=${amountSend}&chainId=${chainId}&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&slippage=0.1&userWalletAddress=${userWalletAddress}"
         val httpMethod = "GET"
         val preSignData = "$timestamp$httpMethod$requestPath$queryParams"
-        val secretKey = OKX_SECRETE_API_KEY
 
+        val secretKey = OKX_SECRETE_API_KEY
         val sign = generateHmacSHA256Signature(preSignData, secretKey)
 
-        /* val headers = mutableMapOf<String, String>()
-         headers["OK-ACCESS-TIMESTAMP"] = timestamp
-         headers["OK-ACCESS-SIGN"] = sign
-         headers["Content-Type"] = "application/json"*/
-
-
         val url =
-            OKX_SWAP_API + "amount=${amountSend}&chainId=${chainId}&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&slippage=0.1&userWalletAddress=${userWalletAddress}"
+            "https://plutope.app/api/okx-swap-transcation?" + "amount=${amountSend}&chainId=${chainId}&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&slippage=0.1&userWalletAddress=${userWalletAddress}"
         viewModelScope.launch {
             _tagSwapUsingOkx.emit(NetworkState.Loading())
             _tagSwapUsingOkx.collectStateFlow(
@@ -165,7 +159,7 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
         // val amountSend: BigInteger = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
         val amountSend: BigInteger = convertToWei(amount.toDouble(), decimal!!)
         val timestamp = Date().toInstant().toString()
-        val requestPath = "/api/v5/dex/aggregator/approve-transaction?"
+        val requestPath = "/api/v5/dex/aggregator/okx-approve-transcation?"
         val queryParams =
             "amount=${amountSend}&chainId=${chainId}&tokenContractAddress=${tokenContractAddress}&approveAmount=${amountSend}"
         val httpMethod = "GET"
@@ -180,7 +174,7 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
          headers["Content-Type"] = "application/json"*/
 
         val url =
-            OKX_APPROVE_API + "amount=${amountSend}&chainId=${chainId}&tokenContractAddress=${tokenContractAddress}&approveAmount=${amountSend}"
+            "https://plutope.app/api/okx-approve-transcation?" + "amount=${amountSend}&chainId=${chainId}&tokenContractAddress=${tokenContractAddress}&approveAmount=${amountSend}"
         viewModelScope.launch {
             _tagApproveUsingOkx.emit(NetworkState.Loading())
             _tagApproveUsingOkx.collectStateFlow(
@@ -200,49 +194,6 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
         mac.init(secretKeySpec)
         val signatureBytes = mac.doFinal(data.toByteArray(StandardCharsets.UTF_8))
         return Base64.getEncoder().encodeToString(signatureBytes)
-    }
-
-    //okx swap to get estimate price
-    private val _tagSwapUsingOkxEstimate =
-        MutableStateFlow<NetworkState<OkxSwapResponse?>>(NetworkState.Empty())
-
-    val executeSwapUsingOkxEstimatResponse: StateFlow<NetworkState<OkxSwapResponse?>>
-        get() = _tagSwapUsingOkxEstimate
-
-    fun executeSwapOkxEstimat(
-        amount: String,
-        chainId: String,
-        toTokenAddress: String,
-        fromTokenAddress: String,
-        userWalletAddress: String,
-        decimal: Int? = 18, lastEnteredAmount: String
-    ) {
-        // val amountSend: BigInteger = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
-
-        val amountSend: BigInteger = convertToWei(amount.toDouble(), decimal!!)
-
-        val timestamp = Date().toInstant().toString()
-        val requestPath = "/api/v5/dex/aggregator/swap?"
-        val queryParams =
-            "amount=${amountSend}&chainId=${chainId}&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&slippage=0.1&userWalletAddress=${userWalletAddress}"
-        val httpMethod = "GET"
-        val preSignData = "$timestamp$httpMethod$requestPath$queryParams"
-        val secretKey = OKX_SECRETE_API_KEY
-
-        val sign = generateHmacSHA256Signature(preSignData, secretKey)
-        val url =
-            OKX_SWAP_API + "amount=${amountSend}&chainId=${chainId}&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&slippage=0.1&userWalletAddress=${userWalletAddress}"
-        viewModelScope.launch {
-            _tagSwapUsingOkxEstimate.emit(NetworkState.Loading())
-            _tagSwapUsingOkxEstimate.collectStateFlow(
-                swapRepo.executeSwapUsingOkx(
-                    url,
-                    sign,
-                    timestamp,
-                    lastEnteredAmount
-                )
-            )
-        }
     }
 
 
@@ -405,6 +356,76 @@ class SwapViewModel @Inject constructor(val swapRepo: SwapRepo, val tokensRepo: 
                     env,
                     fromAddress
                 )
+            )
+        }
+    }
+
+
+    /**
+     * Swap quote Single transaction
+     * */
+
+    private val _tagSwapQuoteSingleApi =
+        MutableStateFlow<NetworkState<SwapQuoteResponseModel?>>(NetworkState.Empty())
+
+    val swapQuoteSingleCallResponse: StateFlow<NetworkState<SwapQuoteResponseModel?>>
+        get() = _tagSwapQuoteSingleApi
+
+    fun swapQuoteSingleCall(
+        body: SwapQuoteRequestModel
+    ) {
+        viewModelScope.launch {
+            _tagSwapQuoteSingleApi.emit(NetworkState.Loading())
+            _tagSwapQuoteSingleApi.collectStateFlow(
+                swapRepo.swapQuoteSingleCall(
+                    body = body
+                )
+            )
+        }
+    }
+
+    /**
+     * Exodus update transaction call
+     * */
+
+    private val _exodusUpdateRequest =
+        MutableStateFlow<NetworkState<ExodusSwapResponseModel?>>(NetworkState.Empty())
+
+    val exodusUpdateResponse: StateFlow<NetworkState<ExodusSwapResponseModel?>>
+        get() = _exodusUpdateRequest
+
+    fun exodusSwapUpdateOrderCall(
+        id: String?, transactionId: String?
+    ) {
+        viewModelScope.launch {
+            _exodusUpdateRequest.emit(NetworkState.Loading())
+            _exodusUpdateRequest.collectStateFlow(
+                swapRepo.exodusSwapUpdateOrderCall(
+                    id = id!!,
+                    transactionId = transactionId!!
+                )
+            )
+        }
+    }
+
+
+    /**
+     * get Exodus transaction status call
+     * */
+
+    private val _exodusStatusRequest =
+        MutableStateFlow<NetworkState<ExodusSwapResponseModel?>>(NetworkState.Empty())
+
+    val exodusTransactionStatusResponse: StateFlow<NetworkState<ExodusSwapResponseModel?>>
+        get() = _exodusStatusRequest
+
+    fun exodusTransactionStatusUpdateCall(
+        id: String?
+    ) {
+        viewModelScope.launch {
+            _exodusStatusRequest.emit(NetworkState.Loading())
+            _exodusStatusRequest.collectStateFlow(
+                swapRepo.exodusTransactionStatusCall(id = id!!)
             )
         }
     }

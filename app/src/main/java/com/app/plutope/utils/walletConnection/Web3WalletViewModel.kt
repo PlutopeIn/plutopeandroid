@@ -1,26 +1,22 @@
 package com.app.plutope.utils.walletConnection
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.app.plutope.ui.base.BaseViewModel
 import com.app.plutope.utils.common.CommonNavigator
+import com.app.plutope.utils.logd
 import com.app.plutope.utils.loge
-import com.app.plutope.utils.walletConnection.state.AuthEvent
 import com.app.plutope.utils.walletConnection.state.ConnectionState
 import com.app.plutope.utils.walletConnection.state.NoAction
 import com.app.plutope.utils.walletConnection.state.PairingState
 import com.app.plutope.utils.walletConnection.state.SignEvent
-import com.app.plutope.utils.walletConnection.state.connectionStateFlow
-import com.walletconnect.web3.wallet.client.Wallet
-import com.walletconnect.web3.wallet.client.Web3Wallet
+import com.reown.walletkit.client.Wallet
+import com.reown.walletkit.client.WalletKit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,8 +26,6 @@ class Web3WalletViewModel @Inject constructor() : BaseViewModel<CommonNavigator>
 
     private val connectivityStateFlow: MutableStateFlow<ConnectionState> =
         MutableStateFlow(ConnectionState.Idle)
-    val connectionState =
-        merge(connectivityStateFlow.asStateFlow(), connectionStateFlow.asStateFlow())
 
 
     private val _pairingStateSharedFlow: MutableSharedFlow<PairingState> = MutableSharedFlow()
@@ -39,7 +33,7 @@ class Web3WalletViewModel @Inject constructor() : BaseViewModel<CommonNavigator>
 
 
     val walletEvents = WCDelegate.walletEvents.map { wcEvent ->
-        Log.d("Web3Wallet", "VM: $wcEvent")
+        logd("Web3Wallet", "VM: $wcEvent")
 
         when (wcEvent) {
             is Wallet.Model.SessionRequest -> {
@@ -54,46 +48,36 @@ class Web3WalletViewModel @Inject constructor() : BaseViewModel<CommonNavigator>
                 val arrayOfArgs: ArrayList<String?> =
                     arrayListOf(topic, icon, peerName, requestId, params, chain, method)
 
-
-
                 SignEvent.SessionRequest(wcEvent, arrayOfArgs, arrayOfArgs.size)
 
 
             }
 
-            is Wallet.Model.AuthRequest -> {
-                loge("walletEvents", "AuthRequest")
+            /* is Wallet.Model.AuthRequest -> {
+                 viewModelScope.launch {
+                     _pairingStateSharedFlow.emit(PairingState.Success)
+                 }
 
-                viewModelScope.launch {
-                    _pairingStateSharedFlow.emit(PairingState.Success)
-                }
+                 try {
+                     val message = Web3Wallet.formatMessage(
+                         Wallet.Params.FormatMessage(
+                             wcEvent.payloadParams,
+                             ISSUER
+                         )
+                     ) ?: "Error formatting message"
+                     loge("Message", message)
+                 } catch (e: Exception) {
+                     e.printStackTrace()
+                 }
+                 AuthEvent.OnRequest(wcEvent.id, "")
 
-                try {
-                    val message = Web3Wallet.formatMessage(
-                        Wallet.Params.FormatMessage(
-                            wcEvent.payloadParams,
-                            ISSUER
-                        )
-                    ) ?: "Error formatting message"
-                    loge("Message", message)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-
-
-                AuthEvent.OnRequest(wcEvent.id, "")
-
-            }
+             }*/
 
             is Wallet.Model.SessionDelete -> {
-                loge("walletEvents", "SessionDelete")
                 SignEvent.Disconnect
             }
 
             is Wallet.Model.SessionProposal -> {
-                Log.d("SessionProposal", "VM: $wcEvent")
-
                 viewModelScope.launch {
                     _pairingStateSharedFlow.emit(PairingState.Success)
                 }
@@ -101,8 +85,6 @@ class Web3WalletViewModel @Inject constructor() : BaseViewModel<CommonNavigator>
             }
 
             is Wallet.Model.ConnectionState -> {
-                loge("walletEvents", "ConnectionState")
-
                 val connectionState = if (wcEvent.isAvailable) {
                     ConnectionState.Ok
                 } else {
@@ -112,9 +94,7 @@ class Web3WalletViewModel @Inject constructor() : BaseViewModel<CommonNavigator>
             }
 
             else -> {
-
                 loge("walletEvents", "No Action")
-
                 NoAction
 
             }
@@ -127,10 +107,8 @@ class Web3WalletViewModel @Inject constructor() : BaseViewModel<CommonNavigator>
             _pairingStateSharedFlow.emit(PairingState.Loading)
         }
 
-
         val pairingParams = Wallet.Params.Pair(pairingUri)
-
-        Web3Wallet.pair(pairingParams) { error ->
+        WalletKit.pair(pairingParams) { error ->
             viewModelScope.launch {
                 _pairingStateSharedFlow.emit(PairingState.Error(error.throwable.message ?: ""))
             }

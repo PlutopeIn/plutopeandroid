@@ -28,24 +28,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
-import org.kethereum.eip137.model.ENSName
-import org.kethereum.ens.ENS
-import org.kethereum.model.Address
-import org.kethereum.model.ByteCode
-import org.kethereum.model.ChainId
-import org.kethereum.model.SignatureData
-import org.kethereum.model.SignedTransaction
-import org.kethereum.rpc.EthereumRPC
-import org.kethereum.rpc.model.BlockInformation
-import org.kethereum.rpc.model.FeeHistory
-import org.kethereum.rpc.model.StringResultResponse
-import org.komputing.khex.model.HexString
+
 import org.web3j.ens.EnsResolver
 import org.web3j.ens.EnsResolver.isValidEnsName
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.Web3jService
 import org.web3j.protocol.http.HttpService
-import java.math.BigInteger
 import java.math.RoundingMode
 import java.util.concurrent.TimeUnit
 
@@ -89,8 +77,6 @@ class AddENS : BaseFragment<FragmentAddENSBinding, AddENSViewModel>() {
                     getEthENS()
                 }
         */
-
-
 
 
         val ensList = arrayListOf<ENSListModel>()
@@ -143,99 +129,6 @@ class AddENS : BaseFragment<FragmentAddENSBinding, AddENSViewModel>() {
 
     }
 
-    private fun getEthENS() {
-        val ethereumRPC = object : EthereumRPC {
-            override fun accounts(): List<Address>? {
-                val model = Address(Wallet.getPublicWalletAddress(CoinType.ETHEREUM)!!)
-                val address = arrayListOf<Address>()
-                address.add(model)
-                return address
-
-            }
-
-            override fun blockNumber(): BigInteger? {
-                TODO("Not yet implemented")
-            }
-
-            override fun call(
-                transaction: org.kethereum.model.Transaction,
-                block: String
-            ): HexString? {
-                TODO("Not yet implemented")
-            }
-
-            override fun chainId(): ChainId? {
-                return ChainId(1)
-            }
-
-            override fun clientVersion(): String? {
-                return "1"
-            }
-
-            override fun estimateGas(transaction: org.kethereum.model.Transaction): BigInteger? {
-                return 0.toBigInteger()
-            }
-
-            override fun gasPrice(): BigInteger? {
-                return 0.toBigInteger()
-            }
-
-            override fun getBalance(address: Address, block: String): BigInteger? {
-                return 0.toBigInteger()
-            }
-
-            override fun getBlockByNumber(number: BigInteger): BlockInformation? {
-                TODO("Not yet implemented")
-            }
-
-            override fun getCode(address: Address, block: String): ByteCode? {
-                TODO("Not yet implemented")
-            }
-
-            override fun getFeeHistory(
-                blocks: Int,
-                lastBlock: String,
-                percentiles: String
-            ): FeeHistory? {
-                TODO("Not yet implemented")
-            }
-
-            override fun getStorageAt(
-                address: Address,
-                position: String,
-                block: String
-            ): HexString? {
-                TODO("Not yet implemented")
-            }
-
-            override fun getTransactionByHash(hash: String): SignedTransaction? {
-                TODO("Not yet implemented")
-            }
-
-            override fun getTransactionCount(address: Address, block: String): BigInteger? {
-                TODO("Not yet implemented")
-            }
-
-            override fun sendRawTransaction(data: String): String? {
-                TODO("Not yet implemented")
-            }
-
-            override fun sign(address: Address, message: ByteArray): SignatureData? {
-                TODO("Not yet implemented")
-            }
-
-            override fun stringCall(function: String, params: String): StringResultResponse? {
-                TODO("Not yet implemented")
-            }
-        }
-
-        val ens = ENS(ethereumRPC)
-        val address = ens.getAddress(ENSName("web3j.eth"))
-
-        loge("ENS_ADD", "$address")
-
-    }
-
 
     private fun sendTransaction(it: ENSListModel) {
 
@@ -268,7 +161,7 @@ class AddENS : BaseFragment<FragmentAddENSBinding, AddENSViewModel>() {
                                 gasLimit = "0",
                                 gasPrice = "0",
                                 data = it.data?.tx?.params?.data!!,
-                                value = txValue!!
+                                value = txValue
 
                             ) { success, errorMessage, _ ->
                                 if (success) {

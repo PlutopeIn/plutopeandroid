@@ -8,8 +8,8 @@ import com.app.plutope.utils.loge
 import com.app.plutope.utils.walletConnection.WCDelegate
 import com.app.plutope.utils.walletConnection.state.CoreEvent
 import com.app.plutope.utils.walletConnection.state.NoAction
-import com.walletconnect.android.Core
-import com.walletconnect.web3.wallet.client.Web3Wallet
+import com.reown.android.Core
+import com.reown.walletkit.client.WalletKit
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -26,7 +26,7 @@ class ConnectionsViewModel : ViewModel() {
         MutableSharedFlow(replay = 0, extraBufferCapacity = 1, BufferOverflow.DROP_OLDEST)
     private var refreshFlow: SharedFlow<Unit> = _refreshFlow.asSharedFlow()
     private val signConnectionsFlow = merge(WCDelegate.walletEvents, refreshFlow).map {
-       // Log.d("Web3Wallet", "signConnectionsFlow: $it")
+        // Log.d("Web3Wallet", "signConnectionsFlow: $it")
         getLatestActiveSignSessions()
     }
 
@@ -67,7 +67,7 @@ class ConnectionsViewModel : ViewModel() {
 
     private fun getLatestActiveSignSessions(): List<ConnectionUI> {
         return try {
-            Web3Wallet.getListOfActiveSessions().filter { wcSession ->
+            WalletKit.getListOfActiveSessions().filter { wcSession ->
                 wcSession.metaData != null
             }.mapIndexed { index, wcSession ->
 

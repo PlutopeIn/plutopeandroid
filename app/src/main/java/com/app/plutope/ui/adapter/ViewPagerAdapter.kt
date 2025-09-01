@@ -4,8 +4,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class ViewPagerAdapter(var fragments: List<Fragment>,actvity:FragmentActivity) :
-    FragmentStateAdapter(actvity) {
+class ViewPagerAdapter(var fragments: List<Fragment>,activity:FragmentActivity) :
+    FragmentStateAdapter(activity) {
+
+
 
     override fun getItemCount(): Int = fragments.size
 

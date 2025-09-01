@@ -1,69 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimary"
+    android:fillViewport="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_white">
 
-<!--
+    <!--
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_252mdp"
+            android:layout_marginTop="@dimen/_85mdp"
+            android:src="@drawable/img_welcome_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    -->
+    <!--
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_25mdp"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/multichain"
+            app:lottie_speed="2" />-->
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/img_back"
+        android:layout_width="@dimen/_50mdp"
+        android:layout_height="@dimen/_50mdp"
+        android:layout_marginStart="@dimen/_10mdp"
+        android:layout_marginTop="@dimen/_10mdp"
+        android:focusable="true"
+        android:foreground="@drawable/ripple_effect"
+        android:padding="@dimen/_8mdp"
+        android:src="@drawable/ic_back_new"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title_skip2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20mdp"
+        android:fontFamily="@font/inter"
+        android:text="@string/skip"
+        android:textColor="@color/sub_title_gray"
+        android:textSize="@dimen/_15mdp"
+        app:layout_constraintBottom_toBottomOf="@id/img_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/img_back" />
+
     <ImageView
         android:id="@+id/image_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_252mdp"
-        android:layout_marginTop="@dimen/_85mdp"
-        android:src="@drawable/img_welcome_2"
+        android:layout_height="@dimen/_350mdp"
+        android:layout_marginTop="@dimen/_20mdp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/welcome_screen_img_third"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
--->
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/image_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/_25mdp"
-        android:scaleType="fitXY"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/multichain"
-        app:lottie_speed="2" />
+        app:layout_constraintTop_toBottomOf="@id/img_back" />
 
 
     <TextView
         android:id="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_33mdp"
-        android:fontFamily="@font/quicksand_bold"
-        android:gravity="center_horizontal"
-        android:text="@string/multi_chain_amp_lightning_fast"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_25msp"
+        android:layout_marginHorizontal="@dimen/_20mdp"
+        android:layout_marginTop="@dimen/_30mdp"
+        android:fontFamily="@font/violet_sans"
+        android:gravity="start"
+        android:lineSpacingExtra="@dimen/_5mdp"
+        android:text="@string/one_wallet_amp_unlimited_possibilities"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_32msp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_view"
+        app:layout_constraintTop_toBottomOf="@id/image_view" />
 
-        />
 
     <TextView
         android:id="@+id/txt_instruction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_38mdp"
+        android:layout_marginHorizontal="@dimen/_20mdp"
         android:layout_marginTop="@dimen/_23mdp"
-        android:fontFamily="@font/quicksand_regular"
-        android:gravity="center_horizontal"
-        android:text="@string/the_plutope_wallet_operates_across_multiple_chains_delivering_lightning_fast_transactions_no_more_manual_network_selection"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_14msp"
+        android:fontFamily="@font/inter"
+        android:gravity="start"
+        android:lineSpacingExtra="@dimen/_3mdp"
+        android:text="@string/explore_a_world_of_unlimited_possibilities_with_a_single_wallet_empowering_you_to_do_more_with_your_digital_assets"
+        android:textColor="@color/sub_title_gray"
+        android:textSize="@dimen/_16msp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_title"
 
         />
 
+    <ImageView
+        android:id="@+id/img_button_next_w2"
+        android:layout_width="@dimen/_60mdp"
+        android:layout_height="@dimen/_60mdp"
+        android:layout_marginTop="@dimen/_20mdp"
+        app:layout_constraintVertical_bias="1"
+        android:layout_marginBottom="@dimen/_30mdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_circle_welcom_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_instruction"
+
+
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

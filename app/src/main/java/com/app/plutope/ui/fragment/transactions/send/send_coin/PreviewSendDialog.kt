@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import com.app.plutope.R
 import com.app.plutope.databinding.DialogSendAdvancedPriviewBinding
-import com.app.plutope.utils.bigIntegerToString
 import com.app.plutope.utils.constant.ENTER_GAS_LIMIT
 import com.app.plutope.utils.constant.ENTER_GAS_PRICE
 import com.app.plutope.utils.constant.ENTER_GAS_PRICE_EMPTY
@@ -16,9 +15,9 @@ import com.app.plutope.utils.constant.ENTER_NONCE
 import com.app.plutope.utils.constant.isFullScreenLockDialogOpen
 import com.app.plutope.utils.gweiToWei
 import com.app.plutope.utils.showToast
-import com.app.plutope.utils.stringToBigInteger
+import com.app.plutope.utils.stringToBigDecimal
 import com.app.plutope.utils.weiToGwei
-import java.math.BigInteger
+import java.math.BigDecimal
 
 
 class PreviewSendAdvanceDialog private constructor() {
@@ -66,9 +65,9 @@ class PreviewSendAdvanceDialog private constructor() {
         fullScreenSuccessDialog?.window!!.attributes = layoutParams
         fullScreenSuccessDialog?.setCancelable(false)
 
-        val convertedPrice = weiToGwei(stringToBigInteger(transactionNetworkModel?.gasPrice!!))
+        val convertedPrice = weiToGwei(stringToBigDecimal(transactionNetworkModel?.gasPrice!!))
 
-        binding.edtGasPrice.setText(bigIntegerToString(convertedPrice))
+        binding.edtGasPrice.setText(convertedPrice.toPlainString())
         binding.edtGasLimit.setText(transactionNetworkModel.gasLimit.toString())
         binding.edtNonce.setText(transactionNetworkModel.nonce.toString())
 
@@ -99,7 +98,7 @@ class PreviewSendAdvanceDialog private constructor() {
 
                 else -> {
 
-                    val gp = stringToBigInteger(binding.edtGasPrice.text.toString())
+                    val gp = stringToBigDecimal(binding.edtGasPrice.text.toString())
                     gweiToWei(gp)
 
 
@@ -111,7 +110,6 @@ class PreviewSendAdvanceDialog private constructor() {
                     )
 
                     dismiss()
-
 
                 }
             }
@@ -141,7 +139,7 @@ class PreviewSendAdvanceDialog private constructor() {
 
     interface DialogOnClickBtnListner {
         fun onSubmitClicked(
-            gasPrice: BigInteger,
+            gasPrice: BigDecimal,
             gasLimit: String,
             nonce: String,
             transactionData: String

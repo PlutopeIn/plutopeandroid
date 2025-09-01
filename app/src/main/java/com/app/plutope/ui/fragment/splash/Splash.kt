@@ -8,14 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.app.plutope.R
 import com.app.plutope.databinding.FragmentSplashBinding
+import com.app.plutope.utils.constant.needAppUpdateVersion
 import com.app.plutope.utils.extras.PreferenceHelper
 import com.app.plutope.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +22,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class Splash : Fragment() {
     private lateinit var binding: FragmentSplashBinding
+
     @Inject
     lateinit var preferenceHelper: PreferenceHelper
     override fun onCreateView(
@@ -38,27 +38,39 @@ class Splash : Fragment() {
 
         if (preferenceHelper.menomonicWallet != "") {
             CoroutineScope(Dispatchers.Main).launch {
-                delay(1000)
+
+                if (isAdded && !isStateSaved) {
+                    if (preferenceHelper.appUpdatedFlag == "" || preferenceHelper.appUpdatedFlag == needAppUpdateVersion) {
+                        findNavController().safeNavigate(SplashDirections.actionSplashToUpdateAnything())
+                    } else {
+                        findNavController().safeNavigate(SplashDirections.actionSplashToDashboard())
+                    }
+                }
+
+            }
+
+        } else {
+            // binding.videoView.visibility = View.VISIBLE
+            //  playVideoSplash()
+
+            if (preferenceHelper.menomonicWallet != "") {
                 if (preferenceHelper.appUpdatedFlag == "") {
                     findNavController().safeNavigate(SplashDirections.actionSplashToUpdateAnything())
                 } else {
                     findNavController().safeNavigate(SplashDirections.actionSplashToDashboard())
                 }
 
+            } else {
+                findNavController().safeNavigate(SplashDirections.actionSplashToWalletSetup())
             }
-
-        } else {
-            binding.videoView.visibility = View.VISIBLE
-            playVideoSplash()
         }
 
 
     }
 
     private fun playVideoSplash() {
-        val videoPath =
-            "android.resource://" + requireContext().packageName + "/" + R.raw.splash_video_short
-        val videoUri = Uri.parse(videoPath)
+        // val videoPath = "android.resource://" + requireContext().packageName + "/" + R.raw.splash_video_short
+        val videoUri = Uri.parse(/*videoPath*/"")
         binding.videoView.setVideoURI(videoUri)
         binding.videoView.start()
         binding.videoView.setOnCompletionListener { mp ->
@@ -66,7 +78,7 @@ class Splash : Fragment() {
             if (preferenceHelper.menomonicWallet != "") {
                 if (preferenceHelper.appUpdatedFlag == "") {
                     findNavController().safeNavigate(SplashDirections.actionSplashToUpdateAnything())
-                }else {
+                } else {
                     findNavController().safeNavigate(SplashDirections.actionSplashToDashboard())
                 }
 
@@ -82,3 +94,4 @@ class Splash : Fragment() {
     }
 
 }
+

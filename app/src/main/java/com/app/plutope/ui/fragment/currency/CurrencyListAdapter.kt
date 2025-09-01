@@ -13,7 +13,6 @@ class CurrencyListAdapter(
     var providerClick: ((CurrencyModel)) -> Unit
 ) :
     ListAdapter<CurrencyModel, CurrencyListAdapter.ViewHolder>(DIFF_CALLBACK) {
-
     inner class ViewHolder(var binding: RowCurrencyListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(model: CurrencyModel) {

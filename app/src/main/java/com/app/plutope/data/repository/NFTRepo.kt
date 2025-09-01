@@ -3,7 +3,6 @@ package com.app.plutope.data.repository
 import com.app.plutope.model.NFTListModel
 import com.app.plutope.network.ApiHelper
 import com.app.plutope.network.NoConnectivityException
-import com.app.plutope.utils.Event
 import com.app.plutope.utils.constant.NO_INTERNET_CONNECTION
 import com.app.plutope.utils.constant.responseServerError
 import com.app.plutope.utils.constant.serverErrorMessage
@@ -14,8 +13,8 @@ import javax.inject.Inject
 class NFTRepo @Inject constructor(private val apiHelper: ApiHelper) {
 
     suspend fun getNFTListing(
-        url:String
-    ): NetworkState<NFTListModel?> {
+        url: String
+    ): NetworkState<MutableList<NFTListModel>?> {
         return try {
             val response = apiHelper.executeNftListApi(url)
             val result = response.body()
@@ -30,15 +29,14 @@ class NFTRepo @Inject constructor(private val apiHelper: ApiHelper) {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
+            if (e is NoConnectivityException || e is UnknownHostException) {
                 NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
-            }else {
-              NetworkState.Error(e.message.toString())
+            } else {
+                NetworkState.Error(e.message.toString())
             }
         }
 
     }
-
 
 
 }

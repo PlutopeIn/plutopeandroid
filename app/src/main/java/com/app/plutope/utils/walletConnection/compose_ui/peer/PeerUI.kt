@@ -2,7 +2,7 @@ package com.app.plutope.utils.walletConnection.compose_ui.peer
 
 import androidx.compose.ui.graphics.Color
 import com.app.plutope.R
-import com.walletconnect.web3.wallet.client.Wallet
+import com.reown.walletkit.client.Wallet
 
 
 data class PeerUI(
@@ -58,13 +58,6 @@ fun getValidationIcon(validation: Validation): Int {
     }
 }
 
-fun getValidationTitle(validation: Validation): String {
-    return when (validation) {
-        Validation.VALID -> "Verified domain"
-        Validation.UNKNOWN -> "Cannot verify"
-        Validation.INVALID -> "Invalid domain"
-    }
-}
 
 fun getDescriptionTitle(peerContextUI: PeerContextUI): String {
     return if (peerContextUI.isScam == true) "Known security risk" else {

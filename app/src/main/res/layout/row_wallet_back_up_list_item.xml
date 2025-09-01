@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_5mdp"
-        android:background="@drawable/bg_corner_radius_10">
+        android:background="@drawable/bg_corner_radius_35">
 
 
         <TextView
@@ -25,7 +25,7 @@
             android:layout_marginStart="@dimen/_14mdp"
             android:fontFamily="@font/quicksand_semibold"
             android:text="@{model.fileName}"
-            android:textColor="@color/white"
+            android:textColor="@color/bg_white"
             android:textSize="@dimen/_13msp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

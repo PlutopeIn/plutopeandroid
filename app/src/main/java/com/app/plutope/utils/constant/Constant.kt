@@ -1,6 +1,14 @@
 package com.app.plutope.utils.constant
 
+import androidx.core.text.HtmlCompat
+import com.app.plutope.R
 import com.app.plutope.model.Tokens
+import com.app.plutope.ui.fragment.card.card_wallet_list.CardWalletListResponseModel
+import com.app.plutope.ui.fragment.card.my_card.CardListResponseModel
+import com.app.plutope.ui.fragment.card_beta.user_management.card_dashboard.model.AccountModel
+import com.app.plutope.utils.extras.PreferenceHelper
+import com.app.plutope.utils.isScientificNotation
+import com.app.plutope.utils.loge
 
 const val getNotificationType = "Notification_Type"
 const val key_notification_type = "key_notification_type"
@@ -9,15 +17,15 @@ const val serverErrorMessage = "Server Error"
 
 const val btcImplementationMessage = "BTC in not available now implemented coming soon"
 
-enum class Language(val displayName: String, val code: String) {
-    ENGLISH("English", "en"),
-    THAI("Thai", "th"),
-    HINDI("Hindi", "hi"),
-    ARABIC("Arabic", "ar")
-}
-
-class JJ {
-    var selectedLanguage: String = "en"
+enum class Language(
+    val displayName: String,
+    val code: String,
+    val imageResId: Int,
+    var isSelected: Boolean = false
+) {
+    HINDI("Hindi", "hi", R.drawable.ic_india_flag),
+    ENGLISH("English", "en", R.drawable.ic_america_flag),
+    THAI("Thai", "th", R.drawable.ic_thai_flag)
 }
 
 
@@ -25,21 +33,32 @@ const val RELAY_URL = "relay.walletconnect.com"
 
 //Page types
 
-var appUpdateVersion = "1"
+/***
+ * If you need to see update screen in your app change needAppUpdateVersion and appUpdateVersion both count update currentVersion+1
+ * **/
+
+var needAppUpdateVersion = "5"  // last 4
+var appUpdateVersion = "6"   //5
 
 const val nftPageType = "1"
 const val AddCustomTokenPageType = "2"
 
+const val registerType = "1"
+const val passwordType = "2"
+
+var isForceDownLockScreen: Boolean = false
+
 var isFromReceived: Boolean = false
 var isPausedOnce: Boolean = false
 
-const val buttonSwap = "Swap"
-const val buttonSell = "Sell"
-const val buttonRampable = "Rampable"
+var statusKYC1Process = ""
+var statusKYC2Process = ""
 
-const val buttonMetaMask = "Meta mask"
-const val buttonTrustWallet = "Trust wallet"
-const val buttonPlutoPe = "PlutoPe"
+var isChangePin: Boolean = false
+var typeFromChangePin = 1
+var isOpenAlreadyOtpDialog = false
+var isCardOtpDialog = false
+
 
 const val typeSell = "Sell"
 const val typeBuy = "Buy"
@@ -47,39 +66,89 @@ const val typeBuy = "Buy"
 const val pageTypeBuy = "Buy"
 const val pageTypeSwap = "Swap"
 
+
+const val pageTypePhoneNumber = "phone_number"
+const val pageTypeWalletAddress = "wallet_address"
+
 var isFullScreenLockDialogOpen = false
 
 const val typeCountryList: Int = 1
 const val typeCurrencyList: Int = 2
 const val typeCountryCodeList: Int = 3
 
-var lastSelectedSlippage = 2
+var lastSelectedSlippage = 1
+
+var isFromList: Boolean = false
+
+var defaultPLTTokenId = "plt"
 
 
 //URL
-const val BASE_URL = "https://sc.chimpareusa.com"
-const val API_URL = "$BASE_URL/api/v2/"
+
 const val cryptoCurrencyUrl = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/"
-const val cryptoCurrencyMarketUrl = "https://api.coingecko.com/api/v3/coins/markets"
-//Network messages
 
 const val responseServerError = 500
-const val responseBadRequest = 400
+const val responseBadRequest = 400 or 403
+const val responseUnAuthorizedRequest = 401
 
 //Validation messages
 const val CANT_BE_EMPTY = "Can't Be Empty!"
 const val ENTER_EMAIL_PHONE = "Please enter email or mobile no."
+
+const val CURRENT_PASSWORD_EMPTY_VALIDATION = "Please enter current password"
+const val NEW_PASSWORD_EMPTY_VALIDATION = "Please enter new password"
+const val PASSWORD_EMPTY_VALIDATION_NEW = "Please enter confirm password"
+const val PASSWORD_MATCH_VALIDATION = "Password and confirm password does not match"
 const val ENTER_PASSWORD = "Please enter password"
 const val backupnamecantempty = "Backup Name can't be empty!"
-
-//INFURA API KEY
-const val INFURA_KEY = "3c01e09390db4731bfebd48d42c7dde0"
+const val phrasesCanNotBeEmpty = "Phrases can't be empty"
 
 
 //
 
 const val BASE_URL_PLUTO_PE = "https://plutope.app/api/"
-const val BASE_URL_PLUTO_PE_LOCAL = "http://192.168.29.77:3011/api/"
+const val BASE_URL_PLUTO_PE_IMAGES = BASE_URL_PLUTO_PE + "images/"
+
+enum class CardBetaEnv(val type: String) {
+    LIVE("Live"),
+    TEST("Test"),
+}
+
+var cardBetaENV = CardEnv.LIVE.type
+
+const val liveCardBetaUrl = "https://api.sandbox-v2.vault.ist/"
+const val testCardBetaUrl = "https://api.sandbox-v2.vault.ist/"
+const val partnerID = "{your_card_partner_id}"
+const val clientId = "{your_card_client_id}"
+val CARD_BETA_BASE_URL = when (cardBetaENV) {
+    CardEnv.LIVE.type -> liveCardBetaUrl
+    else -> testCardBetaUrl
+}
+
+
+enum class CardEnv(val type: String) {
+    LIVE("Live"),
+    TEST("Test"),
+}
+
+/** @Pravin You can change card environment from here live(CardEnv.LIVE.type) or test(CardEnv.TEST.type) **/
+var cardENV = CardEnv.LIVE.type
+
+const val liveCardUrl = "https://api.crypterium.com/"
+const val testCardUrl = "https://api.vault.sandbox.testessential.net/"
+val VAULT_SAND_BOX_URL = when (cardENV) {
+    CardEnv.LIVE.type -> liveCardUrl
+    else -> testCardUrl
+}
+val VAULT_X_MERCHANT_ID =
+    if (cardENV == CardEnv.LIVE.type) "{live_card_merchant_id}" else "{test_card_merchant_id}"
+
+val VAULT_SEND_BOX_URL_VERSION_V1 = VAULT_SAND_BOX_URL + "v1/"
+val VAULT_SEND_BOX_URL_VERSION_V2 = VAULT_SAND_BOX_URL + "v2/"
+val VAULT_SEND_BOX_URL_VERSION_V3 = VAULT_SAND_BOX_URL + "v3/"
+val VAULT_SEND_BOX_URL_VERSION_V4 = VAULT_SAND_BOX_URL + "v4/"
+const val VAULT_X_VERSION = "1.2"
+const val VaultCardProgram = "CP_2"
 
 
 //change now api
@@ -89,47 +158,33 @@ const val EXCHANGE_API = CHANGE_API_URL + "exchange"
 const val EXCHANGE_STATUS_API = "$EXCHANGE_API/by-id"
 const val CHANGE_NOW_AVAILABLE_PAIR = "$EXCHANGE_API/available-pairs?"
 
-const val CHANGE_NOW_BEST_PRICE = CHANGE_API_URL + "markets/estimate?"
-
-const val CHANGE_NOW_API_KEY = "53600a5f3f67bc771bef9f3b0336c740d9c10d9db83e8df1491add59a09b6ccb"
 
 
-const val CHANGE_NOW_ESTIMATION_BASE_URL = "https://vip-api.changenow.io"
-const val CHANGE_MIN_API_URL = "$CHANGE_NOW_ESTIMATION_BASE_URL/v1.3/"
-const val EXCHANGE_MIN_API = CHANGE_MIN_API_URL + "exchange/"
-const val ESTIMATE_MIN_PRICE = EXCHANGE_MIN_API + "estimate?"
+const val CHANGE_NOW_API_KEY = "{CHANGE_NOW_API_KEY}"
 
 
 //Transaction history api
 const val BASE_URL_ETHER_SCAN = "https://api.etherscan.io/"
 const val API_URL_ETHER_SCAN = BASE_URL_ETHER_SCAN + "api?"
-const val ETHER_SCAN_API_KEY = "1IT9WXZ9X2AVMUFJHRBP7E8I6W6TXIMHEJ"
+const val ETHER_SCAN_API_KEY = "{ETHER_SCAN_API_KEY}"
 
 const val BASE_URL_BSC_SCAN = "https://api.bscscan.com/"
 const val API_URL_BSC_SCAN = BASE_URL_BSC_SCAN + "api?"
-const val BSC_SCAN_API_KEY = "G5NXUANXH7RE8ZQXGXRVRJQDZ8RBNMJZ4S"
+const val BSC_SCAN_API_KEY = "{BSC_SCAN_API_KEY}"
 
 //polygon
 const val BASE_URL_POLY_GONE = "https://api.polygonscan.com/"
 const val API_URL_POLY_SCAN = BASE_URL_POLY_GONE + "api?"
-const val POLY_API_KEY = "2QQ6FI7RA8G8R6IBJA52UA97TD9BH3SFG8"
+const val POLY_API_KEY = "{POLY_API_KEY}"
 
 //onMeta APi Key
-const val ON_META_API_KEY = "31e2fd7c-0081-435e-ab7f-e6436e68cd52"
-const val ON_META_BASE_URL = "https://api.onmeta.in/"
-const val ON_META_API_URL = ON_META_BASE_URL + "v1"
-const val ON_META_BEST_PRICE_API = "$ON_META_API_URL/quote/buy"
-const val ON_META_BEST_PRICE_SELL_API = "$ON_META_API_URL/quote/sell"
+const val ON_META_API_KEY = "{ON_META_API_KEY}"
 
 //okx api
-const val OKX_BASE_URL = "https://www.okx.com/"
-const val OKX_API_URL = OKX_BASE_URL + "api/v5/dex/aggregator/"
-const val OKX_SWAP_API = OKX_API_URL + "swap?"
-const val OKX_APPROVE_API = OKX_API_URL + "approve-transaction?"
-const val OKX_SECRETE_API_KEY = "98B9B815F07D1A67F243FDBF7066EE1E"
-const val OKX_API_KEY = "f062cbc4-5228-47a8-a02c-8c9989e2244e"
-const val OKX_PASSPHRASE = "Plutope@ApiKey1"
-const val OKX_HEADER_SOURCE = "plutope"
+const val OKX_SECRETE_API_KEY = "{OKX_SECRETE_API_KEY}"
+const val OKX_API_KEY = "{OKX_API_KEY}"
+const val OKX_PASSPHRASE = "{OKX_PASSPHRASE}"
+const val OKX_HEADER_SOURCE = "{OKX_HEADER_SOURCE}"
 
 
 var isImportWallet: Boolean = false
@@ -155,62 +210,42 @@ const val COIN_GEKO_PLUTO_PE_SERVER_URL =
 const val COIN_GEKO_PLUTO_PE_SERVER_URL_NEW =
     "https://plutope.app/api/markets-price-v2-filter?currency="
 
-//const val COIN_GEKO_COIN_LIST_API = "${COIN_GEKO_MARKETPRICE}list?include_platform=true"
+
 const val COIN_GEKO_COIN_DETAIL = "$COIN_GEKO_MARKETPRICE"
 
 const val COIN_GEKO_COIN_LIST_API = "https://plutope.app/api/get-all-tokens"
 
-//const val TOKEN_IMAGE_LIST_API = "https://paloilapp.com/Laravel/public/list-coin"
 const val TOKEN_IMAGE_LIST_API = "https://plutope.app/api/get-all-images"
 
-const val COIN_GEKO_API_KEY = "CG-VfiNDCtBYqjguUNc7ijB6iok"
 
 //nftMoralysis
 const val NFT_MORALIS_API_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjE4YTViOTIwLThmOWUtNDlmZi1hOGE4LTMzZTEyMWJjOWNkZCIsIm9yZ0lkIjoiMzI5NDkzIiwidXNlcklkIjoiMzM4NzgzIiwidHlwZUlkIjoiZjU2YmIyYzYtMGEzZi00NWNmLTgzNDAtMGE4NjAyZjQ0NDNlIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2ODMxODIzNjQsImV4cCI6NDgzODk0MjM2NH0.I2os4dXf1BJsQLWqpN9oGXmwEC0gSeV8mP4nfy9DY58"
-const val NFT_BASE_URL = "https://deep-index.moralis.io/api/v2/"
+    "{NFT_MORALIS_API_KEY}"
 
 
 //CoinMarketCap
 const val COIN_MARKET_CAP_API_KEY =
-    "7d6014cf-9a4e-41bf-8034-bd971c214ee7"//"7d00fe84-d1ea-47da-b2f6-53287366a15c"
-const val COIN_MARKET_BASE_URL = "https://pro-api.coinmarketcap.com/v1"
-const val COIN_MARKET_CURRENCY_URL = "$COIN_MARKET_BASE_URL/fiat/map"
-
+    "{COIN_MARKET_CAP_API_KEY}"
 
 //okLink APi
-const val OK_LINK_ACCESS_KEY = "91db5ffb-a488-4cc6-863b-e81227f96038"
-const val OK_LINK_BASE_URL = "https://www.oklink.com"
-const val OK_LINK_API_URL = "$OK_LINK_BASE_URL/api/v5/"
-const val OK_LINK_TRANSACTION_LIST = "${OK_LINK_API_URL}explorer/address/transaction-list?"
-const val OK_LINK_TRANSACTION_DETAIL = "${OK_LINK_API_URL}explorer/transaction/transaction-fills?"
+const val OK_LINK_ACCESS_KEY = "{OK_LINK_ACCESS_KEY}"
 
+//Moralis APi
+const val moralis_access_key =
+    "{moralis_access_key}"
 
 //onRamp api
-const val ON_RAMP_API_KEY = "ezJrTUkLwuLOPEtQ278qYreMaRUq7n"
-const val ON_RAMP_BASE_URL = "https://api.onramp.money"
-const val ON_RAMP_API_URL = "${ON_RAMP_BASE_URL}/onramp/api/v2/"
-const val ON_RAMP_BEST_PRICE_URL = "${ON_RAMP_API_URL}common/transaction/quotes"
+const val ON_RAMP_API_KEY = "{ON_RAMP_API_KEY}"
 
 //onMeld api
-const val ON_MELD_BASE_URL = "https://api.meld.io"
-const val ON_MELD_BEST_PRICE = "$ON_MELD_BASE_URL/payments/crypto/quote"
-const val ON_MELD_KEY = "WQ5G9zvsK1cKC22iGZ8KXb:2mSZKY8pSiqYckZgDvnH9UNzphpDgosDyi73m"
+const val ON_MELD_KEY = "{ON_MELD_KEY}"
 
 //About us url
 const val ABOUT_US_URL = "https://plutope.io"
-//const val ABOUT_US_URL = "https://www.plutope.io"
+
 
 //Alchemy Pay
-const val ALCHEMY_PAY_APP_ID = "f83Is2y7L425rxl8"
-const val ALCHEMY_PAY_SECRET_KEY = "4Yn8RkxDXN71Q3p0"
-const val ALCHEMY_PAY_BASE_URL =
-    /* "https://openapi-test.alchemypay.org"*/ "https://openapi.alchemypay.org"
-const val ALCHEMY_PAY_API_URL = "${ALCHEMY_PAY_BASE_URL}/open/api/v3/"
-const val ALCHEMY_PAY_BEST_PRICE_URL = "${ALCHEMY_PAY_API_URL}merchant/order/quote"
-
-//Rampable
-const val RAMPABLE_SECRET_KEY = "wpyYO6EyVSwx3QGY50d0VHCICTjiBHTTRGo7zbL6G6bxBtCSaGBrEbRB70ZhzdvP"
+const val ALCHEMY_PAY_APP_ID = "{ALCHEMY_PAY_APP_ID}"
 
 //Drive
 const val PARENT_FOLDER_ID = "root"
@@ -220,6 +255,7 @@ const val FOLDER_NAME = "PlutoPeApp"
 const val DEFAULT_CHAIN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 
 const val NO_INTERNET_CONNECTION = "No Internet Connection"
+const val UN_AUTHORIZED_ACCESS = "Access token expired"
 
 
 //kip20
@@ -250,4 +286,73 @@ var UNLIMIT = "UNLIMIT"
 const val UNLIMITE_GATEFI_BASE_URL = "https://api-sandbox.gatefi.com/"
 const val UNLIMITE_GATEFI_API_URL = "onramp/v1/"
 
+enum class CardDesign(val colorName: String, val colorCode: Int, val cardBackground: Int) {
+    BLUE("BLUE", R.color.blue, R.drawable.img_card_color_blue),
+    ORANGE("ORANGE", R.color.orange, R.drawable.img_card_color_blue), // Orange color
+    BLACK("BLACK", R.color.black, R.drawable.img_card_color_blue),
+    GOLD("GOLD", R.color.gold, R.drawable.img_card_color_gold), // Gold color
+    PURPLE("PURPLE", R.color.purple, R.drawable.img_card_color_blue) // Purple color
+}
+
+
 var storedTokenList = listOf<Tokens>()
+var supportedVaultCurrency = mutableListOf(
+    "BAT",
+    "BTC",
+    "CHO",
+    "CRPT",
+    "DAI",
+    "DAO",
+    "ETH",
+    "GALA",
+    "LINK",
+    "LTC",
+    "MANA",
+    "MAPS",
+    "MATIC",
+    "MKR",
+    "OMG",
+    "QASH",
+    "REP",
+    "SAND",
+    "SHIB",
+    "UNI",
+    "USDC",
+    "USDT",
+    "XRP",
+    "ZRX"
+)
+
+var walletTokenList: MutableList<CardWalletListResponseModel.Wallet> = arrayListOf()
+var cardStoredList: MutableList<CardListResponseModel.Card> = arrayListOf()
+var lastSelectedWallet = CardWalletListResponseModel.Wallet()
+
+var lastSelectedContactNumber = ""
+
+var selectedCardColor = 0
+
+var isFromTransactionDetail = false
+
+
+fun scientificNotationToNormalNumber(value: String): String {
+    return if (isScientificNotation(value)) {
+        val fullNumberString = "%.10f".format(value.toDouble())
+        fullNumberString
+    } else {
+        HtmlCompat.fromHtml(value, 0).toString()
+
+    }
+}
+
+/**Start card Beta form here **/
+
+fun getBarrierToken(): String {
+    return "Bearer " + PreferenceHelper.getInstance().betaCardAccessToken
+}
+
+var accountList: MutableList<AccountModel> = mutableListOf()
+
+const val reasonTypeExchange = "Exchange"
+const val reasonTypeDeposit = "Deposit"
+const val reasonTypeWithdrawal = "Withdrawal"
+

@@ -17,9 +17,10 @@ class WalletRepo @Inject constructor(private val walletDao: WalletDao) {
     suspend fun insertWallet(
         mnemonics: String,
         passWalletname: String = "",
-        isFromDrive:Boolean=false,
-        isManualBackup:Boolean=false,
-        folderId:String="",fileId:String=""
+        isFromDrive: Boolean = false,
+        isManualBackup: Boolean = false,
+        folderId: String = "",
+        fileId: String = "",
     ): NetworkState<Wallets?> {
         return try {
             var walletName = passWalletname
@@ -35,7 +36,7 @@ class WalletRepo @Inject constructor(private val walletDao: WalletDao) {
                     w_is_cloud_backup = isFromDrive,
                     w_is_manual_backup = isManualBackup,
                     folderId = folderId,
-                    fileId = fileId
+                    fileId = fileId,
                 )
             walletDao.insert(newWallet)
 
@@ -48,16 +49,16 @@ class WalletRepo @Inject constructor(private val walletDao: WalletDao) {
             NetworkState.Success("", lastInsertedWallet)
         } catch (e: Exception) {
             e.printStackTrace()
-            if(e is NoConnectivityException || e is UnknownHostException) {
+            if (e is NoConnectivityException || e is UnknownHostException) {
                 NetworkState.SessionOut("", NO_INTERNET_CONNECTION)
-            }else {
+            } else {
                 NetworkState.Error(serverErrorMessage)
             }
         }
 
     }
 
-    suspend fun getAllWalletList(): Flow<NetworkState<List<Wallets?>>> {
+    suspend fun getAllWalletList(): Flow<NetworkState<List<Wallets>>> {
         return flow {
             val localData: MutableList<Wallets> = mutableListOf()
             localData.addAll(walletDao.getAllWallets().first())
@@ -74,11 +75,8 @@ class WalletRepo @Inject constructor(private val walletDao: WalletDao) {
 
     suspend fun getPrimaryWallet(): Flow<NetworkState<Wallets?>> {
         return flow {
-            var localData: Wallets? = null
-
-            localData = walletDao.getPrimaryWallet()?.first()
+            val localData: Wallets? = walletDao.getPrimaryWallet()?.first()
             if (localData != null) {
-                // If the local data is not empty, return it immediately
                 emit(NetworkState.Success("", localData))
             } else {
                 emit(NetworkState.Error("Failed to load"))
@@ -90,34 +88,49 @@ class WalletRepo @Inject constructor(private val walletDao: WalletDao) {
     suspend fun updatePrimaryWallet(walletId: Int): Flow<NetworkState<Wallets?>> {
         return flow {
             walletDao.updateWalletPrimary(walletId)
-                var walletdata: Wallets? = null
-                emit(NetworkState.Success("", walletdata))
-                walletDao.getPrimaryWallet()?.collect { networkState ->
-                    walletdata = networkState
-                    if (walletdata!=null) {
-                        // If the local data is not empty, return it immediately
-                        emit(NetworkState.Success("", walletdata))
-                    } else {
-                        emit(NetworkState.Error("Failed to load"))
-                    }
+            var walletdata: Wallets? = null
+            emit(NetworkState.Success("", walletdata))
+            walletDao.getPrimaryWallet()?.collect { networkState ->
+                walletdata = networkState
+                if (walletdata != null) {
+                    // If the local data is not empty, return it immediately
+                    emit(NetworkState.Success("", walletdata))
+                } else {
+                    emit(NetworkState.Error("Failed to load"))
                 }
+            }
 
         }
     }
-    suspend fun updateWalletBackupSet(isCloudBackup:Boolean,isManualBackup:Boolean,walletId:Int,walletName:String,folderId:String,fileId:String): Flow<NetworkState<Wallets?>> {
-        return flow {
-            var localData: Int? = null
 
-            localData = walletDao.updateWalletBackupSet(isCloudBackup,isManualBackup,walletId,walletName,folderId,fileId)
+    suspend fun updateWalletBackupSet(
+        isCloudBackup: Boolean,
+        isManualBackup: Boolean,
+        walletId: Int,
+        walletName: String,
+        folderId: String,
+        fileId: String
+    ): Flow<NetworkState<Wallets?>> {
+        return flow {
+
+            walletDao.updateWalletBackupSet(
+                isCloudBackup,
+                isManualBackup,
+                walletId,
+                walletName,
+                folderId,
+                fileId
+            )
             var walletdata: Wallets? = null
             walletDao.getPrimaryWallet()?.collect { networkState ->
                 walletdata = networkState
 
                 emit(NetworkState.Success("", walletdata))
             }
-           if(walletdata==null){
-               emit(NetworkState.Error("Failed to load"))
-           }
+            if (walletdata == null) {
+                emit(NetworkState.Error("Failed to load"))
+            }
+
 
         }
     }
@@ -133,7 +146,7 @@ class WalletRepo @Inject constructor(private val walletDao: WalletDao) {
     }
 
 
-    suspend fun updateAllWalletList(wallet: MutableList<Wallets?>): Flow<NetworkState<Int?>> {
+    suspend fun updateAllWalletList(wallet: MutableList<Wallets>): Flow<NetworkState<Int?>> {
         return flow {
             var localData: Int? = null
             localData = walletDao.updateWallets(wallet)

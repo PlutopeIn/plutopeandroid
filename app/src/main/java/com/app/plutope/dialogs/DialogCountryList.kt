@@ -41,13 +41,13 @@ class DialogCountryList private constructor() {
         context: Context?,
         list: MutableList<CountryListModel>,
         listType: Int = typeCountryList,
-        unit: (CountryListModel) -> Any
+        unit: (CountryListModel) -> Unit
     ) {
 
         if (alertDialogLocation == null) {
             alertDialogLocation = BottomSheetDialog(
                 context!!,
-                R.style.Theme_QuinableFacilityApp_BottomSheet_Dialog_Navigation
+                R.style.DialogAnimation
             )
         }
         alertDialogLocation?.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -98,7 +98,7 @@ class DialogCountryList private constructor() {
         for (i in list)
             when (listType) {
                 typeCountryList -> {
-                    if (i.countryName?.lowercase()!!.contains(text.lowercase())) {
+                    if (i.countryName?.lowercase()!!.contains(text.lowercase()) || i.smallName.lowercase().contains(text.lowercase()) || i.unicode?.lowercase()!!.contains(text.lowercase())) {
                         filterList.add(i)
                     }
                 }
@@ -160,12 +160,14 @@ class DialogCountryList private constructor() {
                 val countryObject = countryArray.getJSONObject(i)
 
                 val countryName = countryObject.getString("name")
+                val smallName = countryObject.getString("alpha2Code")
                 val images = countryObject.getJSONObject("flags").getString("png")
                 val countryCode = countryObject.getJSONArray("callingCodes").getString(0)
 
                 var currencyName = ""
                 var currencyCode = ""
                 var currencySymbol = ""
+
                 if (countryObject.has("currencies")) {
 
                     val currency = countryObject.getJSONArray("currencies")
@@ -173,6 +175,7 @@ class DialogCountryList private constructor() {
                         currencyCode = currency.getJSONObject(i).getString("code")
                         currencyName = currency.getJSONObject(i).getString("name")
                         currencySymbol = currency.getJSONObject(i).getString("symbol")
+
                     }
 
                 }
@@ -183,7 +186,9 @@ class DialogCountryList private constructor() {
                         code = countryCode,
                         currencyName = currencyName,
                         currencyCode = currencyCode,
-                        currencySymbol = currencySymbol
+                        currencySymbol = currencySymbol,
+                        smallName = smallName
+
                     )
                 )
             }

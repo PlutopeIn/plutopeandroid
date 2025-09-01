@@ -14,32 +14,74 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/bg_white"
         tools:context=".ui.fragment.transactions.send.Send">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
+                android:padding="@dimen/_8mdp"
+                android:src="@drawable/ic_back_new"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/send"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20msp"
+                app:layout_constraintBottom_toBottomOf="@id/img_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/img_back" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <EditText
             android:id="@+id/edt_search"
-            style="@style/edittext_fill_bg_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16mdp"
-            android:layout_marginTop="@dimen/_22mdp"
+            android:layout_marginTop="@dimen/_25mdp"
             android:autofillHints=""
-            android:fontFamily="@font/montserrat_light"
+            android:background="@drawable/bg_tab_un_selected"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:paddingVertical="@dimen/_16mdp"
             android:paddingStart="@dimen/_43mdp"
             android:paddingEnd="@dimen/_20mdp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="@color/white"
-            android:textColorHint="@color/purple_7576D"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/_14mdp"
             android:singleLine="true"
-            android:imeOptions="actionDone"
+
+            android:textColor="@color/black"
+            android:textColorHint="@color/icon_gray"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/_14msp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_toolbar" />
 
         <ImageView
             android:id="@+id/img_search"
@@ -50,21 +92,76 @@
             app:layout_constraintBottom_toBottomOf="@id/edt_search"
             app:layout_constraintStart_toStartOf="@id/edt_search"
             app:layout_constraintTop_toTopOf="@id/edt_search"
+            app:tint="@color/icon_gray"
             tools:ignore="ContentDescription" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_send_coin_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/_20mdp"
+            android:layout_marginHorizontal="@dimen/_6mdp"
+            android:layout_marginTop="@dimen/_8mdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/edt_search"
-            app:layout_constraintStart_toStartOf="@id/edt_search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edt_search"
             tools:listitem="@layout/row_crypto_coin_list_item" />
+
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_16mdp"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:animateLayoutChanges="true"
+            android:animationCache="true"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_search"
+            app:shimmer_repeat_delay="10"
+            app:shimmer_repeat_mode="restart"
+            app:shimmer_shape="linear"
+            tools:listitem="@layout/row_assets_list">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+                <include layout="@layout/row_simmer_assets_list" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

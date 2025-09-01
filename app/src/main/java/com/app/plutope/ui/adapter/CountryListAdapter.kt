@@ -14,13 +14,11 @@ import com.app.plutope.utils.constant.typeCurrencyList
 
 
 class CountryListAdapter(
-    var listType: Int,
-    var providerClick: ((CountryListModel)) -> Unit
-) :
-    ListAdapter<CountryListModel, CountryListAdapter.ViewHolder>(DIFF_CALLBACK) {
+    private val listType: Int,
+    private val providerClick: ((CountryListModel)) -> Unit
+) : ListAdapter<CountryListModel, CountryListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    inner class ViewHolder(var binding: RowCountryListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(var binding: RowCountryListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(model: CountryListModel) {
             binding.model = model
 
@@ -45,19 +43,25 @@ class CountryListAdapter(
             binding.executePendingBindings()
 
             itemView.setOnClickListener {
-                providerClick.invoke(model)
+                // Update selection state in the model
+                val updatedModel = model.copy(isSelected = true)
+
+                // Update list to reflect selection change
+                val newList = currentList.map {
+                    if (it == model) updatedModel else it.copy(isSelected = false)
+                }
+
+                submitList(newList)
+                providerClick.invoke(updatedModel)
             }
-
         }
-
     }
 
     companion object {
-        private val DIFF_CALLBACK = object :
-            DiffUtil.ItemCallback<CountryListModel>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CountryListModel>() {
             override fun areItemsTheSame(
                 oldModel: CountryListModel, newModel: CountryListModel
-            ) = oldModel == newModel
+            ) = oldModel.code == newModel.code
 
             override fun areContentsTheSame(
                 oldModel: CountryListModel,
@@ -81,8 +85,5 @@ class CountryListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])
-
     }
-
-
 }

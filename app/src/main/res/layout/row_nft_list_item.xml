@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.app.plutope.model.NFTModel" />
+            type="com.app.plutope.model.NFTListModel" />
 
     </data>
 
@@ -17,7 +17,7 @@
         android:layout_height="@dimen/_164mdp"
         android:layout_marginHorizontal="@dimen/_5mdp"
         android:layout_marginBottom="@dimen/_15mdp"
-        app:cardBackgroundColor="#E025264D"
+        app:cardBackgroundColor="@color/bottom_icon_grey"
         app:cardCornerRadius="@dimen/_10mdp">
 
 
@@ -29,19 +29,17 @@
                 android:id="@+id/imgNft"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/img_apes_dummy"
-                />
+                android:scaleType="fitXY" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_transperant"
-                android:fontFamily="@font/quicksand_regular"
+                android:background="@color/icon_gray"
+                android:fontFamily="@font/violet_sans"
                 android:gravity="center_horizontal"
                 android:paddingVertical="@dimen/_12mdp"
-                android:text="@{model.parsedMetadata.name}"
-                android:textColor="@color/white"
+                android:text="@{model.metadata.name}"
+                android:textColor="@color/white_text"
                 android:textSize="@dimen/_12msp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="nft style ape" />

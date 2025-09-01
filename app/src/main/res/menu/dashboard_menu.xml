@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:checked="false"
-        android:id="@+id/card"
-        android:icon="@drawable/ic_cradit_card"
+        android:id="@+id/cardHome"
+        android:icon="@drawable/ic_bank_card"
         android:title="" />
 
     <item

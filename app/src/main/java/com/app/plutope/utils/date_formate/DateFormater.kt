@@ -14,6 +14,8 @@ import java.util.Locale
 
 
 const val ymdHMS = "yyyy-MM-dd HH:mm:ss"
+const val ymd = "yyyy-MM-dd"
+const val dmyhm = "dd MMM yyyy hh:mm"
 
 fun String.toCal(
     sourceFormat: String = ymdHMS,

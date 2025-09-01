@@ -438,21 +438,21 @@
 
 -keep class com.app.plutope.ui.fragment.add_custom_token.AddCustomToken { <init>(...); }
 
--keep class com.app.plutope.ui.fragment.card.card_list.Card { <init>(...); }
+-keep class com.app.plutope.ui.fragment.old_card_module.Card { <init>(...); }
 
--keep class com.app.plutope.ui.fragment.card.card_wallets.CardDesign { <init>(...); }
+-keep class com.app.plutope.ui.fragment.old_card_module.card_wallets.CardDesign { <init>(...); }
 
--keep class com.app.plutope.ui.fragment.card.membership.basic.Basic { <init>(...); }
+-keep class com.app.plutope.ui.fragment.old_card_module.basic.Basic { <init>(...); }
 
--keep class com.app.plutope.ui.fragment.card.membership_2.MemberShip2Fragment { <init>(...); }
+-keep class com.app.plutope.ui.fragment.old_card_module.membership_2.MemberShip2Fragment { <init>(...); }
 
--keep class com.app.plutope.ui.fragment.card.payment.Payment { <init>(...); }
+-keep class com.app.plutope.ui.fragment.old_card_module.payment.Payment { <init>(...); }
 
--keep class com.app.plutope.ui.fragment.card.personal_details.add_address.AddAddressFragment { <init>(...); }
+-keep class com.app.plutope.ui.fragment.old_card_module.personal_details.add_address.AddAddressFragment { <init>(...); }
 
--keep class com.app.plutope.ui.fragment.card.personal_details.more_details.MoreDetails { <init>(...); }
+-keep class com.app.plutope.ui.fragment.old_card_module.personal_details.more_details.MoreDetails { <init>(...); }
 
--keep class com.app.plutope.ui.fragment.card.personal_details.personal_info.PersonalDetail { <init>(...); }
+-keep class com.app.plutope.ui.fragment.old_card_module.personal_details.personal_info.PersonalDetail { <init>(...); }
 
 -keep class com.app.plutope.ui.fragment.card.sign_up_login.SignUp { <init>(...); }
 
@@ -603,8 +603,6 @@
 -keep class com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator { <init>(android.content.Context, android.util.AttributeSet); }
 
 -keep class de.hdodenhof.circleimageview.CircleImageView { <init>(android.content.Context, android.util.AttributeSet); }
-
--keep class eightbitlab.com.blurview.BlurView { <init>(android.content.Context, android.util.AttributeSet); }
 
 -keep class io.github.g00fy2.quickie.QROverlayView { <init>(android.content.Context, android.util.AttributeSet); }
 

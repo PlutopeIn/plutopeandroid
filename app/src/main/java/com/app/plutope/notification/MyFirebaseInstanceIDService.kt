@@ -9,11 +9,10 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.core.app.NotificationCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.os.bundleOf
-import androidx.navigation.NavDeepLinkBuilder
 import com.app.plutope.R
 import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.utils.extras.PreferenceHelper
+import com.app.plutope.utils.loge
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -33,42 +32,57 @@ class MyFirebaseInstanceIDService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         val data = remoteMessage.data
+        loge("NoData :", "${data}")
         val notificationData = remoteMessage.notification
 
-        val title = notificationData?.title
-        val message = notificationData?.body
-        createNotification(title!!, message!!)
+        try {
+            loge("notificationData :", "title ${notificationData?.title}")
+            loge("notificationData :", "body : ${notificationData?.body}")
+            val title = notificationData?.title
+            val message = notificationData?.body
+            createNotification(title, message)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
 
     }
 
 
     private fun createNotification(
-        title: String,
-        message: String
+        title: String? = "",
+        message: String? = ""
     ) {
         val notificationId = ++currentNotificationId
         val intent = Intent(this, BaseActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         FirebaseAnalytics.getInstance(this).logEvent("Notification_Event") {
-            param("Title", title)
-            param("Message", message)
+            param("Title", title ?: "")
+            param("Message", message ?: "")
 
         }
 
         /**
          *  @author - Pravin patel
-         * Temporary not used pendingIntent it is managed by notification type witch is not implemented yet
+         * Temporary not used pendingIntent it is managed by notification type which is not implemented yet
          * if you need to redirect when click notification in app just un-comment this code -> ( //.setContentIntent(pendingIntent))
          **/
 
         val pendingIntent =
             if (PreferenceHelper.getInstance().menomonicWallet != "") {
-                NavDeepLinkBuilder(applicationContext).setComponentName(BaseActivity::class.java)
-                    .setGraph(R.navigation.nav_graph)
-                    .setDestination(R.id.dashboard)
-                    .setArguments(bundleOf(Pair("id", "")))
-                    .createPendingIntent()
+                /* NavDeepLinkBuilder(applicationContext).setComponentName(BaseActivity::class.java)
+                     .setGraph(R.navigation.nav_graph)
+                     .setDestination(R.id.dashboard)
+                     .setArguments(bundleOf(Pair("id", "")))
+                     .createPendingIntent()*/
+
+                PendingIntent.getActivity(
+                    this,
+                    requestCode,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
 
             } else {
                 PendingIntent.getActivity(
@@ -100,7 +114,7 @@ class MyFirebaseInstanceIDService : FirebaseMessagingService() {
 
 
 
-        mBuilder.color = ResourcesCompat.getColor(resources, R.color.colorAccent, null)
+        mBuilder.color = ResourcesCompat.getColor(resources, R.color.header_blue, null)
         val mNotificationManager =
             this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

@@ -8,24 +8,22 @@
         <variable
             name="transactionModel"
             type="com.app.plutope.model.TransactionLists" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_5mdp"
         android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:background="@drawable/bg_corner_radius_20">
+        android:foreground="?attr/selectableItemBackground">
 
         <ImageView
             android:id="@+id/img_bag"
-            android:layout_width="@dimen/_36mdp"
-            android:layout_height="@dimen/_36mdp"
-            android:layout_marginStart="@dimen/_12mdp"
-            android:background="@drawable/ic_bag_circle"
-            android:padding="@dimen/_10mdp"
-            android:src="@drawable/ic_back_arrow_right_up"
+            android:layout_width="@dimen/_28mdp"
+            android:layout_height="@dimen/_28mdp"
+            android:background="@drawable/bg_circle_light_gray"
+            android:padding="@dimen/_6mdp"
+            android:src="@drawable/ic_send_forword_arrow_transaction"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -34,14 +32,33 @@
             android:id="@+id/txt_transaction_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_14mdp"
-            android:layout_marginTop="@dimen/_18mdp"
-            android:fontFamily="@font/quicksand_semibold"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:layout_marginTop="@dimen/_12mdp"
             tools:text="Transfer"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_13msp"
+
+            android:fontFamily="@font/violet_sans"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15msp"
             app:layout_constraintStart_toEndOf="@id/img_bag"
             app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <TextView
+            android:id="@+id/txt_transaction_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:background="@drawable/bg_status_failed_red"
+            android:fontFamily="@font/violet_sans"
+            android:paddingHorizontal="@dimen/_10mdp"
+            android:paddingVertical="@dimen/_3mdp"
+            android:text="Failed"
+            android:textColor="@color/red"
+            android:textSize="@dimen/_10msp"
+            app:layout_constraintBottom_toBottomOf="@id/txt_transaction_name"
+            app:layout_constraintStart_toEndOf="@id/txt_transaction_name"
+            app:layout_constraintTop_toTopOf="@id/txt_transaction_name"
 
             />
 
@@ -49,17 +66,17 @@
             android:id="@+id/txt_transaction_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_4mdp"
-            android:layout_marginBottom="@dimen/_18mdp"
-            android:fontFamily="@font/quicksand_regular"
+            android:layout_marginTop="@dimen/_6mdp"
+            android:fontFamily="@font/violet_sans"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/_12msp"
+
             android:text="@{transactionModel.addressShow}"
-            android:textColor="@color/purple_7576D"
-            android:textSize="@dimen/_10msp"
             android:ellipsize="middle"
             android:maxWidth="@dimen/_160mdp"
             android:maxLines="1"
             tools:text="higeruhtguierhhgrtguighfguirhguigferuguirghuigfireubguigbuirgufhguireghuigrbirghiughuireghruiehgheruigheruihguirehguire"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/divider"
             app:layout_constraintStart_toStartOf="@id/txt_transaction_name"
             app:layout_constraintTop_toBottomOf="@id/txt_transaction_name"
 
@@ -71,12 +88,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_14mdp"
-            android:layout_marginEnd="@dimen/_19mdp"
-            android:fontFamily="@font/quicksand_semibold"
+            android:layout_marginEnd="@dimen/_1mdp"
             android:text=''
             tools:text="327658754"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_14msp"
+
+            android:fontFamily="@font/violet_sans"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15msp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toEndOf="@id/txt_transaction_name"
@@ -90,22 +108,33 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_3mdp"
             android:layout_marginStart="@dimen/_14mdp"
-            android:layout_marginEnd="@dimen/_19mdp"
-            android:fontFamily="@font/quicksand_regular"
+            android:layout_marginEnd="@dimen/_1mdp"
+            android:fontFamily="@font/violet_sans"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/_14msp"
+
             android:text="@{transactionModel.transactionTime}"
-            android:textColor="@color/purple_7576D"
-            android:textSize="@dimen/_10msp"
             app:layout_constraintTop_toBottomOf="@id/txt_price"
-            android:layout_marginBottom="@dimen/_8mdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintVertical_bias="0"
             app:layout_constraintStart_toEndOf="@id/txt_transaction_name"
             tools:text="fhjkdshgfdk"
-            app:layout_constraintBottom_toBottomOf="parent"
 
             />
-
+        
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            app:layout_constrainedWidth="true"
+            android:background="@color/border_gray"
+            android:layout_marginTop="@dimen/_12mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_transaction_type"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

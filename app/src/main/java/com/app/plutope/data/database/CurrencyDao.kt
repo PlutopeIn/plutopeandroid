@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import com.app.plutope.model.CurrencyModel
 import kotlinx.coroutines.flow.Flow
 
@@ -17,9 +16,9 @@ interface CurrencyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(currency: CurrencyModel)
 
-    @Transaction
+    // @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllCurrency(list: List<CurrencyModel?>)
+    suspend fun insertAllCurrency(list: List<CurrencyModel>)
 
     @Query("SELECT * from currency where isSelected=1")
     fun getSelectedCurrency(): List<CurrencyModel>

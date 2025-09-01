@@ -1,11 +1,11 @@
 package com.app.plutope.utils
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.PictureDrawable
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Bundle
@@ -13,24 +13,29 @@ import android.os.IBinder
 import android.text.InputFilter
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.text.style.UnderlineSpan
-import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.databinding.BindingAdapter
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import cash.z.ecc.android.bip39.Mnemonics
@@ -43,19 +48,20 @@ import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.fragment.wallet.backup.PhraseBackupFragment
 import com.app.plutope.utils.constant.isFullScreenLockDialogOpen
 import com.app.plutope.utils.dialogs.LoadingDialog
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.api.services.drive.DriveScopes
-import de.hdodenhof.circleimageview.CircleImageView
+import io.michaelrocks.libphonenumber.android.NumberParseException
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import org.web3j.crypto.MnemonicUtils
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.methods.response.TransactionReceipt
@@ -103,11 +109,87 @@ fun isPasswordValid(password: String): Boolean {
     return pattern.matches(password)
 }
 
+fun isCardPasswordValid(password: String): Boolean {
+    val digitRegex = ".*\\d.*"
+    val letterRegex = ".*[a-zA-Z].*"
+
+    return password.length >= 8 && password.matches(digitRegex.toRegex()) && password.matches(
+        letterRegex.toRegex()
+    )
+}
+
+fun String?.toNonNullString(): String {
+    if (this == null || this == "null" || this == "") {
+        return ""
+    }
+    return this
+}
+
+fun String?.toNonNullInt(): String {
+    if (this == null || this == "null" || this == "") {
+        return "0"
+    }
+    return this
+}
+
+fun EditText.validateEmpty(): Boolean {
+    val temp = (TextUtils.isEmpty(this.text.trim().toString()))
+    if (temp) this.requestFocus()
+    return temp
+}
+
+fun String.validateEmpty(): Boolean {
+    return TextUtils.isEmpty(trim())
+}
+
+fun validateBothPassword(password: String, confirmPassword: String): Boolean {
+    return password.trim() != confirmPassword.trim()
+}
+
+
+data class PasswordValidation(
+    val isLengthMatched: Boolean = false,
+    val isCaseMatched: Boolean = false,
+    val isNumberMatched: Boolean = false,
+    val isSymbolMatched: Boolean = false,
+
+    )
+
+fun String.passwordValidation(): PasswordValidation {
+
+    return PasswordValidation(
+        isLengthMatched = validateLength(this),
+        isCaseMatched = validateCase(this),
+        isNumberMatched = validateNumber(this),
+        isSymbolMatched = validateSymbol(this),
+    )
+}
+
+
+fun validateLength(password: String): Boolean {
+    return password.length in 8..32
+}
+
+// Validation for uppercase and lowercase Latin letters
+fun validateCase(password: String): Boolean {
+    val hasLowerCase = password.any { it.isLowerCase() }
+    val hasUpperCase = password.any { it.isUpperCase() }
+    return hasLowerCase && hasUpperCase
+}
+
+// Validation for at least one number
+fun validateNumber(password: String): Boolean {
+    return password.any { it.isDigit() }
+}
+
+// Validation for at least one symbol
+fun validateSymbol(password: String): Boolean {
+    return password.any { !it.isLetterOrDigit() }
+}
+
 
 fun EditText.attachPasswordToggle(imageView: ImageView) {
-
     this.transformationMethod = BiggerDotPasswordTransformationMethod
-
     imageView.setOnClickListener {
         if (this.transformationMethod == BiggerDotPasswordTransformationMethod) {
             this.transformationMethod = HideReturnsTransformationMethod.getInstance()
@@ -144,220 +226,9 @@ fun Context.showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
-
-fun setProgress(view: View, progress: Int, context: BaseActivity) {
-
-
-    val imgCircle1: CircleImageView = view.findViewById(R.id.img_circle_1)
-    val imgCircle2: CircleImageView = view.findViewById(R.id.img_circle_2)
-    val imgCircle3: CircleImageView = view.findViewById(R.id.img_circle_3)
-
-    val view1: View = view.findViewById(R.id.view_1)
-    val view2: View = view.findViewById(R.id.view_2)
-    val view3: View = view.findViewById(R.id.view_3)
-    val view4: View = view.findViewById(R.id.view_4)
-
-    val initiated: TextView = view.findViewById(R.id.txt_initiated)
-    val swapping: TextView = view.findViewById(R.id.txt_swapping)
-    val success: TextView = view.findViewById(R.id.txt_success)
-
-    when (progress) {
-
-        1 -> {
-            imgCircle1.background = ResourcesCompat.getDrawable(
-                context.resources,
-                R.drawable.background_circle_progress,
-                null
-            )
-
-            view1.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.purple_25264D,
-                    null
-                )
-            )
-            initiated.setTextColor(ResourcesCompat.getColor(context.resources, R.color.white, null))
-
-
-            imgCircle2.background = ResourcesCompat.getDrawable(
-                context.resources,
-                R.drawable.background_circle_non_progress,
-                null
-            )
-            view2.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.purple_25264D,
-                    null
-                )
-            )
-            view4.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.purple_25264D,
-                    null
-                )
-            )
-            swapping.setTextColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.purple_7576D,
-                    null
-                )
-            )
-
-
-
-            imgCircle3.background = ResourcesCompat.getDrawable(
-                context.resources,
-                R.drawable.background_circle_non_progress,
-                null
-            )
-            view3.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.purple_25264D,
-                    null
-                )
-            )
-            success.setTextColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.purple_7576D,
-                    null
-                )
-            )
-
-
-        }
-
-        2 -> {
-
-            imgCircle1.background =
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    R.drawable.background_circle_progress,
-                    null
-                )
-
-            view1.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.blue_00C6FB,
-                    null
-                )
-            )
-            initiated.setTextColor(ResourcesCompat.getColor(context.resources, R.color.white, null))
-
-            imgCircle2.background =
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    R.drawable.background_circle_progress,
-                    null
-                )
-            view2.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.blue_00C6FB,
-                    null
-                )
-            )
-            view4.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.purple_25264D,
-                    null
-                )
-            )
-            swapping.setTextColor(ResourcesCompat.getColor(context.resources, R.color.white, null))
-
-            imgCircle3.background =
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    R.drawable.background_circle_non_progress,
-                    null
-                )
-
-            view3.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.purple_25264D,
-                    null
-                )
-            )
-            initiated.setTextColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.purple_7576D,
-                    null
-                )
-            )
-
-        }
-
-        3 -> {
-            imgCircle1.background =
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    R.drawable.background_circle_progress,
-                    null
-                )
-
-            view1.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.blue_00C6FB,
-                    null
-                )
-            )
-            initiated.setTextColor(ResourcesCompat.getColor(context.resources, R.color.white, null))
-
-
-            imgCircle2.background =
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    R.drawable.background_circle_progress,
-                    null
-                )
-
-            view2.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.blue_00C6FB,
-                    null
-                )
-            )
-            view4.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.blue_00C6FB,
-                    null
-                )
-            )
-            swapping.setTextColor(ResourcesCompat.getColor(context.resources, R.color.white, null))
-
-
-            imgCircle3.background =
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    R.drawable.background_circle_progress,
-                    null
-                )
-
-            view3.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    context.resources,
-                    R.color.blue_00C6FB,
-                    null
-                )
-            )
-            success.setTextColor(ResourcesCompat.getColor(context.resources, R.color.white, null))
-
-
-        }
-    }
-
+fun Fragment.showToast(message: String) {
+    if (message.isNotEmpty())
+        Toast.makeText(this.context, message, Toast.LENGTH_LONG).show()
 }
 
 
@@ -366,7 +237,6 @@ fun ByteArray.toHexString(): String {
         "%02x".format(byte)
     }
 }
-
 
 fun loadJSONFromRaw(resourceId: Int): String {
     return try {
@@ -381,10 +251,6 @@ fun loadJSONFromRaw(resourceId: Int): String {
     }
 }
 
-//haxadecimal string to long
-fun String?.getHaxaDecimalToLong(): Long {
-    return (this?.substring(2)?.toLong(16)) ?: 0L
-}
 
 //generate 12 words from HDWallet
 fun getMnemonics(): List<CharArray> {
@@ -396,7 +262,6 @@ fun getMnemonics(): List<CharArray> {
 //get word list from list char array
 fun getWordListFromWordCharArray(mnemonicsWords: List<CharArray>): MutableList<String> {
     val wordList = mutableListOf<String>()
-
     for (row in mnemonicsWords) {
         val word = row.joinToString(separator = "")
         wordList.add(word)
@@ -410,7 +275,6 @@ fun Context.copyToClipboard(text: String) {
     clipboard?.setPrimaryClip(ClipData.newPlainText("", text))
 }
 
-
 fun Context.showLoader() {
     if (!isFullScreenLockDialogOpen) CoroutineScope(Dispatchers.Main).launch {
         LoadingDialog.getInstance()?.show(this@showLoader)
@@ -418,55 +282,46 @@ fun Context.showLoader() {
 }
 
 fun Context.showLoaderAnyHow() {
-    LoadingDialog.getClearInstence()
     LoadingDialog.getInstance()?.show(this@showLoaderAnyHow)
-
-
 }
-
 
 fun hideLoader() {
     LoadingDialog.getInstance()?.dismiss()
 }
 
-
-fun Context.openCustomDeviceLock() {
+fun Context.openCustomDeviceLock(listener: DeviceLockOpenSuccess) {
     val dialog = DeviceLockFullScreenDialog.getInstance()
-
     dialog.show(this, object : DeviceLockFullScreenDialog.DialogOnClickBtnListner {
         override fun onSubmitClicked(selectedList: String) {
+            listener.onSuccessOpenDeviceLock()
         }
     })
 
-    // Store the reference to the dialog in your BaseActivity
     (this as? BaseActivity)?.setDeviceLockDialog(dialog)
+
+    /*DeviceLockDialogFragment2.show(
+        (this as BaseActivity).supportFragmentManager,
+        object : DeviceLockDialogFragment2.DialogOnClickBtnListener {
+            override fun onSubmitClicked(selectedList: String) {
+                // Handle success
+                listener.onSuccessOpenDeviceLock()
+            }
+        })*/
+
+
 }
 
-
-val decimalInputFilter = InputFilter { source, _, _, dest, dstart, dend ->
-    val text = dest.toString()
-    val input = source.toString()
-    val result = text.substring(0, dstart) + input + text.substring(dend)
-    if (result.matches("^\\d*\\.\\d{0,2}$".toRegex())) {
-        null // Accept the input as it is
-    } else if (result.matches("^\\d*\\.$".toRegex())) {
-        // Allow input ending with a dot
-        input
-    } else {
-        "" // Remove the invalid input
-    }
+interface DeviceLockOpenSuccess {
+    fun onSuccessOpenDeviceLock()
 }
 
 var decimalInputFilter2 =
     InputFilter { source, _, _, dest, _, _ ->
         val text = dest.toString()
-
-            // If a dot already exists, prevent adding another dot
         if (text.contains(".") && (source == "." || text.substring(text.indexOf(".") + 1).length >= 2)) {
-                return@InputFilter ""
+            return@InputFilter ""
         }
-
-        null // Accept the input as it is
+        null
     }
 
 fun findDecimalFromString(input: String): Boolean {
@@ -476,18 +331,8 @@ fun findDecimalFromString(input: String): Boolean {
     return decimalValue != null
 }
 
-fun formateLimitedDecimal(value: String): String {
-    val decimalFormat = DecimalFormat("#.#####")
-    return decimalFormat.format(value.toDouble())
-}
-
-
 fun convertAmountToCurrency(amount: BigDecimal, price: BigDecimal): BigDecimal {
     return price * amount
-}
-
-fun convertAmountToACurrency(amount: BigDecimal, price: BigDecimal): BigDecimal {
-    return price / amount
 }
 
 fun weiToEther(wei: BigInteger): Double {
@@ -495,15 +340,14 @@ fun weiToEther(wei: BigInteger): Double {
     val weiBigDecimal = wei.toBigDecimal()
     val etherBigDecimal = weiBigDecimal.divide(weiPerEther.toBigDecimal())
     return etherBigDecimal.toDouble()
-
-
 }
 
 fun convertWeiToEther(wei: String, decimal: Int): String {
+    loge("convertWeiToEther", "wei =>${wei} :: decimal => ${decimal}")
     val weiBigDecimal = BigDecimal(wei)
     val divisor = BigDecimal.TEN.pow(decimal)
     val etherBigDecimal = weiBigDecimal.divide(divisor, decimal, RoundingMode.DOWN)
-    return etherBigDecimal.toString()
+    return etherBigDecimal.toPlainString()
 }
 
 fun convertToWei(amount: Double, decimal: Int): BigInteger {
@@ -515,38 +359,10 @@ fun convertToWei(amount: Double, decimal: Int): BigInteger {
 fun getDateFromTimeStamp(timestamp: Long): String {
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = timestamp
-
-    /* val currentTime = System.currentTimeMillis()
-     *//*val diff = currentTime - calendar.timeInMillis
-    val hours = (diff / (1000 * 60 * 60)).toInt()*/
     val dateFormat = SimpleDateFormat("MMM dd yyyy, hh:mm aa", Locale.getDefault())
     return dateFormat.format(calendar.time)
 }
 
-fun getDateFromTimeStampShow(timestamp: Long): String {
-    val calendar = Calendar.getInstance()
-    calendar.timeInMillis = timestamp
-
-    val currentTime = System.currentTimeMillis()
-    val diff = currentTime - calendar.timeInMillis
-    val hours = (diff / (1000 * 60 * 60)).toInt()
-
-    return when {
-
-        hours < 24 -> {
-            "Today"
-        }
-
-        hours in 25..48->{
-            "Yesterday"
-        }
-
-        else -> {
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-            dateFormat.format(calendar.time)
-        }
-    }
-}
 
 fun decryptTransferInput(input: String): Pair<String, BigInteger>? {
     if (input.length < 138) return null
@@ -562,7 +378,6 @@ fun validateMnemonic(mnemonic: String): Pair<Boolean, String> {
     if (words.size != 12) {
         return Pair(false, "Phrase key is invalid. Please enter valid phrase key.")
     }
-
     val reconstructedMnemonic = words.joinToString(" ")
     val isValid = MnemonicUtils.validateMnemonic(reconstructedMnemonic)
     val errorMessage = if (isValid) "" else "Phrase key is invalid. Please enter valid phrase key."
@@ -577,7 +392,13 @@ fun getNetworkString(chain: Chain?): String {
         Chain.OKC -> "okt"
         Chain.Polygon -> "matic"
         Chain.Bitcoin -> "btc"
-        else -> ""
+        Chain.Optimism -> "optimism"
+        Chain.Arbitrum -> "arbitrum"
+        Chain.Avalanche -> "avalanche"
+        Chain.BaseMainnet -> "base"
+        Chain.Tron -> "tron"
+        Chain.Solana -> "solana"
+        else -> chain?.chainName.toString()
     }
 }
 
@@ -588,26 +409,13 @@ fun getNetworkForRangoExchange(chain: Chain?): String {
         Chain.OKC -> "okt"
         Chain.Polygon -> "polygon"
         Chain.Bitcoin -> "btc"
-        else -> ""
-    }
-}
-
-
-fun getNetworkExceptPass(chain: Chain?): Pair<String, String> {
-    return when (chain) {
-        Chain.Ethereum -> {
-            Pair("bsc", "matic")
-        }
-
-        Chain.BinanceSmartChain -> {
-            Pair("eth", "matic")
-        }
-
-        Chain.Polygon -> {
-            Pair("eth", "bsc")
-        }
-
-        else -> Pair("", "")
+        Chain.Optimism -> "optimism"
+        Chain.Arbitrum -> "arbitrum"
+        Chain.Avalanche -> "avalanche"
+        Chain.BaseMainnet -> "base"
+        Chain.Tron -> "tron"
+        Chain.Solana -> "solana"
+        else -> chain?.chainName.toString()
     }
 }
 
@@ -625,16 +433,16 @@ fun Button.enableDisableButton(isValid: Boolean) {
     if (isValid) {
         this.apply {
             isEnabled = true
-            background =
-                ResourcesCompat.getDrawable(resources, R.drawable.button_gradient_26, null)
-            setTextColor(ResourcesCompat.getColor(resources, R.color.white, null))
+            background = ResourcesCompat.getDrawable(resources, R.drawable.button_gradient_26, null)
+            setTextColor(ResourcesCompat.getColor(resources, R.color.white_text, null))
+
         }
     } else {
         this.apply {
             isEnabled = false
             background =
                 ResourcesCompat.getDrawable(resources, R.drawable.button_disable, null)
-            setTextColor(ResourcesCompat.getColor(resources, R.color.green_02303B, null))
+            setTextColor(ResourcesCompat.getColor(resources, R.color.text_gray, null))
 
         }
 
@@ -669,25 +477,17 @@ enum class OnRampType(val value: Int) {
     offRamp(2)
 }
 
-// Extension function to round a Double to a specific number of decimal places
-fun Double.roundTo(places: Int): Double {
-    require(places >= 0)
-    val factor = 10.0.pow(places)
-    return (this * factor).toLong() / factor
-}
 
-//google signin
-
-fun requestGoogleSignIn(context: Context, listner: GoogleSignInListner) {
+//google signIn
+fun requestGoogleSignIn(context: Context, listener: GoogleSignInListner) {
     val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestEmail()
         .requestScopes(Scope(DriveScopes.DRIVE_FILE))
         .build()
     val client = GoogleSignIn.getClient(context, signInOptions)
-
-    // The result of the sign-in Intent is handled in onActivityResult.
-    listner.requestUserGoogleSingIn(client.signInIntent, PhraseBackupFragment.REQUEST_CODE_SIGN_IN)
+    listener.requestUserGoogleSingIn(client.signInIntent, PhraseBackupFragment.REQUEST_CODE_SIGN_IN)
 }
+
 interface GoogleSignInListner {
     fun requestUserGoogleSingIn(recoveryIntent: Intent?, requestCode: Int)
 }
@@ -698,37 +498,6 @@ fun convertDateTimeToDDMMMYYYY(createdTime: String): String {
     return zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).format(formatter)
 }
 
-@BindingAdapter("svgImageUrl")
-fun loadSvgImage(view: ImageView, imageUrl: String?) {
-    imageUrl?.let {
-        val requestBuilder: RequestBuilder<PictureDrawable> = Glide.with(view)
-            .`as`(PictureDrawable::class.java)
-            .listener(SvgSoftwareLayerSetter()) // For SVG support
-            .load(it)
-
-        requestBuilder.into(view)
-    }
-}
-
-fun Context.showAlertDialog(
-    title: String,
-    message: String,
-    positiveButtonText: String = "OK",
-    onPositiveClick: () -> Unit = {}
-) {
-    val alertDialogBuilder = AlertDialog.Builder(this)
-
-    alertDialogBuilder.setTitle(title)
-    alertDialogBuilder.setMessage(message)
-    alertDialogBuilder.setCancelable(false)
-
-    alertDialogBuilder.setPositiveButton(positiveButtonText) { _, _ ->
-        onPositiveClick()
-    }
-
-    val alertDialog: AlertDialog = alertDialogBuilder.create()
-    alertDialog.show()
-}
 
 fun getReceipt(
     web3: Web3j,
@@ -737,41 +506,41 @@ fun getReceipt(
     completion: (Boolean, String?, Optional<TransactionReceipt>?) -> Unit,
 
     ) {
+
     web3.ethGetTransactionReceipt(transactionHash).send().apply {
-        if (this.result != null /*&& this.transactionReceipt.get().status != "0x0"*/) {
-            completion(true, this.transactionReceipt.toString(), this.transactionReceipt)
-        } else {
-            Thread.sleep(2000)
-            getReceipt(
-                web3,
-                transactionHash,
-                count,
-                completion = { success, errorMessage, transaction ->
-                    if (success) {
-                        completion(true, null, transaction)
-                    } else {
-                        completion(false, errorMessage, transaction)
-                    }
-                })
+        when {
+            this.result != null -> {
+                completion(true, this.transactionReceipt.toString(), this.transactionReceipt)
+            }
+
+            else -> {
+                Thread.sleep(2000)
+                getReceipt(
+                    web3,
+                    transactionHash,
+                    count,
+                    completion = { success, errorMessage, transaction ->
+                        if (success) {
+                            completion(true, errorMessage, transaction)
+                        } else {
+                            completion(false, errorMessage, transaction)
+                        }
+                    })
+            }
         }
     }
 }
 
 
-fun shareUrl(context:Context,urlToShare:String) {
-
-    val shareText = "$urlToShare"
-
+fun shareUrl(context: Context, urlToShare: String) {
     val shareIntent = Intent(Intent.ACTION_SEND)
     shareIntent.type = "text/plain"
-    shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
-
-    // Show the share chooser dialog
-    startActivity(context,Intent.createChooser(shareIntent, "Share URL"),Bundle())
+    shareIntent.putExtra(Intent.EXTRA_TEXT, urlToShare)
+    startActivity(context, Intent.createChooser(shareIntent, "Share URL"), Bundle())
 }
 
 //get Resource id
-fun getImageResource(type:String?): Int {
+fun getImageResource(type: String?): Int {
     return when (type?.lowercase()) {
         "erc20" -> R.drawable.ic_erc
         "bep20" -> R.drawable.ic_bep
@@ -781,34 +550,17 @@ fun getImageResource(type:String?): Int {
     }
 }
 
-//balance Text set
 fun setBalanceText(balance: Double, symbol: String, decimalPoints: Int = 6): String {
-    /* val formattedBalance = if (balance <= 0.0) "0" else {
-         val formatted = String.format(decimalPoints, balance.toBigDecimal().stripTrailingZeros())
-         formatted.trimEnd('0', '.') // Trim trailing zeros and the decimal point
-     }*/
-
-    val formattedBalance = if (balance.toBigDecimal() <= BigDecimal.ZERO) "0" else {
+    val formattedBalance = if (balance.toBigDecimal() <= BigDecimal.ZERO) "0" else
         balance.toBigDecimal().setScale(decimalPoints, RoundingMode.DOWN).stripTrailingZeros()
             .toPlainString()
-    }
-
     return "$formattedBalance $symbol"
 }
 
 fun setBalanceText(balance: BigDecimal, symbol: String, decimal: Int = 6): String {
-    val formattedBalance = if (balance <= BigDecimal.ZERO) "0" else {
+    val formattedBalance = if (balance <= BigDecimal.ZERO) "0" else
         balance.setScale(decimal, RoundingMode.DOWN).stripTrailingZeros().toPlainString()
-    }
-
-
-    println("setBalanceText BigDecimal: $balance  :: formattedBalance = $formattedBalance")
-
-    return if (symbol != "") {
-        "$formattedBalance $symbol"
-    } else {
-        formattedBalance
-    }
+    return if (symbol != "") "$formattedBalance $symbol" else formattedBalance
 
 }
 
@@ -817,9 +569,6 @@ fun setBalanceDoubleText(balance: Double, symbol: String, decimal: Int = 6): Str
         BigDecimal(balance).setScale(decimal, RoundingMode.DOWN).stripTrailingZeros()
             .toPlainString()
     }
-
-    println("setBalanceText Double: $balance  :: formattedBalance = $formattedBalance")
-
     return if (symbol.isNotEmpty()) {
         "$formattedBalance $symbol"
     } else {
@@ -828,162 +577,26 @@ fun setBalanceDoubleText(balance: Double, symbol: String, decimal: Int = 6): Str
 }
 
 
-//wallet address validator
-object EthereumAddressValidator {
-
-    // Ethereum address regular expression
-    private val ETHEREUM_ADDRESS_REGEX =
-        "^0x[0-9a-fA-F]{40}$"
-
-    private val ETHEREUM_ADDRESS_PATTERN = Pattern.compile(ETHEREUM_ADDRESS_REGEX)
-
-    fun isValidEthereumAddress(address: String): Boolean {
-        return ETHEREUM_ADDRESS_PATTERN.matcher(address).matches()
-    }
-}
-
-//bottom sheet full height
-fun setupFullHeight(bottomSheetDialog: BottomSheetDialog,context:Context) {
-    val bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
-    val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet!!)
-    BottomSheetBehavior.from(bottomSheet).peekHeight = 250
-    val layoutParams = bottomSheet.layoutParams
-
-    val windowHeight: Int = getWindowHeight(context)
-    if (layoutParams != null) {
-        layoutParams.height = windowHeight
-    }
-    bottomSheet.layoutParams = layoutParams
-    behavior.state = BottomSheetBehavior.STATE_EXPANDED
-}
-
-//Calculate window height
-fun getWindowHeight(context:Context): Int {
-    // Calculate window height for fullscreen use
-    val displayMetrics = DisplayMetrics()
-    (context as Activity?)!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
-    return displayMetrics.heightPixels
-}
-
-//
-/*
-fun extractQRCodeScannerInfo(input: String): Triple<String, String, String>? {
-    val regex1 = Regex("^(.+):(?!@1)(.+?)/transfer\\?address=([^&]+)&([^&]+)=([^&]+)$")
-    val regex2 = Regex("^(.+):(?!@1)(.+?)(?:@1)?(?:\\?(.+))?$")
-
-
-    // val regex3 = Regex("(0x.+?)\\?amount=(.+)")
-    val regex4 = Regex("(0x.+?)\\?(amount|value)=(.+)")
-
-
-    val matchResult1 = regex1.matchEntire(input)
-    val matchResult2 = regex2.matchEntire(input)
-    val matchResult3 = regex4.find(input)
-
-    var valueAmount = ""
-
-    if (matchResult1 != null) {
-        val prefix = matchResult1.groups[2]?.value?.replace("@1", "") ?: ""
-        val address = matchResult1.groups[3]?.value?.replace("@1", "") ?: ""
-        val dynamicValues = matchResult1.groupValues.drop(4).chunked(2).associate { it[0] to it[1] }
-            ?: emptyMap()//parseParameters(matchResult1.groups[4]?.value ?: "")
-
-        if (dynamicValues.isNotEmpty()) {
-            dynamicValues.forEach { (name, value) ->
-                valueAmount = value
-                return@forEach
-            }
-        }
-
-        val parts = address.substringBefore('@')
-
-        Log.e("TAG", "extractQRCodeScannerInfo 1 : $parts")
-
-        return Triple(parts, valueAmount, prefix)
-    } else if (matchResult2 != null) {
-        val prefix = matchResult2.groups[1]?.value ?: ""
-        val address = matchResult2.groups[2]?.value*/
-/*?.replace("@1", "") ?: ""*//*
-
-
-
-
-
-        // If "@" symbol is found, keep only the characters before it, otherwise, use the entire string
-
-
-        val dynamicValues = parseParameters(matchResult2.groups[3]?.value ?: "")
-
-        if (dynamicValues.isNotEmpty()) {
-            dynamicValues.forEach { (name, value) ->
-                valueAmount = value
-                return@forEach
-            }
-        }
-
-        val parts = address!!.substringBefore('@')
-
-
-
-        return Triple(parts, valueAmount, prefix)
-    }else if(matchResult3 != null) {
-        val amount = matchResult3.groupValues[2] ?: ""
-
-        //val parts = address.split('@')
-        val parts = matchResult3.groupValues[1].substringBefore('@')
-        return Triple(parts, amount, "")
-    }
-
-    return null
-}
-
-fun parseParameters(parametersString: String): Map<String, String> {
-    val dynamicValues = mutableMapOf<String, String>()
-
-    if (parametersString.isNotEmpty()) {
-        val parameterPairs = parametersString.split('&')
-        for (pair in parameterPairs) {
-            val keyValue = pair.split('=')
-            if (keyValue.size == 2) {
-                dynamicValues[keyValue[0]] = keyValue[1]
-            }
-        }
-    }
-
-    return dynamicValues
-}
-*/
-
-
-
-
 fun extractQRCodeScannerInfo(input: String): Triple<String, String, String>? {
     val regex1 = Regex("^(.+):(?!@1)(.+?)/transfer\\?address=([^&]+)&([^&]+)=([^&]+)$")
     val regex2 = Regex("^(.+):(?!@1)(.+?)(?:@1)?(?:\\?(.+))?$")
     val regex3 =
         Regex("(0x.+?)\\?(amount|@1?value)=(.+)|(0x.+?)\\?(amount|@137?value)=(.+)|(0x.+?)\\?(amount|@56?value)=(.+)|(0x.+?)\\?(amount|@66?value)=(.+)")
-    // val regexBitcoin = Regex("bitcoin:(.+?)(?:\\?(.+))?")
     val regexBitcoin = Regex("(bitcoin:(.+?)(?:\\?(.+))?)|(ethereum:(.+?)(?:\\?(.+))?)")
-
     val matchResult1 = regex1.matchEntire(input)
     val matchResult2 = regex2.matchEntire(input)
     val matchResult3 = regex3.find(input)
     val matchResultBitcoin = regexBitcoin.matchEntire(input)
-
     var valueAmount = ""
-
     loge("matchResult1", "${matchResult1?.groupValues}")
     loge("matchResult2", "${matchResult2?.groupValues}")
     loge("matchResult3", "${matchResult3?.groupValues}")
     loge("matchResultBitcoin", "${matchResultBitcoin?.groupValues}")
 
     if (matchResult1 != null) {
-        loge("matchResult1", "${matchResult1.groups}")
         val prefix = matchResult1.groups[2]?.value?.replace("@1", "") ?: ""
         val address = matchResult1.groups[3]?.value?.replace("@1", "") ?: ""
         val dynamicValues = matchResult1.groupValues.drop(4).chunked(2).associate { it[0] to it[1] }
-            ?: emptyMap()
-
         if (dynamicValues.isNotEmpty()) {
             dynamicValues.forEach { (name, value) ->
                 valueAmount = value
@@ -993,7 +606,6 @@ fun extractQRCodeScannerInfo(input: String): Triple<String, String, String>? {
         val parts = address.substringBefore('@')
         return Triple(parts, valueAmount, prefix)
     } else if (matchResult2 != null) {
-        loge("matchResult2", "${matchResult2.groups}")
         val prefix = matchResult2.groups[1]?.value ?: ""
         val address = matchResult2.groups[2]?.value
         val dynamicValues = parseParameters(matchResult2.groups[3]?.value ?: "")
@@ -1001,31 +613,25 @@ fun extractQRCodeScannerInfo(input: String): Triple<String, String, String>? {
         if (dynamicValues.isNotEmpty()) {
             dynamicValues.forEach { (name, value) ->
                 val amount = value.split("=")
-
-                valueAmount = /*value*/amount[amount.lastIndex]
+                valueAmount = amount[amount.lastIndex]
                 return@forEach
             }
         }
-
         val parts = address?.substringBefore('@') ?: ""
         return Triple(parts, valueAmount, prefix)
     } else if (matchResult3 != null) {
-        loge("matchResult3", "${matchResult3.groupValues}")
-        val amount = matchResult3.groupValues[3] ?: ""
+        val amount = matchResult3.groupValues[3]
         val parts = matchResult3.groupValues[1].substringBefore('@')
         return Triple(parts, amount, "")
     } else if (matchResultBitcoin != null) {
-        loge("matchResultBitcoin", "${matchResultBitcoin.groups}")
         val address = matchResultBitcoin.groups[1]?.value ?: ""
         val dynamicValues = parseParameters(matchResultBitcoin.groups[2]?.value ?: "")
-
         if (dynamicValues.isNotEmpty()) {
             dynamicValues.forEach { (name, value) ->
                 valueAmount = value
                 return@forEach
             }
         }
-
         val parts = address.substringBefore('@')
         return Triple(parts, valueAmount, "")
     }
@@ -1040,30 +646,27 @@ fun parseParameters(parameters: String): Map<String, String> {
         .associate { it[0] to it[1] }
 }
 
-
-//contain words
-fun containsWord(input: String, word: String): Boolean {
-    val regex = "\\b$word\\b".toRegex()
-    return regex.find(input) != null
+fun hexToDecimalChainId(hex: String?): Long {
+    return hex?.removePrefix("0x")!!.toLong(16)
 }
 
-//format decimal values remove trailing zero
+
+/**
+ * format decimal values remove trailing zero
+ * **/
 fun formatDecimal(input: String): String {
     val decimalValue = try {
         BigDecimal(input).setScale(18, RoundingMode.DOWN).stripTrailingZeros()
     } catch (e: Exception) {
-        BigDecimal.ZERO // If invalid input, use 0
+        BigDecimal.ZERO
     }
-
     val formattedString = decimalValue.toPlainString()
-
-    // Remove trailing zeros after the decimal point
-    val result = if (formattedString.contains(".") && formattedString.indexOf('.') < formattedString.length - 1) {
-        formattedString.replace("0*$".toRegex(), "")
-    } else {
-        formattedString
-    }
-
+    val result =
+        if (formattedString.contains(".") && formattedString.indexOf('.') < formattedString.length - 1) {
+            formattedString.replace("0*$".toRegex(), "")
+        } else {
+            formattedString
+        }
     return result
 }
 
@@ -1076,21 +679,12 @@ fun isScientificNotation(input: String): Boolean {
 
 //open chrome from url
 fun redirectToChrome(context: Context, url: String) {
-    // Create an Intent with the ACTION_VIEW action
     val intent = Intent(Intent.ACTION_VIEW)
-
-    // Set the data (URL) for the Intent
     intent.data = Uri.parse(url)
-
-    // Set the package to force opening in Chrome
     intent.`package` = "com.android.chrome"
-
-    // Check if there's an activity that can handle the Intent
     if (intent.resolveActivity(context.packageManager) != null) {
-        // Start the activity
         context.startActivity(intent)
     } else {
-        // Chrome is not installed; open the URL in the default browser
         intent.`package` = null
         context.startActivity(intent)
     }
@@ -1108,9 +702,19 @@ fun stringToBigDecimal(str: String): BigDecimal {
     return BigDecimal(str)
 }
 
-fun weiToGwei(wei: BigInteger): BigInteger {
+/*fun weiToGwei(wei: BigInteger): BigInteger {
     val gweiFactor = BigInteger.TEN.pow(9)
     return wei.divide(gweiFactor)
+}*/
+
+fun weiToGwei(wei: BigInteger): BigDecimal {
+    val weiInOneGwei = BigDecimal("1000000000") // 1 Gwei = 10^9 Wei
+    return BigDecimal(wei).divide(weiInOneGwei)
+}
+
+fun weiToGwei(wei: BigDecimal): BigDecimal {
+    val weiInOneGwei = BigDecimal("1000000000") // 1 Gwei = 10^9 Wei
+    return wei.divide(weiInOneGwei)
 }
 
 fun gweiToWei(gwei: BigInteger): BigInteger {
@@ -1118,15 +722,17 @@ fun gweiToWei(gwei: BigInteger): BigInteger {
     return gwei.multiply(gweiFactor)
 }
 
+fun gweiToWei(gwei: BigDecimal): BigDecimal {
+    val gweiFactor = BigDecimal("1000000000") // 1 Gwei = 10^9 Wei
+    return gwei.multiply(gweiFactor)
+}
+
 fun hexStringToBigInteger(hexString: String): BigInteger {
-    // Remove the "0x" prefix if present
     val cleanHexString = if (hexString.startsWith("0x", ignoreCase = true)) {
         hexString.substring(2)
     } else {
         hexString
     }
-
-    // Parse the hexadecimal string into a BigInteger
     return BigInteger(cleanHexString, 16)
 }
 
@@ -1151,36 +757,16 @@ fun Context.hideKeyboard(windowToken: IBinder) {
     imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun cleanEthereumAddress(inputAddress: String): String {
-    // Remove leading and trailing whitespaces
-    val trimmedAddress = inputAddress.trim()
-
-    // Check if the address starts with "0x" and remove it if present
-    val addressWithoutPrefix = if (trimmedAddress.startsWith("0x", ignoreCase = true)) {
-        trimmedAddress.substring(2)
-    } else {
-        trimmedAddress
-    }
-
-    // Ensure that the cleaned address is exactly 40 characters long
-    return if (addressWithoutPrefix.length == 40) {
-        addressWithoutPrefix
-    } else {
-        // Handle error or return an indicator that the address is invalid
-        // For example, you can return an empty string or throw an exception
-        throw IllegalArgumentException("Invalid Receiver address: $inputAddress")
-    }
-}
 
 fun getActualDigits(value: Any): String {
-    if (value is String && "e" in value.lowercase()) {
+    return if (value is String && "e" in value.lowercase()) {
         try {
-            return BigDecimal(value).toPlainString()
+            BigDecimal(value).toPlainString()
         } catch (e: Exception) {
-            return value.toString()
+            value.toString()
         }
     } else {
-        return value.toString()
+        value.toString()
     }
 }
 
@@ -1190,27 +776,181 @@ fun convertScientificToBigDecimal(scientificValue: String): BigDecimal {
 
 fun TextView.underlineText(text: String) {
     val spannableString = SpannableString(text)
-
-    // Apply UnderlineSpan to the entire text
     spannableString.setSpan(UnderlineSpan(), 0, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-    // Apply ForegroundColorSpan (optional, for demonstration purposes)
-    /*  val color = Color.BLUE
-      spannableString.setSpan(ForegroundColorSpan(color), 0, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)*/
-
-    // Set the SpannableString to the TextView
     this.text = spannableString
 }
+
+fun ImageView.defaultCountryCodeSelected() {
+    val defaultFlag = "https://flagcdn.com/w320/in.png"
+    loadBannerImage(this, defaultFlag)
+}
+
 
 fun loge(tag: String = "TAG", message: String = "") {
     when {
         BuildConfig.DEBUG -> {
             Log.e(tag, message)
-        }/*else -> {
-           Log.e(tag, message)
-        }*/
+        }
     }
 }
+
+fun logd(tag: String = "TAG", message: String = "") {
+    when {
+        BuildConfig.DEBUG -> {
+            Log.d(tag, message)
+        }
+    }
+}
+
+
+fun Fragment.showSuccessToast(message: String, showTime: Int = Toast.LENGTH_SHORT) {
+    val inflater = LayoutInflater.from(context)
+    val layout = inflater.inflate(R.layout.custom_success_toast, null)
+    val textView = layout.findViewById<TextView>(R.id.txt_toast_message)
+    textView.text = message
+    val toast = Toast(context)
+    toast.duration = showTime
+    toast.view = layout
+    toast.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
+    toast.show()
+}
+
+fun generateRequestBody(params: Map<String, Any>): RequestBody {
+    val mediaType = "application/json; charset=utf-8".toMediaType()
+    val jsonObject = JSONObject()
+    for ((key, value) in params) {
+        when (value) {
+            is String -> jsonObject.put(key, value)
+            is Boolean -> jsonObject.put(key, value)
+            is Int -> jsonObject.put(key, value)
+            // Add more cases for other data types as needed
+            else -> throw IllegalArgumentException("Unsupported data type for parameter $key: ${value::class.simpleName}")
+        }
+    }
+    val jsonString = jsonObject.toString()
+    return jsonString.toRequestBody(mediaType)
+}
+
+fun String.checkPatternMatch(patternRegex: String?): Boolean {
+    val pattern = patternRegex?.let { Pattern.compile(it) }
+    return pattern?.matcher(this)!!.matches()
+}
+
+
+data class CountryInfo(
+    val isoCode: String,
+    val flagEmoji: String,
+    val countryCode: Int,
+    val fullNumber: String,
+    val isValidNumber: Boolean = false
+)
+
+fun getCountryInfo(number: String, phoneNumberUtil: PhoneNumberUtil): CountryInfo? {
+    val validatedNumber = if (number.startsWith("+")) number else "+$number"
+
+    return try {
+        val phone = if (validatedNumber.length < 5) {
+            validatedNumber + "00"
+        } else {
+            validatedNumber
+        }
+        val phoneNumber = phoneNumberUtil.parse(phone, "IN")
+        val countryCode = phoneNumber.countryCode
+        val isoCode = phoneNumberUtil.getRegionCodeForCountryCode(countryCode)
+        val flagEmoji = getFlagEmoji(isoCode)
+        val isValidNumber = phoneNumberUtil.isValidNumber(phoneNumberUtil.parse(phone, isoCode))
+
+        CountryInfo(isoCode, flagEmoji, countryCode, validatedNumber, isValidNumber)
+    } catch (e: NumberParseException) {
+        CountryInfo("", "", 0, validatedNumber, false)
+    }
+}
+
+fun getFlagEmoji(isoCode: String?): String {
+    if (isoCode == null || isoCode.length != 2) {
+        return ""
+    }
+    val countryCode = isoCode.uppercase(Locale.US)
+    val firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6
+    val secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6
+
+    return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
+}
+
+fun isEmailValid(email: String): Boolean {
+    return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+}
+
+fun Context.supportNavigationRedirection() {
+    val url = "https://cards.plutope.io/faq"
+    val intent = CustomTabsIntent.Builder().build()
+    intent.launchUrl(this, Uri.parse(url))
+}
+
+fun ScrollView?.adjustResizeScroll() {
+    this?.viewTreeObserver?.addOnGlobalLayoutListener {
+        val screenHeight = this.rootView?.height
+        val rect = android.graphics.Rect()
+        this.getWindowVisibleDisplayFrame(rect)
+        val keypadHeight = screenHeight?.minus(rect.bottom)
+        if (keypadHeight!! > screenHeight * 0.15) {
+            this.setPadding(0, 0, 0, keypadHeight)
+        } else {
+            this.setPadding(0, 0, 0, 0)
+        }
+    }
+}
+
+fun convertToMillions(amount: Double): String {
+    val million = 1_000_000
+    return if (amount >= million) {
+        val formattedAmount = amount / million
+        val decimalFormat = DecimalFormat("#,##,##0.00")
+        "${decimalFormat.format(formattedAmount)}M"
+    } else {
+        amount.toString()
+    }
+}
+
+fun convertToBillions(amount: Double): String {
+    val divisor = BigDecimal("1000000000") // No underscores
+    val billions = BigDecimal(amount).divide(divisor, 10, RoundingMode.HALF_UP)
+    return "${billions.setScale(2, RoundingMode.HALF_UP)}B"
+}
+
+fun imageViewToBitmap(imageView: ImageView): Bitmap {
+    // Create a Bitmap with the same dimensions as the ImageView
+    val bitmap = Bitmap.createBitmap(
+        imageView.width,
+        imageView.height,
+        Bitmap.Config.ARGB_8888
+    )
+
+    // Draw the ImageView's content onto the Bitmap using a Canvas
+    val canvas = Canvas(bitmap)
+    imageView.draw(canvas)
+
+    return bitmap
+}
+
+@Composable
+fun ShowToastExample(message: String) {
+    val context = LocalContext.current
+
+    // This will show the toast as soon as the composable is composed
+    LaunchedEffect(message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+}
+
+/*fun main() {
+
+
+}*/
+
+
+
+
 
 
 

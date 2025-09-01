@@ -18,7 +18,7 @@ import com.app.plutope.model.Tokens
 import com.app.plutope.model.Wallet
 import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
-import com.app.plutope.ui.fragment.phrase.verify_phrase.VerifySecretPhraseViewModel
+import com.app.plutope.ui.fragment.phrase.recovery_phrase.VerifySecretPhraseViewModel
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.utils.Securities
 import com.app.plutope.utils.attachPasswordToggle
@@ -122,8 +122,8 @@ class SetEncryptionPassword :
             if (args.backupDriveContent != "") {
                 val str =
                     ""/*EncryptionUtils.decryptPassphrase(jsonObj.getString("encryptedData"))*/
-                val password = str?.split("|")?.last()
-                val menomonics = str?.split("|")?.first()
+                val password = str.split("|").last()
+                val menomonics = str.split("|").first()
                 if (password.toString() == viewDataBinding!!.edtPassword.text.toString()) {
                     words = menomonics
                     requireContext().showLoader()
@@ -148,7 +148,7 @@ class SetEncryptionPassword :
                             findNavController().safeNavigate(
                                 SetEncryptionPasswordDirections.actionSetEncryptionPasswordToConfirmEncryptionPassword(
                                     viewDataBinding!!.edtPassword.text.toString(),
-                                    args.backupWalletName,args.walletModel
+                                    args.backupWalletName, args.walletModel
                                 )
                             )
 
@@ -158,7 +158,7 @@ class SetEncryptionPassword :
         }
 
 
-        if(!preferenceHelper.isTokenImageCalled)
+        if (!preferenceHelper.isTokenImageCalled)
             tokenViewModel.getTokenImageList()
     }
 
@@ -234,8 +234,10 @@ class SetEncryptionPassword :
                             hideLoader()
                             requireContext().showToast("Wallet Created successfully.")
 
-if (!preferenceHelper.isFirstTime)                            findNavController().safeNavigate(SetEncryptionPasswordDirections.actionSetEncryptionPasswordToWelcomeScreen())
-else
+                            if (!preferenceHelper.isFirstTime) findNavController().safeNavigate(
+                                SetEncryptionPasswordDirections.actionSetEncryptionPasswordToWelcomeScreen()
+                            )
+                            else
                                 findNavController().safeNavigate(SetEncryptionPasswordDirections.actionSetEncryptionPasswordToDashboard())
                         }
 
@@ -264,7 +266,7 @@ else
                         is NetworkState.Success -> {
 
                             val listTokens = it.data as MutableList<Tokens>
-                            if(listTokens.isNotEmpty()){
+                            if (listTokens.isNotEmpty()) {
                                 tokenViewModel.executeInsertTokens(listTokens)
                             }
 
@@ -294,7 +296,7 @@ else
                     when (it) {
                         is NetworkState.Success -> {
                             hideLoader()
-                            preferenceHelper.isTokenImageCalled=true
+                            preferenceHelper.isTokenImageCalled = true
 
                         }
 
@@ -329,7 +331,7 @@ else
                 isEnabled = true
                 background =
                     ResourcesCompat.getDrawable(resources, R.drawable.button_gradient_26, null)
-                setTextColor(ResourcesCompat.getColor(resources, R.color.white, null))
+                setTextColor(ResourcesCompat.getColor(resources, R.color.bg_white, null))
             }
         } else {
             viewDataBinding?.txtValidationMessage?.setTextColor(

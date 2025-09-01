@@ -52,9 +52,15 @@ class ContactListFragment : BaseFragment<FragmentContactListBinding, ContactList
     }
 
     override fun setupUI() {
+
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         setOnClickListner()
-        if (args.isForSelection) viewDataBinding?.btnAddContact?.visibility =
-            GONE else viewDataBinding?.btnAddContact?.visibility = VISIBLE
+        /* if (args.isForSelection)
+             viewDataBinding?.btnAddContact?.visibility = GONE
+         else viewDataBinding?.btnAddContact?.visibility = VISIBLE*/
 
         adapter = ContactListAdapter {
             if (args.isForSelection) {
@@ -62,6 +68,13 @@ class ContactListFragment : BaseFragment<FragmentContactListBinding, ContactList
                 bundle.putParcelable(keyContactSelect, it)
                 setFragmentResult(keyContact, bundle)
                 findNavController().popBackStack()
+            } else {
+                findNavController().navigate(
+                    ContactListFragmentDirections.actionContactListFragmentToAddContactFragment(
+                        true,
+                        it
+                    )
+                )
             }
         }
 
@@ -73,7 +86,12 @@ class ContactListFragment : BaseFragment<FragmentContactListBinding, ContactList
 
     private fun setOnClickListner() {
         viewDataBinding?.btnAddContact?.setOnClickListener {
-            findNavController().safeNavigate(ContactListFragmentDirections.actionContactListFragmentToAddContactFragment())
+            findNavController().safeNavigate(
+                ContactListFragmentDirections.actionContactListFragmentToAddContactFragment(
+                    false,
+                    null
+                )
+            )
         }
     }
 

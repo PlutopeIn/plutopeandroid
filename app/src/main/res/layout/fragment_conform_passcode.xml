@@ -9,19 +9,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:background="@color/bg_white">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="-50dp"
-            android:layout_marginTop="-200dp"
-            android:layout_marginEnd="-50dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_circle_bg"
-            app:layout_constrainedHeight="true"
-            app:layout_constraintBottom_toTopOf="@id/guid2"
-            app:layout_constraintTop_toTopOf="parent" />
+
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guid1"
@@ -39,27 +29,26 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_width="@dimen/_30mdp"
-            android:layout_height="@dimen/_30mdp"
-            android:layout_marginStart="@dimen/_17mdp"
-            android:layout_marginTop="@dimen/_20mdp"
+            android:layout_width="@dimen/_50mdp"
+            android:layout_height="@dimen/_50mdp"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect"
             android:padding="@dimen/_8mdp"
-            android:src="@drawable/ic_back_arrow"
+            android:src="@drawable/ic_back_new"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-
-
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txt_create_passcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_33mdp"
-            android:fontFamily="@font/quicksand_bold"
+            android:fontFamily="@font/violet_sans"
             android:gravity="center"
             android:text="@string/confirm_passcode"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/_27msp"
             app:layout_constraintBottom_toTopOf="@id/txt_passcode_info"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,11 +62,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_35mdp"
             android:layout_marginTop="@dimen/_20mdp"
-            android:fontFamily="@font/quicksand_regular"
+            android:fontFamily="@font/inter"
             android:gravity="center"
             android:lineSpacingExtra="@dimen/_10mdp"
             android:text="@string/adds_an_extra_layer_of_security_when_using_the_app"
-            android:textColor="@color/white"
+            android:textColor="@color/sub_title_gray"
             android:textSize="@dimen/_13msp"
             app:layout_constraintBottom_toTopOf="@id/guid1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -130,7 +119,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/password_view"
-            app:layout_constraintVertical_bias=".7"
+            app:layout_constraintVertical_bias="1"
 
             />
 

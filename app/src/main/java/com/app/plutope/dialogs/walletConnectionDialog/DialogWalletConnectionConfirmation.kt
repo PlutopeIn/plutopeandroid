@@ -1,7 +1,6 @@
 package com.app.plutope.dialogs.walletConnectionDialog
 
 import android.content.Context
-import android.graphics.Color
 import android.net.Uri
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -32,8 +31,8 @@ import com.app.plutope.utils.walletConnection.compose_ui.session_proposal.wallet
 import com.app.plutope.utils.walletConnection.sendResponseDeepLink
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.walletconnect.web3.wallet.client.Wallet
-import com.walletconnect.web3.wallet.client.Web3Wallet
+import com.reown.walletkit.client.Wallet
+import com.reown.walletkit.client.WalletKit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -93,7 +92,7 @@ class DialogWalletConnectionConfirmation private constructor() {
         val allChain = requiredChains + optionalChains
 
         val sessionProposal: Wallet.Model.SessionProposal = requireNotNull(
-            Web3Wallet.getSessionProposals().find {
+            WalletKit.getSessionProposals().find {
                 it.proposerPublicKey == sessionProposalViewModel.sessionProposal.pubKey
             })
 
@@ -104,7 +103,7 @@ class DialogWalletConnectionConfirmation private constructor() {
         )
 
         val chainList = arrayListOf<Chains>()
-        Chains.values().forEach {
+        Chains.entries.forEach {
             allChain.forEach { chain ->
                 if (it.chainId == chain) {
                     it.walletAddress = getWalletAddress(CoinType.ETHEREUM)!!
@@ -133,17 +132,20 @@ class DialogWalletConnectionConfirmation private constructor() {
                     sessionProposalViewModel.sessionProposal.peerUI.peerUri,
                     Html.FROM_HTML_MODE_LEGACY
                 )
-                movementMethod = LinkMovementMethod.getInstance();
+                movementMethod = LinkMovementMethod.getInstance()
             }
 
             btnConnect.setOnClickListener {
                 CoroutineScope(Dispatchers.Main).launch {
                     try {
-
                         sessionProposalViewModel.approve(sessionProposalViewModel.sessionProposal.pubKey) { redirect ->
+                            loge("WalletConnectionSuccess", "redirectUrl => ${redirect.toUri()}")
+
                             if (redirect.isNotEmpty()) {
                                 context?.sendResponseDeepLink(redirect.toUri())
-                            }
+                            } /*else {
+                                context?.sendResponseDeepLink(Uri.parse("https://presale.plutope.io/"))
+                            }*/
                             dismiss()
                             clearDialogWalletConnectionConfirmationInstence()
                         }
@@ -228,7 +230,7 @@ class DialogWalletConnectionConfirmation private constructor() {
                 Permission(
                     "Move funds without permissions",
                     icon = R.drawable.ic_close,
-                    color = Color.parseColor("#44456E")
+                    color = R.color.black
                 )
             )
             permissionListAdapter.submitList(permissions)

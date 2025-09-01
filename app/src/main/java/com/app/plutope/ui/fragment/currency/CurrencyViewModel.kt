@@ -34,6 +34,20 @@ class CurrencyViewModel @Inject constructor(private val currencyRepo: CurrencyRe
 
     }
 
+    private val _tagUpdateCardCurrency =
+        MutableStateFlow<NetworkState<MutableList<CurrencyModel>?>>(NetworkState.Empty())
+
+    val updateCardCurrencyResponse: StateFlow<NetworkState<MutableList<CurrencyModel>?>>
+        get() = _tagUpdateCardCurrency
+
+    fun executeUpdateCardCurrency(currency: String) {
+        viewModelScope.launch {
+            _tagUpdateCardCurrency.emit(NetworkState.Loading())
+            _tagUpdateCardCurrency.collectStateFlow(currencyRepo.executeUpdateCardCurrencyApi(currency))
+        }
+
+    }
+
 
     private val _insertCurrencyResponse =
         MutableStateFlow<NetworkState<CurrencyModel?>>(NetworkState.Empty())

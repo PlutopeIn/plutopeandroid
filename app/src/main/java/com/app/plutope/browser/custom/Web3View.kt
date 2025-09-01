@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
-import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -33,10 +32,6 @@ class Web3View : WebView {
     ) {
         webViewClient = Web3ViewClient(getContext())
         init()
-    }
-
-    override fun setWebChromeClient(client: WebChromeClient?) {
-        super.setWebChromeClient(client)
     }
 
     override fun setWebViewClient(client: WebViewClient) {
@@ -72,7 +67,7 @@ class Web3View : WebView {
         settings.javaScriptEnabled = true
         settings.cacheMode = WebSettings.LOAD_DEFAULT
         settings.builtInZoomControls = true
-        settings.displayZoomControls = false
+        settings.displayZoomControls = true
         settings.useWideViewPort = true
         settings.loadWithOverviewMode = true
         settings.domStorageEnabled = true

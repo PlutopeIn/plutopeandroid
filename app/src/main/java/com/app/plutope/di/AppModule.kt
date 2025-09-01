@@ -20,7 +20,6 @@ import com.app.plutope.network.NetworkConnectionInterceptor
 import com.app.plutope.ui.base.App
 import com.app.plutope.utils.constant.cryptoCurrencyUrl
 import com.app.plutope.utils.extras.PreferenceHelper
-import com.app.plutope.utils.loge
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,7 +51,6 @@ object AppModule {
     @Singleton
     @Provides
     fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
-        loge("App Module", "here in debug :: ${BuildConfig.DEBUG}")
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -65,58 +63,29 @@ object AppModule {
                 )
             )
             .addInterceptor(NetworkConnectionInterceptor(App.getContext()))
-            .connectTimeout(2, TimeUnit.MINUTES)
+            .connectTimeout(10, TimeUnit.MINUTES)
             .readTimeout(5, TimeUnit.MINUTES)
             .writeTimeout(5, TimeUnit.MINUTES)
             .build()
     } else {
-
-        loge("App Module", "here in release :: ${BuildConfig.DEBUG}")
-
         OkHttpClient
             .Builder()
-            .connectTimeout(2, TimeUnit.MINUTES)
+            .connectTimeout(10, TimeUnit.MINUTES)
             .addInterceptor(providesOkhttpInterceptor())
-            /* .addNetworkInterceptor(
-                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS).setLevel(
-                     HttpLoggingInterceptor.Level.BODY
-                 )
-             )*/
             .addInterceptor(NetworkConnectionInterceptor(App.getContext()))
-            .connectTimeout(5, TimeUnit.MINUTES)
+            .connectTimeout(10, TimeUnit.MINUTES)
             .readTimeout(5, TimeUnit.MINUTES)
             .writeTimeout(5, TimeUnit.MINUTES)
             .build()
     }
 
-    /* @Singleton
-     @Provides
-     fun provideOkHttpClient(): OkHttpClient {
-         val builder = OkHttpClient.Builder()
-             .addInterceptor(providesOkhttpInterceptor())
-             .addInterceptor(NetworkConnectionInterceptor(App.getContext()))
-             .connectTimeout(2, TimeUnit.MINUTES)
-             .readTimeout(5, TimeUnit.MINUTES)
-             .writeTimeout(5, TimeUnit.MINUTES)
-
-         if (BuildConfig.DEBUG) {
-             val loggingInterceptor = HttpLoggingInterceptor()
-             loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
-             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-             builder.addInterceptor(loggingInterceptor)
-         }
-
-         return builder.build()
-     }*/
 
     @Provides
     fun providesOkhttpInterceptor(): Interceptor {
         return Interceptor { chain: Interceptor.Chain ->
             val original: Request = chain.request()
             val requestBuilder: Request.Builder = original.newBuilder()
-                //  .addHeader("X-CMC_PRO_API_KEY", "7d00fe84-d1ea-47da-b2f6-53287366a15c")
                 .addHeader("Accept", "application/json")
-
             val request: Request = requestBuilder.build()
             chain.proceed(request)
         }
@@ -166,7 +135,7 @@ object AppModule {
         tokenDao: TokensDao,
         apiHelper: ApiHelper
     ) =
-        TokensRepo(tokenDao,apiHelper)
+        TokensRepo(tokenDao, apiHelper)
 
     @Singleton
     @Provides
@@ -199,7 +168,7 @@ object AppModule {
         apiHelper: ApiHelper,
         currencyDao: CurrencyDao
     ) =
-        CurrencyRepo(apiHelper,currencyDao)
+        CurrencyRepo(apiHelper, currencyDao)
 
     @Singleton
     @Provides

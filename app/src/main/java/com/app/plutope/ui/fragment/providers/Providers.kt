@@ -59,6 +59,10 @@ class Providers : BaseFragment<FragmentProvidersBinding, ProvidersViewModel>() {
         providerListAdapter?.submitList(providerList)
         viewDataBinding!!.rvProviderList.adapter = providerListAdapter
 
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
     }
 
     override fun setupObserver() {

@@ -6,6 +6,4 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class WelcomeScreenViewModel @Inject constructor() : BaseViewModel<CommonNavigator>() {
-
-}
+class WelcomeScreenViewModel @Inject constructor() : BaseViewModel<CommonNavigator>()

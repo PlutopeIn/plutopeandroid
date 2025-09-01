@@ -2,7 +2,6 @@ package com.app.plutope.ui.fragment.dashboard.nfts
 
 import androidx.lifecycle.viewModelScope
 import com.app.plutope.data.repository.NFTRepo
-import com.app.plutope.model.Info
 import com.app.plutope.model.NFTListModel
 import com.app.plutope.ui.base.BaseViewModel
 import com.app.plutope.utils.common.CommonNavigator
@@ -14,13 +13,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NFTsViewModel @Inject constructor(val nftRepo: NFTRepo) : BaseViewModel<CommonNavigator>() {
+class NFTsViewModel @Inject constructor(private val nftRepo: NFTRepo) :
+    BaseViewModel<CommonNavigator>() {
 
     //Get Nft list
     private val _tagGetNftList =
-        MutableStateFlow<NetworkState<NFTListModel?>>(NetworkState.Empty())
+        MutableStateFlow<NetworkState<MutableList<NFTListModel>?>>(NetworkState.Empty())
 
-    val getNFTListResponse: StateFlow<NetworkState<NFTListModel?>>
+    val getNFTListResponse: StateFlow<NetworkState<MutableList<NFTListModel>?>>
         get() = _tagGetNftList
 
     fun executeGetNFTList(url: String) {

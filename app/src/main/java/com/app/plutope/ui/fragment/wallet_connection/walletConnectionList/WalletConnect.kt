@@ -1,6 +1,8 @@
 package com.app.plutope.ui.fragment.wallet_connection.walletConnectionList
 
+import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -21,6 +23,8 @@ import com.app.plutope.utils.walletConnection.state.PairingState
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -31,7 +35,7 @@ class WalletConnect : BaseFragment<FragmentWalletConnectBinding, WalletConnectVi
     private var adapter: WalletConnectionListAdapter? = null
     private val walletConnectViewModel: WalletConnectViewModel by viewModels()
     private val web3walletViewModel: Web3WalletViewModel by viewModels()
-    private val connectionsViewModel: ConnectionsViewModel by viewModels()
+    private val connectionsViewModel: ConnectionsViewModel by activityViewModels()
 
 
     override fun getViewModel(): WalletConnectViewModel {
@@ -50,13 +54,24 @@ class WalletConnect : BaseFragment<FragmentWalletConnectBinding, WalletConnectVi
         return getString(R.string.wallet_connect)
     }
 
-    override fun setupUI() {
-        // connectionsViewModel.refreshConnections()
+    override fun onResume() {
+        super.onResume()
+        loge("resume", "Here is am wc")
+        connectionsViewModel.refreshConnections()
         handleCoreEvents(connectionsViewModel)
+        // refreshCall()
+
+    }
+
+    override fun setupUI() {
 
 
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
-        adapter = WalletConnectionListAdapter {
+        handleCoreEvents(connectionsViewModel)
+        adapter = WalletConnectionListAdapter(arrayListOf()) {
             findNavController().safeNavigate(
                 WalletConnectDirections.actionWalletConnectionToWalletConnectionDetail(
                     it.id.toString()
@@ -68,6 +83,30 @@ class WalletConnect : BaseFragment<FragmentWalletConnectBinding, WalletConnectVi
             scanQrCode.launch(null)
         }
 
+        viewDataBinding?.swipeRefreshLayout?.setOnRefreshListener {
+
+            refreshCall()
+
+            viewDataBinding?.swipeRefreshLayout?.isRefreshing = false
+        }
+
+    }
+
+    private fun refreshCall() {
+        CoroutineScope(Dispatchers.Main).launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                connectionsViewModel.connections.collect {
+                    loge("connectionList =>", "$it")
+                    if (it.isEmpty()) {
+                        viewDataBinding?.layoutNoFound?.visibility = View.VISIBLE
+                        adapter?.updateList(arrayListOf())
+                    } else {
+                        viewDataBinding?.layoutNoFound?.visibility = View.GONE
+                        adapter?.updateList(it)
+                    }
+                }
+            }
+        }
     }
 
     override fun setupObserver() {
@@ -77,7 +116,13 @@ class WalletConnect : BaseFragment<FragmentWalletConnectBinding, WalletConnectVi
                 connectionsViewModel.refreshConnections()
                 connectionsViewModel.connections.collect {
                     loge("connectionList =>", "$it")
-                    adapter?.submitList(it)
+                    if (it.isEmpty()) {
+                        viewDataBinding?.layoutNoFound?.visibility = View.VISIBLE
+                        adapter?.updateList(arrayListOf())
+                    } else {
+                        viewDataBinding?.layoutNoFound?.visibility = View.GONE
+                        adapter?.updateList(it)
+                    }
                 }
 
             }

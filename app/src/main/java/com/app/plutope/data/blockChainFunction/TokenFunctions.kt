@@ -18,6 +18,7 @@ import com.app.plutope.utils.stringToBigInteger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.RawTransaction
@@ -41,8 +42,18 @@ import java.util.concurrent.TimeUnit
 class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
 
     override suspend fun getGasFee(completion: (BigInteger?, String, BigInteger, BigInteger) -> Unit) {
+
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.connectTimeout(
+            5,
+            TimeUnit.MINUTES
+        )
+        httpClientBuilder.readTimeout(5, TimeUnit.MINUTES)
+        httpClientBuilder.writeTimeout(5, TimeUnit.MINUTES)
+        val httpClient = httpClientBuilder.build()
+
         val chain = tokenDetails.chain
-        val web3 = Web3j.build(HttpService(chain?.rpcURL))
+        val web3 = Web3j.build(HttpService(chain?.rpcURL, httpClient))
         val receiverAddress: String = "0x37Ec14eF9C13C2a07c2cD1ed3f5869D42d9a6596"
         val tokenAmount: Double = 0.0
 
@@ -112,8 +123,6 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                 (initialGasLimit.toBigDecimal() * increaseFactor).toBigInteger()
 
                             val fee = gasPrice * gaslimit
-                            val gasAmount =
-                                convertWeiToEther(fee.toString(), tokenDetails.t_decimal!!.toInt())
                             completion(fee, "$nonce", gaslimit, gasPrice)
 
                         }
@@ -151,23 +160,35 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
         completion: (Boolean, String?, String?) -> Unit
     ) {
 
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.connectTimeout(
+            5,
+            TimeUnit.MINUTES
+        )
+        httpClientBuilder.readTimeout(5, TimeUnit.MINUTES)
+        httpClientBuilder.writeTimeout(5, TimeUnit.MINUTES)
+        val httpClient = httpClientBuilder.build()
+
         val chain = tokenDetails.chain
-        val web3 = Web3j.build(HttpService(chain?.rpcURL))
+        val web3 = Web3j.build(HttpService(chain?.rpcURL, httpClient))
+
+        loge("sendTokenOrCoin", "receiverAddress ${receiverAddress} : tokenAmount ${tokenAmount}")
 
         val contractAddress = tokenDetails.t_address
         val myWalletAddress = Wallet.getPublicWalletAddress(
             tokenDetails.chain?.coinType ?: CoinType.ETHEREUM
         )
 
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val credentials = Credentials.create(chain?.privateKey)
 
                 web3.ethGetTransactionCount(
                     myWalletAddress,
-                    DefaultBlockParameterName.LATEST
+                    DefaultBlockParameterName.PENDING
                 ).sendAsync().get().apply {
                     val nonce: BigInteger = this.transactionCount
+                    loge("nonce_log", "Send_nonce : $nonce")
                     val value: BigInteger =
                         Convert.toWei(tokenAmount.toString(), Convert.Unit.ETHER).toBigInteger()
                     web3.ethGasPrice().sendAsync().get().apply {
@@ -175,7 +196,8 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                         web3.ethEstimateGas(
                             org.web3j.protocol.core.methods.request.Transaction(
                                 myWalletAddress,
-                                nonce,
+                                //nonce,
+                                null,
                                 gasPrice,
                                 BigInteger.ONE,
                                 receiverAddress,
@@ -208,8 +230,13 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                 val decimals = this.toInt()
                                 val gasAmount = convertWeiToEther(fee.toString(), 18)
 
+                                loge("TokenDetails", "${tokenDetails}")
                                 val filterTokenChain =
-                                    (tokenList as MutableList<Tokens>).filter { it.t_address == "" && it.t_type?.lowercase() == tokenDetails.t_type?.lowercase() && it.t_symbol?.lowercase() == tokenDetails.chain?.symbol?.lowercase() }
+                                    (tokenList as MutableList<Tokens>).filter { it.t_address == "" && it.t_type.lowercase() == tokenDetails.t_type.lowercase() /*&& it.t_symbol.lowercase() == tokenDetails.chain?.symbol?.lowercase()*/ }
+                                loge(
+                                    "ARBMAIN",
+                                    "==> ${tokenList.filter { it.t_address == "" && it.t_type == "Arbitrum" }}"
+                                )
                                 loge("filterTokenChain", "==> $filterTokenChain")
                                 if (filterTokenChain.isNotEmpty()) {
                                     val chainBalance = filterTokenChain[0].t_balance
@@ -248,9 +275,18 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                             tokenAmount.toString(),
                                             conversionUnit// Convert.Unit.ETHER//Convert.Unit.valueOf(/*decimals.toString()Convert.Unit.ETHER.toString())
                                         ).toBigInteger()
-
+                                        loge(
+                                            "tokenAmount",
+                                            "receiverAddress => $receiverAddress :: tokenAmount=> $tokenAmount"
+                                        )
                                         contract.transfer(receiverAddress, tokenAmount)
                                             .encodeFunctionCall().apply {
+
+                                                loge(
+                                                    "rawTransaction",
+                                                    "gasPrice=> $gasPrice :: gaslimit=> $gaslimit"
+                                                )
+
 
                                                 val rawTransaction: RawTransaction? =
                                                     RawTransaction.createTransaction(
@@ -270,28 +306,128 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                                 val hexValue =
                                                     Numeric.toHexString(signedTransaction)
 
+                                                loge("signedTransaction", "hexValue => $hexValue")
+
                                                 //transactionReceipt
                                                 web3.ethSendRawTransaction(hexValue).sendAsync()
                                                     .get()
                                                     .apply {
                                                         if (this.hasError()) {
                                                             val errorMessage = this.error.message
-                                                            completion(
-                                                                false,
-                                                                this.error.message,
-                                                                ""
+                                                            loge(
+                                                                "ethSendRawTransaction",
+                                                                "error : $errorMessage"
                                                             )
-                                                            // Handle the error
+                                                            /* completion(
+                                                                 false,
+                                                                 this.error.message,
+                                                                 ""
+                                                             )*/
+
+                                                            if (errorMessage.contains(
+                                                                    "nonce too low",
+                                                                    true
+                                                                )
+                                                            ) {
+                                                                // Retry with increased nonce
+                                                                loge(
+                                                                    "Retry",
+                                                                    "Nonce too low, retrying with incremented nonce"
+                                                                )
+
+                                                                contract.transfer(
+                                                                    receiverAddress,
+                                                                    tokenAmount
+                                                                )
+                                                                    .encodeFunctionCall().apply {
+                                                                        val retryNonce =
+                                                                            nonce.add(BigInteger.ONE)
+                                                                        val retryRawTransaction =
+                                                                            RawTransaction.createTransaction(
+                                                                                retryNonce,
+                                                                                gasPrice,
+                                                                                gaslimit,
+                                                                                contractAddress,
+                                                                                BigInteger.ZERO,
+                                                                                this
+                                                                            )
+
+                                                                        val retrySigned =
+                                                                            TransactionEncoder.signMessage(
+                                                                                retryRawTransaction,
+                                                                                chain.chainIdHex.toLong(),
+                                                                                credentials
+                                                                            )
+                                                                        val retryHex =
+                                                                            Numeric.toHexString(
+                                                                                retrySigned
+                                                                            )
+                                                                        val retryResult =
+                                                                            web3.ethSendRawTransaction(
+                                                                                retryHex
+                                                                            ).send()
+
+                                                                        if (retryResult.hasError()) {
+                                                                            completion(
+                                                                                false,
+                                                                                retryResult.error.message,
+                                                                                ""
+                                                                            )
+                                                                        } else {
+                                                                            val txHash =
+                                                                                retryResult.transactionHash
+                                                                            getReceipt(
+                                                                                web3,
+                                                                                txHash,
+                                                                                0
+                                                                            ) { success, errMsg, receipt ->
+                                                                                if (receipt?.get()?.status == "0x1") {
+                                                                                    completion(
+                                                                                        true,
+                                                                                        null,
+                                                                                        txHash
+                                                                                    )
+                                                                                } else {
+                                                                                    completion(
+                                                                                        false,
+                                                                                        "Send failed please check after sometime.",
+                                                                                        ""
+                                                                                    )
+                                                                                }
+                                                                            }
+                                                                        }
+
+                                                                    }
+
+                                                            } else {
+                                                                // other errors
+                                                                completion(
+                                                                    false,
+                                                                    this.error.message,
+                                                                    ""
+                                                                )
+                                                            }
+
                                                         } else {
+
                                                             val transactionHash =
                                                                 this.transactionHash
                                                             val count = 0
+
+                                                            loge(
+                                                                "ethSendRawTransaction",
+                                                                "success : tHase->$transactionHash"
+                                                            )
                                                             getReceipt(
                                                                 web3,
                                                                 transactionHash,
                                                                 count
                                                             ) { success, errorMessage, transaction ->
                                                                 if (transaction?.get()?.status == "0x1") {
+                                                                    loge(
+                                                                        "getReceipt",
+                                                                        "success : tHase->$transactionHash"
+                                                                    )
                                                                     completion(
                                                                         true,
                                                                         null,
@@ -299,8 +435,8 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                                                     )
                                                                 } else {
                                                                     loge(
-                                                                        "failed transaction",
-                                                                        "$errorMessage"
+                                                                        "getReceipt",
+                                                                        "failed =>$errorMessage"
                                                                     )
                                                                     completion(
                                                                         false,
@@ -347,8 +483,8 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
         )
         httpClientBuilder.readTimeout(5, TimeUnit.MINUTES)
         httpClientBuilder.writeTimeout(5, TimeUnit.MINUTES)
-
         val httpClient = httpClientBuilder.build()
+
         // val web3 = Web3j.build(HttpService(chain?.rpcURL))
         val web3 = Web3j.build(HttpService(chain?.rpcURL, httpClient))
         val contractAddress = tokenDetails.t_address
@@ -363,7 +499,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
 
                 web3.ethGetTransactionCount(
                     walletAddress,
-                    DefaultBlockParameterName.LATEST
+                    DefaultBlockParameterName.PENDING
                 ).sendAsync().apply {
                     // val nonce: BigInteger = this.transactionCount
 
@@ -390,7 +526,6 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                             e.printStackTrace()
 
                         }
-
                     }
                 }
 
@@ -405,12 +540,21 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
     }
 
 
-
     override suspend fun getBalance(completion: (String?) -> Unit) {
+
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.connectTimeout(
+            5,
+            TimeUnit.MINUTES
+        )
+        httpClientBuilder.readTimeout(5, TimeUnit.MINUTES)
+        httpClientBuilder.writeTimeout(5, TimeUnit.MINUTES)
+        val httpClient = httpClientBuilder.build()
+
         val chain = tokenDetails.chain
         val walletAddress =
             Wallet.getPublicWalletAddress(tokenDetails.chain?.coinType ?: CoinType.ETHEREUM)
-        val web3 = Web3j.build(HttpService(chain?.rpcURL))
+        val web3 = Web3j.build(HttpService(chain?.rpcURL, httpClient))
         val contractAddress = tokenDetails.t_address
 
         val executorService: ExecutorService =
@@ -422,7 +566,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
 
                 web3.ethGetTransactionCount(
                     walletAddress,
-                    DefaultBlockParameterName.LATEST
+                    DefaultBlockParameterName.PENDING
                 ).sendAsync().get().apply {
 
                     web3.ethGasPrice().sendAsync().get().apply {
@@ -447,7 +591,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                     )
 
                                     UserTokenData.update(
-                                        symbol = tokenDetails.t_symbol ?: "",
+                                        symbol = tokenDetails.t_symbol,
                                         balance = etherValue.toString()
                                     )
 
@@ -483,7 +627,15 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
         approveCompletion: (Boolean, String?, String?) -> Unit
     ) {
         val chain = tokenDetails.chain
-        val web3 = Web3j.build(HttpService(chain?.rpcURL))
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.connectTimeout(
+            5,
+            TimeUnit.MINUTES
+        )
+        httpClientBuilder.readTimeout(5, TimeUnit.MINUTES)
+        httpClientBuilder.writeTimeout(5, TimeUnit.MINUTES)
+        val httpClient = httpClientBuilder.build()
+        val web3 = Web3j.build(HttpService(chain?.rpcURL, httpClient))
         val myWalletAddress = Wallet.getPublicWalletAddress(
             tokenDetails.chain?.coinType ?: CoinType.ETHEREUM
         )
@@ -494,7 +646,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                 val contractAddress = tokenDetails.t_address
                 web3.ethGetTransactionCount(
                     myWalletAddress,
-                    DefaultBlockParameterName.LATEST
+                    DefaultBlockParameterName.PENDING
                 )
                     .sendAsync().get().apply {
                         val nonce = this.transactionCount
@@ -518,6 +670,10 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                     gasPrice,
                                     initialGasLimit//BigInteger.valueOf(150000)
                                 )
+                                loge(
+                                    "ethSendRawTransaction_1",
+                                    "swapTokenOrCoinOkx : ${dexCotractAddress} :: toAddress : ${toAddress}"
+                                )
 
                                 approveToken(
                                     contract,
@@ -530,12 +686,12 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                     chain,
                                     credentials,
                                     initialGasLimit, toAddress.toString(),
-                                    data,
-                                ) { success, errorMessage ->
+                                    data, nonce
+                                ) { success, errorMessage, transactionHash ->
                                     if (success) {
-                                        completion(true, null, "")
+                                        completion(true, null, transactionHash)
                                     } else {
-                                        completion(false, errorMessage, "")
+                                        completion(false, errorMessage, transactionHash)
                                     }
                                 }
 
@@ -544,8 +700,9 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                     }
 
             } catch (e: Exception) {
+                e.printStackTrace()
                 when (e) {
-                    is NoConnectivityException, is UnknownHostException , is ConnectException-> {
+                    is NoConnectivityException, is UnknownHostException, is ConnectException -> {
                         completion(false, NO_INTERNET_CONNECTION, "")
                     }
 
@@ -554,7 +711,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                     }
                 }
 
-                e.printStackTrace()
+
             }
         }
     }
@@ -565,8 +722,16 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
         tokenList: List<Tokens>,
         completion: (Boolean, TransferNetworkDetail?, String?) -> Unit
     ) {
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.connectTimeout(
+            5,
+            TimeUnit.MINUTES
+        )
+        httpClientBuilder.readTimeout(5, TimeUnit.MINUTES)
+        httpClientBuilder.writeTimeout(5, TimeUnit.MINUTES)
+        val httpClient = httpClientBuilder.build()
         val chain = tokenDetails.chain
-        val web3 = Web3j.build(HttpService(chain?.rpcURL))
+        val web3 = Web3j.build(HttpService(chain?.rpcURL, httpClient))
         val toWalletAddress = try {
             receiverAddress
         } catch (e: Exception) {
@@ -589,7 +754,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                 val credentials = Credentials.create(privateKeyHex)
                 web3.ethGetTransactionCount(
                     credentials.address,
-                    DefaultBlockParameterName.LATEST
+                    DefaultBlockParameterName.PENDING
                 ).sendAsync().get().apply {
                     val nonce: BigInteger = this.transactionCount
                     val value: BigInteger =
@@ -619,7 +784,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                             // val fee = gasPrice * initialGasLimit
                             val fee = gasPrice * increasedGasLimit
                             val gasAmount =
-                                convertWeiToEther(fee.toString(), tokenDetails.t_decimal!!.toInt())
+                                convertWeiToEther(fee.toString(), tokenDetails.t_decimal.toInt())
 
                             if (tokenDetails.t_balance > gasAmount) {
                                 completion(
@@ -630,7 +795,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                         fee,
                                         gasAmount,
                                         bigIntegerToString(gasPrice),
-                                        tokenDetails.t_decimal!!.toInt()
+                                        tokenDetails.t_decimal.toInt()
                                     ),
                                     "transactionHash"
                                 )
@@ -643,7 +808,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                         fee,
                                         gasAmount,
                                         bigIntegerToString(gasPrice),
-                                        tokenDetails.t_decimal!!.toInt()
+                                        tokenDetails.t_decimal.toInt()
                                     ),
                                     "You don't have enough ${tokenDetails.t_name} (${tokenDetails.t_symbol}) to cover network fees.",
                                 )
@@ -688,15 +853,24 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
         gasLimit: BigInteger,
         toAddress: String,
         data: String,
-        completion: (Boolean, String?) -> Unit
+        oldNonce: BigInteger,
+        completion: (Boolean, String?, String?) -> Unit
     ) {
+        loge(
+            "ethSendRawTransaction_1",
+            "approveToken : ${dexContractAddress} :: toAddress : ${toAddress}"
+        )
+
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 val nonce =
                     web3.ethGetTransactionCount(myWalletAddress, DefaultBlockParameterName.LATEST)
                         .sendAsync().get().transactionCount
 
-
+                loge(
+                    "ethSendRawTransaction_2",
+                    "${dexContractAddress} :: CurrentNonce : ${nonce} :: OldNonce =>$oldNonce"
+                )
                 val approveFunction =
                     contract.approve(dexContractAddress, amount).encodeFunctionCall()
 
@@ -715,35 +889,46 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                     credentials
                 )
                 val hexApproveValue = Numeric.toHexString(signedApproveTransaction)
-
+                loge("ethSendRawTransaction", "${hexApproveValue}")
                 web3.ethSendRawTransaction(hexApproveValue).sendAsync().get().apply {
                     if (this.hasError()) {
                         val errorMessage = this.error.message
-                        completion(false, errorMessage)
+                        loge("ethSendRawTransaction", "Error ${errorMessage}")
+                        completion(false, errorMessage, this.transactionHash)
+
+
                     } else {
+                        loge("ethSendRawTransaction", "Response : ${this.transactionHash}")
                         val count = 0
                         getReceipt(
                             web3,
                             this.transactionHash,
                             count
-                        ) { success, errorMessage, transaction ->
+                        ) { _, errorMessage, transaction ->
                             if (transaction?.get()?.status == "0x1") {
                                 swapContractToken(web3, myWalletAddress, chain, credentials,
-                                    toAddress, data, completion = { sucess, errormsg ->
-                                        if (sucess) {
+                                    toAddress, data, completion = { success, _ ->
+                                        if (success) {
+                                            loge(
+                                                "ethSendRawTransaction",
+                                                "Success swapContractToken ${this.transactionHash}"
+                                            )
+
                                             completion(
                                                 true,
-                                                null
+                                                null, this.transactionHash
                                             )
                                         } else {
-                                            completion(false, errorMessage)
+                                            completion(false, errorMessage, this.transactionHash)
                                         }
                                     })
 
                             } else {
+                                loge("ethSendRawTransaction", "Failed swapContractToken")
+
                                 completion(
                                     false,
-                                    "Swap Failed"
+                                    "Swap Failed", ""
                                 )
                             }
                         }
@@ -752,12 +937,12 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                 }
             } catch (e: Exception) {
                 when (e) {
-                    is NoConnectivityException, is UnknownHostException , is ConnectException-> {
-                        completion(false, NO_INTERNET_CONNECTION)
+                    is NoConnectivityException, is UnknownHostException, is ConnectException -> {
+                        completion(false, NO_INTERNET_CONNECTION, "")
                     }
 
                     else -> {
-                        completion(false, e.localizedMessage)
+                        completion(false, e.localizedMessage, "")
                     }
                 }
                 e.printStackTrace()
@@ -778,7 +963,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
 
         web3.ethGetTransactionCount(
             myWalletAddress,
-            DefaultBlockParameterName.LATEST
+            DefaultBlockParameterName.PENDING
         )
             .sendAsync().get().apply {
                 val nonce = this.transactionCount
@@ -796,7 +981,8 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                 16
                             )
                         val increaseFactor: BigDecimal = BigDecimal.valueOf(1.1)
-                        val gasLimit: BigInteger = (initialGasLimit.toBigDecimal() * increaseFactor).toBigInteger()
+                        val gasLimit: BigInteger =
+                            (initialGasLimit.toBigDecimal() * increaseFactor).toBigInteger()
                         try {
                             val rawTransaction = RawTransaction.createTransaction(
                                 nonce,
@@ -811,7 +997,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                 credentials
                             )
                             val hexValue = Numeric.toHexString(signedTransaction)
-
+                            loge("swapContractToken", " $hexValue")
                             web3.ethSendRawTransaction(hexValue).sendAsync().get().apply {
                                 if (this.hasError()) {
                                     val errorMessage = this.error.message
@@ -824,8 +1010,12 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                         web3,
                                         transactionHash,
                                         count
-                                    ) { success, errorMessage, transaction ->
+                                    ) { _, _, transaction ->
                                         if (transaction?.get()?.status == "0x1") {
+                                            loge(
+                                                "swapContractToken",
+                                                "ethSendRawTransaction ${transaction.get().transactionHash}"
+                                            )
                                             completion(
                                                 true,
                                                 null
@@ -843,7 +1033,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
 
                         } catch (e: Exception) {
                             when (e) {
-                                is NoConnectivityException, is UnknownHostException , is ConnectException-> {
+                                is NoConnectivityException, is UnknownHostException, is ConnectException -> {
                                     completion(false, NO_INTERNET_CONNECTION)
                                 }
 
@@ -867,98 +1057,102 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
         tokenAmount: String,
         completion: (Boolean, String?, String?) -> Unit
     ) {
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.connectTimeout(
+            5,
+            TimeUnit.MINUTES
+        )
+        httpClientBuilder.readTimeout(5, TimeUnit.MINUTES)
+        httpClientBuilder.writeTimeout(5, TimeUnit.MINUTES)
+        val httpClient = httpClientBuilder.build()
         val chain = tokenDetails.chain ?: return
-        val web3 = Web3j.build(HttpService(chain.rpcURL))
+        val web3 = Web3j.build(HttpService(chain.rpcURL, httpClient))
 
 
         val myWalletAddress = Wallet.getPublicWalletAddress(
             tokenDetails.chain?.coinType ?: CoinType.ETHEREUM
         )
 
-
-        web3.ethGetTransactionCount(
-            myWalletAddress,
-            DefaultBlockParameterName.LATEST
-        )
-            .sendAsync().get().apply {
-                val nonce = this.transactionCount
-                web3.ethGasPrice().sendAsync().get().apply {
-                    val gasPrice = this.gasPrice
-                    web3.ethEstimateGas(
-                        org.web3j.protocol.core.methods.request.Transaction(
-                            myWalletAddress, nonce, gasPrice,
-                            BigInteger.ONE, toAddress, BigInteger.ZERO, data
+        withContext(Dispatchers.IO) {
+            web3.ethGetTransactionCount(myWalletAddress, DefaultBlockParameterName.PENDING)
+                .sendAsync().get()
+        }.apply {
+            val nonce = this.transactionCount
+            web3.ethGasPrice().sendAsync().get().apply {
+                val gasPrice = this.gasPrice
+                web3.ethEstimateGas(
+                    org.web3j.protocol.core.methods.request.Transaction(
+                        myWalletAddress, nonce, gasPrice,
+                        BigInteger.ONE, toAddress, BigInteger.ZERO, data
+                    )
+                ).sendAsync().get().apply {
+                    val initialGasLimit =
+                        if (this.result.isNullOrBlank()) BigInteger.valueOf(50000) else BigInteger(
+                            this.result.substring(2),
+                            16
                         )
-                    ).sendAsync().get().apply {
-                        val initialGasLimit =
-                            if (this.result.isNullOrBlank()) BigInteger.valueOf(50000) else BigInteger(
-                                this.result.substring(2),
-                                16
-                            )
-                        val increaseFactor: BigDecimal = BigDecimal.valueOf(10.1)
-                        val gasLimit: BigInteger =
-                            (initialGasLimit.toBigDecimal() * increaseFactor).toBigInteger()
-                        try {
-                            val rawTransaction = RawTransaction.createTransaction(
-                                nonce,
-                                gasPrice,
-                                gasLimit,
-                                toAddress,
-                                data
-                            )
+                    val increaseFactor: BigDecimal = BigDecimal.valueOf(10.1)
+                    val gasLimit: BigInteger =
+                        (initialGasLimit.toBigDecimal() * increaseFactor).toBigInteger()
+                    try {
+                        val rawTransaction = RawTransaction.createTransaction(
+                            nonce,
+                            gasPrice,
+                            gasLimit,
+                            toAddress,
+                            data
+                        )
+                        val signedTransaction = TransactionEncoder.signMessage(
+                            rawTransaction,
+                            chain.chainIdHex.toLong(),
+                            Credentials.create(chain.privateKey)
+                        )
+                        val hexValue = Numeric.toHexString(signedTransaction)
 
+                        web3.ethSendRawTransaction(hexValue).sendAsync().get().apply {
+                            if (this.hasError()) {
+                                val errorMessage = this.error.message
+                                completion(false, errorMessage, "")
+                            } else {
+                                val transactionHash = this.transactionHash
 
-                            val signedTransaction = TransactionEncoder.signMessage(
-                                rawTransaction,
-                                chain.chainIdHex.toLong(),
-                                /*credentials*/Credentials.create(chain.privateKey)
-                            )
-                            val hexValue = Numeric.toHexString(signedTransaction)
-
-                            web3.ethSendRawTransaction(hexValue).sendAsync().get().apply {
-                                if (this.hasError()) {
-                                    val errorMessage = this.error.message
-                                    completion(false, errorMessage, "")
-                                } else {
-                                    val transactionHash = this.transactionHash
-
-                                    val count = 0
-                                    getReceipt(
-                                        web3,
-                                        transactionHash,
-                                        count
-                                    ) { success, errorMessage, transaction ->
-                                        if (transaction?.get()?.status == "0x1") {
-                                            completion(
-                                                true,
-                                                null, ""
-                                            )
-                                        } else {
-                                            completion(
-                                                false,
-                                                "Swap Failed", ""
-                                            )
-                                        }
+                                val count = 0
+                                getReceipt(
+                                    web3,
+                                    transactionHash,
+                                    count
+                                ) { _, _, transaction ->
+                                    if (transaction?.get()?.status == "0x1") {
+                                        completion(
+                                            true,
+                                            null, transactionHash
+                                        )
+                                    } else {
+                                        completion(
+                                            false,
+                                            "Swap Failed", ""
+                                        )
                                     }
                                 }
                             }
-
-
-                        } catch (e: Exception) {
-                            when (e) {
-                                is NoConnectivityException, is UnknownHostException, is ConnectException -> {
-                                    completion(false, NO_INTERNET_CONNECTION, "")
-                                }
-
-                                else -> {
-                                    completion(false, e.localizedMessage, "")
-                                }
-                            }
-                            e.printStackTrace()
                         }
+
+
+                    } catch (e: Exception) {
+                        when (e) {
+                            is NoConnectivityException, is UnknownHostException, is ConnectException -> {
+                                completion(false, NO_INTERNET_CONNECTION, "")
+                            }
+
+                            else -> {
+                                completion(false, e.localizedMessage, "")
+                            }
+                        }
+                        e.printStackTrace()
                     }
                 }
             }
+        }
     }
 
 
@@ -970,30 +1164,40 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
         value: String,
         completion: (Boolean, String?, String?) -> Unit
     ) {
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.connectTimeout(
+            5,
+            TimeUnit.MINUTES
+        )
+        httpClientBuilder.readTimeout(5, TimeUnit.MINUTES)
+        httpClientBuilder.writeTimeout(5, TimeUnit.MINUTES)
+        val httpClient = httpClientBuilder.build()
+
         val chain = tokenDetails.chain ?: return
-        val web3 = Web3j.build(HttpService(chain.rpcURL))
+        val web3 = Web3j.build(HttpService(chain.rpcURL, httpClient))
 
 
         val myWalletAddress = Wallet.getPublicWalletAddress(
             tokenDetails.chain?.coinType ?: CoinType.ETHEREUM
         )
 
-        loge("signAndSendTranscation", "$chain")
+        loge("signAndSendTranscation", "$value :: ${gasPrice}")
 
-        web3.ethGetTransactionCount(
-            myWalletAddress,
-            DefaultBlockParameterName.LATEST
-        )
-            .sendAsync().get().apply {
+        try {
+            withContext(Dispatchers.IO) {
+                web3.ethGetTransactionCount(
+                    myWalletAddress,
+                    DefaultBlockParameterName.LATEST
+                ).sendAsync().get()
+            }.apply {
                 val nonce = this.transactionCount
-                web3.ethGasPrice().sendAsync().get().apply {
-//                    val gasPrice = this.gasPrice
-                    var txGasPrice: BigInteger = gasPrice.toBigInteger();
 
-                    if (txGasPrice == null || txGasPrice == 0.toBigInteger()) {
+                loge("nonce_log", "Swap_nonce : $nonce")
+                web3.ethGasPrice().sendAsync().get().apply {
+                    var txGasPrice: BigInteger = gasPrice.toBigInteger()
+                    if (txGasPrice == 0.toBigInteger()) {
                         txGasPrice = this.gasPrice
                     }
-
                     web3.ethEstimateGas(
                         org.web3j.protocol.core.methods.request.Transaction(
                             myWalletAddress, nonce, txGasPrice,
@@ -1035,8 +1239,12 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
 
                             web3.ethSendRawTransaction(hexValue).sendAsync().get().apply {
                                 if (this.hasError()) {
+                                    loge("ErrorData", "${this.error.data} :: ${this.error.code}")
                                     val errorMessage = this.error.message
+                                    loge("error", errorMessage)
                                     completion(false, errorMessage, "")
+
+
                                 } else {
                                     val transactionHash = this.transactionHash
 
@@ -1045,16 +1253,16 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                         web3,
                                         transactionHash,
                                         count
-                                    ) { _, _, transaction ->
+                                    ) { _, errorMessage, transaction ->
                                         if (transaction?.get()?.status == "0x1") {
                                             completion(
                                                 true,
-                                                null, ""
+                                                null, transactionHash
                                             )
                                         } else {
                                             completion(
                                                 false,
-                                                "Swap Failed", ""
+                                                "Swap Failed : $errorMessage", transactionHash
                                             )
                                         }
                                     }
@@ -1077,6 +1285,15 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                     }
                 }
             }
+
+
+        } catch (e: Exception) {
+            completion(
+                false,
+                "Swap Failed : ${e.message}", ""
+            )
+        }
+
     }
 
 
@@ -1090,9 +1307,16 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
         tokenList: List<Tokens>,
         completion: (Boolean, String?, String?) -> Unit
     ) {
-
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.connectTimeout(
+            5,
+            TimeUnit.MINUTES
+        )
+        httpClientBuilder.readTimeout(5, TimeUnit.MINUTES)
+        httpClientBuilder.writeTimeout(5, TimeUnit.MINUTES)
+        val httpClient = httpClientBuilder.build()
         val chain = tokenDetails.chain
-        val web3 = Web3j.build(HttpService(chain?.rpcURL))
+        val web3 = Web3j.build(HttpService(chain?.rpcURL, httpClient))
 
         val contractAddress = tokenDetails.t_address
         val myWalletAddress = Wallet.getPublicWalletAddress(
@@ -1104,30 +1328,10 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
 
                 web3.ethGetTransactionCount(
                     myWalletAddress,
-                    DefaultBlockParameterName.LATEST
+                    DefaultBlockParameterName.PENDING
                 ).sendAsync().get().apply {
-                    // val nonce: BigInteger = this.transactionCount
-                    val value: BigInteger =
-                        Convert.toWei(tokenAmount.toString(), Convert.Unit.ETHER).toBigInteger()
-
                     val totalGasFee = stringToBigInteger(gasAmount)
-
                     val gasAmt = convertWeiToEther(totalGasFee.toString(), 18)
-                    // val gasPrice = this.gasPrice
-
-                    val initialGasLimit =
-                        if (result.isNullOrBlank()) BigInteger.valueOf(150000) else BigInteger(
-                            this.result.substring(
-                                2
-                            ), 16
-                        )
-
-
-                    //  val increaseFactor: BigDecimal = BigDecimal.valueOf(10.1)
-                    //   val gaslimit = (initialGasLimit.toBigDecimal() * increaseFactor).toBigInteger()
-
-                    //  val fee = gasPrice * gaslimit
-
                     val increaseFactor: BigDecimal = BigDecimal.valueOf(1.1)
                     val gaslimitIncrese = (gasLimit.toBigDecimal() * increaseFactor).toBigInteger()
 
@@ -1144,7 +1348,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                         // val gasAmount = convertWeiToEther(fee.toString(), 18)
 
                         val filterTokenChain =
-                            (tokenList as MutableList<Tokens>).filter { it.t_address == "" && it.t_type?.lowercase() == tokenDetails.t_type?.lowercase() && it.t_symbol?.lowercase() == tokenDetails.chain?.symbol?.lowercase() }
+                            (tokenList as MutableList<Tokens>).filter { it.t_address == "" && it.t_type.lowercase() == tokenDetails.t_type.lowercase() && it.t_symbol.lowercase() == tokenDetails.chain?.symbol?.lowercase() }
 
                         if (filterTokenChain.isNotEmpty()) {
                             val chainBalance = filterTokenChain[0].t_balance
@@ -1217,7 +1421,7 @@ class TokenFunctions(private val tokenDetails: Tokens) : BlockchainFunctions {
                                                         web3,
                                                         transactionHash,
                                                         count
-                                                    ) { success, errorMessage, transaction ->
+                                                    ) { _, _, transaction ->
                                                         if (transaction?.get()?.status == "0x1") {
                                                             completion(
                                                                 true,

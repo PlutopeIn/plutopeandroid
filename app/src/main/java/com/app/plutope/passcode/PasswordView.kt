@@ -114,7 +114,7 @@ class PasswordView @JvmOverloads constructor(
     init {
         array.recycle()
 
-        orientation = LinearLayout.HORIZONTAL
+        orientation = HORIZONTAL
         addCircleView(passwordCount)
     }
 
@@ -194,7 +194,7 @@ class PasswordView @JvmOverloads constructor(
 
         val halfMargin = betweenMargin / 2
         val halfIncorrectMaxWidth = (incorrectMaxWidth / 2).toInt()
-        val layoutParams = LinearLayout.LayoutParams(width, height).apply {
+        val layoutParams = LayoutParams(width, height).apply {
             topMargin = correctTop.toInt()
             bottomMargin = correctBottom.toInt()
         }

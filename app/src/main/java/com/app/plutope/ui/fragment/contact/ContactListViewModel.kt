@@ -30,6 +30,20 @@ class ContactListViewModel @Inject constructor(private val contactRepo: ContactR
         }
     }
 
+    //Delete Contacts
+    private val _tagDeleteContacts =
+        MutableStateFlow<NetworkState<ContactModel?>>(NetworkState.Empty())
+
+    val deleteContactResponse: StateFlow<NetworkState<ContactModel?>>
+        get() = _tagDeleteContacts
+
+    fun executeDeleteTokens(addressId: Int) {
+        viewModelScope.launch {
+            _tagDeleteContacts.emit(NetworkState.Loading())
+            _tagDeleteContacts.collectStateFlow(contactRepo.deleteContact(addressId))
+        }
+    }
+
     //get Contacts
     private val _getContactsResponse =
         MutableStateFlow<NetworkState<List<ContactModel?>>>(NetworkState.Empty())

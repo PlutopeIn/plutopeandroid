@@ -1,121 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:fillViewport="true">
 
-<!--
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_228mdp"
-        android:layout_marginTop="@dimen/_140mdp"
-        android:src="@drawable/img_welcome_3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
--->
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/image_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_250mdp"
-        android:layout_marginTop="@dimen/_100mdp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/coin_wallet"
-        app:lottie_speed="1" />
-
-
-    <TextView
-        android:id="@+id/txt_title"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_33mdp"
-        android:layout_marginTop="@dimen/_60mdp"
-        android:fontFamily="@font/quicksand_bold"
-        android:gravity="center_horizontal"
-        android:text="@string/one_wallet_for_all_your_needs"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_25msp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_view"
+        android:background="@color/bg_white">
 
-        />
+        <!--
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_228mdp"
+                android:layout_marginTop="@dimen/_140mdp"
+                android:src="@drawable/img_welcome_3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        -->
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/_50mdp"
+            android:layout_height="@dimen/_50mdp"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect"
+            android:padding="@dimen/_8mdp"
+            android:src="@drawable/ic_back_new"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txt_instruction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_38mdp"
-        android:layout_marginTop="@dimen/_23mdp"
-        android:fontFamily="@font/quicksand_regular"
-        android:gravity="center_horizontal"
-        android:text="@string/transact_stake_withdraw_buy_and_sell_your_cryptocurrencies_with_ease"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_14msp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_title"
+        <TextView
+            android:id="@+id/title_skip3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20mdp"
+            android:fontFamily="@font/inter"
+            android:text="@string/skip"
+            android:textColor="@color/sub_title_gray"
+            android:textSize="@dimen/_15mdp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/img_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/img_back" />
 
-        />
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_300mdp"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:src="@drawable/img_one_wallet2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_back" />
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/btn_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/_10mdp"
-        android:layout_marginBottom="@dimen/_26mdp"
-        android:text="@string/next"
-        android:layout_marginEnd="@dimen/_8mdp"
-        android:textAllCaps="false"
-        android:fontFamily="@font/quicksand_semibold"
-        android:gravity="center"
-        android:padding="@dimen/_8mdp"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_17mdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20mdp"
+            android:layout_marginTop="@dimen/_30mdp"
+            android:fontFamily="@font/violet_sans"
+            android:gravity="start"
+            android:lineSpacingExtra="@dimen/_6mdp"
+            android:text="@string/one_wallet_amp_unlimited_possibilities"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_32msp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view"
 
-        />
+            />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/btn_next_2"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_55mdp"
-        android:layout_marginHorizontal="@dimen/_80mdp"
-        android:layout_marginTop="@dimen/_20mdp"
-        android:layout_marginBottom="@dimen/_26mdp"
-        android:scaleType="fitXY"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_instruction"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/next"
-        app:lottie_speed="2" />
+        <TextView
+            android:id="@+id/txt_instruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_27mdp"
+            android:layout_marginTop="@dimen/_23mdp"
+            android:fontFamily="@font/inter"
+            android:gravity="start"
+            android:lineSpacingExtra="@dimen/_3mdp"
+            android:text="@string/explore_a_world_of_unlimited_possibilities_with_a_single_wallet_empowering_you_to_do_more_with_your_digital_assets"
+            android:textColor="@color/sub_title_gray"
+            android:textSize="@dimen/_16msp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_title"
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/quicksand_bold"
-        android:text="@string/next"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_14mdp"
-        app:layout_constraintBottom_toBottomOf="@id/btn_next_2"
-        app:layout_constraintEnd_toEndOf="@id/btn_next_2"
-        app:layout_constraintStart_toStartOf="@id/btn_next_2"
-        app:layout_constraintTop_toTopOf="@id/btn_next_2" />
+            />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/btn_next_2"
+            style="@style/wallet_button_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_30mdp"
+            android:layout_marginTop="@dimen/_50mdp"
+            android:layout_marginBottom="@dimen/_55mdp"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:text="@string/get_start"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_instruction"
+            app:layout_constraintVertical_bias="1"
+
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

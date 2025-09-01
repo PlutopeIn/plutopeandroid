@@ -14,8 +14,35 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/bg_white"
         tools:context=".ui.fragment.security.Security">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/_50mdp"
+            android:layout_height="@dimen/_50mdp"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect"
+            android:padding="@dimen/_8mdp"
+            android:src="@drawable/ic_back_new"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/violet_sans"
+            android:text="@string/security"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20msp"
+            app:layout_constraintBottom_toBottomOf="@id/img_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/img_back" />
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_app_lock"
@@ -23,11 +50,14 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16mdp"
             android:layout_marginTop="@dimen/_30mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/bg_white"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/txt_toolbar_title">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -38,12 +68,12 @@
                     android:id="@+id/txt_app_lock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
+                    android:layout_marginVertical="@dimen/_20mdp"
                     android:layout_marginStart="@dimen/_16mdp"
-                    android:fontFamily="@font/quicksand_medium"
+                    android:fontFamily="@font/inter"
                     android:text="@string/app_lock"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_16msp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -55,14 +85,24 @@
                     android:layout_marginEnd="@dimen/_17mdp"
                     android:background="@null"
                     android:button="@drawable/selector_switch_track"
+                    android:checked="true"
                     android:thumb="@null"
-                    android:checked="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:track="@null"
 
                     />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:background="@color/border_gray"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@+id/switch_applock"
+                    app:layout_constraintStart_toStartOf="@id/txt_app_lock"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_app_lock" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -75,9 +115,12 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16mdp"
             android:layout_marginTop="@dimen/_5mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
             android:visibility="gone"
+            app:cardBackgroundColor="@color/bg_white"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_app_lock">
@@ -92,26 +135,37 @@
                     android:id="@+id/txt_auto_lock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
+                    android:layout_marginVertical="@dimen/_20mdp"
                     android:layout_marginStart="@dimen/_16mdp"
-                    android:fontFamily="@font/quicksand_medium"
+                    android:fontFamily="@font/inter"
                     android:text="@string/auto_lock"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_16msp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/img_forword_auto"
+                    android:layout_width="@dimen/_20mdp"
+                    android:layout_height="@dimen/_20mdp"
                     android:layout_marginEnd="@dimen/_17mdp"
-                    android:src="@drawable/ic_forword_new"
+                    android:src="@drawable/img_right_arrow"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/black" />
 
-                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:background="@color/border_gray"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@+id/img_forword_auto"
+                    app:layout_constraintStart_toStartOf="@id/txt_auto_lock"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_auto_lock" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -122,8 +176,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/bg_white"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_auto_lock">
@@ -137,12 +194,12 @@
                     android:id="@+id/txt_lock_method"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
+                    android:layout_marginVertical="@dimen/_20mdp"
                     android:layout_marginStart="@dimen/_16mdp"
-                    android:fontFamily="@font/quicksand_medium"
+                    android:fontFamily="@font/inter"
                     android:text="@string/lock_method"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_16msp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -152,26 +209,35 @@
                     android:id="@+id/txt_lock_method_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/quicksand_medium"
-                    tools:text="Passcode/Biometric"
-                    android:textColor="@color/gray_767691"
-                    android:textSize="@dimen/_13msp"
                     android:layout_marginEnd="@dimen/_4mdp"
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13msp"
                     app:layout_constraintBottom_toBottomOf="@id/txt_lock_method"
                     app:layout_constraintEnd_toStartOf="@id/img_right_lock"
-                    app:layout_constraintTop_toTopOf="@id/txt_lock_method" />
+                    app:layout_constraintTop_toTopOf="@id/txt_lock_method"
+                    tools:text="Passcode/Biometric" />
 
                 <ImageView
                     android:id="@+id/img_right_lock"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_20mdp"
+                    android:layout_height="@dimen/_20mdp"
                     android:layout_marginEnd="@dimen/_17mdp"
-                    android:src="@drawable/ic_forword_new"
+                    android:src="@drawable/img_right_arrow"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/black" />
 
-                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:background="@color/border_gray"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@+id/img_right_lock"
+                    app:layout_constraintStart_toStartOf="@id/txt_lock_method"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_lock_method" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -183,8 +249,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16mdp"
             android:layout_marginTop="@dimen/_5mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
-            app:cardCornerRadius="@dimen/_10mdp"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/bg_white"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_lock_method">
@@ -198,12 +267,12 @@
                     android:id="@+id/txt_transaction_signing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_19mdp"
+                    android:layout_marginVertical="@dimen/_20mdp"
                     android:layout_marginStart="@dimen/_16mdp"
-                    android:fontFamily="@font/quicksand_medium"
+                    android:fontFamily="@font/inter"
                     android:text="@string/transaction_signing"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13msp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_16msp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -223,7 +292,15 @@
 
                     />
 
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginTop="@dimen/_20mdp"
+                    android:background="@color/border_gray"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="@+id/switch_trans_signin"
+                    app:layout_constraintStart_toStartOf="@id/txt_transaction_signing"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_transaction_signing" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -233,7 +310,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            app:constraint_referenced_ids="card_auto_lock,card_lock_method,card_transaction_signing"/>
+            app:constraint_referenced_ids="card_auto_lock,card_lock_method,card_transaction_signing" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_security_scanner"
@@ -261,7 +338,7 @@
                     android:layout_marginStart="@dimen/_16mdp"
                     android:fontFamily="@font/quicksand_medium"
                     android:text="@string/security_scanner"
-                    android:textColor="@color/white"
+                    android:textColor="@color/bg_white"
                     android:textSize="@dimen/_13msp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

@@ -26,7 +26,7 @@ import com.app.plutope.model.Wallet
 import com.app.plutope.model.Wallets
 import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
-import com.app.plutope.ui.fragment.phrase.verify_phrase.VerifySecretPhraseViewModel
+import com.app.plutope.ui.fragment.phrase.recovery_phrase.VerifySecretPhraseViewModel
 import com.app.plutope.utils.Securities
 import com.app.plutope.utils.extras.BiometricResult
 import com.app.plutope.utils.extras.PreferenceHelper
@@ -37,6 +37,7 @@ import com.app.plutope.utils.extras.security_setting_request_code
 import com.app.plutope.utils.extras.setBioMetric
 import com.app.plutope.utils.extras.setSafeOnClickListener
 import com.app.plutope.utils.hideLoader
+import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.showLoader
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,6 +76,7 @@ class RecoveryWalletFragment :
         }
 
         override fun successCustomPasscode() {
+            loge("Passcode", "here i am")
             openPasscodeScreen()
         }
 
@@ -93,17 +95,19 @@ class RecoveryWalletFragment :
     }
 
     override fun setupToolbarText(): String {
-        return "Wallet"
+        return ""
     }
 
     override fun setupUI() {
         // Customize soft keyboard behavior for this fragment
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
         setDetails()
         setOnClickListner()
     }
-
 
     private fun setDetails() {
         viewDataBinding?.edtWalletName?.setText(args.walletModel.w_wallet_name)
@@ -130,14 +134,14 @@ class RecoveryWalletFragment :
             if (this.w_is_manual_backup)
                 viewDataBinding?.txtManualValue?.setTextColor(
                     resources.getColor(
-                        R.color.blue_00C6FB,
+                        R.color.header_blue,
                         null
                     )
                 )
             else
                 viewDataBinding?.txtManualValue?.setTextColor(
                     resources.getColor(
-                        R.color.gray_767691,
+                        R.color.button_disable,
                         null
                     )
                 )
@@ -150,8 +154,9 @@ class RecoveryWalletFragment :
     }
 
     private fun setOnClickListner() {
-        val wordList = Securities.decrypt(args.walletModel.w_mnemonic)?.split(" ")?.toMutableList()
+        val wordList = Securities.decrypt(args.walletModel.w_mnemonic).split(" ").toMutableList()
         viewDataBinding?.apply {
+
             cardDriveBackup.setSafeOnClickListener {
                 if (!args.walletModel.w_is_cloud_backup) {
                     findNavController().navigate(
@@ -163,7 +168,7 @@ class RecoveryWalletFragment :
                     findNavController().navigate(
                         RecoveryWalletFragmentDirections.actionRecoveryWalletFragmentToYourRecoveryPhrase(
                             Securities.decrypt(args.walletModel.w_mnemonic).toString(),
-                            wordList!!.toTypedArray(), args.walletModel, true
+                            wordList.toTypedArray(), args.walletModel, true
                         )
                     )
                 }
@@ -171,9 +176,16 @@ class RecoveryWalletFragment :
             cardManualBackup.setSafeOnClickListener {
 
                 if (preferenceHelper.isAppLock) {
-                    if (!preferenceHelper.isLockModePassword)
+                    if (!preferenceHelper.isLockModePassword) {
                         setBioMetric(biometricListener)
-                    else {
+                        DeviceLockFullScreenDialog.getInstance().show(requireContext(),
+                            object : DeviceLockFullScreenDialog.DialogOnClickBtnListner {
+                                override fun onSubmitClicked(selectedList: String) {
+                                    openPasscodeScreen()
+                                }
+                            })
+
+                    } else {
                         DeviceLockFullScreenDialog.getInstance().show(requireContext(),
                             object : DeviceLockFullScreenDialog.DialogOnClickBtnListner {
                                 override fun onSubmitClicked(selectedList: String) {
@@ -201,9 +213,14 @@ class RecoveryWalletFragment :
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     if (s.toString().trim()
                             .isNotEmpty() && args.walletModel.w_wallet_name != s.toString().trim()
-                    ) viewDataBinding?.btnSave?.visibility =
-                        VISIBLE else
+                    ) {
+                        viewDataBinding?.btnSave?.visibility = VISIBLE
+                        viewDataBinding?.imgCancel?.visibility = VISIBLE
+                    } else {
                         viewDataBinding?.btnSave?.visibility = GONE
+                        viewDataBinding?.imgCancel?.visibility = GONE
+                    }
+
                 }
 
                 override fun afterTextChanged(s: Editable?) {
@@ -298,7 +315,6 @@ class RecoveryWalletFragment :
                             }
 
                             hideLoader()
-
                         }
 
                         is NetworkState.Loading -> {
@@ -330,12 +346,15 @@ class RecoveryWalletFragment :
                             }
                             hideLoader()
                         }
+
                         is NetworkState.Loading -> {
                             requireContext().showLoader()
                         }
+
                         is NetworkState.Error -> {
                             hideLoader()
                         }
+
                         is NetworkState.SessionOut -> {}
                         else -> {
                             hideLoader()
@@ -344,19 +363,19 @@ class RecoveryWalletFragment :
                 }
             }
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-
             lock_request_code -> if (resultCode == AppCompatActivity.RESULT_OK && isDeviceSecure()) {
                 (requireActivity() as BaseActivity).bioMetricDialog?.dismiss()
+
                 Handler(Looper.getMainLooper()).postDelayed(3000) {
                     (requireActivity() as BaseActivity).openDefaultPass = false
                 }
                 openPasscodeScreen()
-
 
             } else {
                 //If screen lock authentication is failed update text
@@ -395,7 +414,7 @@ class RecoveryWalletFragment :
 
     fun openPasscodeScreen() {
         val wordList =
-            Securities.decrypt(args.walletModel.w_mnemonic)?.trim()?.split(" ")?.toMutableList()
+            Securities.decrypt(args.walletModel.w_mnemonic).trim().split(" ").toMutableList()
 
         if (!args.walletModel.w_is_manual_backup) {
             findNavController().navigate(
@@ -407,7 +426,7 @@ class RecoveryWalletFragment :
             findNavController().navigate(
                 RecoveryWalletFragmentDirections.actionRecoveryWalletFragmentToYourRecoveryPhrase(
                     Securities.decrypt(args.walletModel.w_mnemonic.toString()),
-                    wordList!!.toTypedArray(), args.walletModel, false
+                    wordList.toTypedArray(), args.walletModel, false
                 )
             )
         }

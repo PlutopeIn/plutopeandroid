@@ -7,9 +7,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.app.plutope.model.ContactModel
-import com.app.plutope.model.CurrencyModel
-import com.app.plutope.model.Tokens
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ContactDao {
@@ -22,12 +19,15 @@ interface ContactDao {
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllContacts(list: List<ContactModel?>)
+    suspend fun insertAllContacts(list: List<ContactModel>)
 
     @Query("SELECT * from contacts where address=:contactAddress")
-    fun getSpecificContacts(contactAddress:String): List<ContactModel>
+    fun getSpecificContacts(contactAddress: String): List<ContactModel>
 
     @Update
-    suspend fun updateContact(contact:ContactModel): Int
+    suspend fun updateContact(contact: ContactModel): Int
+
+    @Query("Delete from Contacts where id=:addressId")
+    suspend fun deleteContact(addressId: Int)
 
 }

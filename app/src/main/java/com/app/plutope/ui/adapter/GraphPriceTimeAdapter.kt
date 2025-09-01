@@ -54,7 +54,7 @@ class GraphPriceTimeAdapter(
             val newBackgroundDrawable: Drawable = textView.resources.getDrawable(R.drawable.rounded_white)
             textView.background = newBackgroundDrawable
 
-            val newBackgroundTintColor: ColorStateList? = ContextCompat.getColorStateList(textView.context, R.color.purple_202148)
+            val newBackgroundTintColor: ColorStateList? = ContextCompat.getColorStateList(textView.context, R.color.white_text)
             textView.backgroundTintList = newBackgroundTintColor
         }else{
             // Remove the background

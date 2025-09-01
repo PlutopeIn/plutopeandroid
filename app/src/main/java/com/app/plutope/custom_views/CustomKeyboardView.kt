@@ -22,19 +22,19 @@ class CustomKeyboardView @JvmOverloads constructor(
     private var customKeyboardView: View =
         LayoutInflater.from(context).inflate(R.layout.custom_keybord_view, this, true)
 
-    private var text0: TextView = customKeyboardView.findViewById(R.id.text_0) as TextView
-    private var text1: TextView = customKeyboardView.findViewById(R.id.text_1) as TextView
-    private var text2: TextView = customKeyboardView.findViewById(R.id.text_2) as TextView
-    private var text3: TextView = customKeyboardView.findViewById(R.id.text_3) as TextView
-    private var text4: TextView = customKeyboardView.findViewById(R.id.text_4) as TextView
-    private var text5: TextView = customKeyboardView.findViewById(R.id.text_5) as TextView
-    private var text6: TextView = customKeyboardView.findViewById(R.id.text_6) as TextView
-    private var text7: TextView = customKeyboardView.findViewById(R.id.text_7) as TextView
-    private var text8: TextView = customKeyboardView.findViewById(R.id.text_8) as TextView
-    private var text9: TextView = customKeyboardView.findViewById(R.id.text_9) as TextView
+    private var text0: TextView = customKeyboardView.findViewById(R.id.text_0)
+    private var text1: TextView = customKeyboardView.findViewById(R.id.text_1)
+    private var text2: TextView = customKeyboardView.findViewById(R.id.text_2)
+    private var text3: TextView = customKeyboardView.findViewById(R.id.text_3)
+    private var text4: TextView = customKeyboardView.findViewById(R.id.text_4)
+    private var text5: TextView = customKeyboardView.findViewById(R.id.text_5)
+    private var text6: TextView = customKeyboardView.findViewById(R.id.text_6)
+    private var text7: TextView = customKeyboardView.findViewById(R.id.text_7)
+    private var text8: TextView = customKeyboardView.findViewById(R.id.text_8)
+    private var text9: TextView = customKeyboardView.findViewById(R.id.text_9)
     private var textClose: ConstraintLayout =
-        customKeyboardView.findViewById(R.id.text_d) as ConstraintLayout
-    private var textCancel: TextView = customKeyboardView.findViewById(R.id.text_cencel) as TextView
+        customKeyboardView.findViewById(R.id.text_d)
+    private var textCancel: TextView = customKeyboardView.findViewById(R.id.text_cencel)
 
 
     var listner: NotifyKeyListener? = null

@@ -13,29 +13,34 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_5mdp"
-        android:background="@drawable/bg_corner_radius_10">
+        android:layout_marginBottom="@dimen/_16mdp"
+        android:background="@drawable/bg_corner_radius_35">
 
         <ImageView
             android:id="@+id/img_bag"
             android:layout_width="@dimen/_40mdp"
             android:layout_height="@dimen/_40mdp"
             android:layout_marginStart="@dimen/_14mdp"
-            android:src="@drawable/img_pluto_pe_logo_with_bg"
+            android:src="@drawable/img_logo_circle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txt_wallet_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_14mdp"
-            android:layout_marginTop="@dimen/_20mdp"
-            android:fontFamily="@font/quicksand_semibold"
+            android:layout_marginStart="@dimen/_13mdp"
+            android:layout_marginTop="@dimen/_15mdp"
+            android:fontFamily="@font/violet_sans"
+            app:layout_constrainedWidth="true"
+
+            android:maxLines="2"
+            android:ellipsize="end"
             android:text="@{model.w_wallet_name}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_13msp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16msp"
+            app:layout_constraintEnd_toStartOf="@id/img_menu"
             app:layout_constraintStart_toEndOf="@id/img_bag"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Main Wallet 1"
@@ -47,11 +52,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4mdp"
-            android:layout_marginBottom="@dimen/_20mdp"
-            android:fontFamily="@font/quicksand_regular"
+            android:layout_marginBottom="@dimen/_14mdp"
+            android:fontFamily="@font/inter"
+
             android:text="@string/multi_coin_wallet"
-            android:textColor="@color/purple_7576D"
-            android:textSize="@dimen/_10msp"
+            android:textColor="@color/sub_title_gray"
+            android:textSize="@dimen/_14msp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/txt_wallet_name"
             app:layout_constraintTop_toBottomOf="@id/txt_wallet_name"
@@ -59,31 +65,29 @@
 
         <ImageView
             android:id="@+id/img_primary"
-            android:layout_width="@dimen/_8mdp"
-            android:layout_height="@dimen/_8mdp"
+            android:layout_width="@dimen/_15mdp"
+            android:layout_height="@dimen/_15mdp"
             android:src="@drawable/ic_check"
-            android:visibility="gone"
+            android:layout_marginEnd="-7dp"
             app:layout_constraintEnd_toEndOf="@id/img_bag"
             app:layout_constraintTop_toTopOf="@id/img_bag" />
 
         <ImageView
             android:id="@+id/img_menu"
-            android:layout_width="@dimen/_50mdp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_14mdp"
+            android:paddingEnd="@dimen/_14mdp"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:paddingStart="@dimen/_23mdp"
-            android:paddingTop="@dimen/_25mdp"
-            android:paddingEnd="@dimen/_23mdp"
-            android:paddingBottom="@dimen/_25mdp"
-            android:layout_marginStart="@dimen/_14mdp"
-            android:src="@drawable/ic_menu_dots_vertical"
+            android:src="@drawable/ic_menu_dots"
+            app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constrainedHeight="true"
+            app:tint="@color/black" />
 
-            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

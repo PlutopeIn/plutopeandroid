@@ -76,7 +76,7 @@ class DappBrowserSuggestionsAdapter(
         return filteredSuggestions.size
     }
 
-    override fun getItem(position: Int): DApp? {
+    override fun getItem(position: Int): DApp {
         return filteredSuggestions[position]
     }
 

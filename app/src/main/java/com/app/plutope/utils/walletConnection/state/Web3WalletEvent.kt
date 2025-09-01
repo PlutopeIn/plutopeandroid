@@ -1,6 +1,9 @@
 package com.app.plutope.utils.walletConnection.state
 
-import com.walletconnect.web3.wallet.client.Wallet
+import com.reown.walletkit.client.Wallet
+
+
+sealed interface NotifyEvent
 
 sealed interface Web3WalletEvent
 

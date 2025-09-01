@@ -30,7 +30,7 @@ class Security : BaseFragment<FragmentSecurityBinding, SecurityViewModel>() {
     }
 
     override fun setupToolbarText(): String {
-        return getString(R.string.security)
+        return ""
     }
 
     override fun onResume() {
@@ -46,7 +46,6 @@ class Security : BaseFragment<FragmentSecurityBinding, SecurityViewModel>() {
 
     override fun setupUI() {
 
-
         if (!preferenceHelper.isAppLock) {
             viewDataBinding?.switchApplock?.isPressed = false
             viewDataBinding?.switchApplock?.isChecked = false
@@ -54,6 +53,9 @@ class Security : BaseFragment<FragmentSecurityBinding, SecurityViewModel>() {
         } else {
             viewDataBinding?.groupApplockVisiblity?.visibility = VISIBLE
             viewDataBinding?.switchApplock?.isChecked = true
+        }
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
         }
 
         setDetail()

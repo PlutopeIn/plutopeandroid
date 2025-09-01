@@ -1,7 +1,7 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
-    android:width="32dp"
-    android:height="16dp"
+    android:width="40dp"
+    android:height="20dp"
     android:viewportWidth="32"
     android:viewportHeight="16">
 
@@ -14,15 +14,15 @@
                 android:startY="8"
                 android:type="linear">
                 <item
-                    android:color="#75769d"
+                    android:color="@color/light_gray"
                     android:offset="0" />
                 <item
-                    android:color="#75769d"
+                    android:color="@color/light_gray"
                     android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
     <path
-        android:fillColor="#fff"
+        android:fillColor="@color/white_both_themed"
         android:pathData="M8,8m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
 </vector>

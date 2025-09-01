@@ -5,6 +5,8 @@ import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import com.google.gson.annotations.SerializedName
+
 
 @Keep
 @Parcelize
@@ -20,4 +22,19 @@ data class Wallets(
     var w_is_manual_backup:Boolean=false,
     var folderId:String="",
     var fileId:String=""
+) : Parcelable
+
+data class ReferralCodesWrapperModel(
+    @SerializedName("data")
+    val refCodeModel: ReferralCodesModel? = null
+)
+
+@Parcelize
+data class ReferralCodesModel(
+    @SerializedName("_id")
+    val id: String? = null,
+    @SerializedName("user_code")
+    val userCode: String? = null,
+    @SerializedName("walletAddress")
+    val walletAddress: String? = null
 ) : Parcelable

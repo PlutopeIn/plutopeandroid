@@ -21,42 +21,57 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/bg_white"
             tools:context=".ui.fragment.wallet.back_up_wallet.BackUpWalletCheck">
 
-            <ImageView
+          <!--  <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="-58dp"
                 android:layout_marginTop="-350dp"
                 android:layout_marginEnd="-58dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_circle_bg"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toTopOf="@id/guid2"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />-->
 
-            <androidx.constraintlayout.widget.Guideline
+            <!--<androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guid2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".4" />
+                app:layout_constraintGuide_percent=".4" />-->
 
 
             <ImageView
                 android:id="@+id/img_back"
-                android:layout_width="@dimen/_30mdp"
-                android:layout_height="@dimen/_30mdp"
-                android:layout_marginStart="@dimen/_17mdp"
-                android:layout_marginTop="@dimen/_20mdp"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
                 android:padding="@dimen/_8mdp"
-                android:src="@drawable/ic_back_arrow"
+                android:src="@drawable/ic_back_new"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-
-                />
+            <TextView
+                android:id="@+id/txt_toolbar_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_80mdp"
+                android:ellipsize="end"
+                android:fontFamily="@font/violet_sans"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:text="@string/backup"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20mdp"
+                app:layout_constraintBottom_toBottomOf="@id/img_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/img_back" />
 
 
             <TextView
@@ -64,10 +79,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_33mdp"
-                android:fontFamily="@font/quicksand_bold"
-                android:gravity="center"
+                android:layout_marginHorizontal="@dimen/_20mdp"
+                android:fontFamily="@font/violet_sans"
                 android:text="@string/back_up_your_wallet_now"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_27msp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -77,61 +92,59 @@
                 android:id="@+id/txt_backup_des"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_61mdp"
+                android:layout_marginHorizontal="@dimen/_20mdp"
                 android:layout_marginTop="@dimen/_19mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:gravity="center"
-                android:lineSpacingExtra="@dimen/_10msp"
+                android:fontFamily="@font/inter"
+                android:lineSpacingExtra="@dimen/_5msp"
                 android:text="@string/in_the_next_step_you_will_see_secret_phrase_12_words_that_allows_you_to_recover_a_wallet"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_13msp"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/_14msp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_backup_title" />
 
 
-            <androidx.constraintlayout.widget.Guideline
+           <!-- <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guid"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".5" />
+                app:layout_constraintGuide_percent=".5" />-->
 
 
             <CheckBox
                 android:id="@+id/checkbox_loos_fund"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16mdp"
+                android:layout_marginStart="@dimen/_20mdp"
                 android:layout_marginEnd="@dimen/_15mdp"
                 android:button="@drawable/ic_checkbox_selecter"
-                android:fontFamily="@font/quicksand_regular"
+                android:fontFamily="@font/inter"
                 android:gravity="top"
-                android:lineSpacingExtra="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_30mdp"
                 android:paddingHorizontal="@dimen/_21mdp"
                 android:text="@string/if_lose_my_secret_phrase_my_funds_will_be_lost_forever"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14msp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toTopOf="@id/checkbox_explore_share"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/guid" />
+                app:layout_constraintTop_toBottomOf="@id/txt_backup_des" />
 
             <CheckBox
                 android:id="@+id/checkbox_explore_share"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_30mdp"
                 android:button="@drawable/ic_checkbox_selecter"
-                android:fontFamily="@font/quicksand_regular"
+                android:fontFamily="@font/inter"
                 android:gravity="top"
-                android:lineSpacingExtra="@dimen/_10mdp"
                 android:paddingHorizontal="@dimen/_21mdp"
                 android:text="@string/if_expose_or_share_my_secret_phrase_to_anybody_my_funds_can_get_stolen"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14msp"
                 app:layout_constrainedWidth="true"
+                android:layout_marginTop="@dimen/_20mdp"
                 app:layout_constraintBottom_toTopOf="@id/checkbox_trust_wallet_support"
                 app:layout_constraintEnd_toEndOf="@id/checkbox_loos_fund"
                 app:layout_constraintStart_toStartOf="@id/checkbox_loos_fund"
@@ -142,18 +155,16 @@
                 android:id="@+id/checkbox_trust_wallet_support"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_30mdp"
                 android:layout_marginBottom="@dimen/_64mdp"
                 android:button="@drawable/ic_checkbox_selecter"
-                android:fontFamily="@font/quicksand_regular"
+                android:fontFamily="@font/inter"
                 android:gravity="top"
-                android:lineSpacingExtra="@dimen/_10mdp"
                 android:paddingHorizontal="@dimen/_21mdp"
                 android:text="@string/trust_wallet_support_will_never_reach_out_to_ask_for_it"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14msp"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintBottom_toTopOf="@id/btn_continue"
+                android:layout_marginTop="@dimen/_20mdp"
                 app:layout_constraintEnd_toEndOf="@id/checkbox_explore_share"
                 app:layout_constraintStart_toStartOf="@id/checkbox_explore_share"
                 app:layout_constraintTop_toBottomOf="@id/checkbox_explore_share" />
@@ -165,16 +176,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/_50mdp"
+                android:layout_marginHorizontal="@dimen/_20mdp"
                 android:layout_marginTop="@dimen/_20mdp"
-                android:layout_marginBottom="@dimen/_80mdp"
                 android:text="@string/_continue"
                 android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/checkbox_trust_wallet_support"
-                app:layout_constraintVertical_bias="0.7" />
+                app:layout_constraintVertical_bias="0.9"
+                 />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_8mdp"
-            app:cardBackgroundColor="@color/purple_25264D"
+            app:cardBackgroundColor="@color/bg_white"
             app:cardCornerRadius="@dimen/_17mdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,8 +38,8 @@
                     android:layout_marginEnd="@dimen/_10mdp"
                     android:src="@drawable/ic_close_circle"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/black" />
 
                 <TextView
                     android:id="@+id/txt_title"
@@ -48,10 +48,10 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginHorizontal="@dimen/_20mdp"
                     android:layout_marginTop="@dimen/_31mdp"
-                    android:fontFamily="@font/quicksand_medium"
+                    android:fontFamily="@font/violet_sans"
                     android:gravity="center"
                     android:text="@string/best_quote"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_20msp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -79,53 +79,20 @@
                 <TextView
                     android:id="@+id/txt_receive_amount"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_16mdp"
                     android:layout_marginTop="@dimen/_20mdp"
                     android:layout_marginEnd="@dimen/_10mdp"
-                    android:fontFamily="@font/quicksand_semibold"
+                    android:fontFamily="@font/violet_sans"
                     android:paddingVertical="@dimen/_10mdp"
                     android:text="@string/receiving"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_14mdp"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/guid1"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/txt_title"
                     tools:text="USDT Receiving" />
-
-                <TextView
-                    android:id="@+id/txt_overall_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20mdp"
-                    android:layout_marginEnd="@dimen/_10mdp"
-                    android:fontFamily="@font/quicksand_semibold"
-                    android:paddingVertical="@dimen/_10mdp"
-                    android:text="@string/overall_value"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_14mdp"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintEnd_toEndOf="@id/guid2"
-                    app:layout_constraintStart_toEndOf="@id/guid1"
-                    app:layout_constraintTop_toBottomOf="@id/txt_title" />
-
-
-                <TextView
-                    android:id="@+id/txt_swapper_fee"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_10mdp"
-                    android:fontFamily="@font/quicksand_semibold"
-                    android:gravity="start"
-                    android:paddingVertical="@dimen/_10mdp"
-                    android:text="@string/swapper_fee"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_14mdp"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/guid2"
-                    app:layout_constraintTop_toTopOf="@id/txt_overall_value" />
 
 
                 <androidx.recyclerview.widget.RecyclerView

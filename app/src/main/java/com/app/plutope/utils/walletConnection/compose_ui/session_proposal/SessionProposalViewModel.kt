@@ -11,8 +11,8 @@ import com.app.plutope.utils.walletConnection.compose_ui.peer.toPeerUI
 import com.app.plutope.utils.walletConnection.sessionProposalEvent
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
-import com.walletconnect.web3.wallet.client.Wallet
-import com.walletconnect.web3.wallet.client.Web3Wallet
+import com.reown.walletkit.client.Wallet
+import com.reown.walletkit.client.WalletKit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Calendar
 import javax.inject.Inject
@@ -27,9 +27,9 @@ class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavig
     suspend fun approve(proposalPublicKey: String, onRedirect: (String) -> Unit = {}) {
         return suspendCoroutine { continuation ->
 
-            if (Web3Wallet.getSessionProposals().isNotEmpty()) {
+            if (WalletKit.getSessionProposals().isNotEmpty()) {
                 val sessionProposal: Wallet.Model.SessionProposal = requireNotNull(
-                    Web3Wallet.getSessionProposals().find {
+                    WalletKit.getSessionProposals().find {
                         loge("ProposalKeys", "$proposalPublicKey == ${it.proposerPublicKey}")
                         it.proposerPublicKey == proposalPublicKey
                     })
@@ -44,7 +44,15 @@ class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavig
                     ),
                     namespaces = mapOf(
                         "eip155" to Wallet.Model.Namespace.Session(
-                            chains = listOf("eip155:1", "eip155:137", "eip155:56", "eip155:66"),
+                            chains = listOf(
+                                "eip155:1",
+                                "eip155:137",
+                                "eip155:56",
+                                "eip155:66",
+                                "eip155:97",
+                                "eip155:80001",
+                                "eip155:11155111"
+                            ),
                             methods = listOf(
                                 "eth_sendTransaction",
                                 "personal_sign",
@@ -64,8 +72,16 @@ class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavig
                                 "solana_signMessage",
                                 "wallet_switchEthereumChain",
                                 "wallet_addEthereumChain",
-                                "eth_chainId"
-
+                                "eth_chainId",
+                                "wallet_getPermissions",
+                                "wallet_requestPermissions",
+                                "wallet_registerOnboarding",
+                                "wallet_watchAsset",
+                                "wallet_scanQRCode",
+                                "wallet_sendCalls",
+                                "wallet_getCapabilities",
+                                "wallet_getCallsStatus",
+                                "wallet_showCallsStatus"
                             ),
                             events = listOf("chainChanged", "accountsChanged"),
                             accounts = listOf(
@@ -76,19 +92,35 @@ class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavig
                                 }",
                                 "eip155:137:${
                                     com.app.plutope.model.Wallet.getPublicWalletAddress(
-                                        CoinType.ETHEREUM
+                                        CoinType.POLYGON
                                     )
                                 }",
                                 "eip155:56:${
                                     com.app.plutope.model.Wallet.getPublicWalletAddress(
-                                        CoinType.ETHEREUM
+                                        CoinType.SMARTCHAIN
                                     )
                                 }",
                                 "eip155:66:${
                                     com.app.plutope.model.Wallet.getPublicWalletAddress(
                                         CoinType.ETHEREUM
                                     )
-                                }"
+                                }",
+
+                                "eip155:80001:${
+                                    com.app.plutope.model.Wallet.getPublicWalletAddress(
+                                        CoinType.POLYGON
+                                    )
+                                }",
+                                "eip155:11155111:${
+                                    com.app.plutope.model.Wallet.getPublicWalletAddress(
+                                        CoinType.ETHEREUM
+                                    )
+                                }",
+                                "eip155:97:${
+                                    com.app.plutope.model.Wallet.getPublicWalletAddress(
+                                        CoinType.SMARTCHAIN
+                                    )
+                                }",
                             )
                         ),
 
@@ -98,7 +130,7 @@ class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavig
 
                 loge("Propose_1", " namespaces => ${tempMeta.namespaces}")
 
-                val sessionNamespaces = Web3Wallet.generateApprovedNamespaces(
+                val sessionNamespaces = WalletKit.generateApprovedNamespaces(
                     sessionProposal = sessionProposal,
                     supportedNamespaces = tempMeta.namespaces
                 )
@@ -112,7 +144,7 @@ class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavig
 
                 loge("Propose_3", "$approveProposal")
 
-                Web3Wallet.approveSession(
+                WalletKit.approveSession(
                     approveProposal,
                     onError = { error ->
                         loge("Propose_1_error", "$error")
@@ -134,9 +166,9 @@ class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavig
 
     suspend fun reject(proposalPublicKey: String, onRedirect: (String) -> Unit = {}) {
         return suspendCoroutine { continuation ->
-            if (Web3Wallet.getSessionProposals().isNotEmpty()) {
+            if (WalletKit.getSessionProposals().isNotEmpty()) {
                 val sessionProposal: Wallet.Model.SessionProposal = requireNotNull(
-                    Web3Wallet.getSessionProposals()
+                    WalletKit.getSessionProposals()
                         .find { it.proposerPublicKey == proposalPublicKey })
                 val rejectionReason = "Reject Session"
                 val reject = Wallet.Params.SessionReject(
@@ -146,7 +178,7 @@ class SessionProposalViewModel @Inject constructor() : BaseViewModel<CommonNavig
 
                 loge("rejectSession =>", "$reject")
 
-                Web3Wallet.rejectSession(
+                WalletKit.rejectSession(
                     reject,
                     onSuccess = {
                         continuation.resume(Unit)

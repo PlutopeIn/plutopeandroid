@@ -19,6 +19,7 @@ data class CountryListModel(
     var currencyCode: String? = "No universal currency",
     var currencyName: String? = "No universal currency",
     var currencySymbol: String? = "",
+    var smallName:String="",
     var isSelected: Boolean? = false
 ) : Parcelable
 

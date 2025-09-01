@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_8mdp"
-            app:cardBackgroundColor="#C9000000"
+            app:cardBackgroundColor="@color/transparent_black"
             app:cardCornerRadius="@dimen/_17mdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,8 @@
                     android:layout_marginEnd="@dimen/_10mdp"
                     android:src="@drawable/ic_close_circle"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/black" />
 
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -64,7 +65,7 @@
                     android:fontFamily="@font/quicksand_medium"
                     android:gravity="center"
                     android:text=""
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_20msp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -80,8 +81,8 @@
                     android:fontFamily="@font/quicksand_regular"
                     android:gravity="center_horizontal"
                     android:lineSpacingExtra="@dimen/_10mdp"
-                    android:text=""
-                    android:textColor="@color/white"
+                    tools:text="efefweff"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_13msp"
                     app:layout_constrainedWidth="true"
                     android:layout_marginBottom="@dimen/_20mdp"

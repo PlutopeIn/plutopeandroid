@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    app:statusBarBackground="@color/bg_white"
     tools:context=".ui.base.BaseActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/bg_white"
         android:fitsSystemWindows="true">
 
 
@@ -18,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +34,7 @@
                 android:visibility="gone"
                 app:buttonGravity="center_vertical"
                 app:elevation="0dp"
-                app:navigationIcon="@drawable/ic_back_arrow"
+                app:navigationIcon="@drawable/ic_back_new"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:title="">
 
@@ -44,13 +45,12 @@
                     android:layout_gravity="center"
                     android:drawablePadding="@dimen/_10mdp"
                     android:ellipsize="end"
-                    android:fontFamily="@font/quicksand_bold"
+                    android:fontFamily="@font/violet_sans"
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_18msp"
-
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20msp"
 
                     />
 
@@ -58,6 +58,12 @@
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <WebView
+            android:id="@+id/webview_tron"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_no_internet_connection"
@@ -77,7 +83,7 @@
                 android:fontFamily="@font/quicksand_semibold"
                 android:paddingVertical="@dimen/_5mdp"
                 android:text="@string/no_internet_connection"
-                android:textColor="@color/white"
+                android:textColor="@color/bg_white"
                 android:textSize="@dimen/_12mdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -101,241 +107,56 @@
 
             />
 
-        <EditText
-            android:id="@+id/view_blur"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#E30C0D2D"
-            android:clickable="false"
-            android:contextClickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:longClickable="false"
-            android:saveEnabled="false"
-            android:touchscreenBlocksFocus="false"
-            android:visibility="gone" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guid1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".24" />
-
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guid2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".3" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_close_menu_option"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_cancel_bottom_menu"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/fab_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_5mdp"
-            android:layout_marginBottom="@dimen/_27mdp"
-            android:backgroundTint="@color/transparent"
-            android:elevation="@dimen/_21mdp"
-            android:scaleType="fitXY"
-            android:src="@drawable/img_logo_with_circle_bg"
-            android:visibility="visible"
-            app:borderWidth="0dp"
-            app:elevation="@dimen/_21mdp"
-            app:fabCustomSize="@dimen/_60mdp"
-            app:fabSize="auto"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_anchor="@id/bottom_navigation_card"
-            app:layout_constraintBottom_toBottomOf="@id/bottom_navigation_card"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:maxImageSize="@dimen/_60mdp"
-            app:rippleColor="@color/white"
-            app:srcCompat="@drawable/img_logo_with_circle_bg"
-            app:tint="@null"
-            tools:ignore="ContentDescription" />
-
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/bottom_navigation_card"
+            android:id="@+id/bottomNavigation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_7mdp"
-            android:layout_marginBottom="@dimen/_10mdp"
+            android:layout_height="@dimen/_60mdp"
+            android:elevation="@dimen/_20mdp"
             android:visibility="visible"
             app:cardBackgroundColor="@color/transparent"
-            app:cardCornerRadius="@dimen/_40mdp"
-            app:cardElevation="@dimen/_20mdp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp"
             app:cardUseCompatPadding="false"
-            app:contentPadding="@dimen/_2mdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottom_navigation"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_52mdp"
-                android:background="@drawable/img_bottom_nav_background"
-                app:itemIconSize="@dimen/_20mdp"
-                app:itemIconTint="@color/bottom_nav_icon_selection"
-                app:itemTextColor="@color/bottom_nav_icon_selection"
-                app:labelVisibilityMode="unlabeled"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:menu="@menu/dashboard_menu" />
+                android:layout_height="match_parent">
 
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="@dimen/_25mdp"
+                    app:cardElevation="@dimen/_20mdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.app.plutope.utils.BottomBarButtonView
+                        android:id="@+id/switch_bottom"
+                        android:layout_width="@dimen/_160mdp"
+                        android:layout_height="@dimen/_50mdp"
+                        app:button_background_color="@color/bottom_bar"
+                        app:button_choose_color="@color/header_blue"
+                        app:button_choose_two_color="@color/header_blue"
+                        app:button_radius="@dimen/_30mdp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:stroke_color="@color/bg_white"
+                        app:stroke_width="0" />
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
-
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_center_menu_option"
-            android:layout_width="@dimen/_230mdp"
-            android:layout_height="@dimen/_230mdp"
-            android:layout_marginBottom="-10dp"
-            android:src="@drawable/img_circle_shadow"
-            android:visibility="gone"
-            app:layout_constrainedHeight="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_send"
-            android:layout_width="@dimen/_49mdp"
-            android:layout_height="@dimen/_49mdp"
-            android:layout_marginBottom="@dimen/_5mdp"
-            android:src="@drawable/ic_send"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/img_center_menu_option"
-            app:layout_constraintStart_toStartOf="@id/img_center_menu_option"
-            app:layout_constraintTop_toTopOf="@id/img_center_menu_option" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/quicksand_regular"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_10msp"
-            android:text="@string/send"
-            android:layout_marginTop="@dimen/_3mdp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/img_send"
-            app:layout_constraintStart_toStartOf="@id/img_send"
-            app:layout_constraintTop_toBottomOf="@id/img_send" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_receive"
-            android:layout_width="@dimen/_49mdp"
-            android:layout_height="@dimen/_49mdp"
-            android:layout_marginStart="@dimen/_30mdp"
-            android:layout_marginTop="@dimen/_15mdp"
-            android:src="@drawable/ic_receive_circle"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/img_center_menu_option"
-            app:layout_constraintTop_toTopOf="@id/img_center_menu_option"
-
-            />
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_receive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/quicksand_regular"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_10msp"
-            android:text="@string/receive"
-            android:layout_marginTop="@dimen/_3mdp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/img_receive"
-            app:layout_constraintStart_toStartOf="@id/img_receive"
-            app:layout_constraintTop_toBottomOf="@id/img_receive" />
-
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_add"
-            android:layout_width="@dimen/_49mdp"
-            android:layout_height="@dimen/_49mdp"
-            android:layout_marginTop="@dimen/_15mdp"
-            android:layout_marginEnd="@dimen/_35mdp"
-            android:src="@drawable/ic_add"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/img_center_menu_option"
-            app:layout_constraintTop_toTopOf="@id/img_center_menu_option"
-
-            />
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/quicksand_regular"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_10msp"
-            android:text="@string/buy"
-            android:layout_marginTop="@dimen/_3mdp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/img_add"
-            app:layout_constraintStart_toStartOf="@id/img_add"
-            app:layout_constraintTop_toBottomOf="@id/img_add" />
-
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_swap"
-            android:layout_width="@dimen/_49mdp"
-            android:layout_height="@dimen/_49mdp"
-            android:layout_marginBottom="@dimen/_5mdp"
-            android:src="@drawable/ic_swaping"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/img_center_menu_option"
-            app:layout_constraintEnd_toEndOf="@id/img_center_menu_option"
-            app:layout_constraintTop_toTopOf="@id/img_center_menu_option" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_swap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/quicksand_regular"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_10msp"
-            android:text="@string/swap"
-            android:layout_marginTop="@dimen/_3mdp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/img_swap"
-            app:layout_constraintStart_toStartOf="@id/img_swap"
-            app:layout_constraintTop_toBottomOf="@id/img_swap" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

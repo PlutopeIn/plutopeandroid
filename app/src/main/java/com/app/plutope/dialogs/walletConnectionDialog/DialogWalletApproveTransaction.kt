@@ -17,6 +17,7 @@ import com.app.plutope.utils.hexToMaticWithDecimal
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.underlineText
 import com.app.plutope.utils.walletConnection.WalletConnectionUtils
+import com.app.plutope.utils.walletConnection.WalletConnectionUtils.WalletConnectionMethod.walletSwitchEthereumChain
 import com.app.plutope.utils.walletConnection.session_request.SessionRequestUI
 import com.app.plutope.utils.walletConnection.session_request.SessionRequestViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -112,6 +113,14 @@ class DialogWalletApproveTransaction private constructor() {
                 layoutSignDetail.visibility = View.VISIBLE
 
                 txtSignMessage.text = sessionRequest?.param
+            } else if (model.transactionType == walletSwitchEthereumChain) {
+                txtToolbarTitle.text = "Switch chain"
+                txtBalance.visibility = View.GONE
+                btnConfirm.text = context?.getString(R.string.approve)
+                layoutFinanceDetail.visibility = View.GONE
+                layoutSignDetail.visibility = View.VISIBLE
+
+                txtSignMessage.text = sessionRequest?.param
             } else {
                 txtToolbarTitle.text = context?.getString(R.string.transactions)
                 txtBalance.visibility = View.VISIBLE
@@ -160,6 +169,7 @@ class DialogWalletApproveTransaction private constructor() {
             wrapData?.decimal!!
         )
 
+
         // val chainList = coinDetail.tokenList.filter { it.t_address == "" && it.t_type?.lowercase() == coinDetail.tokenModel.t_type?.lowercase() && it.t_symbol?.lowercase() == coinDetail.tokenModel.chain?.symbol?.lowercase() }
         val chainPrice = token.t_price?.toDoubleOrNull()
         val gp = if (token.t_address != "") (gasAmount.toDouble() * (chainPrice
@@ -169,7 +179,7 @@ class DialogWalletApproveTransaction private constructor() {
 
         loge("GasAmount", "$gasAmount :: GP =>$gp  :: networkFee => $networkFee")
 
-        val correctGP = gp.toBigDecimal().setScale(2, RoundingMode.DOWN).toString()
+        val correctGP = gp.toBigDecimal().setScale(8, RoundingMode.DOWN).toString()
 
         val networkFees =
             (networkFee + " " + token.chain?.symbol + "(${PreferenceHelper(context!!).getSelectedCurrency()?.symbol}${
@@ -192,8 +202,6 @@ class DialogWalletApproveTransaction private constructor() {
             approveDialog?.dismiss()
         }
     }
-
-
 
 
 }

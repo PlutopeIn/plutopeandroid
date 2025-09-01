@@ -16,10 +16,11 @@
         android:id="@+id/card_lock_method"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_16mdp"
+        android:layout_marginHorizontal="@dimen/_12mdp"
         android:layout_marginTop="@dimen/_5mdp"
-        app:cardBackgroundColor="@color/purple_25264D"
-        app:cardCornerRadius="@dimen/_10mdp"
+        app:cardBackgroundColor="@color/bg_white"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/card_auto_lock">
@@ -30,26 +31,26 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_country_flag"
+                bannerImage="@{model.image}"
                 android:layout_width="@dimen/_30mdp"
                 android:layout_height="@dimen/_30mdp"
                 android:layout_marginStart="@dimen/_10mdp"
-                bannerImage="@{model.image}"
-                android:src="@drawable/img_logo_with_circle_bg"
+                android:src="@drawable/img_logo_circle_black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/txt_country_code"
-                android:minWidth="@dimen/_80mdp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_marginVertical="@dimen/_19mdp"
                 android:layout_marginStart="@dimen/_16mdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:textColor="@color/white"
+                android:fontFamily="@font/inter"
+                android:minWidth="@dimen/_80mdp"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_13msp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/img_country_flag"
                 app:layout_constraintTop_toTopOf="parent"
@@ -62,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_19mdp"
                 android:layout_marginStart="@dimen/_16mdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:textColor="@color/white"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_13msp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/txt_country_code"
@@ -76,13 +77,21 @@
                 android:layout_height="@dimen/_20mdp"
                 android:layout_marginEnd="@dimen/_17mdp"
                 android:src="@drawable/ic_tick"
-                android:visibility="@{model.isSelected == true ? View.VISIBLE : View.GONE}"
+                android:visibility="@{model.isSelected ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/black" />
 
-                />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginTop="@dimen/_11mdp"
+                android:background="@color/border_gray"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="@+id/img_tick"
+                app:layout_constraintStart_toStartOf="@id/img_country_flag"
+                app:layout_constraintTop_toBottomOf="@+id/img_country_flag" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

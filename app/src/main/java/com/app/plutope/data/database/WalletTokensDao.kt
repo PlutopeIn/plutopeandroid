@@ -20,5 +20,5 @@ interface WalletTokensDao {
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(list: List<WalletTokens>?)
+    suspend fun insertAll(list: List<WalletTokens>)
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -19,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_8mdp"
-            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardBackgroundColor="@color/bg_white"
             app:cardCornerRadius="@dimen/_17mdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,12 +38,11 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginHorizontal="@dimen/_20mdp"
                     android:layout_marginTop="@dimen/_31mdp"
-                    android:fontFamily="@font/quicksand_medium"
+                    android:fontFamily="@font/violet_sans"
                     android:gravity="center"
                     android:text="@string/add_to_address_book"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_20msp"
-                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,10 +53,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_16mdp"
                     android:layout_marginTop="@dimen/_40mdp"
-                    android:fontFamily="@font/montserrat_medium"
+                    android:fontFamily="@font/violet_sans"
                     android:text="@string/enter_an_alias"
-                    android:textColor="@color/purple_7576D"
-                    android:textSize="@dimen/_10msp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14msp"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/txt_title" />
@@ -66,7 +64,7 @@
 
                 <EditText
                     android:id="@+id/edt_alias_name"
-                    style="@style/edittext_fill_bg_style"
+                    style="@style/edittext_fill_bg_style_bg_white_border_black"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8mdp"
@@ -78,9 +76,9 @@
                     android:paddingVertical="@dimen/_5mdp"
                     android:paddingStart="@dimen/_10mdp"
                     android:paddingEnd="@dimen/_130mdp"
-                    android:textColorHint="@color/gray_767691"
+                    android:textColorHint="@color/dark_gray"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_12msp"
+                    android:textSize="@dimen/_15msp"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/txt_address_or_naming_service"
@@ -90,14 +88,14 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_cancel"
-                    style="@style/button_border_blue"
+                    style="@style/wallet_button_gradient"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50mdp"
                     android:gravity="center"
                     android:layout_marginHorizontal="@dimen/_30mdp"
                     android:text="@string/cancel"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
+                    android:textColor="@color/white_text"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintBottom_toBottomOf="@id/btn_save"
                     app:layout_constraintEnd_toStartOf="@+id/btn_save"
@@ -117,7 +115,7 @@
                     android:gravity="center"
                     android:text="@string/save"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/edt_alias_name"

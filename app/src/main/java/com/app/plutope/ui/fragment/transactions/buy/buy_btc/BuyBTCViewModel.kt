@@ -5,11 +5,8 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.app.plutope.data.repository.ProviderDetailsRepo
 import com.app.plutope.data.repository.TokensRepo
-import com.app.plutope.model.EstimateMinOnChangeValue
 import com.app.plutope.model.MeldRequestModel
-import com.app.plutope.model.OnMetaBestPriceModel
 import com.app.plutope.model.OnMetaSellBestPriceModel
-import com.app.plutope.model.OnRampBestPriceRequestModel
 import com.app.plutope.model.OnRampSellBestPriceRequestModel
 import com.app.plutope.model.ProviderOnRampPriceDetail
 import com.app.plutope.ui.base.BaseViewModel
@@ -49,42 +46,10 @@ class BuyBTCViewModel @Inject constructor(
     }
 
 
-    // Change Now Estimation price
-    private val _tagChangeNowEstimation =
-        MutableStateFlow<NetworkState<EstimateMinOnChangeValue?>>(NetworkState.Empty())
 
-    val getChangeNowEstimation: StateFlow<NetworkState<EstimateMinOnChangeValue?>>
-        get() = _tagChangeNowEstimation
-
-    fun executeEstimationMinChangeNowDetail(url: String) {
-        viewModelScope.launch {
-            _tagChangeNowEstimation.emit(NetworkState.Loading())
-            _tagChangeNowEstimation.collectStateFlow(
-                providerDetailsRepo.estimationMinChangeNow(
-                    url
-                )
-            )
-        }
-    }
 
     var holdSelectedProvider: ProviderModel? = null
     var holdBestPrice: String? = null
-
-    private val _tagOnMetaBestPrice = MutableLiveData<Boolean>()
-    var urlStr = MutableLiveData<String>()
-    var bodyOnMeta = MutableLiveData<OnMetaBestPriceModel>()
-    val executeOnMetaResponse = _tagOnMetaBestPrice.switchMap {
-        invokeOnMetaBestPrice(urlStr.value!!, bodyOnMeta.value!!)
-    }
-
-    fun executeOnMetaBestPrice(url: String, body: OnMetaBestPriceModel) {
-        urlStr.value = url
-        bodyOnMeta.value = body
-        _tagOnMetaBestPrice.value = true
-    }
-
-    private fun invokeOnMetaBestPrice(url: String, body: OnMetaBestPriceModel) =
-        providerDetailsRepo.executeOnMetaBestPrice(url, body)
 
 
     private val _tagChangeNowBestPrice = MutableLiveData<Boolean>()
@@ -101,41 +66,6 @@ class BuyBTCViewModel @Inject constructor(
     private fun invokeChangeNowBestPrice(url: String) =
         providerDetailsRepo.executeChangeNowBestPriceApi(url)
 
-
-    private val _tagOnRampBestPrice = MutableLiveData<Boolean>()
-    var headerOnRampSignKey = MutableLiveData<String>()
-    var headerPayLoad = MutableLiveData<String>()
-    var urlRampStr = MutableLiveData<String>()
-    private var bodyRamp = MutableLiveData<OnRampBestPriceRequestModel>()
-    val executeOnRampResponse = _tagOnRampBestPrice.switchMap {
-        invokeOnRampBestPrice(
-            headerOnRampSignKey.value!!,
-            headerPayLoad.value!!,
-            urlRampStr.value!!,
-            bodyRamp.value!!
-        )
-    }
-
-    fun executeOnRampBestPrice(
-        headerOnRampSignKey: String,
-        headerPayLoad: String,
-        url: String,
-        body: OnRampBestPriceRequestModel
-    ) {
-        urlRampStr.value = url
-        this.headerOnRampSignKey.value = headerOnRampSignKey
-        this.headerPayLoad.value = headerPayLoad
-        bodyRamp.value = body
-        _tagOnRampBestPrice.value = true
-    }
-
-    private fun invokeOnRampBestPrice(
-        headerOnRampSignKey: String,
-        headerPayLoad: String,
-        url: String,
-        body: OnRampBestPriceRequestModel?
-    ) =
-        providerDetailsRepo.executeOnRampBestPrice(headerOnRampSignKey, headerPayLoad, url, body)
 
 
     private val _tagOnMeldBestPrice = MutableLiveData<Boolean>()
@@ -237,22 +167,7 @@ class BuyBTCViewModel @Inject constructor(
         )
 
 
-    private val _tagBestPriceUnlimit = MutableLiveData<Boolean>()
-    var urlUnlimitBestPrice = MutableLiveData<String>()
-    val unlimiBestPriceResponse = _tagBestPriceUnlimit.switchMap {
-        executeCallUnlimitebestPrice(
-            urlUnlimitBestPrice.value!!,
 
-            )
-    }
-
-    fun callUnlimiteBestPrice(url: String) {
-        urlUnlimitBestPrice.value = url
-        _tagBestPriceUnlimit.value = true
-    }
-
-    private fun executeCallUnlimitebestPrice(url: String) =
-        providerDetailsRepo.executeUnlimitBestPrice(url)
 
 
     /**
@@ -272,6 +187,30 @@ class BuyBTCViewModel @Inject constructor(
                 tokenRepo.setWalletActive(
                     address,
                     receiverAddress
+                )
+            )
+        }
+    }
+
+
+    /**
+     * Buy quote Single transaction
+     * */
+
+    private val _tagBuyQuoteSingleApi =
+        MutableStateFlow<NetworkState<BuyResponseModel?>>(NetworkState.Empty())
+
+    val buyQuoteSingleCallResponse: StateFlow<NetworkState<BuyResponseModel?>>
+        get() = _tagBuyQuoteSingleApi
+
+    fun buyQuoteSingleCall(
+        body: BuyRequestModel
+    ) {
+        viewModelScope.launch {
+            _tagBuyQuoteSingleApi.emit(NetworkState.Loading())
+            _tagBuyQuoteSingleApi.collectStateFlow(
+                providerDetailsRepo.buyQuoteSingleCall(
+                    body = body
                 )
             )
         }

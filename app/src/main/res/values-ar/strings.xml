@@ -52,7 +52,6 @@
     <string name="tap_the_words_to_put_them_next_to_each_other_in_the_correct_order">اضغط على الكلمات لوضعها بجوار بعضها البعض بالترتيب الصحيح.</string>
     <string name="done">تم</string>
     <string name="invalid_order_contain">ترتيب غير صالح. حاول مرة أخرى!</string>
-    <string name="spend_your_crypto_anywhere_in_the_world_with_plutope_debit_card" translatable="false">انفق عملاتك الرقمية في أي مكان في العالم باستخدام بطاقة Plutope الائتمانية.</string>
     <string name="multi_chain_amp_lightning_fast" translatable="false"><![CDATA[متعدد السلاسل وسريع بالبرق]]></string>
     <string name="one_wallet_amp_unlimited_possibilities"><![CDATA[محفظة واحدة وإمكانيات غير محدودة]]></string>
     <string name="wallet">المحفظة</string>
@@ -115,7 +114,7 @@
     <string name="status">الحالة</string>
     <string name="recipient">المستلم</string>
     <string name="network_fee">رسوم الشبكة</string>
-    <string name="more_details">مزيد من التفاصيل</string>
+    <string name="more_details"><u>مزيد من التفاصيل</u></string>
     <string name="import_multi_coin_wallet">استيراد محفظة متعددة العملات</string>
     <string name="phrase">عبارة</string>
     <string name="typically_12_sometimes_18_24_words_seprated_by_single_spaces">عادةً 12 (أحيانًا 18، 24) كلمة مفصولة بمسافات فارغة واحدة</string>
@@ -153,7 +152,6 @@
     <string name="just_top_up_your_crypto_in_your_card_and_you_are_good_to_go_your_plutope_card_works_at_all_merchants_that_take_mastercard">قم بتعبئة رصيد عملتك الرقمية في بطاقتك وستكون جاهزًا. تعمل بطاقة PlutoPe في جميع التجار الذين يقبلون بطاقات Mastercard.</string>
     <string name="just_top_up_your_card_with_crypto_and_you_are_good_to_go_your_plutope_card_works_at_all_merchants_that_take_mastercard">قم بتعبئة بطاقتك بالعملة الرقمية وستكون جاهزًا. تعمل بطاقة PlutoPe في جميع التجار الذين يقبلون بطاقات Mastercard.</string>
     <string name="one_wallet_for_all_your_needs" translatable="false">محفظة واحدة لكل احتياجاتك</string>
-    <string name="transact_stake_withdraw_buy_and_sell_your_cryptocurrencies_with_ease" translatable="false">قم بإجراء معاملاتك، وقم بالرهان، وقم بالسحب، وقم بالشراء والبيع لعملاتك الرقمية بسهولة.</string>
     <string name="anyone_can_create_a_token_including_fake_versions_of_existing_tokens_learn_about_scams_and_security_risks">يمكن لأي شخص إنشاء رمز، بما في ذلك النسخ المزيفة للرموز الحالية. تعرف على الاحتيالات ومخاطر الأمان.</string>
     <string name="enter_passcode">أدخل رمز المرور</string>
     <string name="lock_methods">طرق القفل</string>
@@ -171,7 +169,6 @@
     <string name="backup_options">خيارات النسخ الاحتياطي</string>
     <string name="drive_backup" translatable="false">نسخ احتياطي إلى Drive</string>
     <string name="manual_backup">نسخ احتياطي يدوي</string>
-    <string name="main_wallet">المحفظة الرئيسية</string>
     <string name="learn_more">تعلم المزيد</string>
     <string name="delete_backup">حذف النسخ الاحتياطي</string>
     <string name="get_card">احصل على بطاقة</string>
@@ -197,7 +194,7 @@
     <string name="before_deleting_your_icloud_backup_ensure_a_manual_backup_is_in_place_for_your_data_s_security">قبل حذف نسخة الاحتياطي على Drive، تأكد من وجود نسخة احتياطية يدوية لأمان بياناتك.</string>
     <string name="first_name_legal">الاسم الأول (القانوني) *</string>
     <string name="last_name_legal">اسم العائلة (القانوني) *</string>
-    <string name="date_of_birth">تاريخ الميلاد *</string>
+    <string name="date_of_birth_required">تاريخ الميلاد *</string>
     <string name="email_address">عنوان البريد الإلكتروني *</string>
     <string name="mobile_phone">الهاتف المحمول *</string>
     <string name="password_">كلمة المرور *</string>
@@ -233,8 +230,6 @@
     <string name="apply">تطبيق</string>
     <string name="select_payment_method">اختيار وسيلة الدفع</string>
     <string name="details">تفاصيل</string>
-    <string name="get_a_physical_or_virtual_card_in_minutes_that_is_accepted_at_more_than_42_million_merchants_worldwide" translatable="false">احصل على بطاقة فيزا في دقائق يتم قبولها في أكثر من 42 مليون تاجر في جميع أنحاء العالم.</string>
-    <string name="the_plutope_wallet_operates_across_multiple_chains_delivering_lightning_fast_transactions_no_more_manual_network_selection" translatable="false">تعمل محفظة Plutope عبر عدة سلاسل، مما يوفر معاملات سريعة. لا داعي لاختيار الشبكة يدويًا.</string>
     <string name="forgot_password_">نسيت كلمة المرور</string>
     <string name="restore_wallet">استعادة المحفظة</string>
 
@@ -314,6 +309,379 @@
     <string name="max_small">الحد الأقصى</string>
     <string name="providers">مقدمو الخدمة</string>
     <string name="smart_contract_call">استدعاء العقد الذكي</string>
-    <string name="self_transfer">Self transfer</string>
+    <string name="shipping_address">عنوان الشحن</string>
+    <string name="shipping_rates_may_vary_depending_on_the_deliveryaddress_for_your_order">قد تتغير أسعار الشحن اعتمادًا على عنوان التسليم لطلبك</string>
+    <string name="minsk">مينسك</string>
+    <string name="belovezhskaya_pusha_5_street">شارع بيلوفيجسكايا بوشا 5</string>
+    <string name="_155114">155114</string>
+    <string name="go_to_payment">الانتقال إلى الدفع</string>
+    <string name="express_delivery">توصيل سريع</string>
+    <string name="eth_rate">سعر الإيثريوم</string>
+    <string name="total">المجموع</string>
+    <string name="if_you_encounter_any_troubles_with_the_identity_verification_process_we_will_return_your_funds_in_full">إذا واجهت أي مشاكل مع عملية التحقق من الهوية، سنقوم بإعادة أموالك بالكامل</string>
+    <string name="you_will_pay_0_000066_eth_and_get_visa_plastic_card">سوف تدفع 0.000066 إيثريوم وتحصل على بطاقة فيزا بلاستيكية</string>
+    <string name="_0_000066_eth">0.000066 إيثريوم</string>
+    <string name="_0_000013_eth">0.000013 إيثريوم</string>
+    <string name="_0_000053_eth">0.000053 إيثريوم</string>
+    <string name="your_address">عنوانك</string>
+    <string name="_34_483_usd">34،483 دولار أمريكي</string>
+    <string name="eth">إيثريوم</string>
+    <string name="_12_0024">12.0024</string>
+    <string name="total_balance">الرصيد الإجمالي</string>
+    <string name="almost_there">نحن قريبون من الوصول</string>
+    <string name="as_we_re_processing_your_payment_there_s_one_step_left_you_to_get_your_card_verify_your_identify_to_complete_your_order">بينما نقوم بمعالجة دفعتك، هناك خطوة واحدة متبقية لك للحصول على بطاقتك. قم بالتحقق من هويتك لإكمال طلبك.</string>
+    <string name="total_tokens">إجمالي الرموز</string>
+    <string name="claimed_tokens">جميع الرموز المطالب بها</string>
+    <string name="non_claimed_tokens">الرموز غير المطالب بها</string>
+    <string name="my_referrals">إحالاتي</string>
+    <string name="referrals">الإحالات</string>
+
+    <string name="self_transfer">تحويل للنفس</string>
+    <string name="not_available">غير متوفر!</string>
+    <string name="already_have">هل لديك حساب بالفعل؟ <b>تسجيل الدخول</b></string>
+    <string name="phone_number">رقم الهاتف</string>
+    <string name="enter_password">ادخل كلمة المرور</string>
+    <string name="i_have_read_and_agree_with_plutope_terms">لقد قرأت وأوافق على <b><u><font color='#00c6fb'>الشروط والأحكام</font></u></b></string>
+    <string name="confirmations_via_sms">تأكيد عبر رسائل SMS</string>
+    <string name="enter_the_sms_code_we_ve_sent_to_your_phone">أدخل رمز SMS الذي أرسلناه إلى هاتفك</string>
+    <string name="resend_code_in">إعادة إرسال الرمز في <b>5</b> ثوانٍ</string>
+    <string name="enter_your_email">أدخل بريدك الإلكتروني</string>
+    <string name="we_will_send_your_verification_link_verify_your_email_to_receive_communications_about_your_account_or_subscriptions">سنرسل رابط التحقق إلى بريدك الإلكتروني، قم بالتحقق لاستقبال الاتصالات حول حسابك أو اشتراكاتك.</string>
+    <string name="the_password_must_meet_some_conditions_tap_here_to_view_more_information">يجب أن تلبي كلمة المرور بعض الشروط، اضغط هنا لعرض المزيد من المعلومات</string>
+    <string name="phone_number_">رقم الهاتف*</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name="country">البلد</string>
+    <string name="to_order_the_card_you_need_to_pass_verification">لطلب البطاقة، يجب عليك تمرير عملية التحقق</string>
+    <string name="delivery">التوصيل</string>
+    <string name="order_the_card">طلب البطاقة</string>
+    <string name="plastic_card">بطاقة بلاستيكية</string>
+    <string name="withdraw_your_digital_assets_to_cash_from_atms_in_200_countries">سحب الأصول الرقمية إلى نقد من أجهزة الصراف الآلي في أكثر من 200 دولة</string>
+    <string name="use_worldwide">استخدام عالمي</string>
+    <string name="you_can_use_the_card_anywhere_in_the_worldwhere_visa_is_accepted">يمكنك استخدام البطاقة في أي مكان في العالم حيث يتم قبول فيزا</string>
+
+
+    <string name="next">التالي</string>
+    <string name="previous">السابق</string>
+
+
+    <string name="plastic">بلاستيكي</string>
+    <string name="virtual">افتراضي</string>
+    <string name="create_an_account">إنشاء حساب</string>
+    <string name="wants_to_connect_to_your_wallet">%1$s يرغب في الاتصال بمحفظتك</string>
+
+
+    <string name="sign_in">تسجيل الدخول</string>
+    <string name="update">تحديث</string>
+    <string name="residence_street_">شارع الإقامة</string>
+    <string name="residence_street">شارع الإقامة<font color='#F14336'>*</font></string>
+    <string name="zip_code">الرمز البريدي</string>
+    <string name="zip_code_">الرمز البريدي *</string>
+    <string name="create_a_new_password">إنشاء كلمة مرور جديدة</string>
+    <string name="current_password">كلمة المرور الحالية</string>
+    <string name="new_password">كلمة المرور الجديدة</string>
+    <string name="card_type">نوع البطاقة *</string>
+    <string name="card_design_style">نمط تصميم البطاقة *</string>
+    <string name="update_address">تحديث العنوان</string>
+    <string name="cardProfileUserName">" "</string>
+    <string name="email_confirmation_is_required_if_you_didn_t_receive_the_email_resend_it">التأكيد على البريد الإلكتروني مطلوب. إذا لم تتلق البريد الإلكتروني، <font color='#627EEA'>أعد إرساله</font></string>
+    <string name="current_password_">كلمة المرور الحالية *</string>
+    <string name="new_password_">كلمة المرور الجديدة *</string>
+    <string name="add_new_card">إضافة بطاقة جديدة</string>
+    <string name="virtual_card">بطاقة افتراضية</string>
+    <string name="residence_address">عنوان الإقامة *</string>
+    <string name="state_of_residence">الولاية *</string>
+    <string name="document_country">بلد المستند *</string>
+    <string name="country_">البلد *</string>
+    <string name="add_funds">إضافة الأموال</string>
+    <string name="digital_assets">الأصول الرقمية</string>
+    <string name="see_all">عرض الكل</string>
+    <string name="order">طلب</string>
+    <string name="additional_personal_info">معلومات شخصية إضافية</string>
+    <string name="tax_id">الرقم الضريبي / الهوية الضريبية *</string>
+    <string name="verify_your_identity">تحقق من هويتك</string>
+    <string name="kyc_process_content">مرحبًا بك في عملية KYC-1 لدينا. ضمان الأمان والنزاهة. \n\nتحميل مستندات الهوية: \n(1) جواز سفر.\n(2) رخصة القيادة.\n(3) بطاقة الهوية الوطنية. \n\nيمكنك الآن بدء عملية KYC-1 باستخدام أي من الوثائق المذكورة أعلاه.</string>
+    <string name="check">تحقق</string>
+    <string name="rate">معدل</string>
+    <string name="cancel_order">إلغاء الطلب</string>
+    <string name="address2">العنوان 2</string>
+    <string name="billing_address">عنوان الفواتير</string>
+    <string name="address_1_">العنوان 1 *</string>
+
+    <string name="overview">نظرة عامة</string>
+    <string name="history">التاريخ</string>
+    <string name="country_region">البلد/المنطقة *</string>
+    <string name="postal_zip_code">الرمز البريدي/الرمز البريدي *</string>
+    <string name="are_you_usa_related_person">هل أنت شخص مرتبط بالولايات المتحدة؟</string>
+    <string name="i_have_read_and_agree_with_the_terms_and_condition_of_payment_card">لقد قرأت وأوافق على <b><u><font color='#00c6fb'>الشروط والأحكام لبطاقات الدفع</font></u></b></string>
+    <string name="terms">الشروط</string>
+    <string name="top_up">إعادة شحن</string>
+    <string name="operation_time">وقت التشغيل</string>
+    <string name="total_fees">الإجمالي + الرسوم</string>
+    <string name="instantly">فوراً</string>
+    <string name="please_note_that_the_final_rate_will_be_fixed_when_you_confirm_the_transaction">يرجى ملاحظة أن السعر النهائي سيتم تحديده عند تأكيد العملية</string>
+    <string name="card_freeze">مجمد</string>
+    <string name="create_wallet_address">إنشاء عنوان المحفظة</string>
+    <string name="create_a_wallet_to_hold_all_your_favorite_crypto_currencies_in_one_place">إنشاء محفظة للاحتفاظ بجميع عملات التشفير المفضلة لديك في مكان واحد</string>
+    <string name="top_up_address">عنوان إعادة الشحن</string>
+    <string name="buy_crypto">شراء العملة الرقمية</string>
+    <string name="add_a_bank_card">+ إضافة بطاقة بنكية</string>
+    <string name="get">الحصول على</string>
+    <string name="card_number">رقم البطاقة *</string>
+    <string name="expiration_date">تاريخ انتهاء الصلاحية *</string>
+    <string name="card_holder_name">اسم حامل البطاقة *</string>
+    <string name="add_card_detail">إضافة تفاصيل البطاقة</string>
+    <string name="we_accept_only_mastercard_and_visa_debit_bank_card">نحن نقبل فقط بطاقات ماستركارد وفيزا الائتمانية</string>
+    <string name="billing_info">معلومات الفواتير</string>
+    <string name="billing_address_">عنوان الفواتير *</string>
+    <string name="the_billing_address_info">عنوان الفواتير هو العنوان المرتبط ببطاقتك البنكية - يُستخدم للتحقق من معلومات بطاقتك الائتمانية. يجب أن يكون العنوان نفسه الذي تعطيه لبنكك ليتم قبوله</string>
+    <string name="residence_country">بلد الإقامة *</string>
+    <string name="select_cards">اختيار البطاقات</string>
+    <string name="cards">بطاقات</string>
+    <string name="processing_time">وقت المعالجة</string>
+    <string name="exchange">تبادل</string>
+    <string name="submit">إرسال</string>
+    <string name="change_email">تغيير البريد الإلكتروني</string>
+    <string name="save_changes">حفظ التغييرات</string>
+
+    <string name="withdraw">سحب</string>
+    <string name="unlock_the_power_to_use_your_crypto_anywhere_in_the_world_with_our_seamless_spending_options">فتح القدرة على استخدام العملات الرقمية الخاصة بك في أي مكان في العالم مع خيارات الإنفاق السلسة لدينا.</string>
+    <string name="spend_your_crypto_anywhere_in_the_world">انفق عملتك الرقمية في أي مكان في العالم</string>
+    <string name="already_have_card">لديك بطاقة بالفعل</string>
+    <string name="don_t_have_card">ليس لديك بطاقة</string>
+    <string name="support">الدعم</string>
+    <string name="add_new_product">إضافة منتج جديد</string>
+    <string name="restore_your_password">استعادة كلمة المرور الخاصة بك</string>
+    <string name="enter_the_phone_number_provided_during_registration">أدخل رقم الهاتف الذي تم توفيره أثناء التسجيل</string>
+    <string name="restore">استعادة</string>
+    <string name="forgot_your_password_restore">نسيت كلمة المرور؟ <b>استعادة</b></string>
+    <string name="haven_t_yet_create">لم تقم بعد؟ <b>إنشاء</b></string>
+    <string name="defined_by_bank">محدد من قبل البنك</string>
+    <string name="enter_a_higher_amount">أدخل مبلغًا أعلى</string>
+    <string name="enter_a_smaller_amount">أدخل مبلغًا أقل</string>
+    <string name="please_select_country">يرجى اختيار البلد</string>
+    <string name="please_enter_state">الرجاء إدخال الولاية</string>
+    <string name="please_enter_city">الرجاء إدخال المدينة</string>
+    <string name="please_enter_address">الرجاء إدخال العنوان</string>
+    <string name="please_enter_zip_code">الرجاء إدخال الرمز البريدي</string>
+    <string name="limits">الحدود</string>
+    <string name="please_enter_first_name">الرجاء إدخال الاسم الأول</string>
+    <string name="please_enter_last_name">الرجاء إدخال اسم العائلة</string>
+    <string name="please_select_date_of_birth">الرجاء تحديد تاريخ الميلاد</string>
+    <string name="please_enter_street_name">الرجاء إدخال اسم الشارع</string>
+    <string name="sign_in_to_your_account">تسجيل الدخول إلى حسابك</string>
+    <string name="pick_your_document">اختر وثيقتك</string>
+    <string name="choose_one_of_the_available_documents_to_get_started">اختر واحدة من الوثائق المتاحة للبدء</string>
+    <string name="snap_it">التقط صورة</string>
+    <string name="take_a_clear_and_high_quality_photo_of_your_chosen_document">خذ صورة واضحة وعالية الجودة للوثيقة التي اخترتها</string>
+    <string name="take_a_selfie">التقط صورة شخصية</string>
+    <string name="we_partner_with_a_trusted_identity_verification_service_to_keep_your_personal_data_safe_and_never_share_it_with_third_parties">نحن شريك مع خدمة التحقق من الهوية الموثوقة للحفاظ على بياناتك الشخصية آمنة ونحن لا نشاركها أبدًا مع أطراف ثالثة.</string>
+    <string name="we_ll_compare_this_with_your_document">سنقارن هذا مع وثيقتك</string>
+    <string name="start_verification">بدء التحقق</string>
+    <string name="want_to_use_in_plutope">هل ترغب في استخدام %1$s في Plutope؟</string>
+
+    <string name="the_password_must_meet_three_conditions">💡 يجب أن تستوفي كلمة المرور ثلاثة شروط</string>
+    <string name="the_password_must_be_at_least_8_characters_long">يجب أن تكون كلمة المرور على الأقل 8 أحرف.</string>
+    <string name="the_password_must_contain_at_least_one_digit">يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.</string>
+    <string name="the_password_must_contain_at_least_one_letter">يجب أن تحتوي كلمة المرور على حرف واحد على الأقل.</string>
+    <string name="the_password_must_not_be_equal_to_the_phone_number">يجب أن لا تكون كلمة المرور مطابقة لرقم الهاتف.</string>
+    <string name="the_password_must_not_contain_information_from_the_user_profile">يجب أن لا تحتوي كلمة المرور على معلومات من ملف المستخدم.</string>
+    <string name="the_password_cannot_be_the_same_as_any_of_the_previous_five_passwords">يجب ألا تكون كلمة المرور مطابقة لأي من الأرقام السرية الخمس السابقة.</string>
+    <string name="the_password_must_not_be_too_simple_for_example">يجب ألا تكون كلمة المرور بسيطة للغاية، على سبيل المثال، `12345678`</string>
+    <string name="please_enter_phone_number">الرجاء إدخال رقم الهاتف.</string>
+    <string name="please_enter_password">الرجاء إدخال كلمة المرور</string>
+    <string name="invalid_phone_number">رقم هاتف غير صحيح</string>
+
+    <string name="fiat_limit_left">المتبقي من حد العملات الورقية</string>
+    <string name="crypto_limit">حد العملات الرقمية</string>
+    <string name="profile_details">تفاصيل الملف الشخصي</string>
+    <string name="faq">الأسئلة الشائعة</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="you_have_the_maximum_fiat_limit">لديك الحد الأقصى للعملات الورقية</string>
+    <string name="first_name">الاسم الأول</string>
+    <string name="last_name">الاسم الأخير</string>
+    <string name="date_of_birth">تاريخ الميلاد</string>
+    <string name="wallet_address_">عنوان المحفظة:</string>
+    <string name="city_of_residence_">مدينة الإقامة</string>
+    <string name="city_of_residence"><font color='#F14336'>*</font>مدينة الإقامة</string>
+    <string name="invite_and_earn">ادعو واربح</string>
+    <string name="invite">دعوة</string>
+    <string name="change_password">تغيير كلمة المرور</string>
+    <string name="freeze">تجميد</string>
+    <string name="top_up_card">بطاقة الشحن</string>
+    <string name="failed">فشل</string>
+    <string name="pending">قيد الانتظار</string>
+    <string name="bank_card">" بطاقة بنكية"</string>
+    <string name="buy_crypto_with_your_bank_card">شراء عملات مشفرة باستخدام بطاقتك البنكية</string>
+    <string name="instant">فوري</string>
+    <string name="external_wallet">محفظة خارجية</string>
+    <string name="receive_crypto_from_another_wallet">استقبال عملة مشفرة من محفظة أخرى</string>
+    <string name="add_bank_card">إضافة بطاقة بنكية</string>
+    <string name="share">مشاركة</string>
+    <string name="via_phone_number">عبر رقم الهاتف</string>
+    <string name="the_recipient_doesnt_need_to_have_a_plutoPe_account">لا يحتاج المستلم إلى حساب</string>
+    <string name="no_fees">بدون رسوم</string>
+    <string name="worldwide">عالميًا</string>
+    <string name="to_a_wallet">إلى محفظة</string>
+    <string name="enter_an_address_and_send_crypto_in_a_flash">" أدخل عنوانًا وأرسل عملة مشفرة بسرعة"</string>
+    <string name="send_by_phone_number">إرسال عبر رقم الهاتف</string>
+    <string name="send_by_wallet">إرسال عبر المحفظة</string>
+    <string name="not_enough_funds">لا توجد أموال كافية</string>
+    <string name="cancelled">تم الإلغاء</string>
+    <string name="missing_permission">إذن مفقود</string>
+    <string name="all_funds">كل الأموال</string>
+    <string name="wallet_address">عنوان المحفظة</string>
+    <string name="you_send">أنت ترسل</string>
+    <string name="youve_successfully_exchange_a_crypto">لقد قمت بتبادل عملة مشفرة بنجاح</string>
+    <string name="please_enter_pay_amount">الرجاء إدخال المبلغ المدفوع</string>
+    <string name="please_enter_amount_you_want_to_send">الرجاء إدخال المبلغ الذي تريد إرساله</string>
+    <string name="send_not_possible_to_execute">الإرسال غير ممكن للتنفيذ</string>
+    <string name="youve_successfully_sent_the_crypto">" لقد أرسلت العملة المشفرة بنجاح"</string>
+    <string name="your_transaction_succeed">نجحت معاملتك</string>
+    <string name="un_freeze">إلغاء التجميد</string>
+    <string name="password_change_successfully">تم تغيير كلمة المرور بنجاح!</string>
+    <string name="from_card">من البطاقة</string>
+    <string name="from_bank_card">من بطاقة البنك</string>
+    <string name="from_usdt_wallet">من محفظة USDT</string>
+    <string name="from_phone">من الهاتف</string>
+    <string name="to_usdt_wallet">إلى محفظة USDT</string>
+    <string name="please_select_card_type">الرجاء اختيار نوع البطاقة</string>
+    <string name="please_select_card_design_style">الرجاء اختيار تصميم البطاقة</string>
+    <string name="please_enter_tax_id">الرجاء إدخال رقم الهوية الضريبية</string>
+    <string name="please_select_are_you_related_or_not_from_usa">الرجاء اختيار ما إذا كنت مرتبطًا بالولايات المتحدة الأمريكية أم لا؟</string>
+    <string name="you_successfully_topped_up_your_card">لقد قمت بشحن بطاقتك بنجاح</string>
+    <string name="please_enter_get_amount">الرجاء إدخال المبلغ المطلوب</string>
+    <string name="please_enter_state_of_residence">الرجاء إدخال ولاية الإقامة</string>
+    <string name="please_enter_city_of_residence">الرجاء إدخال مدينة الإقامة</string>
+    <string name="please_enter_residence_address">الرجاء إدخال عنوان الإقامة</string>
+    <string name="you_have_not_referred_anyone_yet">لم تشرف على أي شخص حتى الآن!</string>
+    <string name="please_select_tokens">الرجاء اختيار الرموز</string>
+    <string name="action_needed">يتطلب إجراء</string>
+    <string name="your_card_waiting_for_something">بطاقتك في انتظار شيء ما</string>
+    <string name="identity_verification">التحقق من الهوية</string>
+    <string name="verify_now_to_get_your_card_in_a_few_minutes">قم بالتحقق الآن للحصول على بطاقتك في غضون بضع دقائق</string>
+    <string name="verify">التحقق</string>
+    <string name="some_of_the_submitted_documents_dont_meet_our_requirements">بعض المستندات المقدمة لا تلبي متطلباتنا</string>
+    <string name="resubmit_documents">أعد تقديم الوثائق</string>
+    <string name="please_update_your_shipping_address_you_havent_updated_it_before">الرجاء تحديث عنوان الشحن. لم تقم بتحديثه من قبل.</string>
+    <string name="please_update_your_Additional_personal_information_you_havent_updated_it_before">الرجاء تحديث المعلومات الشخصية الإضافية. لم تقم بتحديثها من قبل.</string>
+    <string name="update_additional_info">تحديث المعلومات الإضافية</string>
+    <string name="please_complete_Payment_Process_you_havent_complete_it_before">يرجى استكمال عملية الدفع. لم تكملها من قبل.</string>
+    <string name="pay">دفع</string>
+    <string name="your_card_is_waing_for_activation_are_you_sure_you_want_to_cancel_card_order">البطاقة الخاصة بك في انتظار التفعيل. هل أنت متأكد أنك تريد إلغاء طلب البطاقة؟</string>
+    <string name="your_card_is_in_progress_are_you_sure_you_want_to_cancel_card_order">بطاقتك قيد التقدم. هل أنت متأكد أنك تريد إلغاء طلب البطاقة؟</string>
+    <string name="contact_support">اتصل بالدعم الفني</string>
+    <string name="enter_your_cvv_cvc_to_proceed">أدخل CVV / CVC الخاص بك للمتابعة</string>
+    <string name="i_have_read_and_agree">لقد قرأت وأوافق</string>
+    <string name="congratulations">مبروك</string>
+    <string name="your_order_was_successfully_completed_the_card_will_be_with_you_soon">تم إتمام طلبك بنجاح. سيصل البطاقة إليك قريبًا.</string>
+
+
+    <string name="spend_your_crypto_anywhere_in_the_world_with_plutope_debit_card">أنفق عملتك المشفرة في أي مكان في العالم</string>
+    <string name="get_a_physical_or_virtual_card_in_minutes_that_is_accepted_at_more_than_42_million_merchants_worldwide">احصل على بطاقة فعلية أو افتراضية في دقائق تُقبل في أكثر من 42 مليون تاجر حول العالم</string>
+    <string name="the_plutope_wallet_operates_across_multiple_chains_delivering_lightning_fast_transactions_no_more_manual_network_selection">تعمل محفظة بلوتوب عبر سلاسل متعددة، مما يوفر معاملات سريعة للغاية. لا مزيد من اختيار الشبكة اليدوي</string>
+    <string name="transact_stake_withdraw_buy_and_sell_your_cryptocurrencies_with_ease">قم بإجراء المعاملات، والاستثمار، والسحب، والشراء، والبيع بسهولة</string>
+    <string name="your_transaction_is_pending">معاملتك قيد الانتظار، يرجى التحقق عبر البريد الإلكتروني</string>
+    <string name="you_ve_successfully_sent_the_crypto">لقد أرسلت العملات المشفرة بنجاح</string>
+    <string name="you_ve_successfully_exchange_a_crypto">لقد قمت بتبادل العملات المشفرة بنجاح</string>
+    <string name="you_ve_successfully_bought_the_crypto">لقد اشتريت العملات المشفرة بنجاح</string>
+    <string name="your_transaction_failed">فشلت معاملتك</string>
+    <string name="to_use_our_app_please_provide_next_information_entered_data_below_must_match_your_id">لاستخدام تطبيقنا، يرجى تقديم المعلومات التالية. يجب أن تتطابق البيانات المدخلة أدناه مع هويتك</string>
+    <string name="min">الحد الأدنى</string>
+    <string name="max_">الحد الأقصى</string>
+    <string name="are_you_sure_you_want_logout">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+
+    <string name="are_you_sure_you_want_to_exit_from_plutope">هل أنت متأكد أنك تريد الخروج من PlutoPe؟</string>
+    <string name="level_up_your_verification_to_add">ارفع مستوى التحقق الخاص بك</string>
+    <string name="to_fiat_limit">إلى حد العملات الورقية</string>
+    <string name="chat_with_us">تحدث معنا</string>
+    <string name="your_kyc_process_in_under_review">عملية KYC الخاصة بك قيد المراجعة.</string>
+    <string name="thank_you_for_submitting_your_kyc_information_our_team_is_currently_reviewing_the_provided_documents_and_information_this_process_typically_takes_some_time_to_ensure_compliance_with_regulatory_requirements_and_maintain_the_security_of_our_platform_we_appreciate_your_patience_and_understanding_rest_assured_we_ll_notify_you_of_any_updates_or_additional_steps_required_if_you_have_any_urgent_concerns_please_don_t_hesitate_to_contact_our_support_team">شكراً لك على تقديم معلومات KYC الخاصة بك. فريقنا يراجع حالياً المستندات والمعلومات المقدمة. تستغرق هذه العملية عادةً بعض الوقت لضمان الامتثال للمتطلبات التنظيمية والحفاظ على أمان منصتنا. نحن نقدر صبرك وتفهمك. كن مطمئناً، سنقوم بإبلاغك بأي تحديثات أو خطوات إضافية مطلوبة. إذا كانت لديك أي مخاوف عاجلة، فلا تتردد في الاتصال بفريق الدعم لدينا.</string>
+    <string name="your_kyc_1_process_approved">تمت الموافقة على عملية KYC-1 الخاصة بك.</string>
+    <string name="congratulations_your_kyc_1_verification_process_has_been_successfully_completed_and_approved_we_appreciate_your_cooperation_throughout_this_initial_verification_phase_now_that_your_kyc_1_process_has_been_approved_we_re_moving_forward_with_the_kyc_2_process_to_further_enhance_the_security_and_compliance_of_your_account_our_team_will_guide_you_through_the_additional_steps_required_for_kyc_2_verification">تهانينا! تم إكمال عملية التحقق من KYC-1 بنجاح وتمت الموافقة عليها. نحن نقدر تعاونك طوال مرحلة التحقق الأولية هذه. الآن بعد أن تمت الموافقة على عملية KYC-1 الخاصة بك، نحن نمضي قدماً في عملية KYC-2 لتعزيز الأمان والامتثال لحسابك بشكل أكبر. سيقوم فريقنا بإرشادك خلال الخطوات الإضافية المطلوبة للتحقق من KYC-2.</string>
+    <string name="your_kyc_process_denied">تم رفض عملية KYC الخاصة بك.</string>
+    <string name="secret_phrase">Secret Phrase</string>
+    <string name="backup">نسخ احتياطي</string>
+    <string name="add_details">أضف تفاصيل</string>
+    <string name="choose_provider">اختر المزود</string>
+    <string name="skip">تخطي</string>
+    <string name="get_start">ابدأ الآن</string>
+    <string name="legal">قانوني</string>
+    <string name="wallet_name">اسم المحفظة*</string>
+    <string name="phrase_label">العبارة السرية*</string>
+    <string name="public_address">العنوان العام</string>
+    <string name="add_contacts">إضافة جهات الاتصال</string>
+    <string name="edit_contacts">تعديل جهات الاتصال</string>
+    <string name="custom_swap">التبديل المخصص</string>
+    <string name="quick_swap">التبديل السريع</string>
+    <string name="select_wallet">اختر المحفظة</string>
+    <string name="log_in">تسجيل الدخول</string>
+    <string name="log_In">تسجيل الدخول</string>
+    <string name="sign_up_for_debit_card">سجل للحصول على بطاقة خصم</string>
+    <string name="don_t_have_card_yet">لا تمتلك بطاقة بعد؟ <u><font color="#2B5AF3">سجل الآن</font></u></string>
+    <string name="enter_otp">أدخل OTP</string>
+    <string name="send_to_your_mobile_number">أرسل إلى رقم هاتفك المحمول</string>
+    <string name="receive_otp">لم تستلم OTP؟ <font color="#2B5AF3">إعادة إرسال OTP</font></string>
+    <string name="confirm_new_password">" تأكيد كلمة المرور الجديدة"</string>
+    <string name="pick_your_card">اختر بطاقتك</string>
+    <string name="change_password_new">تغيير كلمة المرور؟</string>
+    <string name="change_email_card">تغيير البريد الإلكتروني</string>
+    <string name="order_a_crypto_debit_card_now">اطلب بطاقة خصم مشفرة الآن</string>
+    <string name="my_card">بطاقتي</string>
+    <string name="first_name_card_edit">الاسم الأول<font color="#F14336">*</font></string>
+    <string name="last_name_card_edit">الاسم الأخير<font color="#F14336">*</font></string>
+    <string name="date_of_birth_card">تاريخ الميلاد<font color="#F14336">*</font></string>
+    <string name="address_card">العنوان<font color="#F14336">*</font></string>
+    <string name="country_card">البلد<font color="#F14336">*</font></string>
+    <string name="postcode_card">الرمز البريدي<font color="#F14336">*</font></string>
+    <string name="city_card">المدينة<font color="#F14336">*</font></string>
+    <string name="transaction_history">تاريخ المعاملات</string>
+    <string name="total_balance_">الرصيد الإجمالي</string>
+    <string name="electronic_use_only">للاستخدام الإلكتروني فقط</string>
+    <string name="delete_account">حذف الحساب</string>
+    <string name="delete_account_instruction">كيف أغلق حسابي؟</string>
+    <string name="card_details">تفاصيل البطاقة</string>
+    <string name="stack">تكديس</string>
+    <string name="game">لعبة</string>
+    <string name="infinite">لانهائي</string>
+    <string name="select_card">اختر البطاقة</string>
+    <string name="waiting_for_activation">في انتظار التفعيل</string>
+    <string name="activation_in_progress">جارٍ تفعيل</string>
+    <string name="increase">زيادة</string>
+    <string name="unlimited">غير محدود</string>
+    <string name="edit">تعديل</string>
+    <string name="explore_a_world_of_unlimited_possibilities_with_a_single_wallet_empowering_you_to_do_more_with_your_digital_assets">استكشف عالماً من الإمكانات غير المحدودة مع محفظة واحدة، مما يمكّنك من فعل المزيد بأصولك الرقمية</string>
+
+    <string name="create">إنشاء</string>
+    <string name="your_new_password_must_be_different_from_previously_used_passwords">يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمات المرور السابقة</string>
+    <string name="personal_detail">البيانات الشخصية</string>
+    <string name="checkout">الدفع</string>
+    <string name="come_up_with_a_pin">أنشئ رمز PIN</string>
+    <string name="avoid_three_identical_or_sequential_numbers_in_a_row">تجنب ثلاث أرقام متشابهة أو متسلسلة</string>
+    <string name="lost_access_to_my_email">فقدت الوصول إلى بريدي الإلكتروني</string>
+    <string name="_8_32_characters_long">8-32 حرفًا</string>
+    <string name="lower_and_uppercase_latin_letters">أحرف لاتينية صغيرة وكبيرة</string>
+    <string name="at_least_1_number">رقم واحد على الأقل</string>
+    <string name="at_least_1_symbol">رمز واحد على الأقل</string>
+    <string name="_8_32_characters_long_nlower_and_uppercase_latin_letters_nat_least_1_number_nat_least_1_symbol">8-32 حرفًا\nأحرف لاتينية صغيرة وكبيرة\nرقم واحد على الأقل\nرمز واحد على الأقل</string>
+    <string name="reset_password">إعادة تعيين كلمة المرور</string>
+    <string name="enter_the_email_related_to_your_account">أدخل البريد الإلكتروني المرتبط بحسابك</string>
+    <string name="verification_code">رمز التحقق *</string>
+    <string name="resend_code">إعادة إرسال الرمز</string>
+    <string name="five_digit_code">رمز مكون من 5 أرقام</string>
+    <string name="no_code_received">لم تستلم رمزًا؟</string>
+    <string name="your_phone_number">رقم هاتفك</string>
+    <string name="referral_code">رمز الإحالة</string>
+    <string name="your_code">رمزك</string>
+    <string name="please_enter_referral_code">يرجى إدخال رمز الإحالة.</string>
+    <string name="_2f">%.2f</string>
+    <string name="dashboard">لوحة التحكم</string>
+    <string name="please_enter_verification_code">يرجى إدخال رمز التحقق</string>
+    <string name="_5f">%.5f</string>
+    <string name="check_explorer">تحقق من Explorer</string>
+    <string name="can_t_find_your_transaction_check_explorer">لا يمكنك العثور على معاملتك؟ <font color='#00C6FB'>تحقق الآن</font></string>
+    <string name="half">نصف</string>
+    <string name="all">الكل</string>
 
 </resources>

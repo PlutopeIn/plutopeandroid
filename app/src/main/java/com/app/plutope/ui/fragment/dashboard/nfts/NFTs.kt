@@ -13,13 +13,13 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentNFTsBinding
 import com.app.plutope.dialogs.NFTDetailDialog
-import com.app.plutope.model.NFTModel
+import com.app.plutope.model.NFTListModel
 import com.app.plutope.model.Wallet
 import com.app.plutope.networkConfig.Chain
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.dashboard.DashboardDirections
 import com.app.plutope.utils.coinTypeEnum.CoinType
-import com.app.plutope.utils.constant.NFT_BASE_URL
+import com.app.plutope.utils.constant.BASE_URL_PLUTO_PE
 import com.app.plutope.utils.constant.nftPageType
 import com.app.plutope.utils.customSnackbar.CustomSnackbar
 import com.app.plutope.utils.network.NetworkState
@@ -31,11 +31,15 @@ import kotlinx.coroutines.launch
 class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
     private val nFTsViewModel: NFTsViewModel by viewModels()
     private var adapter: NftsListAdapter? = null
-    var dataList: MutableList<NFTModel> = mutableListOf()
+    var dataList: MutableList<NFTListModel> = mutableListOf()
     val arrayChain = arrayListOf(
         Chain.Ethereum.chainName,
         Chain.BinanceSmartChain.chainName,
-        Chain.Polygon.chainName
+        Chain.Polygon.chainName,
+        "Avalanche",
+        Chain.Arbitrum.chainName,
+        Chain.BaseMainnet.chainName,
+        Chain.OKC.chainName
     )
 
     var apiCount = 0
@@ -57,12 +61,24 @@ class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
 
     override fun setupUI() {
         adapter = NftsListAdapter {
-            showNftDetailDialog(it)
+            // showNftDetailDialog(it)
+            if (isAdded) {
+                findNavController().safeNavigate(
+                    DashboardDirections.actionDashboardToNftDetails(it)
+                )
+            }
+
         }
         viewDataBinding?.rvNftsList?.adapter = adapter
 
         arrayChain.forEach { it ->
-            nFTsViewModel.executeGetNFTList(NFT_BASE_URL + "${Wallet.getPublicWalletAddress(CoinType.ETHEREUM)}/nft?chain=${it}")
+            nFTsViewModel.executeGetNFTList(
+                BASE_URL_PLUTO_PE + "get-all-nft" + "?&walletAddress=${
+                    Wallet.getPublicWalletAddress(
+                        CoinType.ETHEREUM
+                    )
+                }"
+            )
         }
 
 
@@ -74,12 +90,12 @@ class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
         }
     }
 
-    private fun showNftDetailDialog(nftModel: NFTModel) {
+    private fun showNftDetailDialog(nftModel: NFTListModel) {
         NFTDetailDialog.getInstance().show(
             requireContext(),
-            nftModel.parsedMetadata?.name.toString(),
-            nftModel.parsedMetadata?.description.toString(),
-            nftModel.parsedMetadata?.image.toString()
+            nftModel.metadata?.name.toString(),
+            nftModel.metadata?.description.toString(),
+            nftModel.metadata?.image.toString()
         )
     }
 
@@ -94,24 +110,26 @@ class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
                 nFTsViewModel.getNFTListResponse.collect {
                     when (it) {
                         is NetworkState.Success -> {
-                            apiCount += 1
+                            // apiCount += 1
                             //hideLoader()
-                            val list = it.data?.result
+                            val list = it.data
                             if (!list.isNullOrEmpty()) {
                                 dataList.clear()
                                 dataList.addAll(list)
                                 submitData(dataList)
                             }
 
-                            if (apiCount >= arrayChain.size) {
-                                stopShimmerEffect()
-                                if (dataList.isEmpty()) {
-                                    viewDataBinding?.rvNftsList?.visibility = GONE
-                                    viewDataBinding?.btnReceiveBottom?.visibility = GONE
-                                    viewDataBinding?.layoutNoFound?.visibility = VISIBLE
-                                }
-
+                            stopShimmerEffect()
+                            if (dataList.isEmpty()) {
+                                viewDataBinding?.rvNftsList?.visibility = GONE
+                                viewDataBinding?.btnReceiveBottom?.visibility = GONE
+                                viewDataBinding?.layoutNoFound?.visibility = VISIBLE
                             }
+
+                            /* if (apiCount >= arrayChain.size) {
+
+
+                             }*/
 
 
                         }
@@ -148,7 +166,7 @@ class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
 
     }
 
-    private fun submitData(dataList: MutableList<NFTModel>) {
+    private fun submitData(dataList: MutableList<NFTListModel>) {
         if (dataList.isNotEmpty()) {
             adapter?.submitList(dataList)
             viewDataBinding?.rvNftsList?.visibility = VISIBLE
@@ -165,15 +183,15 @@ class NFTs : BaseFragment<FragmentNFTsBinding, NFTsViewModel>() {
 
     private fun startShimmerEffect() {
         viewDataBinding!!.shimmerLayout.startShimmer()
-        viewDataBinding!!.shimmerLayout.visibility = View.VISIBLE
-        viewDataBinding!!.rvNftsList.visibility = View.GONE
+        viewDataBinding!!.shimmerLayout.visibility = VISIBLE
+        viewDataBinding!!.rvNftsList.visibility = GONE
 
     }
 
     private fun stopShimmerEffect() {
         viewDataBinding!!.shimmerLayout.stopShimmer()
         viewDataBinding?.shimmerLayout?.visibility = View.INVISIBLE
-        viewDataBinding!!.rvNftsList.visibility = View.VISIBLE
+        viewDataBinding!!.rvNftsList.visibility = VISIBLE
     }
 
 }

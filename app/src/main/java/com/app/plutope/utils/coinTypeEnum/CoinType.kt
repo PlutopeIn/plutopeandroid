@@ -55,7 +55,7 @@ enum class CoinType(private val value: Int) {
     MARS(13000118), UMEE(14000118), COREUM(10000990), QUASAR(15000118), PERSISTENCE(16000118), AKASH(
         17000118
     ),
-    NOBLE(18000118);
+    NOBLE(18000118), BASEMAINNET(999999);
 
     fun value(): Int {
         return value
@@ -187,6 +187,7 @@ enum class CoinType(private val value: Int) {
                 16000118 -> PERSISTENCE
                 17000118 -> AKASH
                 18000118 -> NOBLE
+                999999 -> BASEMAINNET
                 else -> null
             }
         }

@@ -4,11 +4,8 @@ package com.app.plutope.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.WindowManager
 import com.app.plutope.R
-import com.app.plutope.databinding.DialogConfirmationAlertBinding
 import com.app.plutope.databinding.DialogSwapProgressBinding
 
 
@@ -74,7 +71,7 @@ class SwapProgressDialog private constructor() {
                 e.printStackTrace()
             }
         } else {
-            dialogConfirmationAlert?.dismiss()
+           // dialogConfirmationAlert?.dismiss()
         }
 
         binding.executePendingBindings()

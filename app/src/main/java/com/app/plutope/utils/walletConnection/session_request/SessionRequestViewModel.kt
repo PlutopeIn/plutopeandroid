@@ -15,8 +15,8 @@ import com.app.plutope.utils.walletConnection.signTypedData
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import com.walletconnect.web3.wallet.client.Wallet
-import com.walletconnect.web3.wallet.client.Web3Wallet
+import com.reown.walletkit.client.Wallet
+import com.reown.walletkit.client.WalletKit
 import org.json.JSONArray
 import org.web3j.utils.Numeric.hexStringToByteArray
 import kotlin.coroutines.resume
@@ -51,7 +51,7 @@ class SessionRequestViewModel : ViewModel() {
                     )
                 )
 
-                Web3Wallet.respondSessionRequest(result,
+                WalletKit.respondSessionRequest(result,
                     onSuccess = {
                         continuation.resume(Unit)
                         sessionRequestEvent = null
@@ -84,24 +84,7 @@ class SessionRequestViewModel : ViewModel() {
     ) {
         return suspendCoroutine { continuation ->
             val sessionRequest = sessionRequest as? SessionRequestUI.Content
-
-            val params = sessionRequest?.param
-            val id = sessionRequest?.requestId
-            val chainId = sessionRequest?.chain
-            val request = sessionRequest?.method
-
-            loge(
-                "Approve",
-                ":: Session :: ${transactionModelDApp.chainId}  address : ${
-                    com.app.plutope.model.Wallet.getPrivateKeyData(
-                        CoinType.ETHEREUM
-                    )
-                }"
-            )
-
             if (sessionRequest != null) {
-
-
                 val signature = signPersonalMessage(
                     sessionRequest.param,
                     com.app.plutope.model.Wallet.getPrivateKeyData(CoinType.ETHEREUM)
@@ -111,30 +94,20 @@ class SessionRequestViewModel : ViewModel() {
                         signature
                     }
 
+                    /*sessionRequest.method == SWITCH_WALLET_CHAIN -> {
+
+                    }*/
+
                     sessionRequest.method == ETH_SIGN_DATA -> {
-                        // signature
-
-                        // val x = getSignTypedDataParamsData(sessionRequest.param)
-
-                        // loge("getSignTypedDataParamsData","$x")
-
-                        /*val (domain, types, data) = getSignTypedDataParamsData(Gson().toJson(sessionRequest.param) as List<String>)
-                        types.remove("EIP712Domain")
-                        val signedData = wallet._signTypedData(domain, types, data)
-                        val jsonRpcResult = formatJsonRpcResult(id, signedData)*/
-
-
-
                         signTypedData(
                             sessionRequest.param,
                             com.app.plutope.model.Wallet.getPrivateKeyData(CoinType.ETHEREUM)
                         )
-
-
                     }
 
                     sessionRequest.chain?.contains(
-                        transactionModelDApp.chainId, true
+                        transactionModelDApp.chainId,
+                        true
                     ) == true -> transactionHash
 
                     else -> throw Exception("Unsupported Chain")
@@ -152,7 +125,7 @@ class SessionRequestViewModel : ViewModel() {
 
                 loge("response", "result : $result \n\n Response = >$response")
 
-                Web3Wallet.respondSessionRequest(response,
+                WalletKit.respondSessionRequest(response,
                     onSuccess = {
                         loge("respondSessionRequest", "onSuccess => $it")
                         continuation.resume(Unit)
@@ -177,7 +150,7 @@ class SessionRequestViewModel : ViewModel() {
         sendSessionRequestResponseDeepLink: (Uri) -> Unit,
     ) {
         loge("TAG", "sendResponseDeepLink ==> $sessionRequest")
-        Web3Wallet.getActiveSessionByTopic(sessionRequest.topic)?.redirect?.toUri()
+        WalletKit.getActiveSessionByTopic(sessionRequest.topic)?.redirect?.toUri()
             ?.let { deepLinkUri ->
                 loge("getActiveSessionByTopic", "$deepLinkUri")
                 sendSessionRequestResponseDeepLink(deepLinkUri)
@@ -205,8 +178,23 @@ class SessionRequestViewModel : ViewModel() {
             )
         } else SessionRequestUI.Initial
     }
+
+    /*  internal fun createSwitchChainParams(chain: WalletModel.Model.Chain): String {
+          val chainHex = chain.chainReference.toInt().toString(radix = 16)
+
+          @Language("JSON")
+          val param = """
+              [
+                {
+                  "chainId": "0x$chainHex"
+                }
+              ]
+          """
+          return param.formatParams()
+      }*/
 }
 
 
 private const val PERSONAL_SIGN_METHOD = "personal_sign"
+private const val SWITCH_WALLET_CHAIN = "wallet_switchEthereumChain"
 private const val ETH_SIGN_DATA = "eth_signTypedData_v4"

@@ -7,20 +7,22 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/const_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/const_root"
-        android:background="@color/colorPrimary">
+        android:background="@color/bg_white">
 
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_back"
-            android:layout_width="@dimen/_30mdp"
-            android:layout_height="@dimen/_30mdp"
-            android:layout_marginStart="@dimen/_17mdp"
-            android:layout_marginTop="@dimen/_20mdp"
+            android:layout_width="@dimen/_50mdp"
+            android:layout_height="@dimen/_50mdp"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:layout_marginTop="@dimen/_10mdp"
             android:padding="@dimen/_8mdp"
-            android:src="@drawable/ic_back_arrow"
+            android:src="@drawable/ic_back_new"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,11 +31,11 @@
             android:id="@+id/txt_advanced"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_20mdp"
-            android:fontFamily="@font/quicksand_bold"
+            android:layout_marginTop="@dimen/_25mdp"
             android:gravity="center"
             android:text="@string/advanced"
-            android:textColor="@color/white"
+            android:fontFamily="@font/violet_sans"
+            android:textColor="@color/black"
             android:textSize="@dimen/_20msp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +47,7 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/_80mdp"
+            android:layout_marginTop="@dimen/_10mdp"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toTopOf="@id/btn_save"
             app:layout_constraintTop_toBottomOf="@id/txt_advanced">
@@ -61,59 +63,69 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_17mdp"
                     android:layout_marginTop="@dimen/_20mdp"
-                    android:fontFamily="@font/montserrat_medium"
+                    android:fontFamily="@font/violet_sans"
                     android:lineSpacingExtra="@dimen/_10msp"
                     android:text="@string/gas_price_gwei"
-                    android:textColor="@color/purple_7576D"
-                    android:textSize="@dimen/_10msp"
+                    android:textColor="@color/black"
+
+                    android:textSize="@dimen/_18msp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/edt_gas_price"
-                    style="@style/edittext_fill_bg_style"
+                    style="@style/edittext_fill_bg_style_r_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginTop="@dimen/_10mdp"
                     android:layout_marginEnd="@dimen/_16mdp"
                     android:inputType="numberDecimal"
                     android:paddingStart="@dimen/_20mdp"
                     android:paddingEnd="@dimen/_35mdp"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_10msp"
+                    android:fontFamily="@font/violet_sans"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
+
+                android:textColorHint="@color/dark_gray"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/txt_title_gas_price"
                     app:layout_constraintTop_toBottomOf="@id/txt_title_gas_price" />
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/txt_max_gas_fee"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_17mdp"
                     android:layout_marginTop="@dimen/_20mdp"
-                    android:fontFamily="@font/montserrat_medium"
+                    android:fontFamily="@font/violet_sans"
                     android:lineSpacingExtra="@dimen/_10msp"
                     android:text="@string/max_fee_gwei"
-                    android:textColor="@color/purple_7576D"
-                    android:textSize="@dimen/_10msp"
+                    android:textColor="@color/black"
+
+                    android:textSize="@dimen/_18msp"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edt_gas_price" />
 
                 <EditText
-                    android:visibility="gone"
                     android:id="@+id/edt_max_gas_fee"
-                    style="@style/edittext_fill_bg_style"
+                    style="@style/edittext_fill_bg_style_r_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginTop="@dimen/_10mdp"
                     android:layout_marginEnd="@dimen/_16mdp"
                     android:inputType="numberDecimal"
                     android:paddingStart="@dimen/_20mdp"
                     android:paddingEnd="@dimen/_35mdp"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_10msp"
+                    android:fontFamily="@font/violet_sans"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
+
+                android:textColorHint="@color/dark_gray"
+                    android:visibility="gone"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/txt_max_gas_fee"
@@ -126,26 +138,31 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_17mdp"
                     android:layout_marginTop="@dimen/_20mdp"
-                    android:fontFamily="@font/montserrat_medium"
+                    android:fontFamily="@font/violet_sans"
                     android:lineSpacingExtra="@dimen/_10msp"
                     android:text="@string/gas_limit"
-                    android:textColor="@color/purple_7576D"
-                    android:textSize="@dimen/_10msp"
+                    android:textColor="@color/black"
+
+                    android:textSize="@dimen/_18msp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edt_max_gas_fee" />
 
                 <EditText
                     android:id="@+id/edt_gas_limit"
-                    style="@style/edittext_fill_bg_style"
+                    style="@style/edittext_fill_bg_style_r_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginTop="@dimen/_10mdp"
                     android:layout_marginEnd="@dimen/_16mdp"
                     android:inputType="numberDecimal"
                     android:paddingStart="@dimen/_20mdp"
                     android:paddingEnd="@dimen/_35mdp"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_10msp"
+                    android:fontFamily="@font/violet_sans"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
+
+                android:textColorHint="@color/dark_gray"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/txt_title_gas_limit"
@@ -153,33 +170,38 @@
 
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/txt_transaction_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_17mdp"
                     android:layout_marginTop="@dimen/_20mdp"
-                    android:fontFamily="@font/montserrat_medium"
+                    android:fontFamily="@font/violet_sans"
                     android:lineSpacingExtra="@dimen/_10msp"
                     android:text="@string/transaction_data_optional"
-                    android:textColor="@color/purple_7576D"
-                    android:textSize="@dimen/_10msp"
+                    android:textColor="@color/black"
+
+                    android:textSize="@dimen/_18msp"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edt_gas_limit" />
 
                 <EditText
-                    android:visibility="gone"
                     android:id="@+id/edt_transaction_data"
-                    style="@style/edittext_fill_bg_style"
+                    style="@style/edittext_fill_bg_style_r_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginTop="@dimen/_10mdp"
                     android:layout_marginEnd="@dimen/_16mdp"
                     android:inputType="text"
                     android:paddingStart="@dimen/_20mdp"
                     android:paddingEnd="@dimen/_35mdp"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_10msp"
+                    android:fontFamily="@font/violet_sans"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
+
+                android:textColorHint="@color/dark_gray"
+                    android:visibility="gone"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/txt_transaction_data"
@@ -192,27 +214,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_17mdp"
                     android:layout_marginTop="@dimen/_20mdp"
-                    android:fontFamily="@font/montserrat_medium"
+                    android:fontFamily="@font/violet_sans"
                     android:lineSpacingExtra="@dimen/_10msp"
                     android:text="@string/nonce"
-                    android:textColor="@color/purple_7576D"
-                    android:textSize="@dimen/_10msp"
+                    android:textColor="@color/black"
+
+                    android:textSize="@dimen/_18msp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edt_transaction_data" />
 
                 <EditText
                     android:id="@+id/edt_nonce"
-                    style="@style/edittext_fill_bg_style"
+                    style="@style/edittext_fill_bg_style_r_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_11mdp"
+                    android:layout_marginTop="@dimen/_10mdp"
                     android:layout_marginEnd="@dimen/_16mdp"
                     android:layout_marginBottom="@dimen/_20mdp"
                     android:inputType="numberDecimal"
                     android:paddingStart="@dimen/_20mdp"
                     android:paddingEnd="@dimen/_35mdp"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_10msp"
+                    android:fontFamily="@font/violet_sans"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
+
+                android:textColorHint="@color/dark_gray"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -224,9 +251,13 @@
 
         </ScrollView>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/btn_save"
-            style="@style/wallet_button_gradient"
+            android:background="@drawable/button_bg_border_blue"
+            android:textColor="@color/bg_white"
+            android:fontFamily="@font/violet_sans"
+
+            android:textSize="@dimen/_18msp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_30mdp"

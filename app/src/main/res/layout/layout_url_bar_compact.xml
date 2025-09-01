@@ -4,7 +4,7 @@
     android:id="@+id/address_bar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@drawable/background_bottom_border">
+    >
 
     <RelativeLayout
         android:id="@+id/address_bar_layout"

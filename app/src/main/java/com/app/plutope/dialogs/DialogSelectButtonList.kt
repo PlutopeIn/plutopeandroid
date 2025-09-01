@@ -3,6 +3,7 @@ package com.app.plutope.dialogs
 import android.content.Context
 import android.view.Gravity
 import android.view.WindowManager
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.app.plutope.R
 import com.app.plutope.model.ButtonModel
@@ -51,9 +52,11 @@ class DialogSelectButtonList private constructor() {
         rvDialogButtonList?.adapter = BottomSheetButtonListAdapter(list) {
             unit.invoke(it)
             alertDialogLocation?.dismiss()
-
         }
 
+        alertDialogLocation?.findViewById<TextView>(R.id.txt_cancel)?.setOnClickListener {
+            alertDialogLocation?.dismiss()
+        }
 
 
         if (alertDialogLocation != null) {

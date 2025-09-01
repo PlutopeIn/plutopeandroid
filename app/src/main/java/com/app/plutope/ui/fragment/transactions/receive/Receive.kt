@@ -11,14 +11,18 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentReceiveBinding
 import com.app.plutope.model.Tokens
-import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.transactions.send.CoinListAdapter
 import com.app.plutope.utils.constant.AddCustomTokenPageType
+import com.app.plutope.utils.constant.defaultPLTTokenId
 import com.app.plutope.utils.constant.nftPageType
+import com.app.plutope.utils.loge
 import com.app.plutope.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class Receive : BaseFragment<FragmentReceiveBinding, TokenViewModel>() {
@@ -48,11 +52,19 @@ class Receive : BaseFragment<FragmentReceiveBinding, TokenViewModel>() {
     }
 
     override fun setupToolbarText(): String {
-        return  if (args.pageType == nftPageType) "Receive NFT" else if(args.pageType == AddCustomTokenPageType) "Network" else getString(R.string.receive)
+        return if (args.pageType == nftPageType) "Receive NFT" else if (args.pageType == AddCustomTokenPageType) "Network" else getString(
+            R.string.receive
+        )
     }
 
     override fun setupUI() {
-        (activity as BaseActivity).showToolbarTransparentBack()
+        //  (activity as BaseActivity).showToolbarTransparentBack()
+
+        viewDataBinding?.txtToolbarTitle?.text =
+            if (args.pageType == nftPageType) "Receive NFT" else if (args.pageType == AddCustomTokenPageType) "Network" else getString(
+                R.string.receive
+            )
+
         adapter = CoinListAdapter(providerClick = { model ->
             if (args.pageType == AddCustomTokenPageType) {
                 val bundle = Bundle()
@@ -63,26 +75,72 @@ class Receive : BaseFragment<FragmentReceiveBinding, TokenViewModel>() {
                 findNavController().safeNavigate(ReceiveDirections.actionReceiveToReceiveCoin(model))
             }
         })
-        getAllTokenList()
+
+        viewDataBinding!!.rvReceiveCoinList.adapter = adapter
+        // getAllTokenList()
+
         viewDataBinding!!.edtSearch.doAfterTextChanged {
             filters(it.toString(), dataList)
+        }
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        if (receiveViewModel.tokenList.value == null) {
+            viewDataBinding?.shimmerLayout?.visibility = View.VISIBLE
+            receiveViewModel.fetchAllTokensList() // Fetch initially if null
         }
 
     }
 
     override fun setupObserver() {
-
+        receiveViewModel.tokenList.observe(viewLifecycleOwner) { tokens ->
+            updateUI(tokens)
+        }
     }
 
+    //    private fun filters(text: String, list: MutableList<Tokens>) {
+//        val filterList = ArrayList<Tokens>()
+//        val exactMatchList = ArrayList<Tokens>()
+//
+//        val searchText = text.lowercase()
+//        if (searchText != "") {
+//            for (i in list) {
+//                val symbol = i.t_symbol.lowercase()
+//                if (symbol.contains(searchText) == true) {
+//                    if (symbol == searchText) {
+//                        exactMatchList.add(i)
+//                    } else {
+//                        filterList.add(i)
+//                    }
+//                }
+//            }
+//            val sortedList = exactMatchList + filterList
+//            adapter?.submitList(sortedList)
+//        } else {
+//
+//            val lastList =
+//                list.filter { it.isEnable == true || it.t_balance.toDouble() > 0.0 }.toMutableList()
+//            val pltToken = lastList.find { it.tokenId == defaultPLTTokenId }
+//            if (pltToken != null) {
+//                lastList.remove(pltToken)
+//                lastList.add(0, pltToken)
+//            }
+//
+//            adapter?.submitList(lastList /*list.filter { it.isEnable == true || it.t_balance.toDouble() > 0.0 }*/)
+//        }
+//    }
     private fun filters(text: String, list: MutableList<Tokens>) {
         val filterList = ArrayList<Tokens>()
         val exactMatchList = ArrayList<Tokens>()
 
         val searchText = text.lowercase()
-        if (searchText != "") {
+        val allowedSymbols = setOf("ETH", "POL", "BNB", "OKT", "OP", "ARB", "AVAX", "BASE")
+
+        if (searchText.isNotEmpty()) {
             for (i in list) {
-                val symbol = i.t_symbol?.lowercase()
-                if (symbol?.contains(searchText) == true) {
+                val symbol = i.t_symbol.lowercase()
+                if (symbol.contains(searchText)) {
                     if (symbol == searchText) {
                         exactMatchList.add(i)
                     } else {
@@ -93,39 +151,76 @@ class Receive : BaseFragment<FragmentReceiveBinding, TokenViewModel>() {
             val sortedList = exactMatchList + filterList
             adapter?.submitList(sortedList)
         } else {
+            // Apply the new filtering condition
+            val lastList = list.filter {
+                (it.isEnable == true || it.t_balance.toDouble() > 0.0) &&
+                        (it.t_address.isEmpty() && allowedSymbols.contains(it.t_symbol.uppercase()))
+            }.toMutableList()
 
-            adapter?.submitList(list.filter { it.isEnable == true || it.t_balance.toDouble() > 0.0 })
+            val pltToken = lastList.find { it.tokenId == defaultPLTTokenId }
+            if (pltToken != null) {
+                lastList.remove(pltToken)
+                lastList.add(0, pltToken)
+            }
+
+            adapter?.submitList(lastList)
         }
     }
 
-    private fun getAllTokenList() {
 
-        val list = receiveViewModel.getAllTokensList()
+    private fun updateUI(tokens: List<Tokens>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val sortedList = tokens.sortedByDescending { it.t_balance.toBigDecimalOrNull() }
+                .distinctBy { it.t_pk }
 
+            val filteredList =
+                sortedList.filter { it.isEnable == true || it.t_balance.toDouble() > 0.0 }
+                    .toMutableList()
 
-        val sortList=list.sortedByDescending { it.t_balance.toBigDecimalOrNull() }.distinctBy { it.t_pk }
-
-        if (sortList.isNotEmpty()) {
-            dataList.clear()
-            if (args.pageType == nftPageType || args.pageType == AddCustomTokenPageType) {
-                if (args.pageType == AddCustomTokenPageType) {
-                    dataList.addAll(sortList.filter { it.t_address == "" })
+            if (tokens.isNotEmpty()) {
+                dataList.clear()
+                if (args.pageType == nftPageType || args.pageType == AddCustomTokenPageType) {
+                    if (args.pageType == AddCustomTokenPageType) {
+                        dataList.addAll(sortedList.filter { it.t_address == "" })
+                        loge("AddCustomTokenPageType", "updateUI: ${dataList}")
+                    } else {
+                        dataList.addAll(sortedList.filter {
+                            it.t_address == "" && it.t_name.lowercase() != getString(
+                                R.string.okt_chain
+                            ).lowercase()
+                        })
+                    }
                 } else {
-                    dataList.addAll(sortList.filter {
-                        it.t_address == "" && it.t_name?.lowercase() != getString(
-                            R.string.okt_chain
-                        ).lowercase()
-                    })
+                    dataList.addAll(sortedList)
                 }
-            } else {
-                dataList.addAll(sortList)
-            }
-            viewDataBinding?.rvReceiveCoinList?.visibility = View.VISIBLE
-            adapter?.submitList(dataList.filter { it.isEnable == true || it.t_balance.toDouble() > 0.0 })
-            viewDataBinding?.rvReceiveCoinList?.adapter = adapter
-            adapter?.notifyDataSetChanged()
 
+                CoroutineScope(Dispatchers.Main).launch {
+                    viewDataBinding?.shimmerLayout?.visibility = View.GONE
+                    viewDataBinding?.rvReceiveCoinList?.visibility = View.VISIBLE
+
+                    val pltToken = filteredList.find { it.tokenId == defaultPLTTokenId }
+                    if (pltToken != null) {
+                        filteredList.remove(pltToken)
+                        filteredList.add(0, pltToken)
+                    }
+                    if (args.pageType == nftPageType || args.pageType == AddCustomTokenPageType) {
+                        adapter?.submitList(dataList)
+                    } else {
+
+                        loge(
+                            "filteredList",
+                            "${filteredList.filter { it.t_symbol.lowercase() == "arb" }}"
+                        )
+
+                        adapter?.submitList(filteredList.distinct())
+                    }
+                    viewDataBinding!!.rvReceiveCoinList.smoothScrollToPosition(0)
+                }
+
+
+            }
         }
+
     }
 
 

@@ -14,8 +14,47 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/bg_white"
         tools:context=".ui.fragment.wallet_connection.walletConnectionDetail.WalletConnectionDetail">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:padding="@dimen/_8mdp"
+                android:src="@drawable/ic_back_new"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/connection_detail"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20msp"
+                app:layout_constraintBottom_toBottomOf="@id/img_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/img_back" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <include
             android:id="@+id/layout_connector"
@@ -26,7 +65,7 @@
             android:layout_marginTop="@dimen/_20mdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/layout_toolbar" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_20mdp"
             android:layout_marginTop="@dimen/_20mdp"
-            android:background="@drawable/bg_corner_radius_10"
+            android:background="@drawable/bg_wallet_connection_list"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="@id/layout_connector"
@@ -47,11 +86,11 @@
                 android:id="@+id/txt_wallet_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/quicksand_bold"
+                android:fontFamily="@font/violet_sans"
                 android:paddingVertical="@dimen/_20mdp"
                 android:layout_marginStart="@dimen/_20mdp"
                 android:text="@string/wallet"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14mdp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -66,8 +105,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="middle"
                 android:gravity="end"
-                android:fontFamily="@font/quicksand_semibold"
-                android:textColor="@color/white"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14mdp"
                 android:maxLines="1"
                 android:paddingHorizontal="@dimen/_20mdp"
@@ -85,10 +124,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_20mdp"
-            android:fontFamily="@font/quicksand_bold"
+            android:fontFamily="@font/violet_sans"
             android:text="@string/network"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/_14mdp"
+            android:textStyle="bold"
             app:layout_constrainedWidth="true"
             app:layout_constraintStart_toStartOf="@id/layout_wallet"
             app:layout_constraintTop_toBottomOf="@id/layout_wallet"
@@ -114,13 +154,13 @@
 
         <Button
             android:id="@+id/btn_remove_connection"
-            style="@style/button_border_blue"
+            style="@style/wallet_button_gradient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/_30mdp"
             android:layout_marginTop="@dimen/_66mdp"
-            android:layout_marginBottom="@dimen/_40mdp"
+            android:layout_marginBottom="@dimen/_30mdp"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/remove_connection"

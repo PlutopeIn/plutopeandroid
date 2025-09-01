@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_5mdp"
-        android:background="@drawable/bg_corner_radius_10">
+        >
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageView"
@@ -37,17 +37,29 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_12mdp"
             android:layout_marginVertical="@dimen/_17mdp"
-            android:fontFamily="@font/quicksand_semibold"
+            android:fontFamily="@font/violet_sans"
+
             android:gravity="center_vertical"
             android:text="@{model.code + ` - `+model.name}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_13msp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16msp"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="All - Albanian Lek" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:layout_marginTop="@dimen/_20mdp"
+            android:background="@color/border_gray"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="@+id/txt_phrases"
+            app:layout_constraintStart_toStartOf="@id/txt_phrases"
+            app:layout_constraintTop_toBottomOf="@+id/txt_phrases" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

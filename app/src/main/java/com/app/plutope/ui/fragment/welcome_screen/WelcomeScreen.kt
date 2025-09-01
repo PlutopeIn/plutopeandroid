@@ -6,14 +6,15 @@ import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import com.airbnb.lottie.LottieAnimationView
 import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentWelcomeScreenBinding
@@ -51,11 +52,13 @@ class WelcomeScreen : BaseFragment<FragmentWelcomeScreenBinding, WelcomeScreenVi
     }
 
     override fun setupUI() {
-        preferenceHelper.isFirstTime=true
+        preferenceHelper.isFirstTime = true
         myViewPagerAdapter = ViewAdapter(requireContext())
         viewDataBinding!!.viewPager.adapter = myViewPagerAdapter
         viewDataBinding!!.viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
         viewDataBinding!!.tabIndicator.attachTo(viewDataBinding!!.viewPager)
+
+
 
     }
 
@@ -91,18 +94,38 @@ class WelcomeScreen : BaseFragment<FragmentWelcomeScreenBinding, WelcomeScreenVi
                 0 -> {
                     // viewDataBinding!!.btnNext2.visibility = View.GONE
                     val imageView = view.findViewById<ImageView>(R.id.image_view)
-                    Glide.with(imageView.context).load(R.drawable.welcome_1).into(imageView)
+                    Glide.with(imageView.context).load(R.drawable.welcome_screen_img_first)
+                        .into(imageView)
+
+                    view.findViewById<TextView>(R.id.title_skip).setOnClickListener {
+                        findNavController().navigate(WelcomeScreenDirections.actionWelcomeScreenToDashboard())
+                    }
+
+                    view.findViewById<ImageView>(R.id.img_button_next_w1).setOnClickListener {
+                        viewDataBinding?.viewPager?.setCurrentItem(1)
+                    }
+
+
                 }
 
                 1 -> {
                     // viewDataBinding!!.btnNext2.visibility = View.GONE
+
+                    view.findViewById<TextView>(R.id.title_skip2).setOnClickListener {
+                        findNavController().navigate(WelcomeScreenDirections.actionWelcomeScreenToDashboard())
+                    }
+
+                    view.findViewById<ImageView>(R.id.img_button_next_w2).setOnClickListener {
+                        viewDataBinding?.viewPager?.setCurrentItem(2)
+                    }
+
                 }
 
                 2 -> {
 
                     // viewDataBinding!!.btnNext2.visibility = View.VISIBLE
 
-                    view.findViewById<LottieAnimationView>(R.id.btn_next_2).setOnClickListener {
+                    view.findViewById<Button>(R.id.btn_next_2).setOnClickListener {
                         findNavController().navigate(WelcomeScreenDirections.actionWelcomeScreenToDashboard())
                     }
                 }

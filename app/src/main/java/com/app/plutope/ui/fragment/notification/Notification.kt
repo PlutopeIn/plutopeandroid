@@ -9,10 +9,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class Notification : BaseFragment<FragmentNotificationBinding, NotificationViewModel>() {
-
-
     private val notificationViewModel: NotificationViewModel by viewModels()
-    var notificationAdapter: NotificationListAdapter? = null
+    private var notificationAdapter: NotificationListAdapter? = null
 
     override fun getViewModel(): NotificationViewModel {
         return notificationViewModel
@@ -33,16 +31,16 @@ class Notification : BaseFragment<FragmentNotificationBinding, NotificationViewM
     override fun setupUI() {
 
         val notificationList = arrayListOf<NotificationModel>()
-      /*  repeat(10) {
-            notificationList.add(
-                NotificationModel(
-                    "",
-                    "Received : 5,000 DST",
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod.",
-                    "9:35 AM"
-                )
-            )
-        }*/
+        /*  repeat(10) {
+              notificationList.add(
+                  NotificationModel(
+                      "",
+                      "Received : 5,000 DST",
+                      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod.",
+                      "9:35 AM"
+                  )
+              )
+          }*/
 
         notificationAdapter = NotificationListAdapter { }
         notificationAdapter?.submitList(notificationList)

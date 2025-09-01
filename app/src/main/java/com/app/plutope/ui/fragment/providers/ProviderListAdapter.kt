@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.app.plutope.databinding.RowProviderListItemBinding
+import com.app.plutope.utils.loge
 import com.bumptech.glide.Glide
 
 
@@ -19,10 +20,11 @@ class ProviderListAdapter(
         fun bind(model: ProviderModel) {
             binding.model = model
 
-            binding.txtCryptoName.text = model.providerName
+            binding.txtCryptoName.text = model.name
             binding.txtUsdPrice.text = if(model.isFromSell) model.currencyCode+model.bestPrice else model.bestPrice +" "+model.symbol
 
-            Glide.with(binding.imgCryptoCoin.context).load(model.icon).into(binding.imgCryptoCoin)
+            loge("ImageUrl"," when set=> ${model.providerIcon}")
+            Glide.with(binding.imgCryptoCoin.context).load(model.providerIcon).into(binding.imgCryptoCoin)
             binding.executePendingBindings()
 
             itemView.setOnClickListener {

@@ -4,12 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent">
-
-
+    
     <androidx.cardview.widget.CardView
         android:layout_width="@dimen/_80mdp"
         android:layout_height="@dimen/_80mdp"
-        app:cardBackgroundColor="#000000"
+        app:cardBackgroundColor="@color/text_gray"
         app:cardCornerRadius="@dimen/_10mdp"
         app:cardElevation="0dp"
         app:cardUseCompatPadding="false"
@@ -24,7 +23,7 @@
             android:layout_height="@dimen/_50mdp"
             android:layout_gravity="center"
             android:visibility="visible"
-            android:background="#000000"
+            android:background="@color/text_gray"
             app:lottie_speed="2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

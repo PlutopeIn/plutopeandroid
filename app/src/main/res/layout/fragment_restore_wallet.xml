@@ -19,7 +19,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/bg_white"
             tools:context=".ui.fragment.wallet.restore_wallet.RestoreWallet">
 
 
@@ -30,24 +30,22 @@
                 android:layout_marginTop="-280dp"
                 android:layout_marginEnd="-50dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_circle_bg"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toTopOf="@id/guid1"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/img_back"
-                android:layout_width="@dimen/_30mdp"
-                android:layout_height="@dimen/_30mdp"
-                android:layout_marginStart="@dimen/_17mdp"
-                android:layout_marginTop="@dimen/_20mdp"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
                 android:padding="@dimen/_8mdp"
-                android:src="@drawable/ic_back_arrow"
+                android:src="@drawable/ic_back_new"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-
-
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <androidx.constraintlayout.widget.Guideline
@@ -64,22 +62,24 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent=".1" />
 
-            <androidx.constraintlayout.widget.Guideline
+            <!--<androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guid2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".28" />
+                app:layout_constraintGuide_percent=".28" />-->
 
 
             <TextView
                 android:id="@+id/txt_restore_your_wallet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/quicksand_bold"
-                android:gravity="center"
-                android:text="@string/restore_your_wallet"
-                android:textColor="@color/white"
+                android:layout_marginHorizontal="@dimen/_25mdp"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:fontFamily="@font/violet_sans"
+                android:includeFontPadding="true"
+                android:text="@string/restore_wallet"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_27msp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -87,24 +87,24 @@
 
                 />
             <!--android:text="@string/restore_your_wallet_with_the_12_word_secret_phrase_or_with_icloud"-->
-            <TextView
-                android:id="@+id/txt_wallet_setup_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_36mdp"
-                android:layout_marginTop="@dimen/_19mdp"
-                android:fontFamily="@font/quicksand_regular"
-                android:gravity="center"
-                android:lineSpacingExtra="@dimen/_10mdp"
-                android:text="@string/restore_your_wallet_with_the_12_word_secret_phrase"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_13msp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_restore_your_wallet"
+            <!-- <TextView
+                 android:id="@+id/txt_wallet_setup_info"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginHorizontal="@dimen/_36mdp"
+                 android:layout_marginTop="@dimen/_19mdp"
+                 android:fontFamily="@font/violet_sans"
+                 android:gravity="center"
+                 android:lineSpacingExtra="@dimen/_10mdp"
+                 android:text="@string/restore_your_wallet_with_the_12_word_secret_phrase"
+                 android:textAlignment="center"
+                 android:textColor="@color/black"
+                 android:textSize="@dimen/_13msp"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toBottomOf="@id/txt_restore_your_wallet"
 
-                />
+                 />-->
 
             <!--
                         <ImageView
@@ -117,7 +117,7 @@
                             app:layout_constraintTop_toBottomOf="@id/guid2" />
             -->
 
-            <com.airbnb.lottie.LottieAnimationView
+            <!--<com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/img_pay_now"
                 android:layout_width="@dimen/_300mdp"
                 android:layout_height="@dimen/_250mdp"
@@ -130,7 +130,18 @@
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/restore_wallet"
-                app:lottie_speed="2" />
+                app:lottie_speed="2" />-->
+            <ImageView
+                android:id="@+id/img_wallet"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_350mdp"
+                android:layout_marginTop="@dimen/_33mdp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_one_wallet2"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_restore_your_wallet" />
 
 
             <Button
@@ -148,28 +159,28 @@
                 app:layout_constraintBottom_toTopOf="@id/btn_restore_with_secret_phrase"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/img_pay_now"
-                app:layout_constraintVertical_bias="1"
-
+                app:layout_constraintTop_toBottomOf="@id/img_wallet"
                 app:layout_constraintVertical_chainStyle="packed" />
 
             <!-- style="@style/wallet_button_gradient"-->
 
             <Button
                 android:id="@+id/btn_restore_with_secret_phrase"
-                style="@style/wallet_button_gradient"
+                style="@style/button_border_import_custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/_50mdp"
-                android:layout_marginBottom="@dimen/_80mdp"
+                android:layout_marginHorizontal="@dimen/_25mdp"
+                android:layout_marginBottom="@dimen/_20mdp"
                 android:text="@string/restore_with_secret_phrase"
                 android:textAllCaps="false"
+                android:textColor="@color/black"
+                app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_restore_with_google_drive"
-                app:layout_constraintVertical_bias="1" />
+                app:layout_constraintTop_toBottomOf="@id/img_wallet"
+                app:layout_constraintVertical_bias="0.9" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

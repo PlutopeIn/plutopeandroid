@@ -477,8 +477,8 @@
     <dimen name="_124msp">@dimen/_99ssp</dimen>
     <dimen name="_125msp">@dimen/_100ssp</dimen>
 
-    <dimen name="input_button_width">@dimen/_80mdp</dimen>
-    <dimen name="input_button_height">@dimen/_80mdp</dimen>
+    <dimen name="input_button_width">@dimen/_130mdp</dimen>
+    <dimen name="input_button_height">@dimen/_77mdp</dimen>
     <dimen name="input_button_text_size">@dimen/_40msp</dimen>
 
     <dimen name="key_text_size">@dimen/_14mdp</dimen>

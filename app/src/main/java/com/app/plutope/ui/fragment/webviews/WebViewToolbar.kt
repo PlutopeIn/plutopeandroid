@@ -8,6 +8,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.app.plutope.BR
 import com.app.plutope.R
@@ -36,6 +37,13 @@ class WebViewToolbar : BaseFragment<FragmentWebViewToolbarBinding, WebViewViewMo
 
     override fun setupUI() {
         // requireContext().showLoader()
+
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        viewDataBinding!!.txtToolbarTitle.text = args.title
+
         val webSettings: WebSettings = viewDataBinding!!.webView.settings
          webSettings.javaScriptEnabled = true
         webSettings.loadsImagesAutomatically = true
@@ -69,7 +77,7 @@ class WebViewToolbar : BaseFragment<FragmentWebViewToolbarBinding, WebViewViewMo
 
         viewDataBinding!!.webView.webViewClient = object : WebViewClient() {
 
-            override fun onPageFinished(view: android.webkit.WebView?, url: String?) {
+            override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 //  hideLoader()
             }

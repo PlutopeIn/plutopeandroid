@@ -112,41 +112,16 @@ sealed class BuyCrypto {
 
         fun buildURL(forDomain: Domain): String {
             return when (forDomain) {
-                is Domain.MELD -> {
-                    "https://www.fluidmoney.xyz?publicKey=${forDomain.pubKey}&countryCodeLocked=${forDomain.countryCode}&sourceAmountLocked=${forDomain.sourceAmount}&sourceCurrencyCodeLocked=${forDomain.sourceCurrencyCode}&destinationCurrencyCodeLocked=${forDomain.getFormatedCurrency}&walletAddressLocked=${forDomain.walletAddress}"
-                }
-
+                is Domain.MELD -> { "https://www.fluidmoney.xyz?publicKey=${forDomain.pubKey}&countryCodeLocked=${forDomain.countryCode}&sourceAmountLocked=${forDomain.sourceAmount}&sourceCurrencyCodeLocked=${forDomain.sourceCurrencyCode}&destinationCurrencyCodeLocked=${forDomain.getFormatedCurrency}&walletAddressLocked=${forDomain.walletAddress}" }
                 is Domain.OnRamp -> "https://onramp.money/main/${forDomain.isBuyOrSellType?.lowercase()}/?appId=337391&coinCode=${forDomain.coinCode}&walletAddress=${forDomain.walletAddress}&fiatAmount=${forDomain.fiatAmount}&fiatType=${forDomain.fiatType}&network=${forDomain.network}"
                 is Domain.ChangeNow -> "https://changenow.io/exchange?from=${forDomain.from}&to=${forDomain.to}&fiatMode=${forDomain.fiatMode}&amount=${forDomain.amount}&recipientAddress=${forDomain.recipientAddress}"
                 is Domain.OnMeta -> {
-
                     val isOnRamp: String =
                         if (forDomain.isBuyOrSellType?.lowercase() == typeBuy.lowercase()) "enabled" else "disabled"
                     val isOffRamp: String =
                         if (forDomain.isBuyOrSellType?.lowercase() == typeSell.lowercase()) "enabled" else "disabled"
-//tokenAddress: '${forDomain.tokenAddress}',
 
                     "https://plutope.app/api/on-meta?walletAddress=${forDomain.walletAddress}&tokenSymbol=${forDomain.tokenSymbol}&tokenAddress=${forDomain.tokenAddress.orEmpty()}&chainId=${forDomain.chainId}&fiatAmount=${forDomain.fiatAmount}&offRamp=$isOffRamp&onRamp=$isOnRamp"
-
-                    /*
-                                        """
-                                            let createWidget = new onMetaWidget({
-                                                elementId: 'widget',
-                                                apiKey: '${forDomain.apiKey}',
-                                                walletAddress: '${forDomain.walletAddress}',
-                                                fiatAmount: '${forDomain.fiatAmount}',
-                                                chainId: '${forDomain.chainId}',
-
-                                                offRamp: '$isOffRamp',
-                                                onRamp: '$isOnRamp',
-                                                tokenSymbol: '${forDomain.tokenSymbol}'
-                                            });
-
-                                            createWidget.init();
-                                            createWidget.on(eventType, callbackFn);
-                                        """.trimIndent()
-                    */
-
 
                 }
 
@@ -173,5 +148,5 @@ sealed class BuyCrypto {
 }
 
 enum class CoinCode {
-    MELD, CHANGENOW, ONMETA, ONRAMP, ALCHEMYPAY, UNLIMIT, OKX, RANGO, RAMPABLE,
+    MELD, CHANGENOW, ONMETA, ONRAMP, ALCHEMYPAY, UNLIMIT, OKX, RANGO, RAMPABLE,EXODUS
 }

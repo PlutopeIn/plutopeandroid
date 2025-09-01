@@ -50,7 +50,7 @@ class DialogSwapProviderList private constructor() {
             WindowManager.LayoutParams.WRAP_CONTENT
         )
 
-        dialogPushNotification?.window?.setBackgroundDrawableResource(com.app.plutope.R.color.transparent)
+        dialogPushNotification?.window?.setBackgroundDrawableResource(R.color.transparent)
         dialogPushNotification?.window!!.attributes = layoutParams
         dialogPushNotification?.setCancelable(false)
 
@@ -81,8 +81,12 @@ class DialogSwapProviderList private constructor() {
         }
 
 
+/*
         adapter.submitList(list.filter { providerModel -> providerModel.bestPrice.toDouble() > 0.0 }
             .distinctBy { it.providerName }.sortedByDescending { it.bestPrice.toDouble() })
+*/
+
+        adapter.submitList(list)
 
         binding.imgClose.setOnClickListener {
             dialogPushNotification?.dismiss()

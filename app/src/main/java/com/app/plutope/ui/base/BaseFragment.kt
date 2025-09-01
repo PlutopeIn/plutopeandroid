@@ -11,19 +11,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.compose.runtime.Composable
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.app.plutope.utils.constant.getNotificationType
 import com.app.plutope.utils.constant.key_notification_type
 import com.app.plutope.utils.constant.networkErrorMessage
 import com.app.plutope.utils.extras.PreferenceHelper
+import com.app.plutope.utils.hideLoader
+import com.app.plutope.utils.network.NetworkState
+import com.app.plutope.utils.showLoaderAnyHow
+import com.app.plutope.utils.showToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
 import com.google.api.services.drive.DriveScopes
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -32,13 +42,15 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
     internal var viewDataBinding: T? = null
     private var rootView: View? = null
     var mViewModel: V? = null
-    private var googleSignInClient: GoogleSignInClient?=null
+    private var googleSignInClient: GoogleSignInClient? = null
+
     @Inject
     lateinit var preferenceHelper: PreferenceHelper
 
-    companion object{
+    companion object {
         const val REQUEST_CODE_SIGN_IN = 1
     }
+
     /**
      *  Override below method for set view model instance
      * */
@@ -77,7 +89,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
      */
     open fun refreshNetwork() {}
 
-    open fun  handleSignInResultGet(data: Intent){}
+    open fun handleSignInResultGet(data: Intent) {}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,29 +105,14 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
         super.onViewCreated(
             view,
             savedInstanceState
-        ) //(requireActivity() as BaseActivity).hideNavigationIcon()
+        )
         setGoogleSignInIntialization()
-        setupUI()/* val networkConnection = NetworkConnection(requireContext())
-        networkConnection.observe(viewLifecycleOwner) { isConnected ->
-            if (isConnected) {
-                networkDialogDismiss()
-               *//* viewDataBinding!!.rootView.topSnackbar()
-                dashboardViewModel.executeScheduleList("", "", "")*//*
-
-                setupUI()
-            } else {
-                // Toast.makeText(context, "No internet Connection!", Toast.LENGTH_SHORT).show()
-
-                requireContext().showNetworkError()
-            }
-        }
-*/
-
+        setupUI()
         setupToolbarText()
         setupObserver()
         mViewModel = getViewModel()
         viewDataBinding?.setVariable(getBindingVariable(), mViewModel)
-        viewDataBinding?.lifecycleOwner = this
+        viewDataBinding?.lifecycleOwner = viewLifecycleOwner
         viewDataBinding?.executePendingBindings()
 
         (requireActivity() as BaseActivity).showToolBarTitle(setupToolbarText())
@@ -163,8 +160,9 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
         googleSignInClient = GoogleSignIn.getClient(requireContext(), signInOptions)
 
     }
+
     protected fun signIn() {
-        if(googleSignInClient!=null){
+        if (googleSignInClient != null) {
             setGoogleSignInIntialization().apply {
                 googleSignInClient?.signInIntent?.let {
                     startActivityForResult(
@@ -176,6 +174,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_SIGN_IN) {
@@ -190,5 +189,83 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
     open fun backPressed() {
 
     }
+
+
+    fun <T> apiObserveState(
+        flow: Flow<NetworkState<T>>,
+        onSuccess: (T?) -> Unit,
+        onLoading: () -> Unit = { showLoader() },
+        onError: (String?) -> Unit = { showToast(it ?: "An error occurred") },
+        onSessionOut: (String?) -> Unit = { handleSessionOut() }
+    ) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                flow.collect { state ->
+                    when (state) {
+                        is NetworkState.Success -> onSuccess(state.data)
+                        is NetworkState.Loading -> onLoading()
+                        is NetworkState.Error -> onError(state.message.toString())
+                        is NetworkState.SessionOut -> {
+                            onSessionOut(state.message.toString())
+
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun <T> ApiObserveComposeState(
+        flow: NetworkState<T>,
+        onLoading: @Composable () -> Unit,
+        onError: @Composable (String) -> Unit,
+        onSuccess: @Composable (T?) -> Unit
+    ) {
+        when (flow) {
+            is NetworkState.Error -> {
+                hideLoader()
+                onError(
+                    flow.message.toString()
+                )
+
+            }
+
+            is NetworkState.Loading -> onLoading()
+            is NetworkState.SessionOut -> {
+                handleSessionOut()
+                hideLoader()
+            }
+
+            is NetworkState.Success -> {
+                hideLoader()
+                onSuccess(flow.data)
+            }
+
+            else -> {
+
+            }
+        }
+    }
+
+    // Provide common behavior for loaders, toasts, etc.
+    open fun showLoader() {
+        requireContext().showLoaderAnyHow()
+    }
+
+
+    open fun showToast(message: String?) {
+        requireContext().showToast(message!!)
+    }
+
+    open fun handleSessionOut() {
+        hideLoader()
+        showToast("Un Auth")
+        (activity as BaseActivity).logoutCardBetaUser("")
+
+    }
+
 
 }

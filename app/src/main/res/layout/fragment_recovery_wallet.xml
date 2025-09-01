@@ -18,8 +18,34 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/bg_white"
             tools:context=".ui.fragment.recovery_wallet.RecoveryWalletFragment">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
+                android:padding="@dimen/_8mdp"
+                android:src="@drawable/ic_back_new"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/wallet"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20msp"
+                app:layout_constraintBottom_toBottomOf="@id/img_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/img_back" />
 
             <TextView
                 android:id="@+id/txt_name"
@@ -27,13 +53,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16mdp"
                 android:layout_marginTop="@dimen/_40mdp"
-                android:fontFamily="@font/montserrat_medium"
+                android:fontFamily="@font/violet_sans"
                 android:text="@string/name"
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_10msp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15msp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/txt_toolbar_title" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edt_wallet_name"
@@ -48,10 +74,12 @@
                 android:minHeight="@dimen/_45mdp"
                 android:paddingVertical="@dimen/_5mdp"
                 android:paddingStart="@dimen/_20mdp"
-                android:paddingEnd="@dimen/_20mdp"
-                android:textColorHint="@color/gray_767691"
+                android:paddingEnd="@dimen/_40mdp"
+                android:textColorHint="@color/dark_gray"
                 android:textCursorDrawable="@null"
-                android:textSize="@dimen/_12msp"
+                android:fontFamily="@font/violet_sans"
+                android:textSize="@dimen/_15msp"
+                android:textColor="@color/black"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -77,10 +105,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16mdp"
                 android:layout_marginTop="@dimen/_40mdp"
-                android:fontFamily="@font/montserrat_medium"
+                android:fontFamily="@font/violet_sans"
                 android:text="@string/backup_options"
-                android:textColor="@color/purple_7576D"
-                android:textSize="@dimen/_10msp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15msp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edt_wallet_name" />
@@ -92,15 +120,15 @@
                 android:layout_marginHorizontal="@dimen/_16mdp"
                 android:layout_marginTop="@dimen/_10mdp"
                 android:visibility="gone"
-                app:cardBackgroundColor="@color/purple_25264D"
-                app:cardCornerRadius="@dimen/_10mdp"
+                app:cardCornerRadius="@dimen/_23mdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_backup_option">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    style="@style/edittext_fill_bg_style">
 
                     <ImageView
                         android:id="@+id/img_drive"
@@ -121,9 +149,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="@dimen/_19mdp"
                         android:layout_marginStart="@dimen/_7mdp"
-                        android:fontFamily="@font/quicksand_medium"
+                        android:fontFamily="@font/violet_sans"
                         android:text="@string/drive_backup"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/_13msp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/img_drive"
@@ -134,8 +162,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/_10mdp"
-                        android:fontFamily="@font/quicksand_medium"
-                        android:textColor="@color/gray_767691"
+                        android:fontFamily="@font/violet_sans"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/_13msp"
                         app:layout_constraintBottom_toBottomOf="@id/txt_drive"
                         app:layout_constraintEnd_toStartOf="@id/img_drive_backup_arrow"
@@ -158,88 +186,83 @@
 
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/card_manual_backup"
+                style="@style/edittext_fill_bg_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16mdp"
                 android:layout_marginTop="@dimen/_10mdp"
-                app:cardBackgroundColor="@color/purple_25264D"
-                app:cardCornerRadius="@dimen/_10mdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_drive_backup">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_manual"
+                    android:layout_width="@dimen/_25mdp"
+                    android:layout_height="@dimen/_25mdp"
+                    android:layout_marginStart="@dimen/_15mdp"
+                    android:background="@drawable/ic_backup"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/black"
+                    android:backgroundTint="@color/black"
+                    />
 
-                    <ImageView
-                        android:id="@+id/img_manual"
-                        android:layout_width="@dimen/_20mdp"
-                        android:layout_height="@dimen/_20mdp"
-                        android:layout_marginStart="@dimen/_15mdp"
-                        android:background="@drawable/ic_user_guide"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                <TextView
+                    android:id="@+id/txt_manual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/_19mdp"
+                    android:layout_marginStart="@dimen/_7mdp"
+                    android:fontFamily="@font/violet_sans"
+                    android:text="@string/manual_backup"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15msp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/img_manual"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/txt_manual_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_10mdp"
+                    android:fontFamily="@font/violet_sans"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15msp"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_manual"
+                    app:layout_constraintEnd_toStartOf="@id/img_manual_arrow"
+                    app:layout_constraintTop_toTopOf="@id/txt_manual"
+                    tools:text="Not Active" />
 
-                        />
+                <ImageView
+                    android:id="@+id/img_manual_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_17mdp"
+                    android:src="@drawable/ic_forword_new"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
 
-                    <TextView
-                        android:id="@+id/txt_manual"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="@dimen/_19mdp"
-                        android:layout_marginStart="@dimen/_7mdp"
-                        android:fontFamily="@font/quicksand_medium"
-                        android:text="@string/manual_backup"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_13msp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/img_manual"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    />
 
-                    <TextView
-                        android:id="@+id/txt_manual_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_10mdp"
-                        android:fontFamily="@font/quicksand_medium"
-                        android:textColor="@color/gray_767691"
-                        android:textSize="@dimen/_13msp"
-                        app:layout_constraintBottom_toBottomOf="@id/txt_manual"
-                        app:layout_constraintEnd_toStartOf="@id/img_manual_arrow"
-                        app:layout_constraintTop_toTopOf="@id/txt_manual"
-                        tools:text="Not Active" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <ImageView
-                        android:id="@+id/img_manual_arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_17mdp"
-                        android:src="@drawable/ic_forword_new"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-
-                        />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/txt_backup_des"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_19mdp"
-                android:fontFamily="@font/quicksand_regular"
+                android:fontFamily="@font/violet_sans"
                 android:gravity="start"
                 android:maxLines="2"
                 android:text="@string/if_you_loos_access_to_this_device_your_fund_will_be_lost_unless_you_back_up"
-                android:textColor="@color/purple_7576D"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_10msp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="@id/card_drive_backup"
@@ -272,6 +295,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:fontFamily="@font/violet_sans"
                 android:layout_marginHorizontal="@dimen/_30mdp"
                 android:layout_marginTop="@dimen/_10mdp"
                 android:layout_marginBottom="@dimen/_20mdp"

@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/bg_white"
         tools:context=".ui.fragment.welcome_screen.WelcomeScreen">
 
         <androidx.viewpager.widget.ViewPager
@@ -21,8 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constrainedHeight="true"
-            android:layout_marginBottom="@dimen/_30mdp"
-            app:layout_constraintBottom_toTopOf="@id/tabIndicator"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,17 +30,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_30mdp"
-            app:dotsColor="@color/blue_00C6FB"
+            android:visibility="invisible"
+            app:dotsColor="@color/black"
             app:dotsSize="@dimen/_7mdp"
             app:dotsSpacing="@dimen/_5mdp"
-            app:dotsStrokeColor="#121C3D"
+            app:dotsStrokeColor="@color/black"
             app:dotsStrokeWidth="@dimen/_1mdp"
-            app:layout_constraintTop_toBottomOf="@id/view_pager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/view_pager"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_pager"
             app:progressMode="true"
-            app:selectedDotColor="@color/blue_00C6FB" />
+            app:selectedDotColor="@color/black" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/btn_next_2"

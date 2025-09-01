@@ -14,72 +14,131 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/bg_white"
         tools:context=".ui.fragment.wallet_connection.walletConnectionList.WalletConnect">
 
-        <!--  <androidx.constraintlayout.widget.ConstraintLayout
-              android:id="@+id/const_root_compose"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:visibility="gone"
-              android:layout_marginHorizontal="@dimen/_5mdp"
-              android:layout_marginVertical="@dimen/_50mdp"
-              >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
+                android:padding="@dimen/_8mdp"
+                android:src="@drawable/ic_back_new"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/wallet_connect"
+                android:textColor="@color/black"
+
+                android:textSize="@dimen/_20msp"
+                app:layout_constraintBottom_toBottomOf="@id/img_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/img_back" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_no_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/img_robot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_user_robot"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-          </androidx.constraintlayout.widget.ConstraintLayout>
-  -->
-        <!--
-                <androidx.compose.ui.platform.ComposeView
-                    android:id="@+id/compose_layout"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    tools:composableName="session_proposal">
+            <TextView
+                android:id="@+id/txt_no_nfts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/not_available"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
+                app:layout_constraintEnd_toEndOf="@id/img_robot"
+                app:layout_constraintStart_toStartOf="@id/img_robot"
+                app:layout_constraintTop_toBottomOf="@id/img_robot" />
 
-                </androidx.compose.ui.platform.ComposeView>
-        -->
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_connection_list"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/_5mdp"
             android:layout_marginBottom="@dimen/_20mdp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toTopOf="@id/btn_add_connection"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/row_wallet_connection_list_item"
+            app:layout_constraintTop_toBottomOf="@id/layout_toolbar">
 
-            />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_connection_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/_5mdp"
+                android:layout_marginBottom="@dimen/_20mdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toTopOf="@id/btn_add_connection"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_toolbar"
+                tools:listitem="@layout/row_wallet_connection_list_item" />
 
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <Button
-            android:layout_marginBottom="@dimen/_40mdp"
             android:id="@+id/btn_add_connection"
-            style="@style/button_border_blue"
+            style="@style/wallet_button_gradient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/_30mdp"
             android:layout_marginTop="@dimen/_66mdp"
-            android:visibility="visible"
+            android:layout_marginBottom="@dimen/_15mdp"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/add_new_connection"
             android:textAllCaps="false"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
 
 
             />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

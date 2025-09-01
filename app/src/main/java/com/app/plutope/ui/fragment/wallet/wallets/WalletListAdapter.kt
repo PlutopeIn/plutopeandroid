@@ -11,7 +11,7 @@ import com.app.plutope.utils.extras.setSafeOnClickListener
 
 class WalletListAdapter(
     var providerClick: ((com.app.plutope.model.Wallets)) -> Unit,
-    var menuClick: ((com.app.plutope.model.Wallets)) -> Unit
+    var menuClick: ((com.app.plutope.model.Wallets)) -> Unit,
 ) :
     ListAdapter<com.app.plutope.model.Wallets, WalletListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -32,6 +32,9 @@ class WalletListAdapter(
             binding.imgMenu.setSafeOnClickListener {
                 menuClick.invoke(model)
             }
+          /*  binding.imgShare.setSafeOnClickListener {
+                shareClick.invoke(model)
+            }*/
         }
 
     }

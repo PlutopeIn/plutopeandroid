@@ -5,23 +5,25 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.app.plutope.R
 import com.app.plutope.databinding.RowNftListItemBinding
-import com.app.plutope.model.NFTModel
+import com.app.plutope.model.NFTListModel
 import com.bumptech.glide.Glide
 
 
 class NftsListAdapter(
-    var providerClick: ((NFTModel)) -> Unit
+    var providerClick: ((NFTListModel)) -> Unit
 ) :
-    ListAdapter<NFTModel, NftsListAdapter.ViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<NFTListModel, NftsListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     inner class ViewHolder(var binding: RowNftListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(model: NFTModel) {
+        fun bind(model: NFTListModel) {
 
             binding.model = model
 
-            Glide.with(binding.imgNft.context).load(model.parsedMetadata?.image)
+            Glide.with(binding.imgNft.context).load(model.metadata?.image)
+                .placeholder(R.drawable.img_no_image)
                 .into(binding.imgNft)
             binding.executePendingBindings()
 
@@ -35,14 +37,14 @@ class NftsListAdapter(
 
     companion object {
         private val DIFF_CALLBACK = object :
-            DiffUtil.ItemCallback<NFTModel>() {
+            DiffUtil.ItemCallback<NFTListModel>() {
             override fun areItemsTheSame(
-                oldModel: NFTModel, newModel: NFTModel
+                oldModel: NFTListModel, newModel: NFTListModel
             ) = oldModel == newModel
 
             override fun areContentsTheSame(
-                oldModel: NFTModel,
-                newModel: NFTModel
+                oldModel: NFTListModel,
+                newModel: NFTListModel
             ) = oldModel == newModel
         }
     }
@@ -65,7 +67,7 @@ class NftsListAdapter(
 
         if (position == currentList.lastIndex || position == (currentList.lastIndex - 1)) {
             val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-            params.bottomMargin = 50
+            params.bottomMargin = 100
             holder.itemView.layoutParams = params
         } else {
             val params = holder.itemView.layoutParams as RecyclerView.LayoutParams

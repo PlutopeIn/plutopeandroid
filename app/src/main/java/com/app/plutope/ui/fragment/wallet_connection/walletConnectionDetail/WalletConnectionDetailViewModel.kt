@@ -6,6 +6,4 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class WalletConnectionDetailViewModel @Inject constructor() : BaseViewModel<CommonNavigator>() {
-
-}
+class WalletConnectionDetailViewModel @Inject constructor() : BaseViewModel<CommonNavigator>()

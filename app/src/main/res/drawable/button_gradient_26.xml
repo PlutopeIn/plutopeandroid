@@ -17,9 +17,9 @@
         android:angle="0"
         android:centerX="0.1"
         android:centerY="0.9"
-        android:endColor="#00C6FB"
+        android:endColor="@color/black"
 
-        android:startColor="#0b5f87"
+        android:startColor="@color/black"
         android:type="linear" />
     <rotate
         android:fromDegrees="270"

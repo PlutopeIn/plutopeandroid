@@ -68,17 +68,13 @@ class LoadingDialog  {
     }
 
     fun dismiss() {
-        if (loadingDialog != null && loadingDialog!!.isShowing) {
+
+        loge("Loader", "==>$loadingDialog")
+        if (loadingDialog != null /*&& loadingDialog!!.isShowing*/) {
+            loge("Loader", "IN==>$loadingDialog")
             loadingDialog?.dismiss()
-/*
-            Timer().schedule(object : TimerTask() {
-                override fun run() {
+            loadingDialog?.cancel()
 
-                }
-            }, 1500)
-*/
-
-            // loadingDialog?.dismiss()
         }
     }
 

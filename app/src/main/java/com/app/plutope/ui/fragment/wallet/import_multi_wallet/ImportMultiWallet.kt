@@ -16,13 +16,14 @@ import com.app.plutope.model.Wallet
 import com.app.plutope.model.Wallets
 import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
-import com.app.plutope.ui.fragment.phrase.verify_phrase.VerifySecretPhraseViewModel
+import com.app.plutope.ui.fragment.phrase.recovery_phrase.VerifySecretPhraseViewModel
 import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.utils.Securities
 import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.constant.BASE_URL_PLUTO_PE
 import com.app.plutope.utils.constant.WHAT_IS_SECRET_PHRASE_URL
 import com.app.plutope.utils.constant.appUpdateVersion
+import com.app.plutope.utils.constant.phrasesCanNotBeEmpty
 import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.extras.setSafeOnClickListener
 import com.app.plutope.utils.hideLoader
@@ -45,11 +46,11 @@ import kotlinx.coroutines.launch
 class ImportMultiWallet :
     BaseFragment<FragmentImportMultiWalletBinding, ImportMultiWalletViewModel>() {
 
+    private var walletReferCode: String? = null
     private var words: String = ""
     private val importMultiWalletViewModel: ImportMultiWalletViewModel by viewModels()
     private val verifySecretPhraseViewModel: VerifySecretPhraseViewModel by viewModels()
     private val tokenViewModel: TokenViewModel by viewModels()
-
     private var walletList = mutableListOf<Wallets>()
     override fun getViewModel(): ImportMultiWalletViewModel {
         return importMultiWalletViewModel
@@ -114,6 +115,10 @@ class ImportMultiWallet :
                     viewDataBinding?.edtPhrases?.text?.isEmpty() == true -> viewDataBinding?.edtPhrases?.error =
                         "Phrases can't be empty"
 
+                    viewDataBinding?.edtPhrases?.text?.isEmpty() == true -> requireContext().showToast(
+                        phrasesCanNotBeEmpty
+                    )
+
                     else -> {
 
                         val mainWords = viewDataBinding?.edtPhrases?.text.toString()
@@ -132,7 +137,7 @@ class ImportMultiWallet :
                                 verifySecretPhraseViewModel.executeInsertWallet(
                                     words.trim(),
                                     viewDataBinding?.edtWalletName?.text?.toString()!!,
-                                    isManualBackup = true
+                                    isManualBackup = true,
                                 )
                             } else {
                                 requireContext().showToast("This wallet has already been imported.")
@@ -145,8 +150,11 @@ class ImportMultiWallet :
             }
 
             txtSecretPhraseInstruction.setSafeOnClickListener {
-                findNavController().safeNavigate(ImportMultiWalletDirections.actionImportMultiWalletToWebViewToolbar(
-                    WHAT_IS_SECRET_PHRASE_URL,"What is Secret Phrase?"))
+                findNavController().safeNavigate(
+                    ImportMultiWalletDirections.actionImportMultiWalletToWebViewToolbar(
+                        WHAT_IS_SECRET_PHRASE_URL, "What is Secret Phrase?"
+                    )
+                )
             }
         }
 
@@ -254,21 +262,25 @@ class ImportMultiWallet :
 
                             tokenViewModel.registerWalletCall(
                                 walletAddress!!,
-                                preferenceHelper.firebaseToken!!
+                                preferenceHelper.firebaseToken, type = "import",
+                                "",
                             )
 
-                            if (preferenceHelper.referralCode != "") {
+                            /*if (preferenceHelper.referralCode != "") {
                                 tokenViewModel.registerWalletCallMaster(
                                     preferenceHelper.deviceId,
                                     walletAddress,
-                                    preferenceHelper.referralCode
+                                    preferenceHelper.referralCode,
                                 )
-                            }
+                            }*/
 
                             preferenceHelper.appUpdatedFlag = appUpdateVersion
                             hideLoader()
                             if (!preferenceHelper.isFirstTime)
-                                findNavController().safeNavigate(ImportMultiWalletDirections.actionImportMultiWalletToWelcome())
+
+                                tokenViewModel.executeGetGenerateToken()
+
+                            // findNavController().safeNavigate(ImportMultiWalletDirections.actionImportMultiWalletToWelcome())
                             else
                                 findNavController().safeNavigate(ImportMultiWalletDirections.actionImportMultiWalletToDashboard())
 
@@ -328,6 +340,7 @@ class ImportMultiWallet :
                     when (it) {
                         is NetworkState.Success -> {
                             // hideLoader()
+                            walletReferCode = ""
                         }
 
                         is NetworkState.Loading -> {
@@ -348,31 +361,6 @@ class ImportMultiWallet :
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                tokenViewModel.getRegisterWalletMaster.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-                            // hideLoader()
-                        }
-
-                        is NetworkState.Loading -> {
-                            //requireContext().showLoader()
-                        }
-
-                        is NetworkState.Error -> {
-                            //  hideLoader()
-                        }
-
-                        is NetworkState.SessionOut -> {}
-
-                        else -> {
-                            //  hideLoader()
-                        }
-                    }
-                }
-            }
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -422,7 +410,7 @@ class ImportMultiWallet :
 
                                 tokenViewModel.getAllDisableTokens().forEach { allToken ->
                                     it.data.forEach {
-                                        if (/*allToken.t_symbol?.lowercase() == it.symbol?.lowercase() &&*/ it.tokenAddress?.lowercase() == allToken.t_address?.lowercase()) {
+                                        if (allToken.t_symbol.lowercase() == it.symbol?.lowercase() && it.tokenAddress?.lowercase() == allToken.t_address.lowercase()) {
                                             if (it.tokenAddress != "0x0000000000000000000000000000000000001010") {
                                                 tempList.add(allToken)
                                             }
@@ -462,6 +450,39 @@ class ImportMultiWallet :
 
                         is NetworkState.SessionOut -> {}
 
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                tokenViewModel.getGenerateTokenResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            loge(
+                                "getGenerateTokenResponse",
+                                "${it.data?.data?.isUpdate} :: ${it.data?.data?.tokenString}"
+                            )
+                            if (it.data?.data?.isUpdate == true) {
+                                if (it.data.data.tokenString?.lowercase() != preferenceHelper.updateTokenText.lowercase()) {
+                                    preferenceHelper.updateTokenText = it.data.data.tokenString!!
+                                }
+                            }
+
+                            findNavController().safeNavigate(ImportMultiWalletDirections.actionImportMultiWalletToWelcome())
+
+                        }
+
+                        is NetworkState.Loading -> {}
+                        is NetworkState.Error -> {
+                            findNavController().safeNavigate(ImportMultiWalletDirections.actionImportMultiWalletToWelcome())
+                        }
+
+                        is NetworkState.SessionOut -> {}
                         else -> {
 
                         }

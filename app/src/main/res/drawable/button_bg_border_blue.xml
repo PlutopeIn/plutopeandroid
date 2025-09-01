@@ -3,8 +3,20 @@
     android:shape="rectangle">
     <corners android:radius="@dimen/_26mdp" />
 
-    <stroke
+    <!--<stroke
         android:width="@dimen/_1mdp"
-        android:color="@color/blue_00C6FB" />
+        android:color="@color/black" />-->
+    <gradient
+        android:angle="0"
+        android:centerX="0.1"
+        android:centerY="0.9"
+        android:endColor="@color/black"
+
+        android:startColor="@color/black"
+        android:type="linear" />
+    <rotate
+        android:fromDegrees="270"
+        android:pivotX="10%"
+        android:pivotY="90%" />
 
 </shape>

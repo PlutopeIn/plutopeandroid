@@ -11,71 +11,61 @@
 
     </data>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_5mdp"
-        app:cardBackgroundColor="@color/purple_25264D"
-        app:cardCornerRadius="@dimen/_10mdp"
-        app:cardElevation="@dimen/_6mdp"
-        app:cardUseCompatPadding="false">
+        android:layout_marginBottom="@dimen/_2mdp"
+        android:background="@drawable/bg_corner_radius_20">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_crypto_coin"
+            android:layout_width="@dimen/_40mdp"
+            android:layout_height="@dimen/_40mdp"
+            android:layout_marginStart="@dimen/_14mdp"
+            android:tint="@color/black"
+            app:layout_constraintBottom_toBottomOf="@id/txt_crypto_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txt_crypto_name" />
+
+        <TextView
+            android:id="@+id/txt_crypto_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_23mdp"
+            android:layout_marginStart="@dimen/_11mdp"
+            android:layout_marginEnd="@dimen/_11mdp"
+            android:fontFamily="@font/violet_sans"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16msp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/txt_usd_price"
+            app:layout_constraintStart_toEndOf="@id/img_crypto_coin"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Bitcoin"
+
+            />
 
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/img_crypto_coin"
-                android:layout_width="@dimen/_40mdp"
-                android:layout_height="@dimen/_40mdp"
-                android:layout_marginStart="@dimen/_14mdp"
-                android:src="@drawable/img_ethereum"
-                app:layout_constraintBottom_toBottomOf="@id/txt_crypto_name"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/txt_crypto_name"
-                />
+        <TextView
+            android:id="@+id/txt_usd_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_17mdp"
+            android:fontFamily="@font/violet_sans"
+            android:textColor="@color/header_blue"
+            android:textSize="@dimen/_16msp"
+            app:layout_constraintBottom_toBottomOf="@id/txt_crypto_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txt_crypto_name"
+            tools:text="0.0059 BTC"
 
-            <TextView
-                android:id="@+id/txt_crypto_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/_23mdp"
-                android:layout_marginStart="@dimen/_11mdp"
-                android:layout_marginEnd="@dimen/_11mdp"
-                android:fontFamily="@font/quicksand_semibold"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_13msp"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/txt_usd_price"
-                app:layout_constraintStart_toEndOf="@id/img_crypto_coin"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Bitcoin"
-
-                />
+            />
 
 
-            <TextView
-                android:id="@+id/txt_usd_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_17mdp"
-                android:fontFamily="@font/quicksand_semibold"
-                android:textColor="@color/blue_00C6FB"
-                android:textSize="@dimen/_14msp"
-                app:layout_constraintBottom_toBottomOf="@id/txt_crypto_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/txt_crypto_name"
-                tools:text="0.0059 BTC"
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
 
 </layout>

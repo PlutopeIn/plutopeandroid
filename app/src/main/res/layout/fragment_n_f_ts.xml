@@ -11,54 +11,57 @@
 
     </data>
 
-    <androidx.core.widget.NestedScrollView
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:fitsSystemWindows="true">
+        android:background="@color/bg_white"
+        tools:context=".ui.fragment.dashboard.nfts.NFTs">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_nfts_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16mdp"
+            android:layout_marginBottom="@dimen/_20mdp"
+            android:nestedScrollingEnabled="true"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@id/btn_receive_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            app:spanCount="2"
+            tools:itemCount="5"
+            tools:listitem="@layout/row_nft_list_item" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".ui.fragment.dashboard.nfts.NFTs">
+            android:layout_marginHorizontal="@dimen/_16mdp"
+            android:animateLayoutChanges="true"
+            android:animationCache="true"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shimmer_repeat_delay="10"
+            app:shimmer_repeat_mode="restart"
+            app:shimmer_shape="linear">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_nfts_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16mdp"
-                android:visibility="visible"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constrainedHeight="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0"
-                app:spanCount="2"
-                tools:itemCount="10"
-                tools:listitem="@layout/row_nft_list_item" />
-
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerLayout"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/_16mdp"
-                android:animateLayoutChanges="true"
-                android:animationCache="true"
-                android:visibility="visible"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constrainedHeight="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shimmer_repeat_delay="10"
-                app:shimmer_repeat_mode="restart"
-                app:shimmer_shape="linear"
-                tools:listitem="@layout/row_nft_list_item_shimmer">
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <include layout="@layout/row_nft_list_item_shimmer" />
@@ -70,97 +73,95 @@
                     <include layout="@layout/row_nft_list_item_shimmer" />
 
                     <include layout="@layout/row_nft_list_item_shimmer" />
-
                 </LinearLayout>
+            </ScrollView>
 
 
-            </com.facebook.shimmer.ShimmerFrameLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_no_found"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_no_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/_100mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.35">
+
+            <ImageView
+                android:id="@+id/img_robot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_user_robot"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.35">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/img_robot"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_user_robot"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txt_no_nfts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/no_nfts_yet"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
+                app:layout_constraintEnd_toEndOf="@id/img_robot"
+                app:layout_constraintStart_toStartOf="@id/img_robot"
+                app:layout_constraintTop_toBottomOf="@id/img_robot" />
 
-                <TextView
-                    android:id="@+id/txt_no_nfts"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12mdp"
-                    android:fontFamily="@font/quicksand_regular"
-                    android:text="@string/no_nfts_yet"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_16msp"
-                    app:layout_constraintEnd_toEndOf="@id/img_robot"
-                    app:layout_constraintStart_toStartOf="@id/img_robot"
-                    app:layout_constraintTop_toBottomOf="@id/img_robot" />
-
-                <TextView
-                    android:id="@+id/txt_add_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_7mdp"
-                    android:fontFamily="@font/quicksand_regular"
-                    android:text="@string/learn_more"
-                    android:textColor="@color/blue_00C6FB"
-                    android:textSize="@dimen/_10msp"
-                    app:layout_constraintEnd_toEndOf="@id/img_robot"
-                    app:layout_constraintStart_toStartOf="@id/img_robot"
-                    app:layout_constraintTop_toBottomOf="@id/txt_no_nfts" />
-
-                <Button
-                    android:id="@+id/btn_receive"
-                    style="@style/wallet_button_gradient"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_38mdp"
-                    android:layout_marginTop="@dimen/_18mdp"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/_40mdp"
-                    android:text="@string/receive"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/txt_add_more" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+            <TextView
+                android:id="@+id/txt_add_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_7mdp"
+                android:fontFamily="@font/violet_sans"
+                android:text="@string/learn_more"
+                android:textColor="@color/blue_00C6FB"
+                android:textSize="@dimen/_10msp"
+                app:layout_constraintEnd_toEndOf="@id/img_robot"
+                app:layout_constraintStart_toStartOf="@id/img_robot"
+                app:layout_constraintTop_toBottomOf="@id/txt_no_nfts" />
 
             <Button
-                android:id="@+id/btn_receive_bottom"
+                android:id="@+id/btn_receive"
                 style="@style/wallet_button_gradient"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_38mdp"
+                android:layout_marginTop="@dimen/_18mdp"
                 android:gravity="center"
                 android:paddingHorizontal="@dimen/_40mdp"
-                android:layout_marginBottom="@dimen/_100mdp"
+                android:text="@string/receive"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:visibility="gone"
+                android:textColor="@color/bg_white"
                 app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="@string/receive_nft"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_nfts_list" />
+                app:layout_constraintTop_toBottomOf="@id/txt_add_more" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+
+
+        <Button
+            android:id="@+id/btn_receive_bottom"
+            style="@style/wallet_button_gradient"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_38mdp"
+            android:layout_marginBottom="@dimen/_70mdp"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_40mdp"
+            android:text="@string/receive_nft"
+            android:textAllCaps="false"
+            android:visibility="gone"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_nfts_list" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

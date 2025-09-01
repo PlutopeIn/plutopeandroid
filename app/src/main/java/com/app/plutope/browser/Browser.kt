@@ -44,6 +44,8 @@ class Browser : BaseFragment<FragmentBrowserBinding, BrowserViewModel>(), URLLoa
 
     private lateinit var dApp: DApp
 
+    private var lastLoadUrl = ""
+
     companion object {
         private const val DAPP_BROWSER = "DAPP_BROWSER"
         private const val MAGIC_BUNDLE_VAL: Long = 0xACED00D
@@ -78,14 +80,13 @@ class Browser : BaseFragment<FragmentBrowserBinding, BrowserViewModel>(), URLLoa
     }
 
     override fun setupUI() {
-
+        lastLoadUrl = navArgs.url
         dApp = DApp("Rampable", navArgs.url)
         addToHistory(context, dApp)
 
         initView()
-
         viewDataBinding!!.swapRefresh.setOnRefreshListener {
-            viewDataBinding!!.web3view.loadUrl(navArgs.url)
+            viewDataBinding!!.web3view.loadUrl(lastLoadUrl)
             viewDataBinding!!.swapRefresh.isRefreshing = false
         }
 
@@ -121,15 +122,19 @@ class Browser : BaseFragment<FragmentBrowserBinding, BrowserViewModel>(), URLLoa
                 }
             })
 
+        viewDataBinding!!.web3view.isVerticalScrollBarEnabled = true
+        viewDataBinding!!.web3view.isHorizontalScrollBarEnabled = true
 
         viewDataBinding!!.web3view.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
 
                 loge("shouldOverrideUrlLoading", "==> $url")
 
-                val prefixCheck = url.split(":".toRegex()).dropLastWhile { it.isEmpty() }
-                    .toTypedArray()
+                val prefixCheck =
+                    url.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+
                 if (prefixCheck.size > 1) {
+                    loge("UrlPrefix", "${prefixCheck[0]}")
                     val intent: Intent
                     when (prefixCheck[0]) {
                         C.DAPP_PREFIX_TELEPHONE -> {
@@ -157,7 +162,26 @@ class Browser : BaseFragment<FragmentBrowserBinding, BrowserViewModel>(), URLLoa
                             return true
                         }
 
-                        else -> {}
+                        else -> {
+                            if (prefixCheck[0] != "https") {
+
+
+                                intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse(url)
+                                startActivity(intent)
+
+                                /*
+                                val parts = url.split("://wc?uri=")
+                                if(parts.size == 2) {
+                                      loge("ShouldOver", "Broswer==> ${parts[1]}")
+                                      web3walletViewModel.pair(URLDecoder.decode(parts[1], "UTF-8"))
+                                  }*/
+                            } else {
+                                lastLoadUrl = url
+                            }
+
+
+                        }
                     }
                 }
                 /*
@@ -186,7 +210,7 @@ class Browser : BaseFragment<FragmentBrowserBinding, BrowserViewModel>(), URLLoa
 
     }
 
-    private val defaultDappUrl: String?
+    private val defaultDappUrl: String
         get() {
             val customHome = browserViewModel.getHomePage(context)
             return customHome ?: defaultDapp(Chains.ETHEREUM.chainReference.toLong())
@@ -269,7 +293,7 @@ class Browser : BaseFragment<FragmentBrowserBinding, BrowserViewModel>(), URLLoa
         viewDataBinding!!.web3view.clearHistory()
         viewDataBinding!!.web3view.stopLoading()
         viewDataBinding!!.web3view.resetView()
-        viewDataBinding!!.web3view.loadUrl(defaultDappUrl!!)
+        viewDataBinding!!.web3view.loadUrl(defaultDappUrl)
         setUrlText(defaultDappUrl)
     }
 

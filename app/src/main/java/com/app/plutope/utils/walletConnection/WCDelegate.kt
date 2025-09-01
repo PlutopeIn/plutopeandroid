@@ -1,11 +1,10 @@
 package com.app.plutope.utils.walletConnection
 
-import android.util.Log
 import com.app.plutope.utils.loge
-import com.walletconnect.android.Core
-import com.walletconnect.android.CoreClient
-import com.walletconnect.web3.wallet.client.Wallet
-import com.walletconnect.web3.wallet.client.Web3Wallet
+import com.reown.android.Core
+import com.reown.android.CoreClient
+import com.reown.walletkit.client.Wallet
+import com.reown.walletkit.client.WalletKit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -14,33 +13,33 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-object WCDelegate : Web3Wallet.WalletDelegate, CoreClient.CoreDelegate {
+object WCDelegate : WalletKit.WalletDelegate, CoreClient.CoreDelegate {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val _coreEvents: MutableSharedFlow<Core.Model> = MutableSharedFlow()
     val coreEvents: SharedFlow<Core.Model> = _coreEvents.asSharedFlow()
 
     private val _walletEvents: MutableSharedFlow<Wallet.Model> = MutableSharedFlow()
     val walletEvents: SharedFlow<Wallet.Model> = _walletEvents.asSharedFlow()
-    var authRequestEvent: Pair<Wallet.Model.AuthRequest, Wallet.Model.VerifyContext>? = null
+    // var authRequestEvent: Pair<Wallet.Model.AuthRequest, Wallet.Model.VerifyContext>? = null
 
     //  var sessionProposalEvent: Pair<Wallet.Model.SessionProposal, Wallet.Model.VerifyContext>? = null
     //var sessionRequestEvent: Pair<Wallet.Model.SessionRequest, Wallet.Model.VerifyContext>? = null
 
     init {
         CoreClient.setDelegate(this)
-        Web3Wallet.setWalletDelegate(this)
+        WalletKit.setWalletDelegate(this)
     }
 
-    override fun onAuthRequest(
-        authRequest: Wallet.Model.AuthRequest,
-        verifyContext: Wallet.Model.VerifyContext
-    ) {
-        authRequestEvent = Pair(authRequest, verifyContext)
+    /*  override fun onAuthRequest(
+          authRequest: Wallet.Model.AuthRequest,
+          verifyContext: Wallet.Model.VerifyContext
+      ) {
+          authRequestEvent = Pair(authRequest, verifyContext)
 
-        scope.launch {
-            _walletEvents.emit(authRequest)
-        }
-    }
+          scope.launch {
+              _walletEvents.emit(authRequest)
+          }
+      }*/
 
     override fun onConnectionStateChange(state: Wallet.Model.ConnectionState) {
         scope.launch {
@@ -50,10 +49,17 @@ object WCDelegate : Web3Wallet.WalletDelegate, CoreClient.CoreDelegate {
 
 
     override fun onError(error: Wallet.Model.Error) {
-        //mixPanel.track("error", JSONObject().put("error", error.throwable.stackTraceToString()))
         scope.launch {
             _walletEvents.emit(error)
         }
+    }
+
+    override fun onProposalExpired(proposal: Wallet.Model.ExpiredProposal) {
+
+    }
+
+    override fun onRequestExpired(request: Wallet.Model.ExpiredRequest) {
+
     }
 
     override fun onSessionDelete(sessionDelete: Wallet.Model.SessionDelete) {
@@ -63,7 +69,7 @@ object WCDelegate : Web3Wallet.WalletDelegate, CoreClient.CoreDelegate {
     }
 
     override fun onSessionExtend(session: Wallet.Model.Session) {
-        Log.d("Session Extend", "${session.expiry}")
+        loge("onSessionExtend", "${session.expiry}")
     }
 
     override fun onSessionProposal(
@@ -71,12 +77,6 @@ object WCDelegate : Web3Wallet.WalletDelegate, CoreClient.CoreDelegate {
         verifyContext: Wallet.Model.VerifyContext
     ) {
         sessionProposalEvent = Pair(sessionProposal, verifyContext)
-
-        loge(
-            "sessionProposalEvent",
-            "sessionProposalEvent => $sessionProposalEvent   :: sessionProposal => $sessionProposal :: verifyContext => $verifyContext"
-        )
-
         scope.launch {
             _walletEvents.emit(sessionProposal)
         }
@@ -87,12 +87,6 @@ object WCDelegate : Web3Wallet.WalletDelegate, CoreClient.CoreDelegate {
         verifyContext: Wallet.Model.VerifyContext
     ) {
         sessionRequestEvent = Pair(sessionRequest, verifyContext)
-
-        loge(
-            "onSessionRequestEvent",
-            "sessionRequestEvent => $sessionRequestEvent   :: sessionProposal => $sessionRequest :: verifyContext => $verifyContext"
-        )
-
         scope.launch {
             _walletEvents.emit(sessionRequest)
         }
@@ -110,9 +104,22 @@ object WCDelegate : Web3Wallet.WalletDelegate, CoreClient.CoreDelegate {
         }
     }
 
+
     override fun onPairingDelete(deletedPairing: Core.Model.DeletedPairing) {
         scope.launch {
             _coreEvents.emit(deletedPairing)
+        }
+    }
+
+    override fun onPairingExpired(expiredPairing: Core.Model.ExpiredPairing) {
+        scope.launch {
+            _coreEvents.emit(expiredPairing)
+        }
+    }
+
+    override fun onPairingState(pairingState: Core.Model.PairingState) {
+        scope.launch {
+            _coreEvents.emit(pairingState)
         }
     }
 }

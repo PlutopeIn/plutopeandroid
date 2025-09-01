@@ -33,7 +33,7 @@ private const val POLYGON_HOMEPAGE = "https://alphawallet.com/browser-item-categ
 
 private var POLYGON_ID: Long = 137
 
-fun loadFile(context: Context, @RawRes rawRes: Int): String? {
+fun loadFile(context: Context, @RawRes rawRes: Int): String {
     var buffer = ByteArray(0)
     try {
         val `in` = context.resources.openRawResource(rawRes)
@@ -159,7 +159,7 @@ private fun storeJsonData(fName: String, json: String, context: Context) {
 }
 
 
-private fun parseDappHistory(history: List<DApp?>): List<DApp?>? {
+private fun parseDappHistory(history: List<DApp?>): List<DApp?> {
     var requireRefresh = false
     val recodeHistory: MutableList<DApp> = java.util.ArrayList()
     for (dapp in history) {
@@ -180,7 +180,7 @@ private fun parseDappHistory(history: List<DApp?>): List<DApp?>? {
 }
 
 
-fun loadJsonData(fName: String?, context: Context): String? {
+fun loadJsonData(fName: String?, context: Context): String {
     val sb = StringBuilder()
     val file = File(context.filesDir, fName)
     try {
@@ -251,7 +251,7 @@ fun loadJSONFromAsset(context: Context, fileName: String?): String? {
     return json
 }
 
-fun defaultDapp(chainId: Long): String? {
+fun defaultDapp(chainId: Long): String {
     return if (chainId == POLYGON_ID) POLYGON_HOMEPAGE else DEFAULT_HOMEPAGE
 }
 

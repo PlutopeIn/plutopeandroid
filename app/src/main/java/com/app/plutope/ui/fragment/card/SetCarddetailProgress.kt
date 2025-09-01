@@ -48,7 +48,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
             personalDetail.setTextColor(
                 ResourcesCompat.getColor(
                     context.resources,
-                    R.color.white,
+                    R.color.bg_white,
                     null
                 )
             )
@@ -125,7 +125,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
             personalDetail.setTextColor(
                 ResourcesCompat.getColor(
                     context.resources,
-                    R.color.white,
+                    R.color.bg_white,
                     null
                 )
             )
@@ -153,7 +153,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
             membership.setTextColor(
                 ResourcesCompat.getColor(
                     context.resources,
-                    R.color.white,
+                    R.color.bg_white,
                     null
                 )
             )
@@ -202,7 +202,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
             personalDetail.setTextColor(
                 ResourcesCompat.getColor(
                     context.resources,
-                    R.color.white,
+                    R.color.bg_white,
                     null
                 )
             )
@@ -232,7 +232,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
             membership.setTextColor(
                 ResourcesCompat.getColor(
                     context.resources,
-                    R.color.white,
+                    R.color.bg_white,
                     null
                 )
             )
@@ -252,7 +252,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
                     null
                 )
             )
-            card.setTextColor(ResourcesCompat.getColor(context.resources, R.color.white, null))
+            card.setTextColor(ResourcesCompat.getColor(context.resources, R.color.bg_white, null))
 
 
         }
@@ -275,7 +275,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
             personalDetail.setTextColor(
                 ResourcesCompat.getColor(
                     context.resources,
-                    R.color.white,
+                    R.color.bg_white,
                     null
                 )
             )
@@ -305,7 +305,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
             membership.setTextColor(
                 ResourcesCompat.getColor(
                     context.resources,
-                    R.color.white,
+                    R.color.bg_white,
                     null
                 )
             )
@@ -325,7 +325,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
                     null
                 )
             )
-            card.setTextColor(ResourcesCompat.getColor(context.resources, R.color.white, null))
+            card.setTextColor(ResourcesCompat.getColor(context.resources, R.color.bg_white, null))
 
             imgCircle4.background =
                 ResourcesCompat.getDrawable(
@@ -351,7 +351,7 @@ fun setCardProgress(view: View, progress: Int, context: BaseActivity) {
             )
 
 
-            payment.setTextColor(ResourcesCompat.getColor(context.resources, R.color.white, null))
+            payment.setTextColor(ResourcesCompat.getColor(context.resources, R.color.bg_white, null))
 
 
         }

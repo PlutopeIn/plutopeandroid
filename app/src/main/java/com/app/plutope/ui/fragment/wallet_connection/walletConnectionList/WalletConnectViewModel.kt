@@ -10,8 +10,8 @@ import com.app.plutope.utils.walletConnection.compose_ui.session_proposal.wallet
 import com.app.plutope.utils.walletConnection.sessionProposalEvent
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
-import com.walletconnect.web3.wallet.client.Wallet
-import com.walletconnect.web3.wallet.client.Web3Wallet
+import com.reown.walletkit.client.Wallet
+import com.reown.walletkit.client.WalletKit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -26,11 +26,11 @@ class WalletConnectViewModel @Inject constructor() : BaseViewModel<CommonNavigat
 
     suspend fun approve(proposalPublicKey: String, onRedirect: (String) -> Unit = {}) {
         return suspendCoroutine { continuation ->
-            if (Web3Wallet.getSessionProposals().isNotEmpty()) {
+            if (WalletKit.getSessionProposals().isNotEmpty()) {
                 val sessionProposal: Wallet.Model.SessionProposal = requireNotNull(
-                    Web3Wallet.getSessionProposals()
+                    WalletKit.getSessionProposals()
                         .find { it.proposerPublicKey == proposalPublicKey })
-                val sessionNamespaces = Web3Wallet.generateApprovedNamespaces(
+                val sessionNamespaces = WalletKit.generateApprovedNamespaces(
                     sessionProposal = sessionProposal,
                     supportedNamespaces = walletMetaData.namespaces
                 )
@@ -39,7 +39,7 @@ class WalletConnectViewModel @Inject constructor() : BaseViewModel<CommonNavigat
                     namespaces = sessionNamespaces
                 )
 
-                Web3Wallet.approveSession(approveProposal,
+                WalletKit.approveSession(approveProposal,
                     onError = { error ->
                         continuation.resumeWithException(error.throwable)
                         Firebase.crashlytics.recordException(error.throwable)
@@ -57,9 +57,9 @@ class WalletConnectViewModel @Inject constructor() : BaseViewModel<CommonNavigat
 
     suspend fun reject(proposalPublicKey: String, onRedirect: (String) -> Unit = {}) {
         return suspendCoroutine { continuation ->
-            if (Web3Wallet.getSessionProposals().isNotEmpty()) {
+            if (WalletKit.getSessionProposals().isNotEmpty()) {
                 val sessionProposal: Wallet.Model.SessionProposal = requireNotNull(
-                    Web3Wallet.getSessionProposals()
+                    WalletKit.getSessionProposals()
                         .find { it.proposerPublicKey == proposalPublicKey })
                 val rejectionReason = "Reject Session"
                 val reject = Wallet.Params.SessionReject(
@@ -67,7 +67,7 @@ class WalletConnectViewModel @Inject constructor() : BaseViewModel<CommonNavigat
                     reason = rejectionReason
                 )
 
-                Web3Wallet.rejectSession(reject,
+                WalletKit.rejectSession(reject,
                     onSuccess = {
                         continuation.resume(Unit)
                         sessionProposalEvent = null

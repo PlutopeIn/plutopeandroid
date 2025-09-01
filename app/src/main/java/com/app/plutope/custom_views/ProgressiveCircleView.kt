@@ -19,21 +19,32 @@ class ProgressiveCircleView @JvmOverloads constructor(
     // Define the border gradient colors here
 
 
-    val color1 = Color.parseColor("#C693FE")
+    /*val color1 = Color.parseColor("#C693FE")
     val color2 = Color.parseColor("#9654D9")
     val color3 = Color.parseColor("#5ABEF8")
     val color4 = Color.parseColor("#00C6FB")
     val color5 = Color.parseColor("#C471F5")
     val color6 = Color.parseColor("#FA71CD")
     val color7 = Color.parseColor("#48C6EF")
-    val color8 = Color.parseColor("#6F86D6")
+    val color8 = Color.parseColor("#6F86D6")*/
 
-    val color9 = Color.parseColor("#9654D9")
-    val color10 = Color.parseColor("#C693FE")
+//    val color9 = Color.parseColor("#9654D9")
+//    val color10 = Color.parseColor("#C693FE")
+
+
+    val color1 = Color.parseColor("#EDE7F6") // Very light purple
+    val color2 = Color.parseColor("#E1BEE7") // Light lavender
+    val color3 = Color.parseColor("#D1C4E9") // Lavender
+    val color4 = Color.parseColor("#F3E5F5") // Light pinkish purple
+    val color5 = Color.parseColor("#EDE7F6") // Very light lilac
+    val color6 = Color.parseColor("#F8E1FF") // Very pale purple
+    val color7 = Color.parseColor("#F3E5F5") // Very light mauve
+    val color8 = Color.parseColor("#F0EBFF") // Light lavender mist
+
 
 
     private val borderColors = intArrayOf(
-        color10, color9, color8, color7, color6, color5, color4, color3, color2, color1
+        /*color10, color9, */color8, color7, color6, color5, color4, color3, color2, color1
     )
 
     // Define the inner color

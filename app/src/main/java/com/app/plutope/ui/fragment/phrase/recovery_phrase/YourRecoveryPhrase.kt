@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.view.MotionEvent
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.WindowManager
@@ -21,17 +19,27 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentYourRecoveryPhraseBinding
 import com.app.plutope.dialogs.ConfirmationAlertDialog
+import com.app.plutope.model.Tokens
+import com.app.plutope.model.Wallet
+import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
-import com.app.plutope.ui.fragment.phrase.verify_phrase.VerifySecretPhraseViewModel
+import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.wallet.backup.PhraseBackupFragment
 import com.app.plutope.utils.GoogleSignInListner
+import com.app.plutope.utils.Securities
+import com.app.plutope.utils.coinTypeEnum.CoinType
+import com.app.plutope.utils.constant.appUpdateVersion
 import com.app.plutope.utils.copyToClipboard
+import com.app.plutope.utils.enableDisableButton
 import com.app.plutope.utils.extras.DriveServiceHelper
 import com.app.plutope.utils.extras.buttonClickedWithEffect
+import com.app.plutope.utils.extras.setSafeOnClickListener
 import com.app.plutope.utils.hideLoader
+import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.requestGoogleSignIn
 import com.app.plutope.utils.safeNavigate
+import com.app.plutope.utils.showLoaderAnyHow
 import com.app.plutope.utils.showToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -41,25 +49,26 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import dagger.hilt.android.AndroidEntryPoint
-import eightbitlab.com.blurview.RenderScriptBlur
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.Integer.min
 
 
 @AndroidEntryPoint
 class YourRecoveryPhrase :
-    BaseFragment<FragmentYourRecoveryPhraseBinding, YourRecoveryPhraseViewModel>() {
-
+    BaseFragment<FragmentYourRecoveryPhraseBinding, VerifySecretPhraseViewModel>() {
+    private var walletReferCode: String? = null
     private var wordsList: Array<String> = arrayOf()
     private var words: String? = ""
     var isShowPhrases: Boolean = false
-    private val yourRecoveryPhraseViewModel: YourRecoveryPhraseViewModel by viewModels()
     private val verifySecretPhraseViewModel: VerifySecretPhraseViewModel by viewModels()
+    private val tokenViewModel: TokenViewModel by viewModels()
     private val args: YourRecoveryPhraseArgs by navArgs()
-    val spanCount = 6
+    val spanCount = 2
     private lateinit var mDriveServiceHelper: DriveServiceHelper
-    override fun getViewModel(): YourRecoveryPhraseViewModel {
-        return yourRecoveryPhraseViewModel
+    override fun getViewModel(): VerifySecretPhraseViewModel {
+        return verifySecretPhraseViewModel
     }
 
     override fun getBindingVariable(): Int {
@@ -71,16 +80,19 @@ class YourRecoveryPhrase :
     }
 
     override fun setupToolbarText(): String {
-        return getString(R.string.your_recovery_phrase)
+        return ""
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun setupUI() {
-        // Set the secure flag to prevent screenshots
-        requireActivity().window.setFlags(
+        /*requireActivity().window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
-        )
+        )*/
+
+        viewDataBinding?.imgBack?.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         words = args.wordsString
         wordsList = args.wordArrayList
@@ -93,10 +105,10 @@ class YourRecoveryPhrase :
                 viewDataBinding?.txtCopy?.visibility = GONE
             }
             if (!args.walletModel.w_is_manual_backup) {
-                if(args.walletModel.w_is_cloud_backup && args.isFromDriveBackup){
+                if (args.walletModel.w_is_cloud_backup && args.isFromDriveBackup) {
                     viewDataBinding?.btnContinue?.visibility = GONE
                     viewDataBinding?.txtCopy?.visibility = GONE
-                }else {
+                } else {
                     viewDataBinding?.btnContinue?.visibility = VISIBLE
                     viewDataBinding?.txtCopy?.visibility = VISIBLE
                 }
@@ -108,103 +120,29 @@ class YourRecoveryPhrase :
             viewDataBinding?.btnContinue?.visibility = VISIBLE
         }
 
-        val radius = 12f
-        val decorView: View = requireActivity().window.decorView
-        val windowBackground = decorView.background
-        viewDataBinding!!.blurView.setupWith(
-            viewDataBinding!!.rvPhraseGeneratedList,
-            RenderScriptBlur(requireContext())
-        ) // or RenderEffectBlur
-            .setFrameClearDrawable(windowBackground) // Optional
-            .setBlurRadius(radius)
-
-
-        /*  viewDataBinding!!.cardViewBlur.setOnClickListener {
-              viewDataBinding!!.txtHideShowPhrase.performClick()
-          }
-
-          viewDataBinding!!.cardView.setOnClickListener{
-              viewDataBinding!!.txtHideShowPhrase.performClick()
-          }*/
-
-        viewDataBinding!!.cardViewBlur.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    viewDataBinding!!.cardViewBlur.visibility = GONE
-                    viewDataBinding!!.txtTapToView.visibility = GONE
-                    true
-                }
-
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    viewDataBinding!!.cardViewBlur.visibility = VISIBLE
-                    viewDataBinding!!.txtTapToView.visibility = VISIBLE
-                    true
-                }
-
-                else -> false
-            }
-        }
-
-        /*
-                viewDataBinding!!.txtHideShowPhrase.setOnClickListener {
-                    isShowPhrases = !isShowPhrases
-                    if (isShowPhrases) {
-                        viewDataBinding!!.cardViewBlur.visibility = GONE
-                        viewDataBinding!!.txtTapToView.visibility = GONE
-                        viewDataBinding!!.txtHideShowPhrase.text = getString(R.string.hide_recovery_phrase)
-                    } else {
-                        viewDataBinding!!.cardViewBlur.visibility = VISIBLE
-                        viewDataBinding!!.txtTapToView.visibility = VISIBLE
-                        viewDataBinding!!.txtHideShowPhrase.text = getString(R.string.show_recovery_phrase)
-                    }
-                }
-        */
-
 
         val adapter = PhraseGenerateListAdapter { _: String, _: Int -> }
         adapter.submitList(wordsList.toMutableList())
 
         val layoutManager =
-            GridLayoutManager(requireContext(), spanCount, GridLayoutManager.HORIZONTAL, false)
+            GridLayoutManager(requireContext(), spanCount, GridLayoutManager.VERTICAL, false)
         viewDataBinding?.rvPhraseGeneratedList?.layoutManager = layoutManager
 
         viewDataBinding?.rvPhraseGeneratedList?.adapter = adapter
+        if (!preferenceHelper.isTokenImageCalled) {
+            tokenViewModel.getTokenImageList()
+        }
+
+        if (preferenceHelper.referralCode.isNotEmpty()) {
+            viewDataBinding?.lytReferral?.visibility = VISIBLE
+            viewDataBinding?.txtReferralCode?.text = preferenceHelper.referralCode
+        } else {
+            viewDataBinding?.lytReferral?.visibility = GONE
+        }
 
         setListener()
     }
 
-    override fun setupObserver() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                verifySecretPhraseViewModel.updateWalletBackupResponse.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-                            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
-                                val wallet = args.walletModel
-                                wallet.w_is_cloud_backup=false
-                                findNavController().navigate(YourRecoveryPhraseDirections.actionYourRecoveryPhraseToRecoveryWalletFragment(wallet))
-                            }
-
-                        }
-
-                        is NetworkState.Loading -> {
-
-                        }
-
-                        is NetworkState.Error -> {
-
-                        }
-
-                        is NetworkState.SessionOut -> {}
-
-                        else -> {
-                            hideLoader()
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     inner class ColumnGridLayoutManager(context: Context, spanCount: Int) :
         GridLayoutManager(context, spanCount) {
@@ -241,14 +179,11 @@ class YourRecoveryPhrase :
     }
 
     private fun setListener() {
-        viewDataBinding?.btnContinue?.buttonClickedWithEffect {
-            findNavController().safeNavigate(
-                YourRecoveryPhraseDirections.actionYourRecoveryPhraseToVerifySecretPhrase(
-                    words.toString(),
-                    wordsList,
-                    args.walletModel
-                )
-            )
+        viewDataBinding?.btnContinue?.setSafeOnClickListener {
+            viewDataBinding?.btnContinue?.enableDisableButton(false)
+            // findNavController().safeNavigate(YourRecoveryPhraseDirections.actionYourRecoveryPhraseToWelcomeScreen())
+
+            createWalletAndInsertTable()
         }
 
         viewDataBinding?.txtCopy?.setOnClickListener {
@@ -272,7 +207,26 @@ class YourRecoveryPhrase :
         }
     }
 
-    private fun openConfirmationDialog(title:String,subtitle:String,isFromRecovery: Boolean) {
+
+    private fun createWalletAndInsertTable() {
+        preferenceHelper.isWalletCreatedData = true
+        requireContext().showLoaderAnyHow()
+        viewDataBinding?.btnContinue?.enableDisableButton(true)
+        if (args.walletModel.w_wallet_name != "") {
+            verifySecretPhraseViewModel.updateWalletBackup(
+                args.walletModel.w_is_cloud_backup,
+                true,
+                args.walletModel.w_id,
+                args.walletModel.w_wallet_name.toString(),
+                args.walletModel.folderId,
+                args.walletModel.fileId
+            )
+        } else {
+            verifySecretPhraseViewModel.executeInsertWallet(words!!, isManualBackup = true)
+        }
+    }
+
+    private fun openConfirmationDialog(title: String, subtitle: String, isFromRecovery: Boolean) {
         ConfirmationAlertDialog.getInstance().show(
             requireContext(),
             title,
@@ -280,7 +234,7 @@ class YourRecoveryPhrase :
             isFromRecovery,
             listener = object : ConfirmationAlertDialog.DialogOnClickBtnListner {
                 override fun onDeleteClick() {
-                    if(!isFromRecovery){
+                    if (!isFromRecovery) {
                         requestGoogleSignIn(requireContext(), object : GoogleSignInListner {
                             override fun requestUserGoogleSingIn(
                                 recoveryIntent: Intent?,
@@ -368,8 +322,315 @@ class YourRecoveryPhrase :
     override fun onDestroyView() {
         // Clear the secure flag when the fragment is destroyed
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
-
         super.onDestroyView()
+    }
+
+    override fun setupObserver() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                verifySecretPhraseViewModel.updateWalletBackupResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                                val wallet = args.walletModel
+                                wallet.w_is_cloud_backup = false
+                                findNavController().navigate(
+                                    YourRecoveryPhraseDirections.actionYourRecoveryPhraseToRecoveryWalletFragment(
+                                        wallet
+                                    )
+                                )
+                            }
+
+                        }
+
+                        is NetworkState.Loading -> {
+
+                        }
+
+                        is NetworkState.Error -> {
+
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                verifySecretPhraseViewModel.insertWalletResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            preferenceHelper.menomonicWallet = Securities.decrypt(words)
+                            val data = it.data
+                            (requireActivity() as BaseActivity).setWalletObject()
+                            if (data != null) {
+                                Wallet.setWalletObjectFromInstance(data)
+                                Wallet.refreshWallet()
+                            }
+                            tokenViewModel.getAllTokenList(tokenViewModel)
+
+                        }
+
+                        is NetworkState.Loading -> {}
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tokenViewModel.insertTokenResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            tokenViewModel.insertInWalletTokens(tokenViewModel)
+                        }
+
+                        is NetworkState.Loading -> {
+
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tokenViewModel.insertWalletTokenResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            hideLoader()
+                            requireContext().showToast("Wallet Created successfully")
+
+                            val walletAddress = Wallet.getPublicWalletAddress(CoinType.ETHEREUM)
+                            tokenViewModel.registerWalletCall(
+                                walletAddress!!,
+                                preferenceHelper.firebaseToken, type = "create",
+                                preferenceHelper.referralCode
+                            )
+
+                            /*  tokenViewModel.registerWalletCallMaster(
+                                  preferenceHelper.deviceId,
+                                  walletAddress,
+                                  preferenceHelper.referralCode,
+                              )*/
+
+
+                            preferenceHelper.appUpdatedFlag = appUpdateVersion
+                            if (!preferenceHelper.isFirstTime)
+                                tokenViewModel.executeGetGenerateToken()
+                            // findNavController().safeNavigate(YourRecoveryPhraseDirections.actionYourRecoveryPhraseToWelcomeScreen())
+                            else
+                            // findNavController().safeNavigate(VerifySecretPhraseDirections.actionVerifySecretPhraseToDashboard())
+                                findNavController().safeNavigate(YourRecoveryPhraseDirections.actionYourRecoveryPhraseToDashboard())
+                        }
+
+                        is NetworkState.Loading -> {
+
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tokenViewModel.coinGeckoTokensResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            val listTokens = it.data as MutableList<Tokens>
+                            if (listTokens.isNotEmpty()) {
+                                tokenViewModel.executeInsertTokens(listTokens)
+                            }
+
+                        }
+
+                        is NetworkState.Loading -> {
+
+                        }
+
+                        is NetworkState.Error -> {
+
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        GlobalScope.launch(Dispatchers.IO) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tokenViewModel.tokenImageListResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            hideLoader()
+                            preferenceHelper.isTokenImageCalled = true
+
+                        }
+
+                        is NetworkState.Loading -> {
+
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+        GlobalScope.launch(Dispatchers.IO) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tokenViewModel.getRegisterWallet.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            hideLoader()
+                            walletReferCode = ""
+                        }
+
+                        is NetworkState.Loading -> {
+
+                        }
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                verifySecretPhraseViewModel.updateWalletBackupResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            hideLoader()
+                            if (args.walletModel.w_mnemonic != "") {
+                                val walletModel = args.walletModel
+                                walletModel.w_is_manual_backup = true
+                                if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                                    /*  findNavController().safeNavigate(
+                                          VerifySecretPhraseDirections.actionVerifySecretPhraseToRecoveryWalletFragment(args.walletModel)
+                                      )*/
+
+                                    findNavController().safeNavigate(
+                                        YourRecoveryPhraseDirections.actionYourRecoveryPhraseToRecoveryWalletFragment(
+                                            args.walletModel
+                                        )
+                                    )
+                                }
+                            }
+
+
+                        }
+
+                        is NetworkState.Loading -> {}
+
+                        is NetworkState.Error -> {
+                            hideLoader()
+                        }
+
+                        is NetworkState.SessionOut -> {}
+
+                        else -> {
+                            hideLoader()
+                        }
+                    }
+                }
+            }
+        }
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                tokenViewModel.getGenerateTokenResponse.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            loge(
+                                "getGenerateTokenResponse",
+                                "${it.data?.data?.isUpdate} :: ${it.data?.data?.tokenString}"
+                            )
+                            if (it.data?.data?.isUpdate == true) {
+                                if (it.data.data.tokenString?.lowercase() != preferenceHelper.updateTokenText.lowercase()) {
+                                    preferenceHelper.updateTokenText = it.data.data.tokenString!!
+                                }
+                            }
+
+                            findNavController().safeNavigate(YourRecoveryPhraseDirections.actionYourRecoveryPhraseToWelcomeScreen())
+                        }
+
+                        is NetworkState.Loading -> {}
+                        is NetworkState.Error -> {
+                            findNavController().safeNavigate(YourRecoveryPhraseDirections.actionYourRecoveryPhraseToWelcomeScreen())
+                        }
+
+                        is NetworkState.SessionOut -> {}
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 }
 

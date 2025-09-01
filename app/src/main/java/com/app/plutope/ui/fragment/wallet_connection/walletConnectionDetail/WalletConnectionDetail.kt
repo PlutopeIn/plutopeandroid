@@ -13,6 +13,7 @@ import com.app.plutope.networkConfig.Chains
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.wallet_connection.walletConnectionList.NetworkListAdapter
 import com.app.plutope.utils.loge
+import com.app.plutope.utils.safeNavigate
 import com.app.plutope.utils.walletConnection.compose_ui.connections.ConnectionType
 import com.app.plutope.utils.walletConnection.compose_ui.connections.ConnectionUI
 import com.app.plutope.utils.walletConnection.compose_ui.connections.ConnectionsViewModel
@@ -21,8 +22,8 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.walletconnect.web3.wallet.client.Wallet
-import com.walletconnect.web3.wallet.client.Web3Wallet
+import com.reown.walletkit.client.Wallet
+import com.reown.walletkit.client.WalletKit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +56,11 @@ class WalletConnectionDetail :
     }
 
     override fun setupUI() {
+
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         connectionsViewModel.currentConnectionId = args.connectionId.toInt()
         // val connectionUI by remember { connectionsViewModel.currentConnectionUI }
         CoroutineScope(Dispatchers.Main).launch {
@@ -80,15 +86,16 @@ class WalletConnectionDetail :
                         }
                         if (topic != null) {
 
-                            Web3Wallet.disconnectSession(
+                            WalletKit.disconnectSession(
                                 Wallet.Params.SessionDisconnect(topic)
                             ) { error ->
                                 Firebase.crashlytics.recordException(error.throwable)
                             }
 
-
                             connectionsViewModel.refreshConnections()
-                            findNavController().popBackStack()
+                            findNavController().safeNavigate(WalletConnectionDetailDirections.actionWalletConnectionDetailToWalletConnection())
+
+                            // findNavController().popBackStack()
                         } else {
                             loge(message = "Topic is null")
                         }
@@ -122,12 +129,6 @@ class WalletConnectionDetail :
 
         val adapter = NetworkListAdapter {}
         viewDataBinding!!.rvNetworkList.adapter = adapter
-
-        val chains: List<String>? = when (val connectionType = connectionUI?.type) {
-            is ConnectionType.Sign -> connectionType.namespaces["eip155"]?.chains
-            else -> null
-        }
-
         val account: List<String>? = when (val connectionType = connectionUI?.type) {
             is ConnectionType.Sign -> connectionType.namespaces["eip155"]?.accounts
             else -> null
@@ -158,6 +159,11 @@ class WalletConnectionDetail :
 
     override fun setupObserver() {
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        connectionsViewModel.refreshConnections()
     }
 
 

@@ -40,7 +40,12 @@ class BuyDetailsViewModel @Inject constructor(
 
         viewModelScope.launch {
             _tagGetTransactionHistory.emit(NetworkState.Loading())
-            _tagGetTransactionHistory.collectStateFlow(transactionRepo.getTransactionHistory(url,tokens))
+            _tagGetTransactionHistory.collectStateFlow(
+                transactionRepo.getTransactionHistory(
+                    url,
+                    tokens
+                )
+            )
         }
     }
 
@@ -57,7 +62,7 @@ class BuyDetailsViewModel @Inject constructor(
     fun getTransactionApiKey(tokens: Tokens): String {
         return when (tokens.chain) {
             Chain.Ethereum -> ETHER_SCAN_API_KEY
-            Chain.BinanceSmartChain ->BSC_SCAN_API_KEY
+            Chain.BinanceSmartChain -> BSC_SCAN_API_KEY
             Chain.OKC -> ""
             Chain.Polygon -> POLY_API_KEY
             else -> ""
@@ -78,6 +83,45 @@ class BuyDetailsViewModel @Inject constructor(
                 transactionRepo.getTransactionHistoryNew(
                     url,
                     tokens
+                )
+            )
+        }
+    }
+
+    //transaction History moralis
+    private val _tagGetTransactionMoralisHistory =
+        MutableStateFlow<NetworkState<TransactionMoralisResponse?>>(NetworkState.Empty())
+
+    val transactionHistoryMoralisResponse: StateFlow<NetworkState<TransactionMoralisResponse?>>
+        get() = _tagGetTransactionMoralisHistory
+
+    fun executeGetTransactionHistoryMoralis(url: String, tokens: Tokens) {
+        viewModelScope.launch {
+            _tagGetTransactionMoralisHistory.emit(NetworkState.Loading())
+            _tagGetTransactionMoralisHistory.collectStateFlow(
+                transactionRepo.executeMoralisTransactionList(
+                    url,
+                    tokens
+                )
+            )
+        }
+    }
+
+    //transaction History new
+    private val _tagGetTransferHistory =
+        MutableStateFlow<NetworkState<TransferHistoryModel?>>(NetworkState.Empty())
+
+    val transferHistoryResponse: StateFlow<NetworkState<TransferHistoryModel?>>
+        get() = _tagGetTransferHistory
+
+    fun executeGetTransferHistory(url: String, tokens: Tokens, page: Int? = 0) {
+        viewModelScope.launch {
+            _tagGetTransferHistory.emit(NetworkState.Loading())
+            _tagGetTransferHistory.collectStateFlow(
+                transactionRepo.executeTransactionHistoryList(
+                    url,
+                    tokens,
+                    page
                 )
             )
         }

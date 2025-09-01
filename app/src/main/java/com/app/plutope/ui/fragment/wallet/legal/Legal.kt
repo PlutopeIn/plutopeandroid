@@ -1,6 +1,5 @@
 package com.app.plutope.ui.fragment.wallet.legal
 
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -8,7 +7,9 @@ import com.app.plutope.BR
 import com.app.plutope.R
 import com.app.plutope.databinding.FragmentLegalBinding
 import com.app.plutope.ui.base.BaseFragment
+import com.app.plutope.utils.enableDisableButton
 import com.app.plutope.utils.extras.buttonClickedWithEffect
+import com.app.plutope.utils.loge
 import com.app.plutope.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,11 +30,28 @@ class Legal : BaseFragment<FragmentLegalBinding, LegalViewModel>() {
     }
 
     override fun setupToolbarText(): String {
-        return "Legal"
+        return ""
     }
 
     override fun setupUI() {
         setupListener()
+        viewDataBinding!!.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+
+        val screenWidthInPixels = resources.displayMetrics.widthPixels
+        val screenHeightInPixels = resources.displayMetrics.heightPixels
+        val screenDensity = resources.displayMetrics.density
+
+
+
+        loge("viewport","width=>$screenWidthInPixels   :: height=> $screenHeightInPixels  :: density => $screenDensity")
+
+       // val screenWidthInDp = convertPixelsToDp(this, screenWidthInPixels.toFloat())
+       // val screenHeightInDp = convertPixelsToDp(this, screenHeightInPixels.toFloat())
+
+
     }
 
     private fun setupListener() {
@@ -50,7 +68,8 @@ class Legal : BaseFragment<FragmentLegalBinding, LegalViewModel>() {
         viewDataBinding!!.layoutTermsOfService.setOnClickListener {
             findNavController().safeNavigate(
                 LegalDirections.actionLegalToWebViewToolbar(
-                    url = "https://plutope.io/terms-conditions.html",
+                   // url = "https://plutope.io/terms-conditions.html",
+                    url = "https://www.plutope.io/terms-and-conditions",
                     title = "Terms Of Service"
                 )
             )
@@ -59,20 +78,26 @@ class Legal : BaseFragment<FragmentLegalBinding, LegalViewModel>() {
 
         viewDataBinding?.checkbox?.setOnCheckedChangeListener { compoundButton, _ ->
             if (compoundButton.isChecked) {
-                viewDataBinding!!.btnContinue.apply {
+               /* viewDataBinding!!.btnContinue.apply {
                     isEnabled = true
                     background =
                         ResourcesCompat.getDrawable(resources, R.drawable.button_gradient_26, null)
-                    setTextColor(ResourcesCompat.getColor(resources, R.color.white, null))
-                }
+                    setTextColor(ResourcesCompat.getColor(resources, R.color.bg_white, null))
+                }*/
+
+                viewDataBinding!!.btnContinue.enableDisableButton(true)
+
             } else {
-                viewDataBinding!!.btnContinue.apply {
+
+                viewDataBinding!!.btnContinue.enableDisableButton(false)
+
+              /*  viewDataBinding!!.btnContinue.apply {
                     isEnabled = false
                     background =
                         ResourcesCompat.getDrawable(resources, R.drawable.button_disable, null)
-                    setTextColor(ResourcesCompat.getColor(resources, R.color.green_02303B, null))
+                    setTextColor(ResourcesCompat.getColor(resources, R.color.bg_white, null))
 
-                }
+                }*/
 
             }
         }

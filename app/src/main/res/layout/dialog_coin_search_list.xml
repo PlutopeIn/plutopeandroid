@@ -35,12 +35,14 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0">
 
-                <androidx.appcompat.widget.AppCompatEditText
+                <EditText
                     android:id="@+id/edt_search"
-                    style="@style/edittext_fill_bg_style"
+                    android:paddingVertical="@dimen/_16mdp"
+                    android:background="@drawable/bg_tab_un_selected"
+                    android:textColorHint="@color/icon_gray"
+                    android:textSize="@dimen/_14mdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_search"
                     android:layout_marginHorizontal="@dimen/_16mdp"
                     android:layout_marginTop="@dimen/_22mdp"
                     android:autofillHints=""
@@ -49,13 +51,11 @@
                     android:paddingStart="@dimen/_43mdp"
                     android:paddingEnd="@dimen/_20mdp"
                     android:maxLines="1"
-                    android:singleLine="true"
+                    android:inputType="text"
                     android:ellipsize="end"
-                    android:imeOptions="actionNext"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/purple_7576D"
+                    android:imeOptions="actionDone"
+                    android:textColor="@color/black"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_14mdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -69,13 +69,15 @@
                     app:layout_constraintBottom_toBottomOf="@id/edt_search"
                     app:layout_constraintStart_toStartOf="@id/edt_search"
                     app:layout_constraintTop_toTopOf="@id/edt_search"
+                    app:tint="@color/icon_gray"
                     tools:ignore="ContentDescription" />
+
 
                 <ProgressBar
                     android:id="@+id/progress_token"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:indeterminateTint="@color/blue_00C6FB"
+                    android:indeterminateTint="@color/header_blue"
                     android:layout_marginBottom="30dp"
                     android:elevation="@dimen/_10mdp"
                     android:visibility="gone"
@@ -154,6 +156,26 @@
 
                 </com.facebook.shimmer.ShimmerFrameLayout>
 
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/no_data_available"
+                    android:layout_width="@dimen/_200mdp"
+                    android:layout_height="@dimen/_200mdp"
+                    android:layout_gravity="center"
+                    android:minWidth="@dimen/_200mdp"
+                    android:minHeight="@dimen/_200mdp"
+                    android:layout_marginBottom="@dimen/_50mdp"
+                    android:visibility="gone"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_search"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/no_data_available"
+
+                    />
 
                 <View
                     android:layout_width="match_parent"

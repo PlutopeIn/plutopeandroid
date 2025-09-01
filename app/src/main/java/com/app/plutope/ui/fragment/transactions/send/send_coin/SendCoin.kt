@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
@@ -30,8 +29,13 @@ import com.app.plutope.dialogs.DeviceLockFullScreenDialog
 import com.app.plutope.dialogs.SendTransferPreviewDialog
 import com.app.plutope.model.ContactModel
 import com.app.plutope.model.CurrencyModel
+import com.app.plutope.model.TokenDetail
+import com.app.plutope.model.TokenInfo
 import com.app.plutope.model.Tokens
+import com.app.plutope.model.TransactionType
+import com.app.plutope.model.TransferTraceDetail
 import com.app.plutope.model.Wallet
+import com.app.plutope.networkConfig.getWalletAddress
 import com.app.plutope.ui.base.BaseActivity
 import com.app.plutope.ui.base.BaseFragment
 import com.app.plutope.ui.fragment.contact.ContactListFragment
@@ -40,7 +44,6 @@ import com.app.plutope.ui.fragment.token.TokenViewModel
 import com.app.plutope.ui.fragment.transactions.buy.graph.GraphDetailViewModel
 import com.app.plutope.utils.BitcoinAddressValidator
 import com.app.plutope.utils.Securities
-import com.app.plutope.utils.bigIntegerToString
 import com.app.plutope.utils.coinTypeEnum.CoinType
 import com.app.plutope.utils.constant.COIN_GEKO_MARKET_API
 import com.app.plutope.utils.constant.ENTER_AMOUNT
@@ -56,6 +59,7 @@ import com.app.plutope.utils.enableDisableButton
 import com.app.plutope.utils.extractQRCodeScannerInfo
 import com.app.plutope.utils.extras.BiometricResult
 import com.app.plutope.utils.extras.InputFilterMinMax
+import com.app.plutope.utils.extras.PreferenceHelper
 import com.app.plutope.utils.extras.buttonClickedWithEffect
 import com.app.plutope.utils.extras.setBioMetric
 import com.app.plutope.utils.extras.setSafeOnClickListener
@@ -66,10 +70,14 @@ import com.app.plutope.utils.isScientificNotation
 import com.app.plutope.utils.loge
 import com.app.plutope.utils.network.NetworkState
 import com.app.plutope.utils.safeNavigate
+import com.app.plutope.utils.setBalanceText
 import com.app.plutope.utils.showLoader
 import com.app.plutope.utils.showLoaderAnyHow
+import com.app.plutope.utils.showSuccessToast
 import com.app.plutope.utils.showToast
 import com.app.plutope.utils.stringToBigInteger
+import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
@@ -77,10 +85,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.bitcoinj.core.Address
+import org.bitcoinj.core.Coin
+import org.bitcoinj.core.ECKey
+import org.bitcoinj.core.Utils
+import org.bitcoinj.kits.WalletAppKit
+import org.bitcoinj.params.MainNetParams
 import org.web3j.crypto.WalletUtils
+import java.io.File
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
+import java.util.concurrent.CompletableFuture
 
 @AndroidEntryPoint
 class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
@@ -97,6 +113,8 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
     private var isCurrencySelected: Boolean = false
     private val graphDetailViewModel: GraphDetailViewModel by viewModels()
     val args: SendCoinArgs by navArgs()
+
+    private var isSwitchOn = false
 
     private val scanQrCode = registerForActivityResult(ScanQRCode()) { result: QRResult ->
         when (result) {
@@ -180,10 +198,75 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
 
     }
 
+    /* private fun toggleSwitch(isOn: Boolean) {
+         isSwitchOn = isOn
+         updateSwitchState()
+     }
+
+     private fun updateSwitchState() {
+         if (isSwitchOn) {
+             viewDataBinding?.switchButton!!.x =
+                 (viewDataBinding!!.switchBackground.width - viewDataBinding!!.switchButton.width).toFloat()
+             viewDataBinding!!.switchBackground.setBackgroundResource(R.drawable.switch_background_on)
+             viewDataBinding!!.switchButton.setBackgroundResource(R.drawable.switch_button_on)
+             viewDataBinding!!.switchBackground.text = "ON"
+             viewDataBinding!!.switchBackground.setTextColor(resources.getColor(android.R.color.white))
+         } else {
+             viewDataBinding!!.switchButton.x = 0f
+             viewDataBinding!!.switchBackground.setBackgroundResource(R.drawable.switch_background_on)
+             viewDataBinding!!.switchButton.setBackgroundResource(R.drawable.switch_button_off)
+             viewDataBinding!!.switchBackground.text = "OFF"
+             viewDataBinding!!.switchBackground.setTextColor(resources.getColor(android.R.color.black))
+         }
+     }*/
+
+
     override fun setupUI() {
 
+        loge("Send", "Token : ${args.tokenModel}")
+
+
+        /* viewDataBinding?.switchButton?.setOnTouchListener { v, event ->
+             when (event.action) {
+                 MotionEvent.ACTION_MOVE -> {
+                     val x = event.rawX - (viewDataBinding?.switchButton!!.width / 2)
+                     if (x < 0) {
+                         viewDataBinding?.switchButton!!.x = 0f
+                     } else if (x > viewDataBinding?.switchBackground!!.width - viewDataBinding?.switchButton!!.width) {
+                         viewDataBinding?.switchButton!!.x =
+                             (viewDataBinding?.switchBackground!!.width - viewDataBinding?.switchButton!!.width).toFloat()
+                     } else {
+                         viewDataBinding?.switchButton!!.x = x
+                     }
+                     true
+                 }
+
+                 MotionEvent.ACTION_UP -> {
+                     toggleSwitch(viewDataBinding?.switchButton!!.x > viewDataBinding?.switchBackground!!.width / 2)
+                     true
+                 }
+
+                 else -> false
+             }
+         }*/
+
+
+
+
+        setTokenDetails()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            args.tokenModel.callFunction.getBalance {
+                args.tokenModel.t_balance = it!!
+            }
+        }
+
+        viewDataBinding!!.txtToolbarTitle.text =
+            "${context?.getString(R.string.send)} ${args.tokenModel.t_symbol}"
         viewDataBinding!!.model = args.tokenModel
         selectedCurrency = preferenceHelper.getSelectedCurrency()
+
+        viewDataBinding!!.txtCurrencyType.text = selectedCurrency?.code
 
         /*CoroutineScope(Dispatchers.Main).launch {
             loge("ENS","Address => ${resolveENSName()}")
@@ -195,6 +278,12 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
             viewDataBinding!!.btnContinue.text = getString(R.string.send_bitcoin)
         } else {
             viewDataBinding!!.btnContinue.text = getString(R.string.next)
+            if (args.result.trim() != "") {
+
+
+                handleQRCodeResult(args.result)
+            }
+
         }
 
         val inputFilterMinMax = InputFilterMinMax()
@@ -214,6 +303,92 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
         graphDetailViewModel.executeGetMarketResponse("$COIN_GEKO_MARKET_API?vs_currency=${preferenceHelper.getSelectedCurrency()?.code}&sparkline=false&locale=en&ids=${args.tokenModel.tokenId}")
 
     }
+
+    private fun setTokenDetails() {
+        val tokenModel = args.tokenModel
+
+        PreferenceHelper.getInstance().getSelectedCurrency()?.symbol ?: ""
+        if (tokenModel.isCustomTokens) {
+            val img = when (tokenModel.t_type.lowercase()) {
+                "erc20" -> R.drawable.ic_erc
+                "bep20" -> R.drawable.ic_bep
+                "polygon" -> R.drawable.ic_polygon
+                "kip20" -> R.drawable.ic_kip
+                else -> {
+                    R.drawable.ic_erc
+                }
+            }
+            Glide.with(requireContext()).load(img).into(viewDataBinding?.imgCoin!!)
+
+        } else {
+
+            val imageUrl =
+                if (tokenModel.t_logouri != "" || tokenModel.t_logouri.isNotEmpty()) tokenModel.t_logouri else tokenModel.chain?.icon
+
+            val img = when (tokenModel.t_type.lowercase()) {
+                "erc20" -> R.drawable.img_eth_logo
+                "bep20" -> R.drawable.ic_bep
+                "polygon" -> R.drawable.ic_polygon
+                "kip20" -> R.drawable.ic_kip
+                else -> {
+                    R.drawable.img_eth_logo
+                }
+            }
+
+
+            Glide.with(viewDataBinding?.imgCoin!!.context).load(imageUrl)
+                .placeholder(img)
+                .error(img)
+                .into(viewDataBinding?.imgCoin!!)
+
+            // Glide.with(requireContext()).load(tokenModel.t_logouri).into(viewDataBinding?.imgCoin!!)
+        }
+
+        // viewDataBinding?.txtToolbarTitle?.text = tokenModel.t_name
+
+        viewDataBinding?.txtBalance?.text = setBalanceText(
+            tokenModel.t_balance.toBigDecimal(),
+            tokenModel.t_symbol.toString(),
+            7
+        )
+        viewDataBinding?.txtNetworkName?.text = tokenModel.t_type
+
+        val priceDouble = tokenModel.t_price.toDoubleOrNull() ?: 0.0
+        val priceText = String.format("%.2f", priceDouble)
+        val percentChange = tokenModel.t_last_price_change_impact.toDoubleOrNull() ?: 0.0
+        val color = if (percentChange < 0.0) context?.resources!!.getColor(
+            R.color.red,
+            null
+        ) else context?.resources!!.getColor(R.color.green_00A323, null)
+
+        val pricePercent = if (percentChange < 0.0) String.format(
+            "%.2f",
+            percentChange
+        ) else "+" + String.format("%.2f", percentChange)
+
+        viewDataBinding?.txtPrice?.text =
+            "1 ${tokenModel.t_symbol} = " + preferenceHelper.getSelectedCurrency()?.symbol + "" + priceText
+
+        /* viewDataBinding?.txtCryptoDiffrencePercentage?.text = "$pricePercent%"
+         viewDataBinding?.txtCryptoDiffrencePercentage?.setTextColor(color)*/
+
+
+        if (isCurrencySelected) {
+            viewDataBinding!!.txtMax.visibility = GONE
+            viewDataBinding!!.maxUnderline.visibility = GONE
+            viewDataBinding!!.txtCoinType.text = selectedCurrency?.code
+            viewDataBinding!!.txtCurrencyType.text = viewDataBinding!!.model?.t_symbol
+
+        } else {
+            viewDataBinding!!.txtMax.visibility = VISIBLE
+            viewDataBinding!!.maxUnderline.visibility = VISIBLE
+            viewDataBinding!!.txtCoinType.text = viewDataBinding!!.model?.t_symbol
+            viewDataBinding!!.txtCurrencyType.text = selectedCurrency?.code
+        }
+
+
+    }
+
 
     private fun setOnClickListner() {
         viewDataBinding?.apply {
@@ -261,7 +436,7 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
 
                         val convertedEstPrice = try {
                             convertAmountToCurrency(
-                                amt.toDouble().toBigDecimal() ?: BigDecimal.ZERO,
+                                amt.toDouble().toBigDecimal(),
                                 args.tokenModel.t_price.toString().toDouble().toBigDecimal()
                             )
                         } catch (e: NumberFormatException) {
@@ -279,19 +454,19 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                         }
 
 
-                        convertPrice = convertedEstPrice.toDouble() ?: 0.0
+                        convertPrice = convertedEstPrice.toDouble()
                         if (!isCurrencySelected) {
 
                             viewDataBinding?.txtConvertBalance?.text =
                                 if (s.toString().isNotEmpty() && args.tokenModel.t_price.toString()
                                         .isNotEmpty()
-                                ) "~ " + selectedCurrency?.symbol + "" + convertPrice else "0"
+                                ) "= " + selectedCurrency?.symbol + "" + convertPrice else "0"
                         } else {
 
                             viewDataBinding?.txtConvertBalance?.text =
                                 if (s.toString().isNotEmpty() && args.tokenModel.t_price.toString()
                                         .isNotEmpty()
-                                ) "~ $currencyPrice" + " ${args.tokenModel.t_symbol}" else "0"
+                                ) "= $currencyPrice" + " ${args.tokenModel.t_symbol}" else "0"
 
                         }
 
@@ -306,31 +481,41 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
             txtMax.setSafeOnClickListener {
                 val balanceValue = args.tokenModel.t_balance.toDoubleOrNull() ?: 0.0
                 val formattedBalance = if (balanceValue == 0.0) "0" else balanceValue.toString()
-
-
                 viewDataBinding!!.edtAmount.setText(formattedBalance)
-                // viewDataBinding?.edtAmount?.setSelection(viewDataBinding!!.edtContractAddress.length())
+                viewDataBinding?.edtAmount?.setSelection(viewDataBinding!!.edtAmount.length())
 
             }
 
-            txtCoinType.setOnClickListener {
+            layoutSwap.setOnClickListener {
                 isCurrencySelected = !isCurrencySelected
                 viewDataBinding?.edtAmount?.setText("")
                 loge("isCurrencySelected", "=>$isCurrencySelected")
                 if (isCurrencySelected) {
                     viewDataBinding!!.txtMax.visibility = GONE
+                    viewDataBinding!!.maxUnderline.visibility = GONE
                     viewDataBinding!!.txtCoinType.text = selectedCurrency?.code
+                    viewDataBinding!!.txtCurrencyType.text = viewDataBinding!!.model?.t_symbol
+
+
                     viewDataBinding!!.amountBtc.text =
                         getString(R.string.amount_label) + " " + selectedCurrency?.code
                 } else {
                     viewDataBinding!!.txtMax.visibility = VISIBLE
+                    viewDataBinding!!.maxUnderline.visibility = VISIBLE
                     viewDataBinding!!.txtCoinType.text = viewDataBinding!!.model?.t_symbol
+                    viewDataBinding!!.txtCurrencyType.text = selectedCurrency?.code
+
                     viewDataBinding!!.amountBtc.text =
                         getString(R.string.amount_label) + " " + model?.t_symbol
 
                 }
 
             }
+
+            viewDataBinding?.txtCurrencyType?.setOnClickListener {
+                layoutSwap.performClick()
+            }
+
 
 
 
@@ -391,12 +576,32 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                                     "mainnet",
                                     Wallet.getPublicWalletAddress(CoinType.BITCOIN)!!
                                 )
+
+
+                                /*val senderPrivateKey = Wallet.getPrivateKeyData(CoinType.BITCOIN)
+                                val recipientAddress = viewDataBinding?.edtContractAddress?.text.toString()
+
+                                val valueInSatoshi = btcToSatoshi(if (!isCurrencySelected) viewDataBinding?.edtAmount?.text.toString().toDouble()
+                                else currencyPrice.toString().toDouble())
+
+                                loge("bTCTOSATOSHI","${valueInSatoshi}")
+
+                                val amountToSend =
+                                    Coin.valueOf(valueInSatoshi) // Amount in satoshis (e.g., 0.001 BTC)
+
+                                sendBitcoinTransaction(
+                                    senderPrivateKey,
+                                    recipientAddress,
+                                    amountToSend
+                                )*/
+
+
                             } else {
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     tokenList = tokenViewModel.getAllTokensList()
                                     requireActivity().runOnUiThread {
                                         sendCoinViewModel?.isFromLaverageChange?.value = false
-                                        sendCoinViewModel?.customGasPrice?.value = 0.toBigInteger()
+                                        sendCoinViewModel?.customGasPrice?.value = 0.toBigDecimal()
                                         sendCoinViewModel?.customGasLimit?.value = "0"
                                         sendCoinViewModel?.customNonce?.value = "0"
                                         sendCoinViewModel?.customTransactionData?.value = ""
@@ -423,13 +628,22 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                     )
                 )
             }
+
+            imgBack.setSafeOnClickListener {
+                findNavController().popBackStack()
+            }
         }
 
     }
 
+    fun btcToSatoshi(btcAmount: Double): Long {
+        val satoshiPerBitcoin = 100_000_000
+        return (btcAmount * satoshiPerBitcoin).toLong()
+    }
+
     private fun openSendTransferPreviewDialog() {
 
-        lastSelectedSlippage = 2
+        lastSelectedSlippage = 0
         sendCoinViewModel.setCoinDetail(
             viewDataBinding?.edtContractAddress?.text.toString(),
             if (!isCurrencySelected) viewDataBinding?.edtAmount?.text.toString()
@@ -439,7 +653,7 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
             viewDataBinding?.txtConvertBalance?.text.toString()
         )
 
-        SendTransferPreviewDialog(listner = object :
+        SendTransferPreviewDialog.newInstance(dialogDismissListner = object :
             SendTransferPreviewDialog.DialogOnClickBtnListner {
             override fun onConfirmClickListner() {
                 requireActivity().runOnUiThread {
@@ -523,15 +737,16 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
             }
         }
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 contactViewModel.insertContactResponse.collect {
                     when (it) {
                         is NetworkState.Success -> {
                             hideLoader()
                             //detail page
                             if (it.data != null) {
-                                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT)
-                                    .show()
+                                if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                                    showSuccessToast("Contact add successfully")
+                                }
                             }
                         }
 
@@ -562,9 +777,9 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                             if (cryptoList?.isNotEmpty() == true) {
                                 val cryptoModel = cryptoList[0]
 
-                                viewDataBinding?.model?.t_price = cryptoModel.current_price
+                                viewDataBinding?.model?.t_price = cryptoModel.current_price ?: "0"
                                 viewDataBinding?.model?.t_last_price_change_impact =
-                                    cryptoModel.price_change_percentage_24h
+                                    cryptoModel.price_change_percentage_24h ?: "0"
 
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     viewDataBinding?.model?.callFunction?.getBalance {
@@ -645,6 +860,9 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                                  )
                              }*/
 
+
+
+
                             sendCoinViewModel.setWalletActiveCall(
                                 Wallet.getPublicWalletAddress(
                                     CoinType.BITCOIN
@@ -695,10 +913,39 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
             loge("Amount", "==> $amount")
             args.tokenModel.callFunction.sendTokenOrCoin(
                 address, amount, tokenList
-            ) { success, errorMessage, code ->
+            ) { success, errorMessage, transactionHash ->
 
                 if (success) {
                     requireActivity().runOnUiThread {
+
+                        sendWholeTransactionTraceDetail(
+                            TransferTraceDetail(
+                                walletAddress = getWalletAddress(CoinType.ETHEREUM)!!,
+                                transactionType = TransactionType.SEND.value,
+                                providerType = "",
+                                transactionHash = transactionHash!!,
+                                requestId = "",
+                                tokenDetailArrayList = arrayListOf(
+                                    TokenDetail(
+                                        from = TokenInfo(
+                                            chainId = args.tokenModel.chain!!.chainIdHex,
+                                            address = getWalletAddress(
+                                                args.tokenModel.chain?.coinType ?: CoinType.ETHEREUM
+                                            )!!,
+                                            symbol = args.tokenModel.t_symbol
+                                        ),
+                                        to = TokenInfo(
+                                            chainId = args.tokenModel.chain!!.chainIdHex,
+                                            address = address,
+                                            symbol = args.tokenModel.t_symbol
+                                        )
+                                    )
+                                )
+                            )
+                        )
+
+
+
                         sendCoinViewModel.setWalletActiveCall(
                             Wallet.getPublicWalletAddress(
                                 CoinType.ETHEREUM
@@ -718,7 +965,7 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                 } else {
                     requireActivity().runOnUiThread {
                         hideLoader()
-                        if (code?.isEmpty() == true) {
+                        if (transactionHash?.isEmpty() == true) {
                             requireContext().showToast(errorMessage.toString())
                         } else {
                             requireContext().showToast(errorMessage.toString())
@@ -735,14 +982,42 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                     receiverAddress = address,
                     tokenAmount = amount,
                     nonce = stringToBigInteger(sendCoinViewModel.customNonce.value!!),
-                    gasAmount = bigIntegerToString(sendCoinViewModel.customGasPrice.value!!),
+                    gasAmount = sendCoinViewModel.customGasPrice.value!!.toPlainString(),
                     gasLimit = stringToBigInteger(sendCoinViewModel.customGasLimit.value!!),
                     decimal = sendCoinViewModel.decimal.value!!,
                     tokenList = tokenList
-                ) { success, errorMessage, code ->
+                ) { success, errorMessage, transactionHash ->
 
                     if (success) {
                         requireActivity().runOnUiThread {
+
+                            sendWholeTransactionTraceDetail(
+                                TransferTraceDetail(
+                                    walletAddress = getWalletAddress(CoinType.ETHEREUM)!!,
+                                    transactionType = TransactionType.SEND.value,
+                                    providerType = "",
+                                    transactionHash = transactionHash!!,
+                                    requestId = "",
+                                    tokenDetailArrayList = arrayListOf(
+                                        TokenDetail(
+                                            from = TokenInfo(
+                                                chainId = args.tokenModel.chain!!.chainIdHex,
+                                                address = getWalletAddress(
+                                                    args.tokenModel.chain?.coinType
+                                                        ?: CoinType.ETHEREUM
+                                                )!!,
+                                                symbol = args.tokenModel.t_symbol
+                                            ),
+                                            to = TokenInfo(
+                                                chainId = args.tokenModel.chain!!.chainIdHex,
+                                                address = address,
+                                                symbol = args.tokenModel.t_symbol
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+
                             sendCoinViewModel.setWalletActiveCall(
                                 Wallet.getPublicWalletAddress(
                                     CoinType.ETHEREUM
@@ -761,7 +1036,7 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
                     } else {
                         requireActivity().runOnUiThread {
                             hideLoader()
-                            if (code?.isEmpty() == true) {
+                            if (transactionHash?.isEmpty() == true) {
                                 requireContext().showToast(errorMessage.toString())
                             } else {
                                 requireContext().showToast(errorMessage.toString())
@@ -800,9 +1075,11 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
         if (qrResult?.first != null) {
             // viewDataBinding!!.edtContractAddress.setText(cleanEthereumAddress(qrResult.first))
             viewDataBinding!!.edtContractAddress.setText(qrResult.first)
+            viewDataBinding?.edtContractAddress?.setSelection(viewDataBinding!!.edtContractAddress.length())
         } else {
             //  viewDataBinding!!.edtContractAddress.setText(cleanEthereumAddress(result))
             viewDataBinding!!.edtContractAddress.setText(result)
+            viewDataBinding?.edtContractAddress?.setSelection(viewDataBinding!!.edtContractAddress.length())
         }
 
         if (qrResult?.second != null && qrResult.second.isNotBlank()) {
@@ -818,17 +1095,22 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
 
         //  isCurrencySelected = !isCurrencySelected
 
-        loge("", "")
 
         if (isCurrencySelected) {
-            viewDataBinding!!.txtMax.visibility = View.GONE
+            viewDataBinding!!.txtMax.visibility = GONE
+            viewDataBinding!!.maxUnderline.visibility = GONE
             viewDataBinding!!.txtCoinType.text = selectedCurrency?.code
+            viewDataBinding!!.txtCurrencyType.text = viewDataBinding!!.model?.t_symbol
+
+
         } else {
-            viewDataBinding!!.txtMax.visibility = View.VISIBLE
+            viewDataBinding!!.txtMax.visibility = VISIBLE
+            viewDataBinding!!.maxUnderline.visibility = VISIBLE
             viewDataBinding!!.txtCoinType.text = viewDataBinding!!.model?.t_symbol
+            viewDataBinding!!.txtCurrencyType.text = selectedCurrency?.code
         }
 
-        if (qrResult.third.lowercase().trim() == args.tokenModel.t_address?.lowercase()?.trim()
+        if (qrResult.third.lowercase().trim() == args.tokenModel.t_address.lowercase().trim()
             || args.tokenModel.chain?.name?.lowercase()?.replace(" ", "")
                 ?.contains(qrResult.third.lowercase().trim(), ignoreCase = true) == true
         ) {
@@ -892,5 +1174,71 @@ class SendCoin : BaseFragment<FragmentSendCoinBinding, SendCoinViewModel>() {
 
     }
 */
+
+
+    fun sendBitcoinTransaction(senderPrivateKey: String, recipientAddress: String, amount: Coin) {
+        try {
+            val params = MainNetParams.get()
+            val kit = WalletAppKit(params, File("."), "endrequest-example")
+            //WalletAppKit.launch(TestNet3Params.get(), File("."), "sendrequest-example")
+
+            /* kit.startAsync()
+             kit.awaitRunning()*/
+
+            val wallet = kit.wallet()
+            val privateKey = ECKey.fromPrivate(Utils.HEX.decode(senderPrivateKey))
+            wallet.importKey(privateKey)
+
+            val recipient = Address.fromString(params, recipientAddress)
+
+            try {
+                val result: org.bitcoinj.wallet.Wallet.SendResult =
+                    kit.wallet().sendCoins(kit.peerGroup(), recipient, amount)
+                println("coins sent. transaction hash: ${result.tx.txId}")
+            } catch (e: org.bitcoinj.wallet.Wallet.CouldNotAdjustDownwards) {
+                println("Not enough coins in your wallet. Missing ${e.message} satoshis are missing (including fees)")
+                println("Send money to: ${kit.wallet().currentReceiveAddress()}")
+
+                val balanceFuture: CompletableFuture<Coin> = kit.wallet().getBalanceFuture(
+                    amount,
+                    org.bitcoinj.wallet.Wallet.BalanceType.AVAILABLE
+                ) as CompletableFuture<Coin>
+                balanceFuture.whenComplete { balance, throwable ->
+                    if (balance != null) {
+                        println("coins arrived and the wallet now has enough balance")
+                    } else {
+                        println("something went wrong")
+                    }
+                }
+            }
+
+            kit.stopAsync()
+            kit.awaitTerminated()
+
+
+            /* val sendRequest = SendRequest.to(recipient, amount)
+             wallet.completeTx(sendRequest)
+             wallet.commitTx(sendRequest.tx)
+             loge("TXData", "${sendRequest.tx}")
+
+             kit.stopAsync()
+             kit.awaitTerminated()*/
+
+
+        } catch (e: Exception) {
+            // Handle exceptions appropriately
+            loge("Error", "Exception: ${e.message}")
+            e.printStackTrace()
+        }
+    }
+
+    private fun sendWholeTransactionTraceDetail(
+        transferModel: TransferTraceDetail
+    ) {
+        loge("TransferModel", "transferModel = > ${Gson().toJson(transferModel)}")
+        tokenViewModel.traceActivityLogCall(transferModel)
+
+    }
+
 
 }

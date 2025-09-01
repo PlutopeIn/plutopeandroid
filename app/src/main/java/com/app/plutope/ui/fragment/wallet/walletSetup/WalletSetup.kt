@@ -1,5 +1,6 @@
 package com.app.plutope.ui.fragment.wallet.walletSetup
 
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -32,6 +33,18 @@ class WalletSetup : BaseFragment<FragmentWalletSetupBinding, WalletSetupViewMode
     }
 
     override fun setupUI() {
+
+        if (preferenceHelper.menomonicWallet != "") {
+            viewDataBinding?.imgBack?.visibility = View.VISIBLE
+        }else{
+            viewDataBinding?.imgBack?.visibility = View.GONE
+        }
+
+        viewDataBinding?.imgBack?.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+
         setUpListener()
     }
 

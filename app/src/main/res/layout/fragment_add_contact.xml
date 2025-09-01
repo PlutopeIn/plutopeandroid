@@ -21,8 +21,37 @@
             android:id="@+id/const_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/bg_white"
             tools:context=".ui.fragment.contact.A">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="@dimen/_50mdp"
+                android:layout_height="@dimen/_50mdp"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
+                android:padding="@dimen/_8mdp"
+                android:src="@drawable/ic_back_new"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_profile_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/add_contacts"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16msp"
+                app:layout_constraintBottom_toBottomOf="@id/img_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/img_back" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_network"
@@ -30,10 +59,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16mdp"
                 android:layout_marginTop="@dimen/_50mdp"
-                android:background="@drawable/bg_corner_radius_10"
+                android:background="@drawable/bg_corner_radius_35"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_contract_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_37mdp"
+                android:layout_marginTop="@dimen/_30mdp"
+                android:fontFamily="@font/violet_sans"
+                android:lineSpacingExtra="@dimen/_10msp"
+                android:text="@string/public_address"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_17msp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_name" />
 
 
             <EditText
@@ -42,58 +85,84 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_50mdp"
                 android:layout_marginTop="@dimen/_10mdp"
-                android:hint="@string/public_address_0x"
-                android:paddingStart="@dimen/_10mdp"
-                android:paddingEnd="@dimen/_90mdp"
+                android:paddingEnd="@dimen/_110mdp"
                 android:maxLines="1"
+                android:paddingStart="@dimen/_30mdp"
+                android:textColorHint="@color/dark_gray"
+                android:textColor="@color/dark_gray"
                 android:singleLine="true"
-                tools:text="fbdndjfjdnjn"
+                android:textSize="@dimen/_15msp"
                 android:textCursorDrawable="@null"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="@id/layout_network"
                 app:layout_constraintStart_toStartOf="@id/layout_network"
-                app:layout_constraintTop_toBottomOf="@+id/edt_name"
+                app:layout_constraintTop_toBottomOf="@+id/txt_contract_address"
 
                 />
 
-            <ImageView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/img_scanner"
-                android:layout_width="@dimen/_17mdp"
-                android:layout_height="@dimen/_17mdp"
-                android:layout_marginEnd="@dimen/_17mdp"
-                android:src="@drawable/img_scanner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_4mdp"
+                app:cardBackgroundColor="@color/green"
+                app:cardCornerRadius="@dimen/_50mdp"
                 app:layout_constraintBottom_toBottomOf="@id/edt_contract_address"
                 app:layout_constraintEnd_toEndOf="@id/edt_contract_address"
-                app:layout_constraintTop_toTopOf="@id/edt_contract_address" />
+                app:layout_constraintTop_toTopOf="@id/edt_contract_address" >
 
-            <TextView
+                <ImageView
+                    android:layout_width="@dimen/_45mdp"
+                    android:layout_height="@dimen/_45mdp"
+                    android:padding="@dimen/_13mdp"
+                    android:src="@drawable/scaner_image"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
                 android:id="@+id/txt_paste"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_12mdp"
                 android:fontFamily="@font/quicksand_regular"
                 android:text="@string/paste"
-                android:textColor="@color/blue_00C6FB"
-                android:textSize="@dimen/_13msp"
+                android:src="@drawable/ic_paste_new"
+                android:visibility="visible"
+                android:layout_marginEnd="@dimen/_12mdp"
                 app:layout_constraintBottom_toBottomOf="@id/edt_contract_address"
                 app:layout_constraintEnd_toStartOf="@id/img_scanner"
-                app:layout_constraintTop_toTopOf="@id/edt_contract_address" />
+                app:layout_constraintTop_toTopOf="@id/edt_contract_address"/>
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_37mdp"
+                android:layout_marginTop="@dimen/_40mdp"
+                android:fontFamily="@font/violet_sans"
+                android:lineSpacingExtra="@dimen/_10msp"
+                android:text="@string/name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_17msp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_profile_title" />
 
             <EditText
                 android:id="@+id/edt_name"
                 style="@style/edittext_fill_bg_style_r_10"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_50mdp"
-                android:layout_marginTop="@dimen/_40mdp"
-                android:hint="@string/name"
+                android:layout_marginTop="@dimen/_10mdp"
                 android:inputType="textPersonName"
                 android:maxLines="1"
+                android:paddingStart="@dimen/_30mdp"
+                android:textSize="@dimen/_15msp"
+                android:textColor="@color/black"
                 android:paddingHorizontal="@dimen/_10mdp"
                 android:textCursorDrawable="@null"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="@id/layout_network"
                 app:layout_constraintStart_toStartOf="@id/layout_network"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_name"
 
                 />
 
@@ -101,27 +170,57 @@
 
             <Button
                 android:id="@+id/btn_add_contact"
-                style="@style/wallet_button_gradient"
+                android:background="@drawable/button_bg_border_blue"
+                android:textColor="@color/bg_white"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_50mdp"
                 android:layout_gravity="center"
-                android:text="@string/add_contact"
+                android:text="@string/add"
+                android:textSize="@dimen/_18msp"
+                android:fontFamily="@font/violet_sans"
                 android:textAllCaps="false"
+                android:visibility="gone"
                 app:layout_constrainedWidth="true"
-                android:layout_marginTop="40dp"
                 app:layout_constraintEnd_toEndOf="@id/layout_network"
                 app:layout_constraintStart_toStartOf="@id/layout_network"
-                app:layout_constraintTop_toBottomOf="@id/edt_contract_address"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="@dimen/_41mdp"/>
 
-
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guid"
+            <Button
+                android:id="@+id/btn_save"
+                style="@style/wallet_button_gradient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.95" />
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginBottom="@dimen/_10mdp"
+                android:text="@string/save"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/btn_delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
+            <Button
+                android:id="@+id/btn_delete"
+                style="@style/button_border_red"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/violet_sans"
+                android:layout_marginHorizontal="@dimen/_30mdp"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:layout_marginBottom="@dimen/_41mdp"                android:text="@string/delete"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_goneMarginTop="@dimen/_100mdp"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintVertical_chainStyle="packed"
+
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
